@@ -1,0 +1,795 @@
+<title>Blazing Forge Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+/* Layout: a workbench. Roster rail on the left, one open character sheet on the right; stacks on phones. */
+:root{
+  --bg:#eef0f3; --panel:#ffffff; --ink:#18202c; --muted:#5c6676; --line:#d5dae2;
+  --accent:#d0571f; --accent-ink:#ffffff; --chakra:#2a6bd1; --ok:#1f7a4d; --warn:#a86400; --bad:#b3261e;
+  --soft:#f6f7f9; --chip:#e6e9ee;
+  --display:"Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161d; --panel:#1a2029; --ink:#e7ebf1; --muted:#9aa4b3; --line:#2c3441;
+  --accent:#f07a3e; --accent-ink:#1a1006; --chakra:#6ea2f2; --ok:#4cc38a; --warn:#e3a34b; --bad:#f2786f;
+  --soft:#151a22; --chip:#262e3a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161d; --panel:#1a2029; --ink:#e7ebf1; --muted:#9aa4b3; --line:#2c3441;
+  --accent:#f07a3e; --accent-ink:#1a1006; --chakra:#6ea2f2; --ok:#4cc38a; --warn:#e3a34b; --bad:#f2786f;
+  --soft:#151a22; --chip:#262e3a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:14px 48px}
+header.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding-block:6px 14px;border-bottom:1px solid var(--line)}
+.brand{font:700 22px/1 var(--display);letter-spacing:.02em}
+.brand b{color:var(--accent)}
+.brand small{display:block;font:500 12px/1.4 var(--body);color:var(--muted);letter-spacing:0;margin-top:4px}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav.tabs button{font:600 14px var(--display);letter-spacing:.03em;text-transform:uppercase;background:none;border:1px solid transparent;color:var(--muted);padding:7px 12px;border-radius:var(--r);cursor:pointer}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--line);background:var(--panel)}
+nav.tabs .beta{font:600 10px var(--body);color:var(--chakra);margin-left:4px;vertical-align:2px}
+#theme-toggle{font-size:12.5px;padding:5px 9px;border-color:var(--line)}
+.status{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.busy{background:var(--chakra)}
+main{padding-top:18px}
+.grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.rail{display:flex;flex-direction:column;gap:8px}
+.rail .head{display:flex;justify-content:space-between;align-items:center}
+h2{font:700 15px var(--display);text-transform:uppercase;letter-spacing:.06em;margin:0;color:var(--muted)}
+h3{font:600 17px var(--display);letter-spacing:.02em;margin:0}
+.card-btn{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;text-align:left;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:8px;cursor:pointer;color:inherit;font:inherit}
+.card-btn[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.card-btn .ic{width:44px;height:44px;border-radius:5px;background:var(--chip);object-fit:cover}
+.card-btn .t{font-weight:600;line-height:1.25}
+.card-btn .s{font-size:12.5px;color:var(--muted);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.sheet-head .grow{flex:1;min-width:0}
+.sec{padding:16px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.sec:last-child{border-bottom:0}
+.sec > .lbl{font:600 12px var(--display);text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 14px}
+label.f{display:grid;gap:4px;font-size:12.5px;color:var(--muted);min-width:0}
+label.f > span{font-weight:500}
+input[type=text],input[type=number],select,textarea{font:inherit;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:5px;padding:7px 9px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:58px}
+.mono{font-family:var(--mono);font-size:13px}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--chakra);outline-offset:1px}
+button.btn{font:600 13.5px var(--body);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:5px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+button.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button.btn.ghost{background:none;border-color:transparent;color:var(--muted)}
+button.btn.danger{color:var(--bad)}
+button.btn:disabled{opacity:.5;cursor:not-allowed}
+.hint{font-size:12.5px;color:var(--muted);margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.chip.ok{color:var(--ok)} .chip.warn{color:var(--warn)} .chip.bad{color:var(--bad)}
+.pick{position:relative;min-width:0}
+.pick .val{display:flex;gap:8px;align-items:center;min-width:0}
+.pick .val input{flex:1}
+.pick ul{position:absolute;z-index:20;left:0;right:0;top:100%;margin:2px 0 0;padding:4px;list-style:none;background:var(--panel);border:1px solid var(--line);border-radius:5px;max-height:280px;overflow:auto;box-shadow:0 8px 24px rgb(0 0 0 / .18)}
+.pick li{padding:6px 8px;border-radius:4px;cursor:pointer;font-size:13.5px;line-height:1.3}
+.pick li small{display:block;color:var(--muted);font-size:12px}
+.pick li[aria-selected="true"],.pick li:hover{background:var(--soft)}
+.sel{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.sel b{color:var(--ink);font-weight:600}
+.art{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.art figure{margin:0;display:grid;gap:6px}
+.art .frame{aspect-ratio:1/1;background:var(--soft);border:1px dashed var(--line);border-radius:5px;display:grid;place-items:center;overflow:hidden;max-width:100%}
+.art .frame.card{aspect-ratio:4/3}
+.art .frame img{width:100%;height:100%;object-fit:contain}
+.art figcaption{font-size:12.5px;color:var(--muted)}
+.ab{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:8px;align-items:start;padding:8px;border:1px solid var(--line);border-radius:5px;background:var(--soft)}
+.ab .n{font:600 13px var(--mono);color:var(--muted);padding-top:7px;text-align:center}
+.ab .body{display:grid;gap:6px;min-width:0}
+.ab .ctl{display:flex;gap:2px}
+.skill{border:1px solid var(--line);border-radius:5px;padding:12px;display:grid;gap:10px;background:var(--soft)}
+.skill .preview{font-size:13.5px;border-left:3px solid var(--chakra);padding:2px 0 2px 10px}
+.toggle{display:flex;gap:8px;align-items:center;font-size:13.5px}
+.empty{padding:28px 16px;text-align:center;color:var(--muted)}
+.warns{display:grid;gap:4px}
+.warns p{margin:0;font-size:13px}
+.warns .w{color:var(--warn)} .warns .e{color:var(--bad)}
+.statbox{display:flex;gap:14px;flex-wrap:wrap;font:500 13px var(--mono)}
+.statbox span b{font-family:var(--display);font-size:18px;margin-left:4px;color:var(--ink);font-variant-numeric:tabular-nums}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{font:600 13.5px var(--body);background:var(--panel);border:0;padding:9px 14px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.part{border:1px solid var(--line);border-radius:5px;padding:10px;display:grid;gap:8px;background:var(--soft)}
+.part .frame{aspect-ratio:1/1;display:grid;place-items:center;background:repeating-conic-gradient(var(--chip) 0 25%, var(--soft) 0 50%) 0 0/16px 16px;border-radius:4px;overflow:hidden}
+.part .frame img{max-width:100%;max-height:100%}
+.part .k{font:500 12px var(--mono);color:var(--muted);overflow-wrap:anywhere}
+table.hist{width:100%;border-collapse:collapse;font-size:13.5px}
+table.hist th,table.hist td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.hist th{font:600 12px var(--display);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:6px;font-size:13.5px;z-index:50;max-width:calc(100% - 32px)}
+.callout{border:1px solid var(--line);border-left:3px solid var(--chakra);border-radius:5px;padding:10px 12px;font-size:13.5px;background:var(--soft)}
+.callout p{margin:0}
+.callout p + p{margin-top:6px}
+.stack{display:grid;gap:12px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<script>
+(function(){ var t="dark"; try{ t=localStorage.getItem("forge-studio-theme")||"dark"; }catch(e){} document.documentElement.setAttribute("data-theme", t); })();
+</script>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Blazing <b>Forge</b> Studio<small>Custom characters, banners and summons for Blazing:Rebirth</small></div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button id="tab-chars" role="tab" aria-selected="true" data-tab="chars">Characters</button>
+      <button id="tab-banners" role="tab" aria-selected="false" data-tab="banners">Banners<span class="beta">beta</span></button>
+      <button id="tab-summon" role="tab" aria-selected="false" data-tab="summon">Summon<span class="beta">beta</span></button>
+      <button id="tab-build" role="tab" aria-selected="false" data-tab="build">Build</button>
+    </nav>
+    <div class="status" id="status"><span class="dot busy"></span><span>Loading the game catalog…</span></div>
+    <button class="btn ghost" id="theme-toggle" type="button" aria-label="Switch between dark and light">Light mode</button>
+  </header>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+"use strict";
+// ------------------------------------------------------------------ state
+const S = {
+  cat: null, unitById: new Map(), slotByR5: new Map(), slotByR6: new Map(),
+  db: null, assets: null, downloads: null, canWrite: true,
+  chars: {}, banners: {}, summon: null, builds: [],
+  tab: "chars", openChar: null, openBanner: null, local: false,
+  gifts: null, localUrls: new Map(), localBlobs: new Map(),
+};
+const ATTR = {1:"Heart",2:"Skill",3:"Body",4:"Bravery",5:"Wisdom"};
+const $ = (s, el=document) => el.querySelector(s);
+const h = (tag, attrs={}, ...kids) => {
+  const el = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})) {
+    if (v == null || v === false) continue;
+    if (k === "class") el.className = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "html") el.innerHTML = v;
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  return el;
+};
+const clone = o => JSON.parse(JSON.stringify(o));
+// art ids: "l_…" kept in this browser, "f_<path>" example art published with the page, anything else account storage
+const blobUrl = id => !id ? "" : String(id).startsWith("l_") ? (S.localUrls.get(id) || "") : String(id).startsWith("f_") ? String(id).slice(2) : "/_blob/" + id;
+let toastT;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,2600); }
+function setStatus(kind, text){ const s=$("#status"); s.replaceChildren(h("span",{class:"dot "+kind}), h("span",{},text)); }
+
+// ------------------------------------------------------------------ catalog helpers
+function unitLabel(u){ return u ? `${u.n} — ${u.s}` : ""; }
+function unitShort(id){ const u=S.unitById.get(+id); return u ? `${u.n} “${u.s}” (${u.r}★, ${u.id})` : (id ? `#${id}` : "none"); }
+function skillRow(id){ return S.cat.skills[id] || null; }
+function fillDesc(tmpl, second){ const v=String(second??"").split(","); return String(tmpl||"").replace(/\{(\d+)\}/g,(m,i)=> v[+i]!==undefined ? v[+i] : m); }
+function abilityText(a){
+  if (!a) return "";
+  if (a.id){ const r=S.cat.abilities[a.id]; return r ? `${r[0]}: ${r[1]}` : `Ability ${a.id}`; }
+  return `${a.name||"Custom ability"}: ${a.description||a.script||""}`;
+}
+
+// ------------------------------------------------------------------ persistence
+let saveTimers = {};
+function persist(coll, id, doc){
+  doc.updatedAt = new Date().toISOString();
+  if (S.local){ saveLocal(); return; }
+  clearTimeout(saveTimers[coll+id]);
+  setStatus("busy","Saving…");
+  saveTimers[coll+id] = setTimeout(async () => {
+    try { await S.db.doc(`${coll}/${id}`).set(clone(doc)); setStatus("ok","All changes saved"); }
+    catch(e){ handleWriteError(e); }
+  }, 600);
+}
+async function removeDoc(coll, id){
+  if (S.local){ saveLocal(); return; }
+  try { await S.db.doc(`${coll}/${id}`).delete(); setStatus("ok","All changes saved"); } catch(e){ handleWriteError(e); }
+}
+function handleWriteError(e){
+  if (e && e.code === "invalid_argument"){ S.canWrite=false; setStatus("warn","View only: you can look but not change this studio"); }
+  else if (e && e.code === "quota_exceeded") setStatus("warn","Storage is full. Delete unused characters or banners.");
+  else setStatus("warn","Couldn't save just now. Your last change will retry on the next edit.");
+}
+function saveLocal(){ try{ localStorage.setItem("forge-studio-draft", JSON.stringify({chars:S.chars,banners:S.banners,summon:S.summon,gifts:S.gifts})); setStatus("ok","Saved in this browser"); }catch(e){ setStatus("warn","This browser won't keep your work. Save a mod pack before you leave."); } }
+function loadLocal(){ try{ const d=JSON.parse(localStorage.getItem("forge-studio-draft")||"null"); if(d){S.chars=d.chars||{};S.banners=d.banners||{};S.summon=d.summon||null;S.gifts=d.gifts||null;} }catch(e){} }
+// art kept in this browser (IndexedDB) when there's no account storage
+function idb(){ return new Promise((res,rej)=>{ try{ const r=indexedDB.open("forge-studio",1); r.onupgradeneeded=()=>r.result.createObjectStore("art"); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }catch(e){ rej(e); } }); }
+async function idbPut(id, blob){ try{ const d=await idb(); await new Promise((res,rej)=>{ const t=d.transaction("art","readwrite"); t.objectStore("art").put(blob,id); t.oncomplete=res; t.onerror=()=>rej(t.error); }); }catch(e){} }
+async function idbLoadAll(){ try{ const d=await idb(); await new Promise(res=>{ const t=d.transaction("art"); const c=t.objectStore("art").openCursor();
+  c.onsuccess=()=>{ const cur=c.result; if(cur){ S.localBlobs.set(cur.key,cur.value); S.localUrls.set(cur.key,URL.createObjectURL(cur.value)); cur.continue(); } else res(); }; c.onerror=()=>res(); }); }catch(e){} }
+const canUpload = () => !!S.assets || S.local;
+async function uploadArt(file){
+  if (S.assets) return S.assets.upload(file);
+  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) throw {code:"unsupported_type"};
+  const id="l_"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  S.localBlobs.set(id,file); S.localUrls.set(id,URL.createObjectURL(file)); await idbPut(id,file); return {id};
+}
+async function artBlob(id){
+  if (!id) return null;
+  if (String(id).startsWith("l_")) return S.localBlobs.get(id) || null;
+  try{ const r=await fetch(blobUrl(id)); return r.ok ? await r.blob() : null; }catch(e){ return null; }
+}
+
+// ------------------------------------------------------------------ pickers
+function picker({value, items, label, render, search, onPick, placeholder}){
+  // items(): array; render(item)->[title, sub]; search(item, q)->bool; value: current label text
+  const wrap = h("div",{class:"pick"});
+  const inp = h("input",{type:"text",placeholder: placeholder||"Search by name or id", "aria-label": label, autocomplete:"off"});
+  const list = h("ul",{role:"listbox",hidden:true});
+  const shown = h("div",{class:"sel"}, value ? h("span",{},"Now: ", h("b",{},value)) : h("span",{},"Nothing picked"));
+  let res=[], idx=0;
+  function draw(){
+    const q = inp.value.trim().toLowerCase();
+    if (!q){ list.hidden=true; return; }
+    res = items().filter(it => search(it,q)).slice(0,40); idx=0;
+    list.replaceChildren(...res.map((it,i)=>{ const [t,sub]=render(it); return h("li",{role:"option","aria-selected":String(i===idx),onmousedown:(e)=>{e.preventDefault();choose(i);}}, t, sub?h("small",{},sub):null); }));
+    list.hidden = !res.length;
+  }
+  function choose(i){ const it=res[i]; if(!it) return; inp.value=""; list.hidden=true; onPick(it); }
+  inp.addEventListener("input", draw);
+  inp.addEventListener("blur", ()=> setTimeout(()=>list.hidden=true,120));
+  inp.addEventListener("keydown", e=>{
+    if (list.hidden) return;
+    if (e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); idx=(idx+(e.key==="ArrowDown"?1:-1)+res.length)%res.length; [...list.children].forEach((li,i)=>li.setAttribute("aria-selected",String(i===idx))); list.children[idx]?.scrollIntoView({block:"nearest"}); }
+    if (e.key==="Enter"){ e.preventDefault(); choose(idx); }
+    if (e.key==="Escape"){ list.hidden=true; }
+  });
+  wrap.append(h("div",{class:"val"},inp), list, shown);
+  return wrap;
+}
+const unitPicker = (opts) => picker({
+  label: opts.label, value: opts.value ? unitShort(opts.value) : "",
+  items: () => S.cat.units.filter(opts.filter || (()=>true)),
+  render: u => [`${u.n} — ${u.s}`, `${u.r}★ · ${ATTR[u.a]||"?"} · id ${u.id}${u.ok && !u.ok[0] ? " · battle sprite missing in this build" : ""}`],
+  search: (u,q) => String(u.id).startsWith(q) || (u.n+" "+u.s).toLowerCase().includes(q),
+  onPick: u => opts.onPick(u), placeholder: opts.placeholder,
+});
+
+// ------------------------------------------------------------------ characters
+function blankChar(){
+  return { name:"New character", subtitle:"", attribute:1, slot5:0, slot6:0, donor:0, gift:true, giftMessage:"",
+    art:{card:"",icon:"",chakra:""}, stats:{from5:0,from6:0,boost:10,maxLimitBreak:true},
+    abilities:[], jutsu:null, ultimate:null, latent:null,
+    fieldSkill:{mode:"donor"}, buddySkill:{mode:"donor"}, visuals:{rig:0,cutin:0,ultimateVideo:true}, notes:"" };
+}
+function charWarnings(c, id){
+  const w=[];
+  if (!c.slot5 || !c.slot6) w.push(["e","Pick the slot this character replaces."]);
+  if (!c.donor) w.push(["e","Pick whose battle sprite and animations to use."]);
+  if (!c.art?.card) w.push(["w","No card art yet. The donor's art will show until you add one."]);
+  const dup = Object.entries(S.chars).find(([k,o]) => k!==id && o.slot5 && o.slot5===c.slot5);
+  if (dup) w.push(["e",`${dup[1].name} already uses this slot.`]);
+  const sl = S.slotByR5.get(+c.slot5);
+  if (sl?.impact) w.push(["w","This slot is an Impact event unit."]);
+  const d = S.unitById.get(+c.donor);
+  if (d && d.ok && !d.ok[0]) w.push(["w","The build's asset audit flags this donor's battle sprite as missing. Earlier legacy units with flagged donors still worked, so test a battle."]);
+  if (c.latent && !c.latent.from) w.push(["w","The latent skill has no animation source."]);
+  if ((c.abilities||[]).length > 10) w.push(["e","Ten abilities at most."]);
+  return w;
+}
+function renderChars(){
+  const ids = Object.keys(S.chars).sort((a,b)=> (S.chars[a].name||"").localeCompare(S.chars[b].name||""));
+  if (!S.openChar || !S.chars[S.openChar]) S.openChar = ids[0] || null;
+  const rail = h("div",{class:"rail"},
+    h("div",{class:"head"}, h("h2",{},`Roster · ${ids.length}`), h("button",{class:"btn primary",onclick:newChar, disabled: !S.canWrite},"New character")),
+    ...ids.map(id => { const c=S.chars[id];
+      return h("button",{class:"card-btn","aria-current":String(id===S.openChar),onclick:()=>{S.openChar=id;render();}},
+        c.art?.icon || c.art?.card ? h("img",{class:"ic",src:blobUrl(c.art.icon||c.art.card),alt:""}) : h("div",{class:"ic"}),
+        h("div",{}, h("div",{class:"t"},c.name||"Unnamed"), h("div",{class:"s"}, `${c.subtitle||"—"} · ${ATTR[c.attribute]||""}`),
+          h("div",{class:"s"}, c.slot5 ? `replaces ${S.slotByR5.get(+c.slot5)?.n||"#"+c.slot5} (${c.slot5}/${c.slot6})` : "no slot yet")));
+    }),
+    ids.length ? null : h("p",{class:"hint"},"No characters yet. Start one with New character.")
+  );
+  const sheet = S.openChar ? charSheet(S.openChar) : h("div",{class:"sheet empty"},"Pick a character on the left, or make a new one.");
+  return h("div",{class:"grid"}, rail, sheet);
+}
+function newChar(){
+  const id = "c" + Date.now().toString(36);
+  S.chars[id] = blankChar(); S.openChar=id; persist("characters", id, S.chars[id]); render();
+}
+function charSheet(id){
+  const c = S.chars[id];
+  const save = () => { persist("characters", id, c); };
+  const rerender = () => { save(); render(); };
+  const field = (lbl, key, obj=c, type="text", opts={}) => h("label",{class:"f"}, h("span",{},lbl),
+    h("input",{type, id:`${id}-${key}`, value: obj[key] ?? "", ...opts, oninput:e=>{ obj[key] = type==="number" ? (e.target.value===""? "" : +e.target.value) : e.target.value; save(); }}));
+  const warns = charWarnings(c, id);
+
+  // --- slot select
+  const slotSel = h("select",{id:`${id}-slot`, onchange:e=>{ const s=S.slotByR5.get(+e.target.value); c.slot5=s?s.r5:0; c.slot6=s?s.r6:0; rerender(); }},
+    h("option",{value:""},"Choose a slot…"),
+    ...S.cat.slots.map(s => { const user = Object.entries(S.chars).find(([k,o])=>k!==id && +o.slot5===s.r5);
+      return h("option",{value:s.r5, selected: +c.slot5===s.r5}, `${s.n} — ${s.s} (${s.r5}/${s.r6})${s.impact?" · Impact":""}${user?" · used by "+user[1].name:""}`); }));
+
+  // --- art
+  const artFig = (key, label, cls, hint) => h("figure",{},
+    h("div",{class:"frame "+cls}, c.art?.[key] ? h("img",{src:blobUrl(c.art[key]),alt:label}) : h("span",{class:"hint"},"No image")),
+    h("figcaption",{}, h("b",{},label), " · ", hint),
+    canUpload() ? h("div",{class:"chips"},
+      h("label",{class:"btn",style:"cursor:pointer"}, c.art?.[key] ? "Replace" : "Upload",
+        h("input",{type:"file",accept:"image/png,image/jpeg,image/webp",hidden:true,onchange:async e=>{
+          const f=e.target.files[0]; if(!f) return; setStatus("busy","Uploading…");
+          try{ const r=await uploadArt(f); c.art=c.art||{}; c.art[key]=r.id; rerender(); toast(`${label} uploaded`); }
+          catch(err){ setStatus("warn", err.code==="too_large"?"That image is over 20 MB.": err.code==="unsupported_type"?"Use a PNG, JPG or WebP image.":"Upload failed. Try again."); }
+        }})),
+      c.art?.[key] ? h("button",{class:"btn ghost",onclick:()=>{ c.art[key]=""; rerender(); }},"Clear") : null)
+    : h("p",{class:"hint"},"Uploading needs edit access to this studio."));
+
+  // --- stats
+  const statLine = (fromId) => { const u=S.unitById.get(+fromId); if(!u) return "Pick a unit"; const k=1+(+c.stats.boost||0)/100;
+    return h("div",{class:"statbox"}, h("span",{},"HP", h("b",{},Math.round(u.st[0]*k).toLocaleString())), h("span",{},"ATK", h("b",{},Math.round(u.st[1]*k).toLocaleString()))); };
+
+  return h("article",{class:"sheet"},
+    h("div",{class:"sheet-head"},
+      c.art?.icon||c.art?.card ? h("img",{src:blobUrl(c.art.icon||c.art.card),alt:"",style:"width:52px;height:52px;border-radius:6px;object-fit:cover"}) : null,
+      h("div",{class:"grow"}, h("h3",{},`${c.name||"Unnamed"}`), h("div",{class:"hint"}, `${c.subtitle||"No subtitle"} · ${ATTR[c.attribute]||""} · ${c.slot5?`slot ${c.slot5} / ${c.slot6}`:"no slot"}`)),
+      h("button",{class:"btn danger",disabled:!S.canWrite,onclick:()=>confirmDelete(id)},"Delete")),
+    warns.length ? h("div",{class:"sec"}, h("div",{class:"warns"}, ...warns.map(([k,t])=>h("p",{class:k},(k==="e"?"Needs fixing: ":"Heads up: ")+t)))) : null,
+
+    h("section",{class:"sec"}, h("div",{class:"lbl"},"Identity"),
+      h("div",{class:"row"}, field("Name","name"), field("Subtitle","subtitle"),
+        h("label",{class:"f"}, h("span",{},"Element"), h("select",{id:`${id}-attr`,onchange:e=>{c.attribute=+e.target.value;rerender();}}, ...Object.entries(ATTR).map(([k,v])=>h("option",{value:k,selected:+c.attribute===+k},v))))),
+      h("label",{class:"f"}, h("span",{},"Replaces this 5★ → 6★ slot"), slotSel),
+      h("p",{class:"hint"},"Only free event and shop units are listed. The offline server only accepts units it already knows, so a custom character takes over one of these. Any copy of that unit you already own turns into this character."),
+      h("div",{class:"row"},
+        h("label",{class:"toggle"}, h("input",{type:"checkbox",id:`${id}-gift`,checked:c.gift!==false,onchange:e=>{c.gift=e.target.checked;save();}}), "Send the 6★ to the Present Box"),
+        field("Gift message","giftMessage"))),
+
+    h("section",{class:"sec"}, h("div",{class:"lbl"},"Art"),
+      h("div",{class:"art"},
+        artFig("card","Card art","card","the big portrait. Transparent PNG, about 720 px wide."),
+        artFig("icon","Box icon","","square, shown in lists. Made from the card if empty."),
+        artFig("chakra","Battle face","","round HUD icon. Made from the box icon if empty."))),
+
+    h("section",{class:"sec"}, h("div",{class:"lbl"},"Battle look"),
+      h("label",{class:"f"}, h("span",{},"Sprite, jutsu and ST animations come from"),
+        unitPicker({label:"Donor unit", value:c.donor, onPick:u=>{ c.donor=u.id; if(!c.stats.from6) { c.stats.from6=u.id; c.stats.from5=u.id; } rerender(); }})),
+      (()=>{ const d=S.unitById.get(+c.donor); if(!d) return null; const tag=(ok,t)=>h("span",{class:"chip "+(ok?"ok":"warn")},(ok?"✓ ":"! ")+t);
+        return h("div",{class:"chips"}, tag(d.ok[0],"battle sprite"), tag(d.ok[1],"cut-in"), tag(d.ok[2],"jutsu effect"), tag(d.ok[3],"ST effect")); })(),
+      h("label",{class:"toggle"}, h("input",{type:"checkbox",id:`${id}-video`,checked:c.visuals?.ultimateVideo!==false,onchange:e=>{c.visuals=c.visuals||{};c.visuals.ultimateVideo=e.target.checked;save();}}),
+        "Play the Secret Technique video (turn off if the ST crashes)")),
+
+    h("section",{class:"sec"}, h("div",{class:"lbl"},"Stats"),
+      h("div",{class:"row"},
+        h("label",{class:"f"}, h("span",{},"6★ stats from"), unitPicker({label:"6★ stats source", value:c.stats.from6, onPick:u=>{c.stats.from6=u.id; rerender();}}), statLine(c.stats.from6)),
+        h("label",{class:"f"}, h("span",{},"5★ stats from"), unitPicker({label:"5★ stats source", value:c.stats.from5, onPick:u=>{c.stats.from5=u.id; rerender();}}), statLine(c.stats.from5))),
+      h("div",{class:"row"},
+        h("label",{class:"f"}, h("span",{},"Boost over the source, %"), h("input",{type:"number",id:`${id}-boost`,value:c.stats.boost??10,step:1,min:-50,max:300,oninput:e=>{c.stats.boost=+e.target.value;save();},onchange:()=>render()})),
+        h("label",{class:"toggle"}, h("input",{type:"checkbox",id:`${id}-mlb`,checked:c.stats.maxLimitBreak!==false,onchange:e=>{c.stats.maxLimitBreak=e.target.checked;save();}}), "Use the source's max limit-break numbers"))),
+
+    abilitiesSection(c, id, save, rerender),
+    skillSection(c, id, "jutsu", "Ninjutsu", rerender, save),
+    skillSection(c, id, "ultimate", "Secret Technique", rerender, save),
+    skillSection(c, id, "latent", "Latent skill (7★ shine, 6★ only)", rerender, save),
+    supportSection(c, id, save, rerender),
+    h("section",{class:"sec"}, h("div",{class:"lbl"},"Notes for the build"),
+      h("label",{class:"f"}, h("span",{},"Anything Claude should know when building this character"),
+        h("textarea",{id:`${id}-notes`,oninput:e=>{c.notes=e.target.value;save();}}, c.notes||"")))
+  );
+}
+function confirmBar(anchor, text, yesLabel, onYes){
+  // one confirmation at a time: pressing Delete again just points at the open one
+  const open = document.querySelector(".confirm-bar");
+  if (open){ open.querySelector("button")?.focus(); return; }
+  const bar=h("div",{class:"callout confirm-bar",style:"flex-basis:100%",role:"alertdialog","aria-label":text}, h("p",{},text),
+    h("div",{class:"chips",style:"margin-top:8px"}, h("button",{class:"btn danger",onclick:()=>{ bar.remove(); onYes(); }},yesLabel),
+      h("button",{class:"btn",onclick:()=>bar.remove()},"Keep")));
+  anchor.append(bar); bar.querySelector("button").focus();
+}
+function confirmDelete(id){
+  const c=S.chars[id];
+  confirmBar($("#main .sheet-head"), `Delete ${c.name}? Its art stays stored but the character is removed from the next build.`, "Delete",
+    ()=>{ delete S.chars[id]; removeDoc("characters",id); S.openChar=null; render(); toast("Character deleted"); });
+}
+function abilitiesSection(c, id, save, rerender){
+  c.abilities = c.abilities || [];
+  const rows = c.abilities.map((a,i)=> h("div",{class:"ab"},
+    h("div",{class:"n"}, i+1),
+    h("div",{class:"body"},
+      a.id ? h("div",{}, h("div",{style:"font-weight:600"}, (S.cat.abilities[a.id]||["Ability"])[0]), h("div",{class:"hint"}, (S.cat.abilities[a.id]||["",""])[1]), h("div",{class:"hint mono"}, (S.cat.abilities[a.id]||["","",""])[2]))
+      : h("div",{class:"row"},
+          h("label",{class:"f"},h("span",{},"Name"),h("input",{type:"text",id:`${id}-ab${i}-n`,value:a.name||"",oninput:e=>{a.name=e.target.value;save();}})),
+          h("label",{class:"f"},h("span",{},"What it does (shown in game)"),h("input",{type:"text",id:`${id}-ab${i}-d`,value:a.description||"",oninput:e=>{a.description=e.target.value;save();}})),
+          h("label",{class:"f"},h("span",{},"Script"),h("input",{type:"text",class:"mono",id:`${id}-ab${i}-s`,value:a.script||"",placeholder:"e.g. CriticalRise:3",oninput:e=>{a.script=e.target.value;save();}})))),
+    h("div",{class:"ctl"},
+      h("button",{class:"btn ghost",title:"Move up","aria-label":"Move up",disabled:i===0,onclick:()=>{ [c.abilities[i-1],c.abilities[i]]=[c.abilities[i],c.abilities[i-1]]; rerender(); }},"↑"),
+      h("button",{class:"btn ghost",title:"Remove","aria-label":"Remove",onclick:()=>{ c.abilities.splice(i,1); rerender(); }},"✕"))));
+  const cmds = abilityCommands();
+  return h("section",{class:"sec"}, h("div",{class:"lbl"},"Abilities"),
+    h("p",{class:"hint"},"The 6★ gets all of them in order; the 5★ gets the first four."),
+    ...rows,
+    c.abilities.length < 10 ? h("div",{class:"row"},
+      h("label",{class:"f"}, h("span",{},"Add a game ability"),
+        picker({label:"Find ability", value:"", placeholder:"Search: crit, chakra, attack…",
+          items:()=>Object.entries(S.cat.abilities).map(([k,v])=>({id:+k,v})),
+          render:a=>[a.v[0], `${a.v[1]} · ${a.v[2]}`],
+          search:(a,q)=> String(a.id).startsWith(q) || (a.v[0]+" "+a.v[1]+" "+a.v[2]).toLowerCase().includes(q),
+          onPick:a=>{ c.abilities.push({id:a.id}); rerender(); }})),
+      h("div",{class:"f",style:"align-content:end"}, h("button",{class:"btn",onclick:()=>{ c.abilities.push({name:"",description:"",script:""}); rerender(); }},"Add a custom ability"))) : null,
+    h("details",{}, h("summary",{class:"hint",style:"cursor:pointer"},"Script commands the game uses"),
+      h("div",{class:"chips",style:"margin-top:8px"}, ...cmds.map(([cmd,ex])=>h("span",{class:"chip mono",title:ex},cmd)))));
+}
+let _cmds=null;
+function abilityCommands(){
+  if (_cmds) return _cmds; const m=new Map();
+  for (const v of Object.values(S.cat.abilities)) for (const part of String(v[2]).split("&")){ const k=part.split(":")[0]; if(k && !m.has(k)) m.set(k,part); }
+  return _cmds=[...m.entries()].sort((a,b)=>a[0].localeCompare(b[0]));
+}
+function skillSection(c, id, kind, title, rerender, save){
+  const slotKey = {jutsu:"j", ultimate:"u", latent:"l"}[kind];
+  const sk = c[kind];
+  const enable = () => { const d=S.unitById.get(+c.donor); const src=d && (kind==="latent" ? (d.l||d.u) : d[slotKey]); const r=src?skillRow(src):null;
+    c[kind] = r ? {script:r[1], secondScript:r[2], type:r[3], turn:r[4], description:"", from: kind==="latent"?d.id:0, effectFrom:0} : {script:"",secondScript:"",type:kind==="latent"?0:5,turn:0,description:"",from:0,effectFrom:0}; rerender(); };
+  if (!sk) return h("section",{class:"sec"}, h("div",{class:"lbl"},title),
+    h("p",{class:"hint"}, kind==="latent" ? "No latent skill. Add one to give the 6★ a third special move." : `Uses the donor's ${title} as it is.`),
+    h("div",{}, h("button",{class:"btn",onclick:enable,disabled:!S.canWrite || !c.donor}, kind==="latent"?"Add a latent skill":`Customise the ${title}`),
+      !c.donor ? h("span",{class:"hint",style:"margin-left:8px"},"Pick the battle look first.") : null));
+  const set = (k,v)=>{ sk[k]=v; save(); };
+  const prev = h("div",{class:"preview"}, fillDesc(sk.description, sk.secondScript) || "Write the in-game text below; {0}, {1}… are filled from Values.");
+  const updPrev = () => prev.textContent = fillDesc(sk.description, sk.secondScript) || "Write the in-game text below; {0}, {1}… are filled from Values.";
+  return h("section",{class:"sec"}, h("div",{class:"lbl"},title),
+    h("div",{class:"skill"},
+      h("div",{class:"row"},
+        h("label",{class:"f"}, h("span",{},"Copy numbers and text from a unit's "+(kind==="jutsu"?"jutsu":kind==="ultimate"?"ST":"latent (or ST)")),
+          unitPicker({label:"Copy skill from", value:sk.copiedFrom, filter:u=> !!(kind==="latent" ? (u.l||u.u) : u[slotKey]), onPick:u=>{
+            const r=skillRow(kind==="latent" ? (u.l||u.u) : u[slotKey]); if(!r) return;
+            Object.assign(sk,{script:r[1],secondScript:r[2],type:r[3],turn:r[4],description:"",copiedFrom:u.id, copiedText:r[5]}); rerender(); }})),
+        h("label",{class:"f"}, h("span",{}, kind==="latent" ? "Animation and video from (that unit's latent, else its ST)" : "Animation from (blank = donor)"),
+          unitPicker({label:"Animation source", value: kind==="latent" ? sk.from : sk.effectFrom, onPick:u=>{ if(kind==="latent") sk.from=u.id; else sk.effectFrom=u.id; rerender(); }}))),
+      sk.copiedText ? h("p",{class:"hint"},"Copied text: ", sk.copiedText) : null,
+      h("div",{class:"row"},
+        h("label",{class:"f"}, h("span",{},"Script"), h("input",{type:"text",class:"mono",id:`${id}-${kind}-script`,value:sk.script||"",oninput:e=>set("script",e.target.value)})),
+        h("label",{class:"f"}, h("span",{},"Values ({0},{1}…)"), h("input",{type:"text",class:"mono",id:`${id}-${kind}-second`,value:sk.secondScript||"",oninput:e=>{set("secondScript",e.target.value);updPrev();}})),
+        h("label",{class:"f"}, h("span",{},"Buff turns"), h("input",{type:"number",id:`${id}-${kind}-turn`,value:sk.turn??0,oninput:e=>set("turn",+e.target.value)})),
+        h("label",{class:"f"}, h("span",{},"Type code"), h("input",{type:"number",id:`${id}-${kind}-type`,value:sk.type??0,oninput:e=>set("type",+e.target.value)}))),
+      h("label",{class:"f"}, h("span",{},"In-game description"), h("textarea",{id:`${id}-${kind}-desc`,oninput:e=>{set("description",e.target.value);updPrev();}}, sk.description||"")),
+      prev,
+      kind!=="latent" ? h("details",{open: !!(sk.r5 && sk.r5.script)}, h("summary",{class:"hint",style:"cursor:pointer"},"Different numbers on the 5★"),
+        h("div",{class:"row",style:"margin-top:8px"},
+          h("label",{class:"f"}, h("span",{},"5★ script"), h("input",{type:"text",class:"mono",id:`${id}-${kind}-r5s`,value:sk.r5?.script||"",placeholder:"same as 6★",oninput:e=>{sk.r5=sk.r5||{};sk.r5.script=e.target.value;save();}})),
+          h("label",{class:"f"}, h("span",{},"5★ values"), h("input",{type:"text",class:"mono",id:`${id}-${kind}-r5v`,value:sk.r5?.secondScript||"",placeholder:"same as 6★",oninput:e=>{sk.r5=sk.r5||{};sk.r5.secondScript=e.target.value;save();}})))) : null,
+      h("div",{}, h("button",{class:"btn ghost",onclick:()=>{ c[kind]=null; rerender(); }}, kind==="latent"?"Remove the latent skill":"Go back to the donor's"))));
+}
+function supportSection(c, id, save, rerender){
+  const fs=c.fieldSkill||(c.fieldSkill={mode:"donor"}), bs=c.buddySkill||(c.buddySkill={mode:"donor"});
+  const fRow = id2 => S.cat.field[id2]; const bRow = id2 => S.cat.buddy[id2];
+  return h("section",{class:"sec"}, h("div",{class:"lbl"},"Field and buddy skills"),
+    h("div",{class:"row"},
+      h("div",{class:"stack"},
+        h("label",{class:"f"}, h("span",{},"Field skill"), h("select",{id:`${id}-fmode`,onchange:e=>{fs.mode=e.target.value;rerender();}},
+          h("option",{value:"donor",selected:fs.mode==="donor"},"Same as the donor"),
+          h("option",{value:"existing",selected:fs.mode==="existing"},"Another unit's field skill"),
+          h("option",{value:"custom",selected:fs.mode==="custom"},"Custom script"))),
+        fs.mode==="existing" ? picker({label:"Field skill", value: fs.id ? `${fRow(fs.id)?.[0]||""} ${fRow(fs.id)?.[1]||""}` : "",
+          items:()=>S.cat.units.filter(u=>u.f).map(u=>({u, f:u.f})), render:x=>[`${x.u.n} — ${x.u.s}`, `${fRow(x.f)?.[0]||""} · ${fRow(x.f)?.[1]||""}`],
+          search:(x,q)=>(x.u.n+" "+x.u.s+" "+(fRow(x.f)||[]).join(" ")).toLowerCase().includes(q), onPick:x=>{fs.id=x.f;rerender();}}) : null,
+        fs.mode==="custom" ? h("div",{class:"row"},
+          h("label",{class:"f"},h("span",{},"Script"),h("input",{type:"text",class:"mono",id:`${id}-fs`,value:fs.script||"",placeholder:"AttackCounter:50%/75%:0.5",oninput:e=>{fs.script=e.target.value;save();}})),
+          h("label",{class:"f"},h("span",{},"Values"),h("input",{type:"text",class:"mono",id:`${id}-fv`,value:fs.secondScript||"",oninput:e=>{fs.secondScript=e.target.value;save();}}))) : null,
+        fs.mode==="custom" ? h("p",{class:"hint"},"A custom field skill rewrites one of the game's unused field-skill rows. Adding a brand-new row crashed the home screen before.") : null),
+      h("div",{class:"stack"},
+        h("label",{class:"f"}, h("span",{},"Buddy skill"), h("select",{id:`${id}-bmode`,onchange:e=>{bs.mode=e.target.value;rerender();}},
+          h("option",{value:"donor",selected:bs.mode==="donor"},"Same as the donor"),
+          h("option",{value:"existing",selected:bs.mode==="existing"},"Another unit's buddy skill"))),
+        bs.mode==="existing" ? picker({label:"Buddy skill", value: bs.id ? (bRow(bs.id)?.[0]||"#"+bs.id) : "",
+          items:()=>S.cat.units.filter(u=>u.b).map(u=>({u,b:u.b})), render:x=>[`${x.u.n} — ${x.u.s}`, bRow(x.b)?.[0]||""],
+          search:(x,q)=>(x.u.n+" "+x.u.s+" "+(bRow(x.b)||[""])[0]).toLowerCase().includes(q), onPick:x=>{bs.id=x.b;rerender();}}) : null)));
+}
+
+// ------------------------------------------------------------------ banners
+function renderBanners(){
+  const ids=Object.keys(S.banners);
+  if (!S.openBanner || !S.banners[S.openBanner]) S.openBanner=ids[0]||null;
+  const rail=h("div",{class:"rail"},
+    h("div",{class:"head"},h("h2",{},`Banners · ${ids.length}`),h("button",{class:"btn primary",disabled:!S.canWrite,onclick:()=>{ const id="b"+Date.now().toString(36);
+      S.banners[id]={name:"New banner",ticker:"",bannerId:60005+ids.length,featured:[],featuredWeight:333,enabled:true,art:{front:""}}; S.openBanner=id; persist("banners",id,S.banners[id]); render(); }},"New banner")),
+    ...ids.map(id=>{ const b=S.banners[id]; return h("button",{class:"card-btn","aria-current":String(id===S.openBanner),onclick:()=>{S.openBanner=id;render();}},
+      b.art?.front ? h("img",{class:"ic",src:blobUrl(b.art.front),alt:""}) : h("div",{class:"ic"}),
+      h("div",{}, h("div",{class:"t"},b.name), h("div",{class:"s"}, `${(b.featured||[]).length} featured · ${b.enabled===false?"off":"on"}`))); }));
+  if (!S.openBanner) return h("div",{class:"grid"}, rail, h("div",{class:"sheet empty"},"No banners yet."));
+  const id=S.openBanner, b=S.banners[id]; const save=()=>persist("banners",id,b); const rr=()=>{save();render();};
+  const n=(b.featured||[]).length; const each = n ? (b.featuredWeight||333) / 333 * 1.7 * 5 / Math.max(n,1) : 0;
+  const sheet=h("article",{class:"sheet"},
+    h("div",{class:"sheet-head"}, h("div",{class:"grow"},h("h3",{},b.name),h("div",{class:"hint"},`Banner ${b.bannerId}`)),
+      h("label",{class:"toggle"},h("input",{type:"checkbox",id:`${id}-on`,checked:b.enabled!==false,onchange:e=>{b.enabled=e.target.checked;save();}}),"In the next build")),
+    h("section",{class:"sec"}, h("div",{class:"lbl"},"Banner"),
+      h("div",{class:"row"},
+        h("label",{class:"f"},h("span",{},"Name"),h("input",{type:"text",id:`${id}-bn`,value:b.name,oninput:e=>{b.name=e.target.value;save();}})),
+        h("label",{class:"f"},h("span",{},"Ticker text"),h("input",{type:"text",id:`${id}-bt`,value:b.ticker||"",oninput:e=>{b.ticker=e.target.value;save();}})))),
+    h("section",{class:"sec"}, h("div",{class:"lbl"},"Featured characters"),
+      ...Object.entries(S.chars).map(([cid,c])=> h("label",{class:"toggle"}, h("input",{type:"checkbox",id:`${id}-f-${cid}`,checked:(b.featured||[]).includes(cid),onchange:e=>{
+        b.featured=b.featured||[]; if(e.target.checked) b.featured.push(cid); else b.featured=b.featured.filter(x=>x!==cid); rr(); }}), `${c.name} — ${c.subtitle||""}`)),
+      h("label",{class:"f",style:"max-width:260px"},h("span",{},"Featured weight"),h("input",{type:"number",id:`${id}-bw`,value:b.featuredWeight||333,min:1,oninput:e=>{b.featuredWeight=+e.target.value;save();},onchange:()=>render()})),
+      h("p",{class:"hint"}, n ? `About ${each.toFixed(1)}% per pull for each featured character (estimate; the build prints the exact rate).` : "Tick at least one character."),
+      h("p",{class:"hint"},"The banner card in game shows up to five featured faces.")),
+    h("section",{class:"sec"}, h("div",{class:"lbl"},"Banner art"),
+      h("div",{class:"art"}, h("figure",{},
+        h("div",{class:"frame card",style:"aspect-ratio:15/8"}, b.art?.front ? h("img",{src:blobUrl(b.art.front),alt:"Banner art"}) : h("span",{class:"hint"},"No image")),
+        h("figcaption",{},"1500 × 800 (15:8). The small top strip is cut from the lower middle."),
+        canUpload() ? h("label",{class:"btn",style:"cursor:pointer;justify-self:start"}, b.art?.front?"Replace":"Upload",
+          h("input",{type:"file",accept:"image/png,image/jpeg,image/webp",hidden:true,onchange:async e=>{ const f=e.target.files[0]; if(!f) return;
+            try{ const r=await uploadArt(f); b.art={front:r.id}; rr(); toast("Banner art uploaded"); }catch(err){ setStatus("warn","Upload failed. Use a PNG, JPG or WebP under 20 MB."); } }})) : null))),
+    h("section",{class:"sec",id:`${id}-del`}, h("button",{class:"btn danger",style:"justify-self:start",onclick:()=>confirmBar(document.getElementById(`${id}-del`),`Delete the banner “${b.name}”?`,"Delete",
+      ()=>{ delete S.banners[id]; removeDoc("banners",id); S.openBanner=null; render(); toast("Banner deleted"); })},"Delete banner")));
+  return h("div",{class:"grid"}, rail, sheet);
+}
+
+// ------------------------------------------------------------------ summon
+function renderSummon(){
+  const sm = S.summon || (S.summon={enabled:true,parts:[]});
+  const save=()=>persist("summon","config",sm);
+  const setMode = on => { sm.enabled=on; save(); render(); };
+  return h("div",{class:"stack"},
+    h("div",{class:"sheet"},
+      h("section",{class:"sec"}, h("div",{class:"lbl"},"Summon animation"),
+        h("div",{class:"seg",role:"group","aria-label":"Summon animation"},
+          h("button",{"aria-pressed":String(sm.enabled!==false),onclick:()=>setMode(true)},"Custom (your art)"),
+          h("button",{"aria-pressed":String(sm.enabled===false),onclick:()=>setMode(false)},"Game's own")),
+        h("p",{class:"hint"},"This picks which one your mod pack uses. To flip it later without a new mod pack, save a switch file and drop it into Files › On My iPhone › Blazing:Rebirth; the game rebuilds your last mod pack with the other animation."),
+        h("div",{class:"chips"},
+          h("button",{class:"btn",disabled:!S.downloads,onclick:()=>saveSwitch(true)},"Save switch: custom"),
+          h("button",{class:"btn",disabled:!S.downloads,onclick:()=>saveSwitch(false)},"Save switch: game's own")))),
+    h("div",{class:"sheet"},
+      h("section",{class:"sec"}, h("div",{class:"lbl"},"Parts"),
+        h("p",{class:"hint"},"Each part is a piece of the summon puppet (arms, body, cut-in). Replace a picture to repaint it; fit and size tweaks are kept from the last tuning. Ask Claude for fine adjustments."),
+        sm.parts?.length ? h("div",{class:"parts"}, ...sm.parts.map((p,i)=> h("div",{class:"part"},
+          h("div",{class:"frame"}, p.asset ? h("img",{src:blobUrl(p.asset),alt:p.cell}) : h("span",{class:"hint"},p.mode||"no image")),
+          h("div",{style:"font-weight:600"}, p.label||p.cell), h("div",{class:"k"}, `${p.texture} › ${p.cell}`),
+          p.mode ? h("span",{class:"chip"},p.mode) : null,
+          canUpload() && !p.mode ? h("label",{class:"btn",style:"cursor:pointer;justify-self:start"},"Replace",
+            h("input",{type:"file",accept:"image/png,image/webp",hidden:true,onchange:async e=>{ const f=e.target.files[0]; if(!f) return;
+              try{ const r=await uploadArt(f); p.asset=r.id; p.changed=true; save(); render(); toast("Part replaced"); }catch(err){ setStatus("warn","Upload failed. Use a transparent PNG."); } }})) : null,
+          p.changed ? h("span",{class:"chip warn"},"changed since last build") : null)))
+        : h("p",{class:"empty"},"No summon parts yet."))));
+}
+
+// ------------------------------------------------------------------ build
+function renderBuild(){
+  const chars=Object.entries(S.chars); const errs=[];
+  for (const [id,c] of chars) for (const [k,t] of charWarnings(c,id)) if (k==="e") errs.push(`${c.name}: ${t}`);
+  for (const b of Object.values(S.banners)) if (b.enabled!==false && /[:!]/.test((b.name||"")+(b.ticker||""))) errs.push(`Banner “${b.name}”: leave ':' and '!' out of the name and ticker; the offline server refuses to start with them.`);
+  return h("div",{class:"stack"},
+    h("div",{class:"sheet"},
+      h("section",{class:"sec"}, h("div",{class:"lbl"},"Make your mod"),
+        h("div",{class:"callout"},
+          h("p",{},"1. Save the mod pack below."),
+          h("p",{},"2. Put it in Files › On My iPhone › Blazing:Rebirth."),
+          h("p",{},"3. Open the game. Blazing Forge builds the mod from your phone's own game data (about a minute), then asks you to reopen the game."),
+          h("p",{},"This needs the Blazing:Rebirth app with the Blazing Forge 3 add-on (below).")),
+        errs.length ? h("div",{class:"warns"}, ...errs.map(t=>h("p",{class:"e"},t))) : h("p",{class:"hint"},`${chars.length} character(s), ${Object.values(S.banners).filter(b=>b.enabled!==false).length} banner(s), summon animation ${S.summon?.enabled===false?"off":"on"}.`),
+        h("div",{class:"chips"},
+          h("button",{class:"btn primary",disabled:!S.downloads || errs.length>0,onclick:exportPack},"Save mod pack"),
+          h("label",{class:"btn",style:"cursor:pointer"},"Open a mod pack",
+            h("input",{type:"file",accept:".zip,application/zip",hidden:true,onchange:e=>{ const f=e.target.files[0]; if(f) importPack(f); e.target.value=""; }}))),
+        !S.downloads ? h("p",{class:"hint"},"Saving files isn't available in this view.") : null,
+        h("p",{class:"hint"},"Opening a mod pack adds its characters and banners to this studio, so you can share packs with friends."))),
+    h("div",{class:"sheet"},
+      h("section",{class:"sec"}, h("div",{class:"lbl"},"Blazing Forge add-on"),
+        h("p",{class:"hint"},"The add-on is what builds and installs mod packs inside the game. Add it to the Blazing:Rebirth IPA once, then every mod pack works."),
+        h("div",{class:"callout"},
+          h("p",{},"1. Save the add-on below and unzip it to get BlazingForge.dylib."),
+          h("p",{},"2. In Sideloadly, open the Blazing:Rebirth IPA, go to Advanced options and inject BlazingForge.dylib."),
+          h("p",{},"3. Install as usual. Your saves and game data stay where they are.")),
+        h("div",{class:"chips"},
+          h("button",{class:"btn",disabled:!S.downloads,onclick:saveAddon},"Save add-on (.zip)"),
+          h("span",{class:"chip",id:"addon-ver"},"Blazing Forge 3.0"))),
+      ),
+    S.db ? h("div",{class:"sheet"},
+      h("section",{class:"sec"}, h("div",{class:"lbl"},"Build with Claude"),
+        h("p",{class:"hint"},"Prefer Claude to build it? Press Request build, then tell Claude “build my Forge mods” in your chat."),
+        h("div",{}, h("button",{class:"btn",disabled:!S.canWrite || errs.length>0,onclick:requestBuild},"Request build")),
+        S.builds.length ? h("div",{class:"tablewrap"}, h("table",{class:"hist"},
+          h("thead",{},h("tr",{},h("th",{},"Requested"),h("th",{},"Status"),h("th",{},"Result"))),
+          h("tbody",{}, ...S.builds.map(b=>h("tr",{}, h("td",{},new Date(b.requestedAt).toLocaleString()),
+            h("td",{}, h("span",{class:"chip "+(b.status==="built"?"ok":b.status==="failed"?"bad":"warn")}, b.status==="built"?"Built":b.status==="failed"?"Failed":"Waiting for Claude")),
+            h("td",{}, b.result||"—")))))) : null)) : null);
+}
+async function requestBuild(){
+  const id="r"+Date.now().toString(36);
+  const doc={requestedAt:new Date().toISOString(),status:"requested",characters:Object.keys(S.chars).length,result:""};
+  try{ await S.db.doc(`builds/${id}`).set(doc); toast("Build requested. Now tell Claude “build my Forge mods”."); }
+  catch(e){ handleWriteError(e); }
+}
+// The mod pack: Blazing Forge's own mod format (units/, banners/, summon/, gifts.json + art) with forge-mod.json at
+// the root, which the game's add-on builds on the phone. studio.json rides along so the pack can be opened here again.
+async function buildPack(){
+  const zip=new JSZip(); const missing=[];
+  const addArt = async (id, path) => { if(!id) return null; const b=await artBlob(id); if(!b){ missing.push(path); return null; } zip.file(path,b); return path.split("/").pop(); };
+  const nonEmpty = o => Object.fromEntries(Object.entries(o||{}).filter(([k,v])=>v!==null && v!==undefined && v!==""));
+  const spare=Object.entries(S.cat.field).filter(([k,v])=>v[3]).map(([k])=>+k).sort((a,b)=>a-b);
+  const rows=new Map(), used=new Set();
+  for (const c of Object.values(S.chars)){ const fs=c.fieldSkill||{}; if(fs.mode==="custom"&&fs.script&&fs.reuse){ const k=fs.script+"|"+(fs.secondScript||""); if(!rows.has(k)) rows.set(k,+fs.reuse); used.add(+fs.reuse); } }
+  const reuseFor = fs => { const k=fs.script+"|"+(fs.secondScript||""); if(!rows.has(k)){ const x=spare.find(v=>!used.has(v)); rows.set(k,x); used.add(x); } return rows.get(k); };
+  const studio={format:"blazing-forge-studio/1",exportedAt:new Date().toISOString(),characters:{},banners:{},summon:null,gifts:S.gifts};
+  for (const [cid,c] of Object.entries(S.chars).sort(([a],[b])=>a.localeCompare(b))){
+    const art={card:await addArt(c.art?.card,`units/${cid}-card.png`), icon:await addArt(c.art?.icon,`units/${cid}-icon.png`), chakra:await addArt(c.art?.chakra,`units/${cid}-chakra.png`)};
+    const sc=clone(c); for (const k of ["card","icon","chakra"]) if (art[k]) { sc.art[k+"File"]="units/"+art[k]; } studio.characters[cid]=sc;
+    for (const star of [5,6]){
+      const u={donor:+c.donor, name:c.name, subtitle:c.subtitle||"", slot:+c["slot"+star]};
+      if (c.attribute) u.attribute=+c.attribute;
+      if (art.card){ u.art={card:art.card}; if(art.icon) u.art.icon=art.icon; if(art.chakra) u.art.chakraIcon=art.chakra; u.cardImageId=+(c.cardImageId||30000+(+c.slot6)%10000); }
+      u.gift = star===6 ? c.gift!==false : false;
+      if (star===6 && c.giftMessage) u.giftMessage=c.giftMessage;
+      const st=c.stats||{}; const src=st["from"+star]||st.from6||st.from5;
+      if (src) u.stats={from:+src, maxLimitBreak:st.maxLimitBreak!==false, boost:Math.round((1+(+st.boost||0)/100)*1e4)/1e4};
+      const abil = star===5 && c.abilities5 ? c.abilities5 : star===5 ? (c.abilities||[]).slice(0,4) : (c.abilities||[]);
+      if (abil.length) u.abilities=abil.map(x=> x.id ? +x.id : nonEmpty({name:x.name,description:x.description,script:x.script,secondScript:x.secondScript,iconType:x.iconType}));
+      const vis={}; const v=c.visuals||{};
+      if (v.ultimateVideo===false) vis.ultimateVideo=0;
+      if (v.rig) vis.rig=+v.rig; if (v.cutin) vis.cutin=+v.cutin;
+      for (const kind of ["jutsu","ultimate","latent"]){
+        const sk=c[kind]; if (!sk || (kind==="latent" && star===5)) continue;
+        if (sk.effectFrom && kind!=="latent") vis[kind+"Effect"]=+sk.effectFrom;
+        let base=nonEmpty(Object.fromEntries(Object.entries(sk).filter(([k])=>!["r5","effectFrom","copiedFrom","copiedText","r5only"].includes(k))));
+        if (star===5 && sk.r5){ if (sk.r5.none) continue; Object.assign(base, nonEmpty(sk.r5)); }
+        if (sk.r5only && star===6) continue;
+        if (kind!=="latent" && !base.script) continue;
+        if (kind==="latent" && !base.from) base.from=+c.donor;
+        u[kind]=base;
+      }
+      if (Object.keys(vis).length) u.visuals=vis;
+      const fs=c.fieldSkill||{mode:"donor"};
+      if (fs.mode==="existing" && fs.id) u.fieldSkill=+fs.id;
+      else if (fs.mode==="custom" && fs.script) u.fieldSkill=nonEmpty({reuse:fs.reuse||reuseFor(fs), script:fs.script, secondScript:fs.secondScript});
+      const bs=c.buddySkill||{mode:"donor"};
+      if (bs.mode==="existing" && bs.id) u.buddySkill=+bs.id;
+      zip.file(`units/${u.slot}-${cid}-r${star}.json`, JSON.stringify(u,null,1));
+    }
+  }
+  for (const [bid,b] of Object.entries(S.banners)){
+    const sb=clone(b); const front=await addArt(b.art?.front,`banners/${bid}-front.png`); if (front) sb.art.frontFile="banners/"+front; studio.banners[bid]=sb;
+    if (b.enabled===false) continue;
+    const spec={id:+b.bannerId, name:b.name, ticker:b.ticker||b.name, copyFrom:b.copyFrom||60001, basePool:b.basePool||"festival",
+      featured:(b.featured||[]).map(x=>S.chars[x] ? +S.chars[x].slot5 : +x).filter(Boolean), featuredWeight:+(b.featuredWeight||100), art:{}};
+    if (front) spec.art.front=front;
+    zip.file(`banners/${bid}.json`, JSON.stringify(spec,null,1));
+  }
+  const sm=S.summon;
+  if (sm && sm.parts?.length){
+    const cfg={bundle:sm.bundle||"language/en/uxsprite/gasha_en", enabled:sm.enabled!==false, textures:{}};
+    const ss=clone(sm);
+    for (const [i,p] of sm.parts.entries()){
+      const pc=clone(p.params||{});
+      if (p.asset){ const f=await addArt(p.asset,`summon/${p.texture}-${p.cell}.png`); if (f){ pc.file=f; ss.parts[i].file="summon/"+f; } }
+      if (p.silhouette){ const f=await addArt(p.silhouette,`summon/${p.texture}-${p.cell}-silhouette.png`); if (f){ pc.silhouette=f; ss.parts[i].silhouetteFile="summon/"+f; } }
+      (cfg.textures[p.texture] ||= {})[p.cell]=pc;
+    }
+    zip.file("summon/summon.json", JSON.stringify(cfg,null,1)); studio.summon=ss;
+  }
+  if (S.gifts?.items?.length) zip.file("gifts.json", JSON.stringify(S.gifts.items,null,1));
+  zip.file("forge-mod.json", JSON.stringify({format:1, made:new Date().toISOString(), characters:Object.values(S.chars).map(c=>`${c.name} — ${c.subtitle||""}`)},null,1));
+  zip.file("studio.json", JSON.stringify(studio,null,1));
+  return {zip, missing};
+}
+async function exportPack(){
+  if (!window.JSZip){ toast("The zip library didn't load. Reload the page and try again."); return; }
+  setStatus("busy","Packing…");
+  try{
+    const {zip, missing}=await buildPack();
+    if (missing.length) toast(`Some art couldn't be read and was left out: ${missing.join(", ")}`);
+    const blob=await zip.generateAsync({type:"blob"});
+    await S.downloads.save({filename:"BlazingForge-mod.zip",data:blob}); toast("Mod pack saved. Put it in Files › On My iPhone › Blazing:Rebirth.");
+  }catch(e){ if(e && e.code && e.code!=="declined") toast("Couldn't save the file here."); }
+  setStatus(S.local?"ok":"ok", S.local?"Saved in this browser":"All changes saved");
+}
+let _addon=null;
+async function loadAddon(){
+  if (_addon) return _addon;
+  const r=await fetch("forge-addon.json"); if (!r.ok) throw new Error("missing"); _addon=await r.json(); return _addon;
+}
+async function saveAddon(){
+  if (!window.JSZip){ toast("The zip library didn't load. Reload the page and try again."); return; }
+  setStatus("busy","Packing the add-on…");
+  try{
+    const a=await loadAddon();
+    const bin=Uint8Array.from(atob(a.b64), c=>c.charCodeAt(0));
+    const zip=new JSZip();
+    zip.file("BlazingForge.dylib", bin, {binary:true, unixPermissions:0o755});
+    zip.file("README.txt", `Blazing Forge ${a.version} add-on (${a.built}), ${a.bytes} bytes, SHA-256 ${a.sha256}\r\n\r\nIn Sideloadly: open the Blazing:Rebirth IPA, Advanced options, inject BlazingForge.dylib, then install.\r\nIt builds and installs Blazing Forge mod packs and patches you put in Files > On My iPhone > Blazing:Rebirth.\r\n`);
+    await S.downloads.save({filename:`Blazing-Forge-addon-${a.version}.zip`, data:await zip.generateAsync({type:"blob", platform:"UNIX"})});
+    toast("Add-on saved");
+  }catch(e){ if (!e || e.code!=="declined") toast("Couldn't load or save the add-on here."); }
+  setStatus("ok", S.local?"Saved in this browser":"All changes saved");
+}
+async function saveSwitch(on){
+  const zip=new JSZip(); zip.file("forge-mod.json", JSON.stringify({format:1, summonSwitch:on?"on":"off"}));
+  try{ await S.downloads.save({filename:`BlazingForge-summon-${on?"custom":"classic"}.zip`, data:await zip.generateAsync({type:"blob"})}); toast("Switch saved. Put it in Files › On My iPhone › Blazing:Rebirth."); }
+  catch(e){ if(e && e.code!=="declined") toast("Couldn't save the file here."); }
+}
+async function importPack(file){
+  if (!window.JSZip){ toast("The zip library didn't load. Reload the page and try again."); return; }
+  setStatus("busy","Opening the mod pack…");
+  try{
+    const zip=await JSZip.loadAsync(file); const sj=zip.file("studio.json");
+    if (!sj){ toast("That zip wasn't saved from Blazing Forge Studio, so it can't be opened here."); setStatus("ok", S.local?"Saved in this browser":"All changes saved"); return; }
+    const st=JSON.parse(await sj.async("string"));
+    const put = async (path) => { const f=path && zip.file(path); if(!f) return ""; const b=await f.async("blob"); const typed=new File([b], path.split("/").pop(), {type:"image/png"}); return (await uploadArt(typed)).id; };
+    let n=0;
+    for (const [cid,c] of Object.entries(st.characters||{})){
+      const id = S.chars[cid] ? cid+"-"+Date.now().toString(36) : cid; const cc=clone(c); cc.art=cc.art||{};
+      for (const k of ["card","icon","chakra"]){ cc.art[k]=await put(c.art?.[k+"File"]); delete cc.art[k+"File"]; }
+      S.chars[id]=cc; persist("characters",id,cc); n++;
+    }
+    for (const [bid,b] of Object.entries(st.banners||{})){ const id=S.banners[bid] ? bid+"-"+Date.now().toString(36) : bid; const bb=clone(b); bb.art={front:await put(b.art?.frontFile)}; S.banners[id]=bb; persist("banners",id,bb); }
+    if (st.summon && (!S.summon || !S.summon.parts?.length)){ const sm=clone(st.summon); for (const p of sm.parts||[]){ p.asset=await put(p.file); if (p.silhouetteFile) p.silhouette=await put(p.silhouetteFile); delete p.file; delete p.silhouetteFile; } S.summon=sm; persist("summon","config",sm); }
+    if (st.gifts && !S.gifts){ S.gifts=st.gifts; if (!S.local && S.db) { try{ await S.db.doc("settings/gifts").set(clone(st.gifts)); }catch(e){} } else saveLocal(); }
+    render(); toast(`Opened the mod pack: ${n} character(s) added.`);
+  }catch(e){ toast("That file couldn't be opened as a mod pack."); }
+  setStatus("ok", S.local?"Saved in this browser":"All changes saved");
+}
+
+// ------------------------------------------------------------------ render + boot
+function render(){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===S.tab)));
+  const main=$("#main"); const y=window.scrollY;
+  if (!S.cat){ main.replaceChildren(h("div",{class:"empty"},"Loading the game catalog…")); return; }
+  const view = S.tab==="chars"?renderChars():S.tab==="banners"?renderBanners():S.tab==="summon"?renderSummon():renderBuild();
+  main.replaceChildren(view); window.scrollTo(0,y);
+  try{ localStorage.setItem("forge-studio-tab", S.tab); }catch(e){}
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{S.tab=b.dataset.tab;render();}));
+(function(){
+  const btn=$("#theme-toggle");
+  const sync=()=>{ const dark=document.documentElement.getAttribute("data-theme")!=="light"; btn.textContent=dark?"Light mode":"Dark mode"; btn.setAttribute("aria-pressed", String(!dark)); };
+  btn.addEventListener("click",()=>{ const next=document.documentElement.getAttribute("data-theme")==="light"?"dark":"light";
+    document.documentElement.setAttribute("data-theme",next); try{ localStorage.setItem("forge-studio-theme",next); }catch(e){} sync(); });
+  sync();
+})();
+
+function subscribe(){
+  S.db.collection("characters").onSnapshot(snap=>{ const next={}; snap.docs.forEach(d=>next[d.id]=clone(d.data()));
+    // keep local edits of the open sheet while typing: only replace when the doc changed elsewhere
+    const active=document.activeElement; S.chars=next; if(!(active && $("#main").contains(active) && /INPUT|TEXTAREA/.test(active.tagName))) render(); }, e=>setStatus("warn","Lost the connection to saved data. Reload the page."));
+  S.db.collection("banners").onSnapshot(snap=>{ const next={}; snap.docs.forEach(d=>next[d.id]=clone(d.data())); S.banners=next; if(S.tab==="banners"||S.tab==="build") maybeRender(); });
+  S.db.doc("summon/config").onSnapshot(d=>{ S.summon=d.exists?clone(d.data()):null; if(S.tab==="summon"||S.tab==="build") maybeRender(); });
+  S.db.doc("settings/gifts").onSnapshot(d=>{ S.gifts=d.exists?clone(d.data()):null; });
+  S.db.collection("builds").orderBy("requestedAt","desc").limit(20).onSnapshot(snap=>{ S.builds=snap.docs.map(d=>clone(d.data())); if(S.tab==="build") maybeRender(); });
+}
+function maybeRender(){ const a=document.activeElement; if(!(a && $("#main").contains(a) && /INPUT|TEXTAREA/.test(a.tagName))) render(); }
+
+async function boot(){
+  try{ const t=localStorage.getItem("forge-studio-tab"); if(t) S.tab=t; }catch(e){}
+  try{
+    const r=await fetch("catalog.json"); S.cat=await r.json();
+    S.cat.units.forEach(u=>S.unitById.set(u.id,u)); S.cat.slots.forEach(s=>{S.slotByR5.set(s.r5,s);S.slotByR6.set(s.r6,s);});
+  }catch(e){ setStatus("warn","Couldn't load the game catalog. Reload the page."); return; }
+  render(); setStatus("busy","Connecting…");
+  const claude = window.claude;
+  if (claude && claude.use){
+    const [db, assets, downloads, user] = await Promise.all([claude.use("db"), claude.use("assets"), claude.use("downloads"), claude.use("user")]);
+    S.db=db; S.assets=assets; S.downloads=downloads;
+    if (user){ try{ const w=await user.can("data.write"); if (w===false) S.canWrite=false; }catch(e){} }
+  }
+  if (!window.claude){
+    // a plain website (e.g. GitHub Pages): ordinary browser downloads
+    S.downloads = { save: async ({filename, data}) => {
+      const url=URL.createObjectURL(data instanceof Blob ? data : new Blob([data]));
+      const a=document.createElement("a"); a.href=url; a.download=filename; document.body.append(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 10000); return {status:"saved"}; } };
+  }
+  if (!S.db){
+    S.local=true;
+    let fresh=true; try{ fresh=!localStorage.getItem("forge-studio-draft"); }catch(e){}
+    loadLocal(); await idbLoadAll();
+    if (fresh){   // first visit: start from the example character and banner
+      try{ const r=await fetch("sample.json"); if (r.ok){ const d=await r.json(); S.chars=d.characters||{}; S.banners=d.banners||{}; saveLocal(); } }catch(e){}
+    }
+    setStatus("ok","Saved in this browser"); render(); return;
+  }
+  setStatus(S.canWrite?"ok":"warn", S.canWrite?"All changes saved":"View only: you can look but not change this studio");
+  subscribe();
+}
+boot();
+})();
+</script>

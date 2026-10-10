@@ -1,0 +1,99 @@
+{
+ "characters": {
+  "vengeance": {
+   "name": "Sasuke Uchiha",
+   "subtitle": "Vengeance Seeker",
+   "attribute": 5,
+   "slot5": 14615,
+   "slot6": 14616,
+   "donor": 10916,
+   "gift": true,
+   "giftMessage": "Example unit: Sasuke Uchiha - Vengeance Seeker.",
+   "cardImageId": 34616,
+   "art": {
+    "card": "f_sample/vengeance-card.png",
+    "icon": "f_sample/vengeance-icon.png",
+    "chakra": ""
+   },
+   "stats": {
+    "from5": 10915,
+    "from6": 10916,
+    "boost": 10.0,
+    "maxLimitBreak": true
+   },
+   "abilities": [
+    {
+     "id": 18193
+    },
+    {
+     "name": "Critical Rate Boost",
+     "description": "Boosts critical rate by 3x.",
+     "script": "CriticalRise:3"
+    },
+    {
+     "name": "Attack Boost After Defeat",
+     "description": "Boosts attack by 5% every time you defeat the enemy (max 50%)",
+     "script": "BuildUp:5%:50%"
+    },
+    {
+     "id": 10905
+    },
+    {
+     "id": 14904
+    }
+   ],
+   "visuals": {
+    "ultimateVideo": true
+   },
+   "notes": "Example character. Edit it or delete it and make your own.",
+   "jutsu": {
+    "script": "BindAttack:5.7:40%",
+    "secondScript": "1,5.7,40,2",
+    "r5": {
+     "script": "BindAttack:5.7:30%",
+     "secondScript": "1,5.7,30,2",
+     "id": 114618
+    }
+   },
+   "ultimate": {
+    "script": "BarrierReset&Attack:14",
+    "secondScript": "1,14"
+   },
+   "latent": {
+    "from": 10486,
+    "script": "AtkUp:3&ChakraHeal:4&_AddCriticalRise:2:10",
+    "secondScript": "10,75,4,10,2",
+    "type": 0,
+    "turn": 10,
+    "description": "Gives you an attack boost of {1}% for {0} turn(s), restores Chakra Gauge by {2}, and boosts your critical rate by {4}x for {3} turn(s)."
+   },
+   "fieldSkill": {
+    "mode": "custom",
+    "reuse": 311026,
+    "script": "AttackCounter:50%/75%:0.5",
+    "secondScript": "50%-75"
+   },
+   "buddySkill": {
+    "mode": "existing",
+    "id": 410885
+   }
+  }
+ },
+ "banners": {
+  "festival-moon": {
+   "bannerId": 60004,
+   "name": "Blazing Festival Moon",
+   "ticker": "Custom Banner 1",
+   "copyFrom": 60001,
+   "basePool": "festival",
+   "featured": [
+    "vengeance"
+   ],
+   "featuredWeight": 333,
+   "enabled": true,
+   "art": {
+    "front": "f_sample/banner-festival-moon.png"
+   }
+  }
+ }
+}

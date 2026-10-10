@@ -1,0 +1,6173 @@
+[
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10013,
+  "chain": [
+   10013,
+   10014,
+   10015
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "The Worst Loser",
+  "obtain": [
+   "Starter Character",
+   "Story Mode: Stage 07-04 in \"Exam Round #3\""
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "unknown",
+  "id": 10014,
+  "chain": [
+   10014,
+   10015
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "The Worst Loser",
+  "obtain": [],
+  "top": 5
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10023,
+  "chain": [
+   10023,
+   10024
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "A Lone Heart",
+  "obtain": [
+   "Story Mode: Stage 8-15 in \"Destruction of the Hidden Leaf\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10033,
+  "chain": [
+   10033,
+   10034
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "The Indomitable Maiden",
+  "obtain": [
+   "Story Mode: Stage 4-7 in \"Exam Round #1\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 4,
+  "cat": "free:gift/login",
+  "id": 10044,
+  "chain": [
+   10044,
+   10045
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "The Best Teacher",
+  "obtain": [
+   "Hidden Leaf's Secret Ultimate Taijutsu",
+   "\"Celebrating 2 Million Downloads\" gift"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10053,
+  "chain": [
+   10053,
+   10054
+  ],
+  "name": "Shikamaru Nara",
+  "subtitle": "Lucid Talent",
+  "obtain": [
+   "Story Mode: Stage 2-5 in \"Team 7 United\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10063,
+  "chain": [
+   10063,
+   10064
+  ],
+  "name": "Ino Yamanaka",
+  "subtitle": "Ever-Changing Movements",
+  "obtain": [
+   "Story Mode: Stage 1-4 in \"Graduation Exam\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10073,
+  "chain": [
+   10073,
+   10074
+  ],
+  "name": "Choji Akimichi",
+  "subtitle": "Insatiable Appetite",
+  "obtain": [
+   "Story Mode: Stage 3-10 in \"Land of Waves\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10083,
+  "chain": [
+   10083,
+   10084
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Loyal Emotions",
+  "obtain": [
+   "Story Mode: Stage 7-8 in \"Exam Round 3\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10093,
+  "chain": [
+   10093,
+   10094
+  ],
+  "name": "Kiba Inuzuka",
+  "subtitle": "Sharp Claws and Fangs",
+  "obtain": [
+   "Story Mode: Stage 5-11 in \"Exam Round #2\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10103,
+  "chain": [
+   10103,
+   10104
+  ],
+  "name": "Shino Aburame",
+  "subtitle": "Unflinching Heart",
+  "obtain": [
+   "Story Mode: Stage 6-10 in \"Preliminaries!\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "free:story",
+  "id": 10113,
+  "chain": [
+   10113,
+   10114
+  ],
+  "name": "Iruka Umino",
+  "subtitle": "Sympathizer",
+  "obtain": [
+   "Starter Character",
+   "Story Mode: Stage 1-1 in \"Graduation Exam\""
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10123,
+  "chain": [
+   10123,
+   10124
+  ],
+  "name": "Ibiki Morino",
+  "subtitle": "Sadist",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10133,
+  "chain": [
+   10133,
+   10134
+  ],
+  "name": "Anko Mitarashi",
+  "subtitle": "Dangerous Dumpling Lover",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10143,
+  "chain": [
+   10143,
+   10144
+  ],
+  "name": "Hayate Gekko",
+  "subtitle": "Third Round Prelim Judge",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10153,
+  "chain": [
+   10153,
+   10154
+  ],
+  "name": "Mizuki",
+  "subtitle": "Hidden Treachery",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10163,
+  "chain": [
+   10163,
+   10164
+  ],
+  "name": "Konohamaru Sarutobi",
+  "subtitle": "The Third's Last Stand",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10173,
+  "chain": [
+   10173,
+   10174
+  ],
+  "name": "Shizune",
+  "subtitle": "Tsunade's Attendant",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10183,
+  "chain": [
+   10183,
+   10184
+  ],
+  "name": "Baki",
+  "subtitle": "Protector of the Village",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10193,
+  "chain": [
+   10193,
+   10194
+  ],
+  "name": "Kakkou",
+  "subtitle": "Powerful and Aggressive",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10243,
+  "chain": [
+   10243,
+   10244
+  ],
+  "name": "Shibi Aburame",
+  "subtitle": "A Reticent Man",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10253,
+  "chain": [
+   10253,
+   10254
+  ],
+  "name": "Shikaku Nara",
+  "subtitle": "The Ino-\"Shika\"-Cho Trio",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10263,
+  "chain": [
+   10263,
+   10264
+  ],
+  "name": "Inoichi Yamanaka",
+  "subtitle": "The \"Ino\"-Shika-Cho Trio",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10273,
+  "chain": [
+   10273,
+   10274
+  ],
+  "name": "Choza Akimichi",
+  "subtitle": "The Ino-Shika-\"Cho\" Trio",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10283,
+  "chain": [
+   10283,
+   10284
+  ],
+  "name": "Hiashi Hyuga",
+  "subtitle": "A Strict Leader",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10293,
+  "chain": [
+   10293,
+   10294
+  ],
+  "name": "Hizashi Hyuga",
+  "subtitle": "Brotherly Fate",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 3,
+  "cat": "summon",
+  "id": 10313,
+  "chain": [
+   10313,
+   10314
+  ],
+  "name": "Tsume Inuzuka",
+  "subtitle": "A Brave Mother",
+  "obtain": [
+   "Rare Summon",
+   "Very Rare Summon"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10475,
+  "chain": [
+   10475,
+   10476
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "No. 1 Maverick",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10485,
+  "chain": [
+   10485,
+   10486
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Lone Survivor",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10495,
+  "chain": [
+   10495,
+   10496
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Copier of 1K Techniques",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10505,
+  "chain": [
+   10505,
+   10506
+  ],
+  "name": "Gaara",
+  "subtitle": "Sand Defense",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10514,
+  "chain": [
+   10514,
+   10515
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Maiden in Love",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10524,
+  "chain": [
+   10524,
+   10525
+  ],
+  "name": "Shikamaru Nara",
+  "subtitle": "Lazy Guy",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10534,
+  "chain": [
+   10534,
+   10535
+  ],
+  "name": "Ino Yamanaka",
+  "subtitle": "Truly Wise",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10544,
+  "chain": [
+   10544,
+   10545
+  ],
+  "name": "Choji Akimichi",
+  "subtitle": "Glutton",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10554,
+  "chain": [
+   10554,
+   10555
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Nice Girl",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10564,
+  "chain": [
+   10564,
+   10565
+  ],
+  "name": "Kiba Inuzuka",
+  "subtitle": "Wild Partners",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10574,
+  "chain": [
+   10574,
+   10575
+  ],
+  "name": "Shino Aburame",
+  "subtitle": "Cold Beetle User",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "free:event",
+  "id": 10584,
+  "chain": [
+   10584,
+   10585
+  ],
+  "name": "Rock Lee",
+  "subtitle": "Never Gives Up",
+  "obtain": [
+   "The Leaf's Handsome Devil"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10594,
+  "chain": [
+   10594,
+   10595
+  ],
+  "name": "Neji Hyuga",
+  "subtitle": "An Unchangeable Destiny",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10604,
+  "chain": [
+   10604,
+   10605
+  ],
+  "name": "Tenten",
+  "subtitle": "Ninja Tool Specialist",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10614,
+  "chain": [
+   10614,
+   10615
+  ],
+  "name": "Hiruzen Sarutobi",
+  "subtitle": "The Third Hokage",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10624,
+  "chain": [
+   10624,
+   10625
+  ],
+  "name": "Jiraiya",
+  "subtitle": "Enter the Sage",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10634,
+  "chain": [
+   10634,
+   10635
+  ],
+  "name": "Orochimaru",
+  "subtitle": "The Horror Returns",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10644,
+  "chain": [
+   10644,
+   10645
+  ],
+  "name": "Kabuto Yakushi",
+  "subtitle": "The Sound's Spy",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10664,
+  "chain": [
+   10664,
+   10665
+  ],
+  "name": "Tayuya",
+  "subtitle": "Tayuya of the North Gate",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10674,
+  "chain": [
+   10674,
+   10675
+  ],
+  "name": "Kidomaru",
+  "subtitle": "Kidomaru of the East Gate",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10684,
+  "chain": [
+   10684,
+   10685
+  ],
+  "name": "Sakon",
+  "subtitle": "Sakon of the West Gate",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10694,
+  "chain": [
+   10694,
+   10695
+  ],
+  "name": "Jirobo",
+  "subtitle": "Jirobo of the South Gate",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10704,
+  "chain": [
+   10704,
+   10705
+  ],
+  "name": "Kimimaro",
+  "subtitle": "Kimimaro of the Earth",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10714,
+  "chain": [
+   10714,
+   10715
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "A Cold-Hearted Criminal",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10724,
+  "chain": [
+   10724,
+   10725
+  ],
+  "name": "Kisame Hoshigaki",
+  "subtitle": "Monster of the Mist",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10734,
+  "chain": [
+   10734,
+   10735
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Nine Tails Power-Up",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10745,
+  "chain": [
+   10745,
+   10746
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Hidden Left Eye",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 10755,
+  "chain": [
+   10755,
+   10756
+  ],
+  "name": "Zabuza Momochi",
+  "subtitle": "Silent Madness",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "free:event",
+  "id": 10764,
+  "chain": [
+   10764,
+   10765
+  ],
+  "name": "Haku",
+  "subtitle": "The Icy Mask's Blades",
+  "obtain": [
+   "Behind the Ice Mask"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "bundle",
+  "id": 10775,
+  "chain": [
+   10775,
+   10776
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Ready for the Curse Mark",
+  "obtain": [
+   "Ninja Pearl Bundle purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bundle",
+  "id": 10785,
+  "chain": [
+   10785,
+   10786
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Hardened Resolve",
+  "obtain": [
+   "Ninja Pearl Bundle purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10795,
+  "chain": [
+   10795,
+   10796
+  ],
+  "name": "Neji Hyuga",
+  "subtitle": "A Caged Bird",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10804,
+  "chain": [
+   10804,
+   10805
+  ],
+  "name": "Ino Yamanaka",
+  "subtitle": "I Don't Want to Lose",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "free:event",
+  "id": 10814,
+  "chain": [
+   10814,
+   10815
+  ],
+  "name": "Zabuza Momochi",
+  "subtitle": "The Demon Returns",
+  "obtain": [
+   "The Mist Demon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10825,
+  "chain": [
+   10825,
+   10826
+  ],
+  "name": "Haku",
+  "subtitle": "A Frozen Heart",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "unknown",
+  "id": 10835,
+  "chain": [
+   10835,
+   10836
+  ],
+  "name": "Asuma Sarutobi",
+  "subtitle": "Master's Teachings",
+  "obtain": [],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "free:event",
+  "id": 10844,
+  "chain": [
+   10844,
+   10845
+  ],
+  "name": "Temari",
+  "subtitle": "A Bold Analyzer",
+  "obtain": [
+   "A Massive Dancing Fan"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "free:event",
+  "id": 10854,
+  "chain": [
+   10854,
+   10855
+  ],
+  "name": "Kankuro",
+  "subtitle": "Mechanical Puppeteer",
+  "obtain": [
+   "Theater of Horrors"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 10865,
+  "chain": [
+   10865,
+   10866
+  ],
+  "name": "Rock Lee",
+  "subtitle": "The Eight Gates",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10874,
+  "chain": [
+   10874,
+   10875
+  ],
+  "name": "Shikamaru Nara",
+  "subtitle": "The Decoy",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 10885,
+  "chain": [
+   10885,
+   10886
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Nine Tails' Shroud",
+  "obtain": [
+   "Various Blazing Festival Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 10895,
+  "chain": [
+   10895,
+   10896
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Curse Mark 2nd State",
+  "obtain": [
+   "Impact! Battle in the Final Valley!"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10905,
+  "chain": [
+   10905,
+   10906
+  ],
+  "name": "Hiruzen Sarutobi",
+  "subtitle": "Ninja Clothes",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10915,
+  "chain": [
+   10915,
+   10916
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Chidori: A New Skill",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10924,
+  "chain": [
+   10924,
+   10925,
+   10926
+  ],
+  "name": "Hashirama Senju",
+  "subtitle": "Father of Leaf Village",
+  "obtain": [
+   "Ninja Gods Summoned",
+   "Impact! A Legend Reborn"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 10925,
+  "chain": [
+   10925,
+   10926
+  ],
+  "name": "Hashirama Senju",
+  "subtitle": "Father of Leaf Village",
+  "obtain": [
+   "Impact! A Legend Reborn"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10934,
+  "chain": [
+   10934,
+   10935,
+   10936
+  ],
+  "name": "Tobirama Senju",
+  "subtitle": "Father of Reanimation",
+  "obtain": [
+   "Ninja Gods Summoned",
+   "Impact! A Bold Leader"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 10935,
+  "chain": [
+   10935,
+   10936
+  ],
+  "name": "Tobirama Senju",
+  "subtitle": "Father of Reanimation",
+  "obtain": [
+   "Impact! A Bold Leader"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 10955,
+  "chain": [
+   10955,
+   10956
+  ],
+  "name": "Gaara",
+  "subtitle": "The Sand's Final Weapon",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 10965,
+  "chain": [
+   10965,
+   10966
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Beyond the Sharingan",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 10975,
+  "chain": [
+   10975,
+   10976
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Rasengan Mastered",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10984,
+  "chain": [
+   10984,
+   10985
+  ],
+  "name": "Asuma Sarutobi",
+  "subtitle": "All-Powerful Infighter",
+  "obtain": [
+   "New Year's Granny Cat's Hiding Place purchase",
+   "Bravery Elemental Ninja's Summon Multi-Summon Bonus"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 10994,
+  "chain": [
+   10994,
+   10995
+  ],
+  "name": "Kurenai Yuhi",
+  "subtitle": "Illusionary Expert",
+  "obtain": [
+   "New Year's Granny Cat's Hiding Place purchase",
+   "Wisdom Elemental Ninja's Summon Multi-Summon Bonus"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "bundle",
+  "id": 11015,
+  "chain": [
+   11015,
+   11016
+  ],
+  "name": "Might Guy",
+  "subtitle": "Hot-Blooded Youth",
+  "obtain": [
+   "Ninja Pearl Bundle purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 11035,
+  "chain": [
+   11035,
+   11036
+  ],
+  "name": "Jirobo",
+  "subtitle": "Brute Strength",
+  "obtain": [
+   "The Chakra-Devouring Warrior"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 11045,
+  "chain": [
+   11045,
+   11046
+  ],
+  "name": "Kidomaru",
+  "subtitle": "A Cruel Game",
+  "obtain": [
+   "Fearsome Threads, Drawing in Death"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 11055,
+  "chain": [
+   11055,
+   11056
+  ],
+  "name": "Jiraiya",
+  "subtitle": "The Toad Ninja",
+  "obtain": [
+   "Impact! Toad Sage!"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 11065,
+  "chain": [
+   11065,
+   11066
+  ],
+  "name": "Tsunade",
+  "subtitle": "The Slug Ninja",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "free:event",
+  "id": 11074,
+  "chain": [
+   11074,
+   11075
+  ],
+  "name": "Orochimaru",
+  "subtitle": "The Snake Ninja",
+  "obtain": [
+   "Shadow of the Vile Serpent"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 11085,
+  "chain": [
+   11085,
+   11086
+  ],
+  "name": "Choji Akimichi",
+  "subtitle": "A Life Bet on Two Wings",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 11104,
+  "chain": [
+   11104,
+   11105
+  ],
+  "name": "Kabuto Yakushi",
+  "subtitle": "Surprising Regeneration",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 11115,
+  "chain": [
+   11115,
+   11116
+  ],
+  "name": "Gaara",
+  "subtitle": "The Strongest Shield",
+  "obtain": [
+   "Ruler of the Endless Sands"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 11135,
+  "chain": [
+   11135,
+   11136
+  ],
+  "name": "Ukon/Sakon",
+  "subtitle": "Brimming with Brutality",
+  "obtain": [
+   "Sharing a Common Destiny"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 11155,
+  "chain": [
+   11155,
+   11156
+  ],
+  "name": "Tayuya",
+  "subtitle": "A Bewitching Flute",
+  "obtain": [
+   "Melody of the Demon Flute"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 11165,
+  "chain": [
+   11165,
+   11166
+  ],
+  "name": "Kimimaro",
+  "subtitle": "The Strongest Spear",
+  "obtain": [
+   "A Flower of Bones, Blooming from Despair"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 11174,
+  "chain": [
+   11174,
+   11175
+  ],
+  "name": "Kiba Inuzuka",
+  "subtitle": "Two-Headed Fangs",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 11215,
+  "chain": [
+   11215,
+   11216
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "A Father's Blade",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 11225,
+  "chain": [
+   11225,
+   11226
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "To Protect His Allies",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 11235,
+  "chain": [
+   11235,
+   11236
+  ],
+  "name": "Rin Nohara",
+  "subtitle": "Overflowing Kindness",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 3,
+  "cat": "free:shop",
+  "id": 12033,
+  "chain": [
+   12033,
+   12034
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Boy Who Aims to be Hokage",
+  "obtain": [
+   "Pre-Registration Bonus",
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 4
+ },
+ {
+  "rarity": 4,
+  "cat": "free:event",
+  "id": 12124,
+  "chain": [
+   12124,
+   12125
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Limits of his Ability",
+  "obtain": [
+   "Red Eyes, Burdened with Fate"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 12235,
+  "chain": [
+   12235,
+   12236
+  ],
+  "name": "Minato Namikaze",
+  "subtitle": "Rapid Lightning",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "free:event",
+  "id": 12244,
+  "chain": [
+   12244,
+   12245
+  ],
+  "name": "Gaara",
+  "subtitle": "Sand Clad Demon",
+  "obtain": [
+   "Endless Sand Shurado"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 12254,
+  "chain": [
+   12254,
+   12255
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Proof of Resolution",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 12324,
+  "chain": [
+   12324,
+   12325
+  ],
+  "name": "Temari",
+  "subtitle": "Sand Hurricane",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 12334,
+  "chain": [
+   12334,
+   12335
+  ],
+  "name": "Kankuro",
+  "subtitle": "Orchestrator of Tragedy",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 12344,
+  "chain": [
+   12344,
+   12345
+  ],
+  "name": "Hayate Gekko",
+  "subtitle": "Crystal Clear Mind",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 12354,
+  "chain": [
+   12354,
+   12355
+  ],
+  "name": "Tayuya",
+  "subtitle": "Aggressive Strategist",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 12364,
+  "chain": [
+   12364,
+   12365
+  ],
+  "name": "Kidomaru",
+  "subtitle": "Solid Flexible Threads",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 12374,
+  "chain": [
+   12374,
+   12375
+  ],
+  "name": "Sakon",
+  "subtitle": "Grotesque Ninja",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 4,
+  "cat": "summon",
+  "id": 12384,
+  "chain": [
+   12384,
+   12385
+  ],
+  "name": "Jirobo",
+  "subtitle": "Herculean Appetite",
+  "obtain": [
+   "Very Rare Summon",
+   "Super Rare Summon"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12395,
+  "chain": [
+   12395,
+   12396
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Soul Shrouded in Sorrow",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12405,
+  "chain": [
+   12405,
+   12406
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Unrelenting Commitment",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12415,
+  "chain": [
+   12415,
+   12416
+  ],
+  "name": "Deidara",
+  "subtitle": "Ephemeral Art",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12425,
+  "chain": [
+   12425,
+   12426
+  ],
+  "name": "Sasori",
+  "subtitle": "Eternal Art",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12605,
+  "chain": [
+   12605,
+   12606
+  ],
+  "name": "Kushina Uzumaki",
+  "subtitle": "The Red-Hot Habanero",
+  "obtain": [
+   "Impact! Nine Tails Appears!"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12615,
+  "chain": [
+   12615,
+   12616
+  ],
+  "name": "Sai",
+  "subtitle": "Mask-like Smile",
+  "obtain": [
+   "Life-giving Brushstrokes"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12635,
+  "chain": [
+   12635,
+   12636
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Blooming Talent",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12645,
+  "chain": [
+   12645,
+   12646
+  ],
+  "name": "Tenten",
+  "subtitle": "Valiant Warrior",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12655,
+  "chain": [
+   12655,
+   12656
+  ],
+  "name": "Ino Yamanaka",
+  "subtitle": "Like a Peony",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12665,
+  "chain": [
+   12665,
+   12666
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Unshakeable Will",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12735,
+  "chain": [
+   12735,
+   12736
+  ],
+  "name": "Orochimaru",
+  "subtitle": "Corrupt Rebirth",
+  "obtain": [
+   "Impact! The Ruler of the Serpents! Battleground! Giant Boss Rush"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12745,
+  "chain": [
+   12745,
+   12746
+  ],
+  "name": "Yamato",
+  "subtitle": "Heartless Thought",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12765,
+  "chain": [
+   12765,
+   12766
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Elegant Attire",
+  "obtain": [
+   "Beauties Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12775,
+  "chain": [
+   12775,
+   12776
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Beautiful Attire",
+  "obtain": [
+   "Beauties Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bundle",
+  "id": 12785,
+  "chain": [
+   12785,
+   12786
+  ],
+  "name": "Tsunade",
+  "subtitle": "Gorgeous Attire",
+  "obtain": [
+   "Ninja Pearl Bundle purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12795,
+  "chain": [
+   12795,
+   12796
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Power of the Fourth Tail",
+  "obtain": [
+   "Impact! Raging Fury"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 12805,
+  "chain": [
+   12805,
+   12806
+  ],
+  "name": "Gaara",
+  "subtitle": "Protector of the Sands",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12825,
+  "chain": [
+   12825,
+   12826
+  ],
+  "name": "Shikamaru Nara",
+  "subtitle": "Beyond Silence",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12835,
+  "chain": [
+   12835,
+   12836
+  ],
+  "name": "Temari",
+  "subtitle": "High Winds",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12845,
+  "chain": [
+   12845,
+   12846
+  ],
+  "name": "Rou",
+  "subtitle": "Melting Presence",
+  "obtain": [
+   "A Shadow Hiding in the Night"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12855,
+  "chain": [
+   12855,
+   12856
+  ],
+  "name": "Soku",
+  "subtitle": "Stubborn Will",
+  "obtain": [
+   "A Shadow Hiding in the Night"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12875,
+  "chain": [
+   12875,
+   12876
+  ],
+  "name": "Gengo",
+  "subtitle": "Master of Silence",
+  "obtain": [
+   "Impact! Lord of Silence"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12885,
+  "chain": [
+   12885,
+   12886
+  ],
+  "name": "Kushina Uzumaki",
+  "subtitle": "Enveloping Kindness",
+  "obtain": [
+   "Sweet Gift Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12895,
+  "chain": [
+   12895,
+   12896
+  ],
+  "name": "Rin Nohara",
+  "subtitle": "Loving Gift",
+  "obtain": [
+   "Sweet Gift Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12905,
+  "chain": [
+   12905,
+   12906
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Avenger",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12915,
+  "chain": [
+   12915,
+   12916
+  ],
+  "name": "Karin",
+  "subtitle": "Acute Perception",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12925,
+  "chain": [
+   12925,
+   12926
+  ],
+  "name": "Suigetsu Hozuki",
+  "subtitle": "The Demon Lives On",
+  "obtain": [
+   "An Unhealthy Sword Obsession"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12935,
+  "chain": [
+   12935,
+   12936
+  ],
+  "name": "Jugo",
+  "subtitle": "Scales of Ruin and Peace",
+  "obtain": [
+   "The Ends of Destruction"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12945,
+  "chain": [
+   12945,
+   12946
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Shura's Truth",
+  "obtain": [
+   "Impact! Arrival of a Savage God Battleground! Giant Boss Rush"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 12955,
+  "chain": [
+   12955,
+   12956
+  ],
+  "name": "Utakata",
+  "subtitle": "Fleeting Tranquility",
+  "obtain": [
+   "Various Blazing Fest Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 12985,
+  "chain": [
+   12985,
+   12986
+  ],
+  "name": "Tobi",
+  "subtitle": "Evil Eyes Behind the Mask",
+  "obtain": [
+   "The Creeping Joker"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 12995,
+  "chain": [
+   12995,
+   12996
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Unique Eyes Blooming",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13005,
+  "chain": [
+   13005,
+   13006
+  ],
+  "name": "Might Guy",
+  "subtitle": "Exploding Fists",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13015,
+  "chain": [
+   13015,
+   13016
+  ],
+  "name": "Kisame Hoshigaki",
+  "subtitle": "Ruler of the Torrent",
+  "obtain": [
+   "Impact! A Ferocious Visage"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13025,
+  "chain": [
+   13025,
+   13026
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Day of Vows",
+  "obtain": [
+   "Wedding Special Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13035,
+  "chain": [
+   13035,
+   13036
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Day of Happiness",
+  "obtain": [
+   "Wedding Special Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13045,
+  "chain": [
+   13045,
+   13046
+  ],
+  "name": "Chiriku",
+  "subtitle": "Ultimate Training",
+  "obtain": [
+   "The Sagely Ninja Monk"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13055,
+  "chain": [
+   13055,
+   13056
+  ],
+  "name": "Hidan",
+  "subtitle": "Worshiping a Mad God",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13065,
+  "chain": [
+   13065,
+   13066
+  ],
+  "name": "Kakuzu",
+  "subtitle": "Life Reavers",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13075,
+  "chain": [
+   13075,
+   13076
+  ],
+  "name": "Yugito Ni'i",
+  "subtitle": "Unbreakable Will",
+  "obtain": [
+   "Impact! Two Tailed Cat Demon Battleground! Giant Boss Rush"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13085,
+  "chain": [
+   13085,
+   13086
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "The Vilest Name",
+  "obtain": [
+   "Various Blazing Fest Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13095,
+  "chain": [
+   13095,
+   13096
+  ],
+  "name": "Chiyo",
+  "subtitle": "Joint Puppet Performance",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13115,
+  "chain": [
+   13115,
+   13116
+  ],
+  "name": "Jiraiya",
+  "subtitle": "Way of the Ninja",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13125,
+  "chain": [
+   13125,
+   13126
+  ],
+  "name": "Konan",
+  "subtitle": "A God's Messenger",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13135,
+  "chain": [
+   13135,
+   13136
+  ],
+  "name": "Hanzo",
+  "subtitle": "Hero of Purple Poison",
+  "obtain": [
+   "Mists of Deadly Poison"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13145,
+  "chain": [
+   13145,
+   13146
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "World Within a Kaleidoscope",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13175,
+  "chain": [
+   13175,
+   13176
+  ],
+  "name": "Deidara",
+  "subtitle": "True Arts",
+  "obtain": [
+   "Deadly Arts of Sublimation"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13185,
+  "chain": [
+   13185,
+   13186
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Child of the Prophecy",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13195,
+  "chain": [
+   13195,
+   13196
+  ],
+  "name": "Konohamaru Sarutobi",
+  "subtitle": "The Will of Budding Flames",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13205,
+  "chain": [
+   13205,
+   13206
+  ],
+  "name": "Pain (Tendo)",
+  "subtitle": "Hammer of Pain",
+  "obtain": [
+   "Impact! Force of Justice"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13215,
+  "chain": [
+   13215,
+   13216
+  ],
+  "name": "Killer Bee",
+  "subtitle": "Completed Jinchuriki",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13225,
+  "chain": [
+   13225,
+   13226
+  ],
+  "name": "Fourth Raikage: Ay",
+  "subtitle": "Savage Lightning",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13235,
+  "chain": [
+   13235,
+   13236
+  ],
+  "name": "Mei Terumi",
+  "subtitle": "The Mist That Melts All",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13245,
+  "chain": [
+   13245,
+   13246
+  ],
+  "name": "Nagato",
+  "subtitle": "Proclaimed Ideals",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13255,
+  "chain": [
+   13255,
+   13256
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Heroine of the Battlefield",
+  "obtain": [
+   "A Woman's Battle Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13265,
+  "chain": [
+   13265,
+   13266
+  ],
+  "name": "Karin",
+  "subtitle": "Thousand-Mile Perception",
+  "obtain": [
+   "A Woman's Battle Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13275,
+  "chain": [
+   13275,
+   13276
+  ],
+  "name": "Chojuro",
+  "subtitle": "Successor to the Ninja Sword",
+  "obtain": [
+   "Deadly Versatile Twinsword"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13285,
+  "chain": [
+   13285,
+   13286
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Darkness of Deep Hatred",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13295,
+  "chain": [
+   13295,
+   13296
+  ],
+  "name": "Ohnoki",
+  "subtitle": "Between a Rock and a Hard Place",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13305,
+  "chain": [
+   13305,
+   13306
+  ],
+  "name": "Zetsu",
+  "subtitle": "Black & White Shadow",
+  "obtain": [
+   "Underground Maw"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13315,
+  "chain": [
+   13315,
+   13316
+  ],
+  "name": "Tsunade",
+  "subtitle": "The Will of Blooming Flames",
+  "obtain": [
+   "Various Blazing Fest Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13325,
+  "chain": [
+   13325,
+   13326
+  ],
+  "name": "Danzo Shimura",
+  "subtitle": "Root of the Great Tree",
+  "obtain": [
+   "Impact! Darkness of the Ninja"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13355,
+  "chain": [
+   13355,
+   13356
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Two Suns",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13365,
+  "chain": [
+   13365,
+   13366
+  ],
+  "name": "Darui",
+  "subtitle": "Words of Conviction",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13385,
+  "chain": [
+   13385,
+   13386
+  ],
+  "name": "Gengetsu Hozuki",
+  "subtitle": "Mists Over the Darkness",
+  "obtain": [
+   "Impact! The Towering Fog"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13395,
+  "chain": [
+   13395,
+   13396
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Hints Leading to the Truth",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13405,
+  "chain": [
+   13405,
+   13406
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Proof of Will",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13425,
+  "chain": [
+   13425,
+   13426
+  ],
+  "name": "Kabuto Yakushi",
+  "subtitle": "Craving for Wisdom",
+  "obtain": [
+   "Impact! From a Snake to a Dragon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13435,
+  "chain": [
+   13435,
+   13436
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "Despair of Loneliness",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13445,
+  "chain": [
+   13445,
+   13446
+  ],
+  "name": "Konan",
+  "subtitle": "A Bridge to Hope",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 4,
+  "cat": "free:story",
+  "id": 13454,
+  "chain": [
+   13454,
+   13455
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Dancing Cherry Blossoms",
+  "obtain": [
+   "Rookie Mission"
+  ],
+  "top": 5
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13465,
+  "chain": [
+   13465,
+   13466
+  ],
+  "name": "Shisui Uchiha",
+  "subtitle": "Hero Without Glory",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13475,
+  "chain": [
+   13475,
+   13476
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Proof of Bonds",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13485,
+  "chain": [
+   13485,
+   13486
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Standing Equal",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13495,
+  "chain": [
+   13495,
+   13496
+  ],
+  "name": "Asuma Sarutobi",
+  "subtitle": "Master's Teachings",
+  "obtain": [
+   "Shining Blade of Wind"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13515,
+  "chain": [
+   13515,
+   13516
+  ],
+  "name": "Tobirama Senju",
+  "subtitle": "Enlightened Brilliance",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13525,
+  "chain": [
+   13525,
+   13526
+  ],
+  "name": "Minato Namikaze",
+  "subtitle": "Confronting Karma",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13535,
+  "chain": [
+   13535,
+   13536
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "Faraway Dream",
+  "obtain": [
+   "Impact! Origin of Destruction",
+   "Battleground! Giant Boss Rush"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13545,
+  "chain": [
+   13545,
+   13546
+  ],
+  "name": "Hashirama Senju",
+  "subtitle": "Bravery Unrivalled",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13575,
+  "chain": [
+   13575,
+   13576
+  ],
+  "name": "Fuu",
+  "subtitle": "Wild and Free",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13585,
+  "chain": [
+   13585,
+   13586
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Indomitable Ninja Way",
+  "obtain": [
+   "1 year Anniversary Gift character Received in the gift box",
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13595,
+  "chain": [
+   13595,
+   13596
+  ],
+  "name": "Zabuza Momochi",
+  "subtitle": "The Measure of a Demon",
+  "obtain": [
+   "The Demon-Haunted Mist of Battle"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13605,
+  "chain": [
+   13605,
+   13606
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Severing Lightning",
+  "obtain": [
+   "Battle Coin Exchange Shop and Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13615,
+  "chain": [
+   13615,
+   13616
+  ],
+  "name": "Haku",
+  "subtitle": "Tears of the Ice Mirror",
+  "obtain": [
+   "Impact! Chance Encounter at the Edge of Hell"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13635,
+  "chain": [
+   13635,
+   13636
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Seal of Light",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13645,
+  "chain": [
+   13645,
+   13646
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Seal of Shadow",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13655,
+  "chain": [
+   13655,
+   13656
+  ],
+  "name": "Might Guy",
+  "subtitle": "Azure Roar",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13665,
+  "chain": [
+   13665,
+   13666
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "Eyes of the Moon",
+  "obtain": [
+   "Impact! The Hour of Revival"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bundle",
+  "id": 13675,
+  "chain": [
+   13675,
+   13676
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Thunder of Retaliation",
+  "obtain": [
+   "Ninja Pearl Bundle purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13705,
+  "chain": [
+   13705,
+   13706
+  ],
+  "name": "Might Guy",
+  "subtitle": "Deep Crimson Youth",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13715,
+  "chain": [
+   13715,
+   13716
+  ],
+  "name": "Gaara",
+  "subtitle": "Many Bonds",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13725,
+  "chain": [
+   13725,
+   13726
+  ],
+  "name": "Kankuro",
+  "subtitle": "Pride In His Work",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13735,
+  "chain": [
+   13735,
+   13736
+  ],
+  "name": "Rasa",
+  "subtitle": "Family Values  ",
+  "obtain": [
+   "Reunion and Clash on the Golden Sands"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13745,
+  "chain": [
+   13745,
+   13746
+  ],
+  "name": "Deidara",
+  "subtitle": "Explosive Fury ",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13755,
+  "chain": [
+   13755,
+   13756
+  ],
+  "name": "Tsunade",
+  "subtitle": "Brilliant Bravery",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase in Granny Cat's Hiding Place"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13765,
+  "chain": [
+   13765,
+   13766
+  ],
+  "name": "Jiraiya",
+  "subtitle": "Chance Encounter Under Fire",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13775,
+  "chain": [
+   13775,
+   13776
+  ],
+  "name": "Hanzo",
+  "subtitle": "Steadfast Veteran",
+  "obtain": [
+   "Impact! Confrontation and Courage"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13795,
+  "chain": [
+   13795,
+   13796
+  ],
+  "name": "Orochimaru",
+  "subtitle": "Hidden Ambitions",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13805,
+  "chain": [
+   13805,
+   13806
+  ],
+  "name": "Pain (Tendo)",
+  "subtitle": "Signal Flare of Revolution",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 13815,
+  "chain": [
+   13815,
+   13816
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Power of Determination",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 13825,
+  "chain": [
+   13825,
+   13826
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Parting Wings",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 13835,
+  "chain": [
+   13835,
+   13836
+  ],
+  "name": "Killer Bee",
+  "subtitle": "Engraved Words",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13845,
+  "chain": [
+   13845,
+   13846
+  ],
+  "name": "Fourth Raikage: Ay",
+  "subtitle": "Solid Lightning",
+  "obtain": [
+   "You're On! Lightning Torrent!"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 13855,
+  "chain": [
+   13855,
+   13856
+  ],
+  "name": "Third Raikage: Ay",
+  "subtitle": "One-Man Army",
+  "obtain": [
+   "Impact! Thundering Veteran"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 13885,
+  "chain": [
+   13885,
+   13886
+  ],
+  "name": "Yagura",
+  "subtitle": "Shadow of the Mist",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13895,
+  "chain": [
+   13895,
+   13896
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "Drawn to Life",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 13905,
+  "chain": [
+   13905,
+   13906
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "Endless Moonlight",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14075,
+  "chain": [
+   14075,
+   14076
+  ],
+  "name": "Rock Lee",
+  "subtitle": "Fighting Spirit Overflowing",
+  "obtain": [
+   "Shinobi Life on the Battlefield"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14095,
+  "chain": [
+   14095,
+   14096
+  ],
+  "name": "Rock Lee",
+  "subtitle": "A Genius of Hard Work",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14105,
+  "chain": [
+   14105,
+   14106
+  ],
+  "name": "Gaara",
+  "subtitle": "Solid Sandstorm",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14115,
+  "chain": [
+   14115,
+   14116
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Sea Spray Blast",
+  "obtain": [
+   "\"Stylin' Shinobi Swimsuit Login\" Gift Character",
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14125,
+  "chain": [
+   14125,
+   14126
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "A Break from the Waves",
+  "obtain": [
+   "\"Swimsuit Shinobi\" Summon Round 2"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14135,
+  "chain": [
+   14135,
+   14136
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Sandy Beach Dreams",
+  "obtain": [
+   "\"Swimsuit Shinobi\" Summon Round 1"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14145,
+  "chain": [
+   14145,
+   14146
+  ],
+  "name": "Ameyuri Ringo",
+  "subtitle": "Furious Full-Tilt Lightning Blade",
+  "obtain": [
+   "Sky-Piercing Lightning Blade"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14175,
+  "chain": [
+   14175,
+   14176
+  ],
+  "name": "Sai",
+  "subtitle": "Ink Drawn from the Heart",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase in Granny Cat's Hiding Place"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14185,
+  "chain": [
+   14185,
+   14186
+  ],
+  "name": "Neji Hyuga",
+  "subtitle": "Burden of Fate",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14195,
+  "chain": [
+   14195,
+   14196
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Unwavering Courage",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14205,
+  "chain": [
+   14205,
+   14206
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Sheer Diligence",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14215,
+  "chain": [
+   14215,
+   14216,
+   14217
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Entrusted With Hope",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 7
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14225,
+  "chain": [
+   14225,
+   14226
+  ],
+  "name": "Kaguya Otsutsuki",
+  "subtitle": "Founding Goddess",
+  "obtain": [
+   "Impact! The Moon Goddess",
+   "Super Impact! Giant Boss Rush"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14245,
+  "chain": [
+   14245,
+   14246
+  ],
+  "name": "Hashirama Senju",
+  "subtitle": "Long-Held Dream",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14255,
+  "chain": [
+   14255,
+   14256
+  ],
+  "name": "Indra",
+  "subtitle": "Lone War God",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14265,
+  "chain": [
+   14265,
+   14266
+  ],
+  "name": "Ashura",
+  "subtitle": "Heir to the Ninja Creed",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase in Granny Cat's Hiding Place"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14285,
+  "chain": [
+   14285,
+   14286
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "Path of Dreams",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14305,
+  "chain": [
+   14305,
+   14306
+  ],
+  "name": "Minato Namikaze",
+  "subtitle": "Flash of Dawn",
+  "obtain": [
+   "\"New Year's Resolution\" Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14315,
+  "chain": [
+   14315,
+   14316
+  ],
+  "name": "Kushina Uzumaki",
+  "subtitle": "Vermillion Prayer",
+  "obtain": [
+   "\"New Year's Resolution\" Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14325,
+  "chain": [
+   14325,
+   14326
+  ],
+  "name": "Kurotsuchi",
+  "subtitle": "The Fence-Sitter's Granddaughter",
+  "obtain": [
+   "The Power of Stone with Lava Style!"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14335,
+  "chain": [
+   14335,
+   14336
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Silent Night Visitor",
+  "obtain": [
+   "A Very Uchiha Christmas Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14345,
+  "chain": [
+   14345,
+   14346
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Heart-Warming Gift",
+  "obtain": [
+   "A Very Uchiha Christmas Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14375,
+  "chain": [
+   14375,
+   14376
+  ],
+  "name": "Han",
+  "subtitle": "Sprint Barrage",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase in Granny Cat's Hiding Place"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14385,
+  "chain": [
+   14385,
+   14386
+  ],
+  "name": "Zabuza Momochi",
+  "subtitle": "Demonic Presence",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14395,
+  "chain": [
+   14395,
+   14396
+  ],
+  "name": "Haku",
+  "subtitle": "Chilling Edge",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14405,
+  "chain": [
+   14405,
+   14406
+  ],
+  "name": "Kushimaru Kuriarare",
+  "subtitle": "Needle Blade",
+  "obtain": [
+   "Lurking Death Needle"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14435,
+  "chain": [
+   14435,
+   14436
+  ],
+  "name": "Tsunade",
+  "subtitle": "Unbreakable Tree-Flower",
+  "obtain": [
+   "Impact! Slug Princess Exorcism",
+   "Super Impact! Giant Boss Rush"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14445,
+  "chain": [
+   14445,
+   14446
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Proof of Ties That Bind",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14465,
+  "chain": [
+   14465,
+   14466
+  ],
+  "name": "Kiba Inuzuka",
+  "subtitle": "Well-Honed Fangs",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14475,
+  "chain": [
+   14475,
+   14476
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Unwavering Feelings",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14485,
+  "chain": [
+   14485,
+   14486
+  ],
+  "name": "Ino Yamanaka",
+  "subtitle": "Promise Upheld",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14495,
+  "chain": [
+   14495,
+   14496
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Long Road to Atonement",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14505,
+  "chain": [
+   14505,
+   14506
+  ],
+  "name": "Nagato",
+  "subtitle": "Reunion with Hope",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14515,
+  "chain": [
+   14515,
+   14516
+  ],
+  "name": "Ino Yamanaka",
+  "subtitle": "Bittersweet Gift",
+  "obtain": [
+   "\"Lucky's Valentine\" Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14525,
+  "chain": [
+   14525,
+   14526
+  ],
+  "name": "Konan",
+  "subtitle": "Wrapped in Sweetness",
+  "obtain": [
+   "\"Lucky's Valentine\" Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14535,
+  "chain": [
+   14535,
+   14536
+  ],
+  "name": "Roshi",
+  "subtitle": "Magma Veteran",
+  "obtain": [
+   "Impact! Molten Torrent",
+   "Super Impact! Giant Boss Rush"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14545,
+  "chain": [
+   14545,
+   14546
+  ],
+  "name": "Chojuro",
+  "subtitle": "Slashing Twinsword",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14555,
+  "chain": [
+   14555,
+   14556
+  ],
+  "name": "Jinpachi Munashi",
+  "subtitle": "Volatile Explosive Blade",
+  "obtain": [
+   "An Explosive Swing to Obliterate All"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14565,
+  "chain": [
+   14565,
+   14566
+  ],
+  "name": "Chino",
+  "subtitle": "Ill-Omened Red Eyes",
+  "obtain": [
+   "Impact! Eyes Dyed Red"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14585,
+  "chain": [
+   14585,
+   14586
+  ],
+  "name": "Tenten",
+  "subtitle": "Ninja Tool Maestro",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14595,
+  "chain": [
+   14595,
+   14596
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Eyes Gazing Over the Future",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14605,
+  "chain": [
+   14605,
+   14606
+  ],
+  "name": "Shisui Uchiha",
+  "subtitle": "Guiding Light",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14615,
+  "chain": [
+   14615,
+   14616
+  ],
+  "name": "Jinin Akebino",
+  "subtitle": "Crushing Bluntsword",
+  "obtain": [
+   "Smoking Hammer Strike"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:gift/login",
+  "id": 14625,
+  "chain": [
+   14625,
+   14626
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Shining Warrior of Bonds",
+  "obtain": [
+   "\"Path of Heroes\" Login Bonus"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14635,
+  "chain": [
+   14635,
+   14636
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Violet Flame Hunter",
+  "obtain": [
+   "April Fools Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14645,
+  "chain": [
+   14645,
+   14646
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Silent Sorcery",
+  "obtain": [
+   "April Fools Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14655,
+  "chain": [
+   14655,
+   14656
+  ],
+  "name": "Might Guy",
+  "subtitle": "Surging Blood",
+  "obtain": [
+   "Impact! Burning Rage of the Crimson Dragon",
+   "Impact! Burning Rage of the Crimson Dragon (Hard Mode)"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14665,
+  "chain": [
+   14665,
+   14666
+  ],
+  "name": "Kaguya Otsutsuki",
+  "subtitle": "Divine Madness",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14675,
+  "chain": [
+   14675,
+   14676
+  ],
+  "name": "Orochimaru",
+  "subtitle": "Winds of Chaos",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14685,
+  "chain": [
+   14685,
+   14686
+  ],
+  "name": "Kimimaro",
+  "subtitle": "Dance of Death",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14695,
+  "chain": [
+   14695,
+   14696
+  ],
+  "name": "Fuguki Suikazan",
+  "subtitle": "Darkness of the Blood Mist",
+  "obtain": [
+   "Blood Mist's Dark-Clad Giant"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14755,
+  "chain": [
+   14755,
+   14756
+  ],
+  "name": "Pain (Shurado)",
+  "subtitle": "Vessel of Madness",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14765,
+  "chain": [
+   14765,
+   14766
+  ],
+  "name": "Pain (Chikushodo)",
+  "subtitle": "Glimpse of the Divine",
+  "obtain": [
+   "Impact! Divine Intervention"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14775,
+  "chain": [
+   14775,
+   14776
+  ],
+  "name": "Jiraiya",
+  "subtitle": "Moment of Choice",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14795,
+  "chain": [
+   14795,
+   14796
+  ],
+  "name": "Yagura",
+  "subtitle": "Child of the Blood Mist",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14805,
+  "chain": [
+   14805,
+   14806
+  ],
+  "name": "Yugito Ni'i",
+  "subtitle": "Unclouded Mind",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14815,
+  "chain": [
+   14815,
+   14816
+  ],
+  "name": "Shikamaru Nara",
+  "subtitle": "Crucial Decision",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14825,
+  "chain": [
+   14825,
+   14826
+  ],
+  "name": "Choji Akimichi",
+  "subtitle": "Fluttering Butterfly",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14835,
+  "chain": [
+   14835,
+   14836
+  ],
+  "name": "Mangetsu Hozuki",
+  "subtitle": "Wielder of the Seven Swords",
+  "obtain": [
+   "Mist-Shrouded Heir of the Seven Swords"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 14845,
+  "chain": [
+   14845,
+   14846
+  ],
+  "name": "Torune Aburame",
+  "subtitle": "Lurking Poison",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14915,
+  "chain": [
+   14915,
+   14916
+  ],
+  "name": "Suigetsu Hozuki",
+  "subtitle": "Liquid Cruelty",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 14925,
+  "chain": [
+   14925,
+   14926
+  ],
+  "name": "Jugo",
+  "subtitle": "All-Consuming Fury",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14945,
+  "chain": [
+   14945,
+   14946
+  ],
+  "name": "Jiraiya",
+  "subtitle": "Hidden Heart",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 14955,
+  "chain": [
+   14955,
+   14956
+  ],
+  "name": "Tsunade",
+  "subtitle": "Daring Courage",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14965,
+  "chain": [
+   14965,
+   14966
+  ],
+  "name": "Masked Man",
+  "subtitle": "Mad Dreamer",
+  "obtain": [
+   "Impact! Mastermind of Calamity",
+   "Impact! Mastermind of Calamity (Hard Mode)"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14975,
+  "chain": [
+   14975,
+   14976
+  ],
+  "name": "Minato Namikaze",
+  "subtitle": "Swift Flash",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 14985,
+  "chain": [
+   14985,
+   14986
+  ],
+  "name": "Sasori",
+  "subtitle": "Everlasting Being",
+  "obtain": [
+   "Living Puppet Show of Doom"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 14995,
+  "chain": [
+   14995,
+   14996
+  ],
+  "name": "Kabuto Yakushi",
+  "subtitle": "Dragon Transformation",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15005,
+  "chain": [
+   15005,
+   15006
+  ],
+  "name": "Pain (Gakido)",
+  "subtitle": "Limitless Maelstrom",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15015,
+  "chain": [
+   15015,
+   15016
+  ],
+  "name": "Utakata",
+  "subtitle": "Floating Bubble",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15035,
+  "chain": [
+   15035,
+   15036
+  ],
+  "name": "Might Dai",
+  "subtitle": "Something to Protect",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15045,
+  "chain": [
+   15045,
+   15046
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "Falling Into Place",
+  "obtain": [
+   "Impact! The Great War Begins",
+   "Impact! The Great War Begins (Hard Mode)"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15075,
+  "chain": [
+   15075,
+   15076
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "The Bitterness of Fate",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15085,
+  "chain": [
+   15085,
+   15086
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "Into Total Darkness",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15105,
+  "chain": [
+   15105,
+   15106
+  ],
+  "name": "Sasori",
+  "subtitle": "The Ultimate Puppet",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15115,
+  "chain": [
+   15115,
+   15116
+  ],
+  "name": "Deidara",
+  "subtitle": "Pursued Aesthetic",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15125,
+  "chain": [
+   15125,
+   15126
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "As a Friend",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15135,
+  "chain": [
+   15135,
+   15136
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "To Eternal Loneliness",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bundle",
+  "id": 15165,
+  "chain": [
+   15165,
+   15166
+  ],
+  "name": "Minato Namikaze",
+  "subtitle": "The Silent Hero",
+  "obtain": [
+   "Ninja Pearl Bundle purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15185,
+  "chain": [
+   15185,
+   15186
+  ],
+  "name": "Pain (Jigokudo)",
+  "subtitle": "The Judge of Truth",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15195,
+  "chain": [
+   15195,
+   15196
+  ],
+  "name": "Anko Mitarashi",
+  "subtitle": "A Smile That Could Kill",
+  "obtain": [
+   "Snake Master Lurking in the Shadows"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15225,
+  "chain": [
+   15225,
+   15226
+  ],
+  "name": "Pain (Tendo)",
+  "subtitle": "Endless Cycle of Battle",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15235,
+  "chain": [
+   15235,
+   15236
+  ],
+  "name": "Konan",
+  "subtitle": "Sign of Destruction",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15245,
+  "chain": [
+   15245,
+   15246
+  ],
+  "name": "Ino Yamanaka",
+  "subtitle": "Flowers in Full Bloom",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15255,
+  "chain": [
+   15255,
+   15256
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "Power of Life or Death",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15265,
+  "chain": [
+   15265,
+   15266
+  ],
+  "name": "Kakuzu",
+  "subtitle": "Powerhouse of Old",
+  "obtain": [
+   "Immortal Warrior on the Battlefield"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15275,
+  "chain": [
+   15275,
+   15276
+  ],
+  "name": "Hashirama Senju",
+  "subtitle": "Bravery Known Throughout the War",
+  "obtain": [
+   "Rival Warlords Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15285,
+  "chain": [
+   15285,
+   15286
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "The Eyes that Shook Heaven and Earth",
+  "obtain": [
+   "Rival Warlords Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15325,
+  "chain": [
+   15325,
+   15326
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Brotherly Pledge",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15335,
+  "chain": [
+   15335,
+   15336
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Unshakable Calm",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15345,
+  "chain": [
+   15345,
+   15346
+  ],
+  "name": "Might Guy",
+  "subtitle": "Passionate Fist",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15355,
+  "chain": [
+   15355,
+   15356
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "Remnants of Despair",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15365,
+  "chain": [
+   15365,
+   15366
+  ],
+  "name": "Shizune",
+  "subtitle": "Benevolent Heart",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15375,
+  "chain": [
+   15375,
+   15376
+  ],
+  "name": "Shisui Uchiha",
+  "subtitle": "Eyes Inviting Illusion",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15385,
+  "chain": [
+   15385,
+   15386
+  ],
+  "name": "Juzo Biwa",
+  "subtitle": "Bloody Existence",
+  "obtain": [
+   "Life-Draining Bloody Blade"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15395,
+  "chain": [
+   15395,
+   15396
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Pure Hatred",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15405,
+  "chain": [
+   15405,
+   15406
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Eyes Which Weave Truth and Lies",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15415,
+  "chain": [
+   15415,
+   15416
+  ],
+  "name": "Pain (Ningendo)",
+  "subtitle": "Palm that Touches the Soul",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15455,
+  "chain": [
+   15455,
+   15456
+  ],
+  "name": "Gaara",
+  "subtitle": "Sandstorm-Commanding Kage",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15465,
+  "chain": [
+   15465,
+   15466
+  ],
+  "name": "Deidara",
+  "subtitle": "Glimmering Art",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15475,
+  "chain": [
+   15475,
+   15476
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Iron Resolve",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15505,
+  "chain": [
+   15505,
+   15506
+  ],
+  "name": "Hanabi Hyuga",
+  "subtitle": "Daughter of the Byakugan",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15535,
+  "chain": [
+   15535,
+   15536
+  ],
+  "name": "Minato Namikaze",
+  "subtitle": "Dazzling Bravery",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15545,
+  "chain": [
+   15545,
+   15546
+  ],
+  "name": "Hashirama Senju",
+  "subtitle": "Amongst the Strongest",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15555,
+  "chain": [
+   15555,
+   15556
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "Phantasy's Beckoning Light",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15575,
+  "chain": [
+   15575,
+   15576
+  ],
+  "name": "Izuna Uchiha",
+  "subtitle": "Wishing for Peace",
+  "obtain": [
+   "Wise Warrior and Upholder of the Mightiest"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15595,
+  "chain": [
+   15595,
+   15596
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "State of Carnage",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15615,
+  "chain": [
+   15615,
+   15616
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "Solitary Devastation",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15625,
+  "chain": [
+   15625,
+   15626
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Rich Aroma",
+  "obtain": [
+   "Love-Filled Sweets Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15635,
+  "chain": [
+   15635,
+   15636
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Tug of the Heart Strings",
+  "obtain": [
+   "Love-Filled Sweets Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15645,
+  "chain": [
+   15645,
+   15646
+  ],
+  "name": "Ao",
+  "subtitle": "An Eye of Mist",
+  "obtain": [
+   "Sublime Byakugan of the Mist"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15665,
+  "chain": [
+   15665,
+   15666
+  ],
+  "name": "Darui",
+  "subtitle": "Carved Seal of Lightning",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15685,
+  "chain": [
+   15685,
+   15686
+  ],
+  "name": "Minato Namikaze",
+  "subtitle": "Unfading Courage",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15705,
+  "chain": [
+   15705,
+   15706
+  ],
+  "name": "Izuna Uchiha",
+  "subtitle": "Intelligent Blade",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15715,
+  "chain": [
+   15715,
+   15716
+  ],
+  "name": "Hayate Gekko",
+  "subtitle": "Composed Dexterity",
+  "obtain": [
+   "Crescent Moon Blade and the Dance of Leaves"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15725,
+  "chain": [
+   15725,
+   15726
+  ],
+  "name": "Indra",
+  "subtitle": "Unparalleled Genius",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15745,
+  "chain": [
+   15745,
+   15746
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Taboo-Breaking Frustration",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15765,
+  "chain": [
+   15765,
+   15766
+  ],
+  "name": "Hiruzen Sarutobi",
+  "subtitle": "Looking into the Future",
+  "obtain": [
+   "Will of the Fiery Powerhouse of Old"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15775,
+  "chain": [
+   15775,
+   15776
+  ],
+  "name": "Sasori",
+  "subtitle": "Puppet Mastery",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15805,
+  "chain": [
+   15805,
+   15806
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Stunning Spring Breeze",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15825,
+  "chain": [
+   15825,
+   15826
+  ],
+  "name": "Tenten",
+  "subtitle": "Battle Blade Dance",
+  "obtain": [
+   "Purchase at Granny Cat's Hiding Place"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15835,
+  "chain": [
+   15835,
+   15836
+  ],
+  "name": "Rock Lee",
+  "subtitle": "The Path of Trust",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 15845,
+  "chain": [
+   15845,
+   15846
+  ],
+  "name": "Shikamaru Nara",
+  "subtitle": "New Resolve",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15865,
+  "chain": [
+   15865,
+   15866
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Pervading Feelings",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15875,
+  "chain": [
+   15875,
+   15876
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Judging the Conventional",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15905,
+  "chain": [
+   15905,
+   15906
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Beyond the Ceaseless",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 15915,
+  "chain": [
+   15915,
+   15916
+  ],
+  "name": "Pakura",
+  "subtitle": "Scorching Red",
+  "obtain": [
+   "Scorching Heroine"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 15935,
+  "chain": [
+   15935,
+   15936
+  ],
+  "name": "Omoi",
+  "subtitle": "Intense Conviction",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 15945,
+  "chain": [
+   15945,
+   15946
+  ],
+  "name": "Pain (Tendo)",
+  "subtitle": "Visage of Justice",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 15985,
+  "chain": [
+   15985,
+   15986
+  ],
+  "name": "Kisame Hoshigaki",
+  "subtitle": "Body and Blade as One",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 16005,
+  "chain": [
+   16005,
+   16006
+  ],
+  "name": "Hidan",
+  "subtitle": "Pure Bloodlust",
+  "obtain": [
+   "Purchase at Granny Cat's Hiding Place"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 16015,
+  "chain": [
+   16015,
+   16016
+  ],
+  "name": "Nagato",
+  "subtitle": "Hope for Peace",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16025,
+  "chain": [
+   16025,
+   16026
+  ],
+  "name": "Orochimaru",
+  "subtitle": "Aspirations of Indulgence",
+  "obtain": [
+   "The All-Knowing Serpent"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16035,
+  "chain": [
+   16035,
+   16036
+  ],
+  "name": "Gaara",
+  "subtitle": "Finally, Friendship",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 16055,
+  "chain": [
+   16055,
+   16056
+  ],
+  "name": "Kushina Uzumaki",
+  "subtitle": "Fist of Hidden Embarrassment",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16075,
+  "chain": [
+   16075,
+   16076
+  ],
+  "name": "Ashura",
+  "subtitle": "Successor",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16095,
+  "chain": [
+   16095,
+   16096
+  ],
+  "name": "Izumo Kamizuki",
+  "subtitle": "Certainly Capable",
+  "obtain": [
+   "The Shinobi Seeking Vindication"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 16105,
+  "chain": [
+   16105,
+   16106
+  ],
+  "name": "Kotetsu Hagane",
+  "subtitle": "Tempered Strength",
+  "obtain": [
+   "Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16125,
+  "chain": [
+   16125,
+   16126
+  ],
+  "name": "Shikamaru Nara",
+  "subtitle": "Surpassing the Master",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16145,
+  "chain": [
+   16145,
+   16146
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Friend's Way of Life",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16155,
+  "chain": [
+   16155,
+   16156
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "The Final Destination",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16195,
+  "chain": [
+   16195,
+   16196
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "The Future We Want",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16205,
+  "chain": [
+   16205,
+   16206
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Buried Past",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 16215,
+  "chain": [
+   16215,
+   16216
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Cherry Blossoms on the Front Line",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16225,
+  "chain": [
+   16225,
+   16226
+  ],
+  "name": "Iruka Umino",
+  "subtitle": "Because of Trust",
+  "obtain": [
+   "The Guiding Will of Fire"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 16245,
+  "chain": [
+   16245,
+   16246
+  ],
+  "name": "Sai",
+  "subtitle": "Drawings Unleashed",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16265,
+  "chain": [
+   16265,
+   16266
+  ],
+  "name": "Killer Bee",
+  "subtitle": "Rumbling Strong Arm ",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16285,
+  "chain": [
+   16285,
+   16286
+  ],
+  "name": "Cee",
+  "subtitle": "Earnest with Composure",
+  "obtain": [
+   "Master Illusionist Supporting the Lightning"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16295,
+  "chain": [
+   16295,
+   16296
+  ],
+  "name": "Sasori",
+  "subtitle": "Eternal Creation",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16305,
+  "chain": [
+   16305,
+   16306
+  ],
+  "name": "Deidara",
+  "subtitle": "Creation of Light",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 16325,
+  "chain": [
+   16325,
+   16326
+  ],
+  "name": "Kimimaro",
+  "subtitle": "Dance of Carnage",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 16335,
+  "chain": [
+   16335,
+   16336
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Gale of Vigor",
+  "obtain": [
+   "Champion of the Hidden Leaf Summon",
+   "Naruto Birthday Special Legendary Ninja Festival"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16355,
+  "chain": [
+   16355,
+   16356
+  ],
+  "name": "Kabuto Yakushi",
+  "subtitle": "Proof of Self",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 16365,
+  "chain": [
+   16365,
+   16366
+  ],
+  "name": "Roshi",
+  "subtitle": "Scorching Shroud",
+  "obtain": [
+   "Purchase at Granny Cat's Hiding Place"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16385,
+  "chain": [
+   16385,
+   16386
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Beyond Rasen",
+  "obtain": [
+   "Blade of the Roaring Storm"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16405,
+  "chain": [
+   16405,
+   16406
+  ],
+  "name": "Hinata Hyuga",
+  "subtitle": "Redemptive Words",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16425,
+  "chain": [
+   16425,
+   16426
+  ],
+  "name": "Tobirama Senju",
+  "subtitle": "Inherited Will of Fire",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16455,
+  "chain": [
+   16455,
+   16456
+  ],
+  "name": "Tsunade",
+  "subtitle": "Protector of the Great Tree",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 16475,
+  "chain": [
+   16475,
+   16476
+  ],
+  "name": "Sakumo Hatake",
+  "subtitle": "Between Duty and Comrades",
+  "obtain": [
+   "Limited Period Granny Cat's Hiding Place purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 16485,
+  "chain": [
+   16485,
+   16486
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Lightning Storm Genius",
+  "obtain": [
+   "\"Battle Prodigy\" Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16505,
+  "chain": [
+   16505,
+   16506
+  ],
+  "name": "Kaguya Otsutsuki",
+  "subtitle": "Plot for Rebirth",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16525,
+  "chain": [
+   16525,
+   16526
+  ],
+  "name": "Fugaku Uchiha",
+  "subtitle": "Prosperity and Faith",
+  "obtain": [
+   "Sign of a Silently Growing Calamity"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 16535,
+  "chain": [
+   16535,
+   16536
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "An Imposing Air",
+  "obtain": [
+   "Longing for Peace Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 16545,
+  "chain": [
+   16545,
+   16546
+  ],
+  "name": "Izuna Uchiha",
+  "subtitle": "Mercilessly Uncompromising",
+  "obtain": [
+   "Longing for Peace Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16565,
+  "chain": [
+   16565,
+   16566
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Battling with your eyes",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16585,
+  "chain": [
+   16585,
+   16586
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "True Peace",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:shop",
+  "id": 16605,
+  "chain": [
+   16605,
+   16606
+  ],
+  "name": "Tenzo (Yamato)",
+  "subtitle": "Beneath the Sun",
+  "obtain": [
+   "Clash Coin Exchange Shop purchase"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16615,
+  "chain": [
+   16615,
+   16616
+  ],
+  "name": "Choji Akimichi",
+  "subtitle": "Gentle Resolve",
+  "obtain": [
+   "Flight of the Resolute Butterfly"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16635,
+  "chain": [
+   16635,
+   16636
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "The Promised Day",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16645,
+  "chain": [
+   16645,
+   16646
+  ],
+  "name": "Kaguya Otsutsuki",
+  "subtitle": "Forbidden Fruit",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 16655,
+  "chain": [
+   16655,
+   16656
+  ],
+  "name": "Konan",
+  "subtitle": "A New Light",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16675,
+  "chain": [
+   16675,
+   16676
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "A Bolt from the Dark",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16695,
+  "chain": [
+   16695,
+   16696
+  ],
+  "name": "Kankuro",
+  "subtitle": "A New Act",
+  "obtain": [
+   "Secret Black Technique of the Dancing Red Sand"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16715,
+  "chain": [
+   16715,
+   16716
+  ],
+  "name": "Hashirama Senju",
+  "subtitle": "Resolve to Protect",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16735,
+  "chain": [
+   16735,
+   16736
+  ],
+  "name": "Shisui Uchiha",
+  "subtitle": "The Price of Pride",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16745,
+  "chain": [
+   16745,
+   16746
+  ],
+  "name": "Dan Kato",
+  "subtitle": "Unfaltering Ambition",
+  "obtain": [
+   "Heartbreaking Happenings"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16775,
+  "chain": [
+   16775,
+   16776
+  ],
+  "name": "Sakura Haruno",
+  "subtitle": "Back to Back",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16805,
+  "chain": [
+   16805,
+   16806
+  ],
+  "name": "Nagato",
+  "subtitle": "As the Older Student",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "free:event",
+  "id": 16825,
+  "chain": [
+   16825,
+   16826
+  ],
+  "name": "Akatsuchi",
+  "subtitle": "Unyielding Stone",
+  "obtain": [
+   "Equanimous Shield"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16835,
+  "chain": [
+   16835,
+   16836
+  ],
+  "name": "Obito Uchiha",
+  "subtitle": "The Illusory World",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16885,
+  "chain": [
+   16885,
+   16886
+  ],
+  "name": "Pain (Tendo)",
+  "subtitle": "Godlike Power",
+  "obtain": [
+   "Various \"Ultimate Blazing Bash\" Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 16935,
+  "chain": [
+   16935,
+   16936
+  ],
+  "name": "Itachi Uchiha",
+  "subtitle": "Talent and Burden",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 16965,
+  "chain": [
+   16965,
+   16966
+  ],
+  "name": "Minato Namikaze",
+  "subtitle": "Raikosekka",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 17005,
+  "chain": [
+   17005,
+   17006
+  ],
+  "name": "Shikamaru Nara",
+  "subtitle": "View to Victory",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 17025,
+  "chain": [
+   17025,
+   17026
+  ],
+  "name": "Ashura",
+  "subtitle": "The Power of Bonds",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 17095,
+  "chain": [
+   17095,
+   17096
+  ],
+  "name": "Madara Uchiha",
+  "subtitle": "Power of Rinne",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "summon",
+  "id": 17125,
+  "chain": [
+   17125,
+   17126
+  ],
+  "name": "Kakashi Hatake",
+  "subtitle": "Kage's Successor",
+  "obtain": [
+   "Super Rare Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 17145,
+  "chain": [
+   17145,
+   17146
+  ],
+  "name": "Darui",
+  "subtitle": "From the Heart",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 17155,
+  "chain": [
+   17155,
+   17156
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Rain of Extinction",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "festival",
+  "id": 17165,
+  "chain": [
+   17165,
+   17166
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Roaring Tears",
+  "obtain": [
+   "Various Blazing Festival Summons"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 17185,
+  "chain": [
+   17185,
+   17186
+  ],
+  "name": "Naruto Uzumaki",
+  "subtitle": "Precious Feelings",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summon"
+  ],
+  "top": 6
+ },
+ {
+  "rarity": 5,
+  "cat": "bash",
+  "id": 17195,
+  "chain": [
+   17195,
+   17196
+  ],
+  "name": "Sasuke Uchiha",
+  "subtitle": "Desired Future",
+  "obtain": [
+   "Various Ultimate Blazing Bash Summons"
+  ],
+  "top": 6
+ }
+]
