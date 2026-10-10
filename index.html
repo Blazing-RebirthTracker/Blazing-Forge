@@ -395,7 +395,11 @@ function renderChars(){
     ids.length ? null : h("p",{class:"hint"},"No characters yet. Start one with New character.")
   );
   const sheet = S.openChar ? charSheet(S.openChar) : h("div",{class:"sheet empty"},"Pick a character on the left, or make a new one.");
-  return h("div",{class:"grid"}, rail, sheet);
+  return h("div",{class:"stack"},
+    h("div",{class:"callout"},
+      h("p",{},h("b",{},"iOS only. "),"Blazing Forge works with the iPhone and iPad version of Blazing:Rebirth. There's no Android version yet."),
+      h("p",{},h("b",{},"Custom characters take over an event unit. "),"Your character uses that unit's awakening materials, and it drops from that unit's event instead of the original.")),
+    h("div",{class:"grid"}, rail, sheet));
 }
 function newChar(){
   const id = "c" + Date.now().toString(36);
@@ -786,8 +790,7 @@ function renderGifts(){
       h("section",{class:"sec"}, h("div",{class:"lbl"},"Gifts"),
         h("p",{class:"hint"},"Send characters, materials, Ninja Pearls, Ryo and Friend Points to the in-game Present Box. They arrive when the mod pack is installed."),
         h("div",{class:"callout"},
-          h("p",{},h("b",{},"iOS only. "),"Gifts are delivered by the Blazing Forge add-on, which runs in the iPhone and iPad version of Blazing:Rebirth."),
-          h("p",{},h("b",{},"Custom characters take over an event unit. "),"Your character uses that unit's awakening materials, and it drops from that unit's event instead of the original."),
+          h("p",{},"Gifts are delivered by the Blazing Forge add-on, which runs in the iPhone and iPad version of Blazing:Rebirth."),
           h("p",{},h("b",{},"Each gift arrives once per account. "),"Changing a gift, or pressing Send again, sends it as a new present.")),
         h("div",{class:"chips"},
           ...[["unit","Add a character"],["material","Add a material"],["pearls","Add Ninja Pearls"],["ryo","Add Ryo"],["friendPoints","Add Friend Points"]].map(([k,t])=>h("button",{class:"btn",disabled:!S.canWrite,onclick:()=>add(k)},t))),
