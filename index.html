@@ -184,9 +184,10 @@ table.hist th{font:600 12px var(--display);text-transform:uppercase;letter-spaci
       <h3>V1.1 <time datetime="2026-10-10">October 10, 2026</time></h3>
       <h4>Gifts</h4>
       <ul>
-        <li>New Gifts tab: send characters, materials, Ninja Pearls, Ryo and Friend Points to the in-game Present Box.</li>
+        <li>New Gifts tab: send characters, materials and Ninja Pearls to the in-game Present Box (All Data mode).</li>
         <li>Send again re-sends a gift to players who already claimed it.</li>
-        <li>Pearls, Ryo and Friend Points need the Blazing Forge 3.1 add-on. Save it again from the Build tab and inject it in Sideloadly.</li>
+        <li>Ninja Pearl gifts need the Blazing Forge 3.1 add-on. Save it again from the Build tab and inject it in Sideloadly.</li>
+        <li>Ryo and Friend Points aren't offered: the game refuses them, and one of them stops every other gift from arriving.</li>
       </ul>
       <h4>Characters</h4>
       <ul>
@@ -731,8 +732,9 @@ const GIFT_KINDS = {
   unit:         {label:"Character", one:"copy", many:"copies", max:99},
   material:     {label:"Material",  one:"copy", many:"copies", max:99},
   pearls:       {label:"Ninja Pearls", max:99999999, title:"Ninja Pearls"},
-  ryo:          {label:"Ryo", max:99999999, title:"Ryo"},
-  friendPoints: {label:"Friend Points", max:99999999, title:"Friend Points"},
+  // the offline server refuses its whole gift list when one gift is Ryo or Friend Points, so the Studio can't add them
+  ryo:          {label:"Ryo", max:99999999, title:"Ryo", blocked:true},
+  friendPoints: {label:"Friend Points", max:99999999, title:"Friend Points", blocked:true},
 };
 const MAT_GROUP = {90:"EXP ramen",91:"Awakening",92:"Gama-chan",93:"Boost sphere",94:"Limit break crystal",95:"Special",96:"Special",97:"Special"};
 const giftKey = () => "g" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
@@ -746,6 +748,10 @@ function giftItemName(g){
     const u=S.unitById.get(+g.charaId); return u ? `${u.n} · ${u.s} (${u.r}★)` : (g.charaId ? `Unit ${g.charaId}` : ""); }
   return GIFT_KINDS[k].label;
 }
+function giftDefaultTitle(g){ const k=giftUiKind(g); return GIFT_KINDS[k]?.title || (giftItemName(g).split(" · ")[0]) || "Gift"; }
+function giftDefaultDetail(g){ const k=giftUiKind(g), n=+g.count||1;
+  if (k==="pearls") return `${n.toLocaleString("en-US")} Ninja Pearls from Blazing Forge.`;
+  const name=giftItemName(g).replace(/ \(\d★\)$/,""); return `${n>1?n+"x ":""}${name||"A gift"} from Blazing Forge.`; }
 function giftTakesOver(g){ return giftUiKind(g)==="unit" && g.charaId && (S.slotByR5.has(+g.charaId) || S.slotByR6.has(+g.charaId)); }
 function renderGifts(){
   const G = S.gifts || (S.gifts={items:[]}); G.items = G.items || [];
@@ -780,21 +786,23 @@ function renderGifts(){
             oninput:e=>{ const v=Math.max(1,Math.min(K.max,Math.round(+e.target.value||1))); g.count=v; g.key=giftKey(); save(); },
             onchange:()=>render()}))),
       h("div",{class:"row"},
-        h("label",{class:"f"}, h("span",{},"Present Box title"), h("input",{type:"text",id:`gift${i}-t`,maxlength:60,value:g.title||"",placeholder:K.title||"Gift",oninput:e=>{ g.title=e.target.value; save(); }})),
-        h("label",{class:"f"}, h("span",{},"Message"), h("input",{type:"text",id:`gift${i}-d`,maxlength:200,value:g.detail||"",placeholder:"Optional",oninput:e=>{ g.detail=e.target.value; save(); }}))),
+        h("label",{class:"f"}, h("span",{},"Present Box title"), h("input",{type:"text",id:`gift${i}-t`,maxlength:60,value:g.title||"",placeholder:giftDefaultTitle(g),oninput:e=>{ g.title=e.target.value; save(); }})),
+        h("label",{class:"f"}, h("span",{},"Message (blank uses the grey text)"), h("input",{type:"text",id:`gift${i}-d`,maxlength:200,value:g.detail||"",placeholder:giftDefaultDetail(g),oninput:e=>{ g.detail=e.target.value; save(); }}))),
       giftTakesOver(g) ? h("p",{class:"hint",style:"color:var(--warn)"},"This unit's slot belongs to a custom character, so this gift arrives as that character.") : null,
-      (k==="unit"||k==="material") && !g.charaId ? h("p",{class:"hint",style:"color:var(--bad)"},"Pick what to send. Gifts with nothing picked are left out of the mod pack.") : null);
+      (k==="unit"||k==="material") && !g.charaId ? h("p",{class:"hint",style:"color:var(--bad)"},"Pick what to send. Gifts with nothing picked are left out of the mod pack.") : null,
+      K.blocked ? h("p",{class:"hint",style:"color:var(--bad)"},`The game doesn't accept ${K.label} as a gift, and one like this stops every other gift from arriving. It's left out of the mod pack; remove it.`) : null);
   });
   return h("div",{class:"stack"},
     h("div",{class:"sheet"},
       h("section",{class:"sec"}, h("div",{class:"lbl"},"Gifts"),
-        h("p",{class:"hint"},"Send characters, materials, Ninja Pearls, Ryo and Friend Points to the in-game Present Box. They arrive when the mod pack is installed."),
+        h("p",{class:"hint"},"Send characters, materials and Ninja Pearls to the in-game Present Box. They arrive when the mod pack is installed."),
         h("div",{class:"callout"},
           h("p",{},"Gifts are delivered by the Blazing Forge add-on, which runs in the iPhone and iPad version of Blazing:Rebirth."),
+          h("p",{},h("b",{},"Gifts arrive in All Data mode only. "),"They don't show up in Vanilla mode."),
           h("p",{},h("b",{},"Each gift arrives once per account. "),"Changing a gift, or pressing Send again, sends it as a new present.")),
         h("div",{class:"chips"},
-          ...[["unit","Add a character"],["material","Add a material"],["pearls","Add Ninja Pearls"],["ryo","Add Ryo"],["friendPoints","Add Friend Points"]].map(([k,t])=>h("button",{class:"btn",disabled:!S.canWrite,onclick:()=>add(k)},t))),
-        h("p",{class:"hint"},"Pearls, Ryo and Friend Points need the Blazing Forge 3.1 add-on or newer (Build tab)."))),
+          ...[["unit","Add a character"],["material","Add a material"],["pearls","Add Ninja Pearls"]].map(([k,t])=>h("button",{class:"btn",disabled:!S.canWrite,onclick:()=>add(k)},t))),
+        h("p",{class:"hint"},"Ninja Pearl gifts need the Blazing Forge 3.1 add-on or newer (Build tab). The game doesn't accept Ryo or Friend Points as gifts."))),
     G.items.length ? h("div",{class:"sheet"}, h("section",{class:"sec"}, h("div",{class:"lbl"},`Your gifts · ${G.items.length}`), ...rows))
       : h("div",{class:"sheet empty"},"No gifts yet. Add one above."));
 }
@@ -897,8 +905,10 @@ async function buildPack(){
     }
     zip.file("summon/summon.json", JSON.stringify(cfg,null,1)); studio.summon=ss;
   }
-  const giftOut=(S.gifts?.items||[]).filter(g=> (g.kind && g.kind!=="unit") || +g.charaId).map(g=>{ const o={...g}; delete o.ui; delete o.updatedAt;
-    if (!o.kind) delete o.kind; if (!o.key) delete o.key; return o; });
+  // every gift gets a title and a message: the game's own gifts always have both, and the server refuses its gift list over a bad one
+  const giftOut=(S.gifts?.items||[]).filter(g=> !GIFT_KINDS[g.kind]?.blocked && ((g.kind && g.kind!=="unit") || +g.charaId)).map(g=>{ const o={...g}; delete o.ui; delete o.updatedAt;
+    if (!o.kind) delete o.kind; if (!o.key) delete o.key;
+    o.title=(o.title||"").trim() || giftDefaultTitle(g); o.detail=(o.detail||"").trim() || giftDefaultDetail(g); return o; });
   if (giftOut.length) zip.file("gifts.json", JSON.stringify(giftOut,null,1));
   zip.file("forge-mod.json", JSON.stringify({format:1, made:new Date().toISOString(), characters:Object.values(S.chars).map(c=>`${c.name} — ${c.subtitle||""}`)},null,1));
   zip.file("studio.json", JSON.stringify(studio,null,1));
@@ -947,16 +957,28 @@ async function importPack(file){
     if (!sj){ toast("That zip wasn't saved from Blazing Forge Studio, so it can't be opened here."); setStatus("ok", S.local?"Saved in this browser":"All changes saved"); return; }
     const st=JSON.parse(await sj.async("string"));
     const put = async (path) => { const f=path && zip.file(path); if(!f) return ""; const b=await f.async("blob"); const typed=new File([b], path.split("/").pop(), {type:"image/png"}); return (await uploadArt(typed)).id; };
-    let n=0;
+    // a character on a slot this studio already uses replaces it, so does a banner with the same banner id
+    let added=0, replaced=0;
     for (const [cid,c] of Object.entries(st.characters||{})){
-      const id = S.chars[cid] ? cid+"-"+Date.now().toString(36) : cid; const cc=clone(c); cc.art=cc.art||{};
+      const same = Object.keys(S.chars).find(k=> +S.chars[k].slot5 && +S.chars[k].slot5===+c.slot5);
+      const id = same || (S.chars[cid] ? cid+"-"+Date.now().toString(36) : cid); same ? replaced++ : added++;
+      const cc=clone(c); cc.art=cc.art||{}; delete cc.notes;
       for (const k of ["card","icon","chakra"]){ cc.art[k]=await put(c.art?.[k+"File"]); delete cc.art[k+"File"]; }
-      S.chars[id]=cc; persist("characters",id,cc); n++;
+      S.chars[id]=cc; persist("characters",id,cc);
     }
-    for (const [bid,b] of Object.entries(st.banners||{})){ const id=S.banners[bid] ? bid+"-"+Date.now().toString(36) : bid; const bb=clone(b); bb.art={front:await put(b.art?.frontFile)}; S.banners[id]=bb; persist("banners",id,bb); }
-    if (st.summon && (!S.summon || !S.summon.parts?.length)){ const sm=clone(st.summon); for (const p of sm.parts||[]){ p.asset=await put(p.file); if (p.silhouetteFile) p.silhouette=await put(p.silhouetteFile); delete p.file; delete p.silhouetteFile; } S.summon=sm; persist("summon","config",sm); }
-    if (st.gifts && !S.gifts){ S.gifts=st.gifts; if (!S.local && S.db) { try{ await S.db.doc("settings/gifts").set(clone(st.gifts)); }catch(e){} } else saveLocal(); }
-    render(); toast(`Opened the mod pack: ${n} character(s) added.`);
+    for (const [bid,b] of Object.entries(st.banners||{})){
+      const same = Object.keys(S.banners).find(k=> +S.banners[k].bannerId===+b.bannerId);
+      const id = same || (S.banners[bid] ? bid+"-"+Date.now().toString(36) : bid);
+      const bb=clone(b); bb.art={front:await put(b.art?.frontFile)}; S.banners[id]=bb; persist("banners",id,bb);
+    }
+    if (st.summon?.parts?.length){ const sm=clone(st.summon); for (const p of sm.parts){ p.asset=await put(p.file); if (p.silhouetteFile) p.silhouette=await put(p.silhouetteFile); delete p.file; delete p.silhouetteFile; } S.summon=sm; persist("summon","config",sm); }
+    if (st.gifts?.items?.length){
+      const G=S.gifts || (S.gifts={items:[]}); G.items=G.items||[];
+      const have=new Set(G.items.map(g=> g.key || JSON.stringify(g)));
+      for (const g of st.gifts.items) if (!have.has(g.key || JSON.stringify(g))) G.items.push(clone(g));
+      persist("settings","gifts",G);
+    }
+    render(); toast(`Opened the mod pack: ${added} character(s) added${replaced?`, ${replaced} replaced`:""}.`);
   }catch(e){ toast("That file couldn't be opened as a mod pack."); }
   setStatus("ok", S.local?"Saved in this browser":"All changes saved");
 }
