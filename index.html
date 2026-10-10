@@ -607,7 +607,7 @@ function renderSummon(){
           h("button",{class:"btn",disabled:!S.downloads,onclick:()=>saveSwitch(false)},"Save switch: game's own")))),
     h("div",{class:"sheet"},
       h("section",{class:"sec"}, h("div",{class:"lbl"},"Parts"),
-        h("p",{class:"hint"},"Each part is a piece of the summon puppet (arms, body, cut-in). Replace a picture to repaint it; fit and size tweaks are kept from the last tuning. Ask Claude for fine adjustments."),
+        h("p",{class:"hint"},"Each part is a piece of the summon puppet (arms, body, cut-in). Replace a picture to repaint it; fit and size tweaks are kept from the last tuning."),
         sm.parts?.length ? h("div",{class:"parts"}, ...sm.parts.map((p,i)=> h("div",{class:"part"},
           h("div",{class:"frame"}, p.asset ? h("img",{src:blobUrl(p.asset),alt:p.cell}) : h("span",{class:"hint"},p.mode||"no image")),
           h("div",{style:"font-weight:600"}, p.label||p.cell), h("div",{class:"k"}, `${p.texture} › ${p.cell}`),
@@ -649,22 +649,7 @@ function renderBuild(){
         h("div",{class:"chips"},
           h("button",{class:"btn",disabled:!S.downloads,onclick:saveAddon},"Save add-on (.zip)"),
           h("span",{class:"chip",id:"addon-ver"},"Blazing Forge 3.0"))),
-      ),
-    S.db ? h("div",{class:"sheet"},
-      h("section",{class:"sec"}, h("div",{class:"lbl"},"Build with Claude"),
-        h("p",{class:"hint"},"Prefer Claude to build it? Press Request build, then tell Claude “build my Forge mods” in your chat."),
-        h("div",{}, h("button",{class:"btn",disabled:!S.canWrite || errs.length>0,onclick:requestBuild},"Request build")),
-        S.builds.length ? h("div",{class:"tablewrap"}, h("table",{class:"hist"},
-          h("thead",{},h("tr",{},h("th",{},"Requested"),h("th",{},"Status"),h("th",{},"Result"))),
-          h("tbody",{}, ...S.builds.map(b=>h("tr",{}, h("td",{},new Date(b.requestedAt).toLocaleString()),
-            h("td",{}, h("span",{class:"chip "+(b.status==="built"?"ok":b.status==="failed"?"bad":"warn")}, b.status==="built"?"Built":b.status==="failed"?"Failed":"Waiting for Claude")),
-            h("td",{}, b.result||"—")))))) : null)) : null);
-}
-async function requestBuild(){
-  const id="r"+Date.now().toString(36);
-  const doc={requestedAt:new Date().toISOString(),status:"requested",characters:Object.keys(S.chars).length,result:""};
-  try{ await S.db.doc(`builds/${id}`).set(doc); toast("Build requested. Now tell Claude “build my Forge mods”."); }
-  catch(e){ handleWriteError(e); }
+      ));
 }
 // The mod pack: Blazing Forge's own mod format (units/, banners/, summon/, gifts.json + art) with forge-mod.json at
 // the root, which the game's add-on builds on the phone. studio.json rides along so the pack can be opened here again.
