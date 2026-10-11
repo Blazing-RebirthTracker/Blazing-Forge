@@ -38,6 +38,22 @@ jobs:
         run: python3 -m pip install --user pillow numpy lz4 UnityPy
       - name: Fetch minimum original game data with range requests
         run: python3 forge/forge.py fetch --base "$RUNNER_TEMP/newidbase"
+      - name: Fetch additional banner catalogs required by native builder
+        run: |
+          python3 - <<'PY'
+          import os,sys
+          sys.path.insert(0, "forge")
+          import rzip
+          from forge import rzip_get
+          root=os.path.join(os.environ["RUNNER_TEMP"],"newidbase")
+          rels=[
+            "content/config/banners/artwork-2.28.0.json",
+            "content/data/banners/artwork-2.28.0.json",
+            "content/config/summons/rotation.json",
+            "content/config/summons/summons.json",
+          ]
+          rzip_get(rzip,root,rels)
+          PY
       - name: Build mod with portable on-device engine
         run: |
           gcc -std=gnu11 -O2 -o forgecore/forgecore forgecore/cli.c forgecore/fc_*.c forgecore/vendor/lz4.c forgecore/vendor/lz4hc.c -lz -lm
