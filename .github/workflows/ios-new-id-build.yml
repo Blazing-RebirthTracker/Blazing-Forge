@@ -28,3 +28,29 @@ jobs:
         with:
           name: experimental-ios-builder-NOT-ENGINE-READY
           path: addon/BlazingForge.dylib
+
+  synthetic-new-id-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python image dependency
+        run: python3 -m pip install --user pillow
+      - name: Fetch minimum original game data with range requests
+        run: python3 forge/forge.py fetch --base "$RUNNER_TEMP/newidbase"
+      - name: Build mod with portable on-device engine
+        run: |
+          gcc -std=gnu11 -O2 -o forgecore/forgecore forgecore/cli.c forgecore/fc_*.c forgecore/vendor/lz4.c forgecore/vendor/lz4hc.c -lz -lm
+          forgecore/forgecore build "$RUNNER_TEMP/newidbase" tools/fixtures/ios-new-id tools/fixtures/ios-new-id/BlazingEngine.json "$RUNNER_TEMP/newidbuild" --summon off
+      - name: Verify independent ID appears in client and offline pack outputs
+        run: |
+          python3 forge/forge.py verify --base "$RUNNER_TEMP/newidbase" --out "$RUNNER_TEMP/newidbuild"
+          python3 - <<'PY'
+          import json,os
+          p=os.path.join(os.environ["RUNNER_TEMP"],"newidbuild","Blazing-Rebirth","BlazingData")
+          c=json.load(open(os.path.join(p,"content","config","core","characters","cache-valid-characters-2.28.0.json")))
+          ids=[u["unitId"] for u in c["units"]]
+          assert 10476 in ids and 480046 in ids
+          assert len(ids)==len(set(ids))
+          print("Client catalog retains donor 10476 and includes new ID 480046")
+          PY
