@@ -1,0 +1,78 @@
+name: iOS new-ID experimental builder
+on:
+  push:
+    branches:
+      - feature/ios-new-id-builder-20261011
+  workflow_dispatch:
+jobs:
+  linux-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build portable C builder
+        run: |
+          cd forgecore
+          gcc -std=gnu11 -O2 -Wall -Wextra -o forgecore             cli.c fc_*.c vendor/lz4.c vendor/lz4hc.c -lz -lm
+          ./forgecore || true
+  ios-compile:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build unsigned iOS arm64 dylib
+        run: |
+          SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+          cd addon
+          xcrun clang -target arm64-apple-ios12.2 -isysroot "$SDK" -fobjc-arc -O2             -dynamiclib -install_name @executable_path/Frameworks/BlazingForge.dylib             -framework Foundation -framework UIKit -lz -Wl,-adhoc_codesign             -o BlazingForge.dylib BlazingForge.m             ../forgecore/fc_util.c ../forgecore/fc_json.c ../forgecore/fc_obf.c             ../forgecore/fc_ufs.c ../forgecore/fc_sf.c ../forgecore/fc_img.c             ../forgecore/fc_build.c ../forgecore/fc_summon.c             ../forgecore/vendor/lz4.c ../forgecore/vendor/lz4hc.c
+          file BlazingForge.dylib
+      - uses: actions/upload-artifact@v4
+        with:
+          name: experimental-ios-builder-NOT-ENGINE-READY
+          path: addon/BlazingForge.dylib
+
+  synthetic-new-id-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python image dependency
+        run: python3 -m pip install --user pillow numpy lz4 UnityPy
+      - name: Fetch minimum original game data with range requests
+        run: python3 forge/forge.py fetch --base "$RUNNER_TEMP/newidbase"
+      - name: Fetch additional banner catalogs required by native builder
+        run: |
+          python3 - <<'PY'
+          import os,sys
+          sys.path.insert(0, "forge/lib")
+          import rzip
+          root=os.path.join(os.environ["RUNNER_TEMP"],"newidbase")
+          rels=[
+            "content/config/banners/artwork-2.28.0.json",
+            "content/data/banners/artwork-2.28.0.json",
+            "content/config/summons/rotation.json",
+            "content/config/summons/summons.json",
+          ]
+          want={"BlazingData/"+p for p in rels}
+          for ent in rzip.load_index():
+            if ent[0] not in want: continue
+            dest=os.path.join(root,ent[0])
+            os.makedirs(os.path.dirname(dest),exist_ok=True)
+            if not os.path.exists(dest):
+              with open(dest,"wb") as fp: fp.write(rzip.fetch(ent))
+            print("Supplement:",ent[0],os.path.getsize(dest))
+          PY
+      - name: Build mod with portable on-device engine
+        run: |
+          gcc -std=gnu11 -O2 -o forgecore/forgecore forgecore/cli.c forgecore/fc_*.c forgecore/vendor/lz4.c forgecore/vendor/lz4hc.c -lz -lm
+          forgecore/forgecore build "$RUNNER_TEMP/newidbase" tools/fixtures/ios-new-id tools/fixtures/ios-new-id/BlazingEngine.json "$RUNNER_TEMP/newidbuild" --summon off
+      - name: Verify independent ID appears in client and offline pack outputs
+        run: |
+          python3 forge/forge.py verify --base "$RUNNER_TEMP/newidbase" --out "$RUNNER_TEMP/newidbuild"
+          python3 - <<'PY'
+          import json,os
+          p=os.path.join(os.environ["RUNNER_TEMP"],"newidbuild","Blazing-Rebirth","BlazingData")
+          c=json.load(open(os.path.join(p,"content","config","core","characters","cache-valid-characters-2.28.0.json")))
+          ids=[u["unitId"] for u in c["units"]]
+          assert 10476 in ids and 480046 in ids
+          assert len(ids)==len(set(ids))
+          print("Client catalog retains donor 10476 and includes new ID 480046")
+          PY

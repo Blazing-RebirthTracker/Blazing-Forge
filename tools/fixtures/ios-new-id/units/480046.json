@@ -1,0 +1,14 @@
+{
+  "id": 480046,
+  "donor": 10476,
+  "rarity": 6,
+  "sameId": 48004,
+  "name": "Forge Test Naruto",
+  "subtitle": "Independent unit ID smoke test",
+  "gift": true,
+  "stats": {
+    "hp": 1,
+    "atk": 1,
+    "speed": 1
+  }
+}
