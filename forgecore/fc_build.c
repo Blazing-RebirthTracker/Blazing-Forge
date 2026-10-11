@@ -400,7 +400,7 @@ int fc_build(const FcBuild *cfg) {
     int abil_loaded = 0, f_loaded = 0, b_loaded = 0, f_changed = 0, b_changed = 0;
     J *chars = NULL, *presents = NULL, *uexp = NULL, *playable = NULL, *progression = NULL;
     J *specs = jnew(J_ARR), *made_abil = jnew(J_OBJ);
-    int allow_new_ids = 0, any_new_ids = 0;
+    int allow_new_ids = 0, any_new_ids = 0, preserve_recovery_pack = 0;
     Buf cardlist = {0}, iconlist = {0}, thumbs_txt = {0}, tmp = {0}, icons_raw = {0}, thumbs_raw = {0};
     Bundle icons = {0}, thumbs = {0}; int icons_open = 0, thumbs_open = 0, icons_changed = 0;
     char **files = NULL; int nfiles = 0;
@@ -429,7 +429,8 @@ int fc_build(const FcBuild *cfg) {
     {
         char *p = fc_sprintf("%s/forge-mod.json", cfg->mod);
         J *m = load_json_file(p); free(p);
-        allow_new_ids = m && jtruthy(jget(m, "allowNewIds")); jfree(m);
+        allow_new_ids = m && jtruthy(jget(m, "allowNewIds"));
+        preserve_recovery_pack = m && jtruthy(jget(m, "preserveRecoveryPack")); jfree(m);
     }
     J *used_slots = jnew(J_ARR);
     for (int si = 0; si < specs->n; si++) {
@@ -825,7 +826,7 @@ int fc_build(const FcBuild *cfg) {
      * Mirror new iOS unit and skill data into the Android recovery pack used
      * by the offline backend. This does not disable compiled engine allowlists.
      */
-    if (any_new_ids) {
+    if (any_new_ids && !preserve_recovery_pack) {
         J *pack = base_json(c, "pack/manifest.json"); if (!pack) goto done;
         const char *android_routes[] = {
             "/assets/Android/language/en/unitdata/unitlist.bytes",
@@ -863,7 +864,14 @@ int fc_build(const FcBuild *cfg) {
         CHECK(out_json(c, CHARS, chars, 1));
         CHECK(out_json(c, UEXP, uexp, 1));
         jfree(pack);
-        fc_log("experimental new-ID tables generated; executable-side validation NOT verified");
+        fc_log("experimental new-ID pack rewrite generated; backend executable acceptance NOT verified");
+    } else if (any_new_ids) {
+        /* Keep every original recovery-pack file byte-identical so SettingsHost's
+           built-in asset-pack binding continues to match the stock server.
+           Client data + JSON character/experience catalogs are still extended. */
+        CHECK(out_json(c, CHARS, chars, 1));
+        CHECK(out_json(c, UEXP, uexp, 1));
+        fc_log("experimental new-ID mode: preserved stock recovery pack and original pack manifest");
     }
 
     /* summon animation re-skin: mod/summon/summon.json paints new part art into the atlas cells */
@@ -1101,7 +1109,7 @@ int fc_build(const FcBuild *cfg) {
         J *routes_now = NULL; { Buf rb = {0}; char *rp = outp(c, "content-ios/ios-routes.json"); file_read(rp, &rb); free(rp); routes_now = jparse((char *)rb.p, rb.n); buf_free(&rb); }
         jset(ios, "routes", jnum_i(routes_now ? routes_now->n : 0)); jfree(routes_now);
         Buf pm = {0};
-        if (any_new_ids) {
+        if (any_new_ids && !preserve_recovery_pack) {
             char *path = outp(c, "pack/manifest.json");
             int rr = file_read(path, &pm); free(path); CHECK(rr);
         } else CHECK(base_read(c, "pack/manifest.json", &pm));
@@ -1109,7 +1117,8 @@ int fc_build(const FcBuild *cfg) {
         jset(jget(bdj, "pack"), "manifestSha256", jstr(sh));
         char *what = fc_sprintf("%s + Blazing Forge mod", jgets(bdj, "what", "")); jset(bdj, "what", jstr(what)); free(what);
         J *fo = jobj(); J *ul = jnew(J_ARR); for (int i = 0; i < specs->n; i++) jpush(ul, jnum_i(jgeti(specs->a[i], "id", 0)));
-        jset(fo, "units", ul); jset(fo, "builtUtc", jnum_i(now)); jset(fo, "mode", jstr(any_new_ids ? "new-ids-experimental" : "slots")); jset(bdj, "forge", fo);
+        jset(fo, "units", ul); jset(fo, "builtUtc", jnum_i(now));
+        jset(fo, "mode", jstr(!any_new_ids ? "slots" : preserve_recovery_pack ? "new-ids-preserve-pack" : "new-ids-experimental")); jset(bdj, "forge", fo);
         CHECK(out_json(c, "blazing-data.json", bdj, 1)); jfree(bdj);
         J *eng = load_json_file(cfg->engine_json); if (!eng) goto done;
         Buf bdb = {0}; char *bdp = outp(c, "blazing-data.json"); file_read(bdp, &bdb); free(bdp); sha256_hex(bdb.p, bdb.n, sh); buf_free(&bdb);
