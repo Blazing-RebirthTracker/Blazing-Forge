@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/ios-new-id-builder-20261011
+      - feature/ios-new-id-preserve-pack-20261011
   workflow_dispatch:
 jobs:
   linux-compile:
