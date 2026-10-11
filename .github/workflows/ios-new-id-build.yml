@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Python image dependency
-        run: python3 -m pip install --user pillow numpy lz4
+        run: python3 -m pip install --user pillow numpy lz4 UnityPy
       - name: Fetch minimum original game data with range requests
         run: python3 forge/forge.py fetch --base "$RUNNER_TEMP/newidbase"
       - name: Build mod with portable on-device engine
