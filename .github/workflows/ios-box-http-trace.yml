@@ -1,0 +1,29 @@
+name: iOS Box HTTP Diagnostic
+on:
+  push:
+    branches:
+      - feature/ios-box-http-trace-v051
+  workflow_dispatch:
+jobs:
+  diagnostic-ios-build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile iOS ARM64 probe and Forge add-on
+        run: |
+          SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+          cd addon
+          xcrun clang -target arm64-apple-ios12.2 -isysroot "$SDK" -fobjc-arc -O2 \
+            -dynamiclib -install_name @executable_path/Frameworks/BlazingForge.dylib \
+            -framework Foundation -framework UIKit -lz -Wl,-adhoc_codesign \
+            -o BlazingForge.dylib BlazingForge.m fc_http_probe.c \
+            ../forgecore/fc_util.c ../forgecore/fc_json.c ../forgecore/fc_obf.c \
+            ../forgecore/fc_ufs.c ../forgecore/fc_sf.c ../forgecore/fc_img.c \
+            ../forgecore/fc_build.c ../forgecore/fc_summon.c \
+            ../forgecore/vendor/lz4.c ../forgecore/vendor/lz4hc.c
+          file BlazingForge.dylib
+          xcrun otool -l BlazingForge.dylib | grep -A8 __interpose || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BlazingForge-v0.5.1-BOX-HTTP-TRACE
+          path: addon/BlazingForge.dylib
