@@ -1,0 +1,30 @@
+name: iOS new-ID experimental builder
+on:
+  push:
+    branches:
+      - feature/ios-new-id-builder-20261011
+  workflow_dispatch:
+jobs:
+  linux-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build portable C builder
+        run: |
+          cd forgecore
+          gcc -std=gnu11 -O2 -Wall -Wextra -o forgecore             cli.c fc_*.c vendor/lz4.c vendor/lz4hc.c -lz -lm
+          ./forgecore || true
+  ios-compile:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build unsigned iOS arm64 dylib
+        run: |
+          SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+          cd addon
+          xcrun clang -target arm64-apple-ios12.2 -isysroot "$SDK" -fobjc-arc -O2             -dynamiclib -install_name @executable_path/Frameworks/BlazingForge.dylib             -framework Foundation -framework UIKit -lz -Wl,-adhoc_codesign             -o BlazingForge.dylib BlazingForge.m             ../forgecore/fc_util.c ../forgecore/fc_json.c ../forgecore/fc_obf.c             ../forgecore/fc_ufs.c ../forgecore/fc_sf.c ../forgecore/fc_img.c             ../forgecore/fc_build.c ../forgecore/fc_summon.c             ../forgecore/vendor/lz4.c ../forgecore/vendor/lz4hc.c
+          file BlazingForge.dylib
+      - uses: actions/upload-artifact@v4
+        with:
+          name: experimental-ios-builder-NOT-ENGINE-READY
+          path: addon/BlazingForge.dylib
