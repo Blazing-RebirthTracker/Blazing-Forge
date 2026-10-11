@@ -954,7 +954,14 @@ def cmd_verify(a):
     arel = "pack/" + next(f["asset"] for f in pk["files"] if f["route"].endswith("/unitdata/unitlist.bytes"))
     ap = os.path.join(O, arel)
     android = json.loads(obf.decode(bundles.read_text(open(ap, "rb").read() if os.path.exists(ap) else b.read(arel))))["datas"]
-    check({x["id"] for x in android} == {x["id"] for x in units}, "engine (Android) unit list has the same unit IDs as the client")
+    mode = bd["forge"].get("mode")
+    android_ids, client_ids = {x["id"] for x in android}, {x["id"] for x in units}
+    if mode == "new-ids-preserve-pack":
+        new_ids = set(bd["forge"]["units"])
+        check(new_ids.isdisjoint(android_ids) and client_ids == android_ids | new_ids,
+              "preserved stock backend IDs plus independent client-only IDs")
+    else:
+        check(android_ids == client_ids, "engine (Android) unit list has the same unit IDs as the client")
     # battle assets: every custom unit's rig, cut-in and effects must exist in this build (else white boxes)
     C_ = catalog(b); base_units = client_units(b)
     base_S = {x["id"]: x for x in json.loads(obf.decode(bundles.read_text(b.route_bytes(ROUTE_SKILL))))["datas"]}
@@ -997,7 +1004,15 @@ def cmd_verify(a):
             if bid in rot0["rareBanners"]: continue
             bn = jload(os.path.join(O, SUMMON_DIR, rel))
             check(not any(c in bn["name"] + bn["ticker"] for c in ":!") and bn["sortNo"] == bn["gashaRareId"], f"banner {bid}: name/ticker/sortNo follow the tested rules")
-    if bd["forge"].get("mode") == "slots":
+    if mode == "new-ids-preserve-pack":
+        for rel in LOCKED_FILES(b):
+            if not rel.startswith("pack/"): continue
+            p = os.path.join(O, rel)
+            check(not os.path.exists(p) or open(p, "rb").read() == b.read(rel), f"original backend recovery pack untouched: {rel}")
+        print("WARNING: this mode has new client units not in stock backend pack; runtime unit acceptance still unproven")
+        print("ALL STATIC CHECKS PASSED" if ok else "SOME CHECKS FAILED")
+        sys.exit(0 if ok else 1)
+    if mode == "slots":
         for rel in LOCKED_FILES(b):
             p = os.path.join(O, rel)
             check(not os.path.exists(p) or open(p, "rb").read() == b.read(rel), f"locked server file untouched: {rel}")
