@@ -696,6 +696,60 @@ int fc_build(const FcBuild *cfg) {
         static const char *views[] = {"home", "gasha", "panel"};
         for (int q = 0; q < 3; q++) { J *ov = jget(tr, views[q]); J *tv = jget(t, views[q]); if (ov && tv) for (int z = 0; z < ov->n; z++) jset(tv, ov->a[z]->k, jclone(ov->a[z])); }
         rows_put(&trims, uid, t);
+        if (!slot_mode) {
+            if (!uexp) {
+                uexp = base_json(c, UEXP); if (!uexp) goto done;
+                playable = base_json(c, "pack/playableunits.json"); if (!playable) goto done;
+                progression = base_json(c, "pack/progressionunits.json"); if (!progression) goto done;
+            }
+            J *donor_cat = cat_find(chars, donor_id);
+            if (!donor_cat) FAIL("%lld: donor %lld is missing from character catalog", uid, donor_id);
+            J *cat = jclone(donor_cat);
+            jset(cat, "unitId", jnum_i(uid));
+            jset(cat, "rare", JC(jget(u, "rare"))); jset(cat, "sameId", JC(jget(u, "sameId")));
+            jset(cat, "cardImageId", JC(jget(u, "cardImageId")));
+            jset(cat, "iconImageId", JC(jget(u, "iconImageId")));
+            jset(cat, "primarySkillId", JC(jget(u, "skillId")));
+            jset(cat, "ultimateSkillId", JC(jget(u, "sSkillId")));
+            J *cs = jget(cat, "skills");
+            if (cs) {
+                J *v = jget(cs, "primary"); if (v) jset(v, "id", JC(jget(u, "skillId")));
+                v = jget(cs, "ultimate"); if (v) jset(v, "id", JC(jget(u, "sSkillId")));
+            }
+            J *identity = jget(cat, "identity");
+            if (identity) {
+                jset(identity, "name", jstr(jgets(s, "name", "")));
+                jset(identity, "subtitle", jstr(jgets(s, "subtitle", "")));
+                jset(identity, "langId", JC(jget(u, "langId")));
+                jset(identity, "subtitleLangId", JC(jget(u, "langId2")));
+                jset(identity, "rarity", JC(jget(u, "rare")));
+                jset(identity, "attribute", JC(jget(u, "attr")));
+                jset(identity, "cost", JC(jget(u, "cost")));
+            }
+            J *pr = jget(cat, "progression");
+            if (pr) {
+                const char *keys[] = {"blazingEvolution", "evolution", "reversion"};
+                for (int i = 0; i < 3; i++) {
+                    J *v = jobj(); jset(v, "materials", jnew(J_ARR));
+                    jset(v, "targetUnitId", jnum_i(0)); jset(pr, keys[i], v);
+                }
+            }
+            J *management = jget(cat, "managementAssets");
+            J *trim_ref = jget(management, "cardTrimming");
+            if (trim_ref) jset(trim_ref, "id", jnum_i(uid));
+            jset(cat, "defaultTeamEligible", jnew(J_BOOL));
+            jpush(jget(chars, "units"), cat);
+            char key[64], donor_key[64];
+            snprintf(key, sizeof key, "%lld", uid);
+            snprintf(donor_key, sizeof donor_key, "%lld", donor_id);
+            J *experience_units = jget(uexp, "units");
+            if (experience_units) jset(experience_units, key, JC(jget(experience_units, donor_key)));
+            if (playable && playable->t == J_ARR) jpush(playable, jnum_i(uid));
+            if (progression && progression->t == J_OBJ) {
+                J *old = jget(progression, donor_key);
+                jset(progression, key, old ? jclone(old) : jnum_i(0));
+            }
+        }
         if (!jget(s, "gift") || jtruthy(jget(s, "gift"))) {
             char key[64]; snprintf(key, sizeof key, "forge-unit-%lld-v1", uid);
             J *gr = jget(presents, "grants");
@@ -744,6 +798,13 @@ int fc_build(const FcBuild *cfg) {
     /* tables back into their bundles */
     fc_log("writing tables");
     rows_finish(&units); rows_finish(&skills); rows_finish(&trims);
+    if (any_new_ids) {
+        J *count = jget(chars, "counts");
+        if (count) {
+            if (jget(count, "unitRecords")) jset(count, "unitRecords", jnum_i(jget(U.j, "datas")->n));
+            if (jget(count, "playerForms")) jset(count, "playerForms", jnum_i(jget(chars, "units")->n));
+        }
+    }
     { Buf o = {0}; CHECK(table_bundle(c, &U, &o)); newb_set(c, "language/en/unitdata/unitlist.bytes", &o); }
     { Buf o = {0}; CHECK(table_bundle(c, &S, &o)); newb_set(c, "unitdatabin/skilllist.bytes", &o); }
     if (f_changed) { rows_finish(&frows); Buf o = {0}; CHECK(table_bundle(c, &FT, &o)); newb_set(c, "unitdatabin/fieldskilllist.bytes", &o); }
