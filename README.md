@@ -36,6 +36,10 @@ Your work is saved in your browser. **Save mod pack** also works as a backup, an
 
 **Something went wrong?** The add-on writes a log to **Files › On My iPhone › Blazing:Rebirth › BlazingForge › forge.log**.
 
+### Independent-ID research (experimental)
+
+The [New-ID Lab](docs/new-id-lab.md) can review a mod ZIP, compare proposed new IDs with a local server's `/diagnostics/unit-preflight` result, and preview banner ID changes. It is **read-only** and does not generate an installable mod. The default Studio/add-on still uses replacement slots; an unmodified server will reject added IDs.
+
 ### Things to know
 
 - The offline server only accepts units it already knows, so every custom character **takes over** a free event or shop 5★→6★ unit. Copies of that unit you already own turn into your character.
