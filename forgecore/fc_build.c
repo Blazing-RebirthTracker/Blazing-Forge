@@ -821,6 +821,51 @@ int fc_build(const FcBuild *cfg) {
         Buf t2 = {0}; bundle_save(&thumbs, &t2, cfg->lz4_level); newb_set(c, "thumbnaillist/thumbnaillist", &t2);
     }
 
+    /*
+     * Mirror new iOS unit and skill data into the Android recovery pack used
+     * by the offline backend. This does not disable compiled engine allowlists.
+     */
+    if (any_new_ids) {
+        J *pack = base_json(c, "pack/manifest.json"); if (!pack) goto done;
+        const char *android_routes[] = {
+            "/assets/Android/language/en/unitdata/unitlist.bytes",
+            "/assets/Android/unitdatabin/skilllist.bytes"
+        };
+        Table *ios_tables[] = {&U, &S};
+        for (int k = 0; k < 2; k++) {
+            J *pentry = NULL, *pfiles = jget(pack, "files");
+            for (int q = 0; pfiles && q < pfiles->n; q++)
+                if (!strcmp(jgets(pfiles->a[q], "route", ""), android_routes[k])) {
+                    pentry = pfiles->a[q]; break;
+                }
+            if (!pentry) FAIL("missing Android recovery route: %s", android_routes[k]);
+            const char *asset = jgets(pentry, "asset", NULL);
+            if (!asset) FAIL("Android recovery route has no asset");
+            char rel[1024]; snprintf(rel, sizeof rel, "pack/%s", asset);
+            Table at = {0}; CHECK(base_read(c, rel, &at.bundle));
+            Buf encoded = {0};
+            if (read_text(&at.bundle, &encoded) || encoded.n < 4) {
+                buf_free(&encoded); table_free(&at); goto done;
+            }
+            at.seed = rd32le(encoded.p); buf_free(&encoded);
+            at.j = jclone(ios_tables[k]->j);
+            Buf rewritten = {0}; int rr = table_bundle(c, &at, &rewritten);
+            table_free(&at); if (rr) goto done;
+            CHECK(out_write(c, rel, rewritten.p, rewritten.n));
+            char sh[65]; sha256_hex(rewritten.p, rewritten.n, sh);
+            jset(pentry, "bytes", jnum_i((long long)rewritten.n));
+            jset(pentry, "sha256", jstr(sh));
+            buf_free(&rewritten);
+        }
+        CHECK(out_json(c, "pack/manifest.json", pack, 2));
+        CHECK(out_json(c, "pack/playableunits.json", playable, 1));
+        CHECK(out_json(c, "pack/progressionunits.json", progression, 1));
+        CHECK(out_json(c, CHARS, chars, 1));
+        CHECK(out_json(c, UEXP, uexp, 1));
+        jfree(pack);
+        fc_log("experimental new-ID tables generated; executable-side validation NOT verified");
+    }
+
     /* summon animation re-skin: mod/summon/summon.json paints new part art into the atlas cells */
     {
         char *sp = fc_sprintf("%s/summon/summon.json", cfg->mod);
@@ -1055,7 +1100,12 @@ int fc_build(const FcBuild *cfg) {
         J *ios = jget(bdj, "iosContent"); jset(ios, "manifestSha256", jstr(sh));
         J *routes_now = NULL; { Buf rb = {0}; char *rp = outp(c, "content-ios/ios-routes.json"); file_read(rp, &rb); free(rp); routes_now = jparse((char *)rb.p, rb.n); buf_free(&rb); }
         jset(ios, "routes", jnum_i(routes_now ? routes_now->n : 0)); jfree(routes_now);
-        Buf pm = {0}; CHECK(base_read(c, "pack/manifest.json", &pm)); sha256_hex(pm.p, pm.n, sh); buf_free(&pm);
+        Buf pm = {0};
+        if (any_new_ids) {
+            char *path = outp(c, "pack/manifest.json");
+            int rr = file_read(path, &pm); free(path); CHECK(rr);
+        } else CHECK(base_read(c, "pack/manifest.json", &pm));
+        sha256_hex(pm.p, pm.n, sh); buf_free(&pm);
         jset(jget(bdj, "pack"), "manifestSha256", jstr(sh));
         char *what = fc_sprintf("%s + Blazing Forge mod", jgets(bdj, "what", "")); jset(bdj, "what", jstr(what)); free(what);
         J *fo = jobj(); J *ul = jnew(J_ARR); for (int i = 0; i < specs->n; i++) jpush(ul, jnum_i(jgeti(specs->a[i], "id", 0)));
