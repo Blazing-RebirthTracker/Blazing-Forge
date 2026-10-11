@@ -1,1 +1,8 @@
-{"format":1,"allowNewIds":true,"characters":["iOS smoke unit 480046"]}
+{
+  "format": 1,
+  "allowNewIds": true,
+  "characters": [
+    "iOS smoke unit 480046"
+  ],
+  "preserveRecoveryPack": true
+}

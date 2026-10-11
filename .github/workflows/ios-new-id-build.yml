@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/ios-new-id-builder-20261011
+      - feature/ios-new-id-preserve-pack-20261011
   workflow_dispatch:
 jobs:
   linux-compile:
@@ -73,6 +74,11 @@ jobs:
           c=json.load(open(os.path.join(p,"content","config","core","characters","cache-valid-characters-2.28.0.json")))
           ids=[u["unitId"] for u in c["units"]]
           assert 10476 in ids and 480046 in ids
+          import hashlib
+          initial=os.path.join(os.environ["RUNNER_TEMP"],"newidbase","BlazingData","pack","manifest.json")
+          built=os.path.join(p,"pack","manifest.json")
+          assert not os.path.exists(built) or open(built,"rb").read()==open(initial,"rb").read()
+          print("Recovery pack manifest is unmodified")
           assert len(ids)==len(set(ids))
           print("Client catalog retains donor 10476 and includes new ID 480046")
           PY
