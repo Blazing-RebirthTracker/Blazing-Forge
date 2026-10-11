@@ -737,7 +737,7 @@ int fc_build(const FcBuild *cfg) {
             J *management = jget(cat, "managementAssets");
             J *trim_ref = jget(management, "cardTrimming");
             if (trim_ref) jset(trim_ref, "id", jnum_i(uid));
-            jset(cat, "defaultTeamEligible", jnew(J_BOOL));
+            jset(cat, "defaultTeamEligible", jnew(J_FALSE));
             jpush(jget(chars, "units"), cat);
             char key[64], donor_key[64];
             snprintf(key, sizeof key, "%lld", uid);
