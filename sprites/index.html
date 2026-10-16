@@ -108,6 +108,8 @@ details.rot summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--tx
 .rotBody{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 #rotAngle{flex:1;min-width:120px;accent-color:var(--ember)}
 #szRange{flex:1;min-width:120px;accent-color:var(--ember)}
+#offX,#offY{width:64px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:7px 8px}
+#pieceCv.dragme{cursor:move;touch-action:none}
 #rotNum,#rfAngle,#szNum,#rfSize{width:76px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:7px 8px}
 .rotSteps .chip{min-height:30px;padding:4px 10px}
 #rfCv{width:100%;max-width:100%;height:auto;border-radius:10px;background:conic-gradient(#232833 25%,#1b1f28 0 50%,#232833 0 75%,#1b1f28 0) 0 0/12px 12px}
@@ -227,15 +229,18 @@ details.rot summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--tx
             <div class="rotBody">
               <span class="lbl">Size</span>
               <div class="row"><input type="range" id="szRange" min="25" max="300" step="1" value="100" aria-label="Size in percent"><input type="number" id="szNum" min="10" max="400" step="1" value="100" aria-label="Size in percent"><span class="hint">%</span></div>
-              <div class="row rotSteps"><button class="chip" data-s="-10">&minus;10%</button><button class="chip" data-s="-1">&minus;1%</button><button class="chip" data-s="1">+1%</button><button class="chip" data-s="10">+10%</button><button class="chip" id="szReset">100%</button>
-                <span class="hint" style="margin-left:6px">Move</span><button class="chip" data-mx="-1" aria-label="Move left">&larr;</button><button class="chip" data-my="-1" aria-label="Move up">&uarr;</button><button class="chip" data-my="1" aria-label="Move down">&darr;</button><button class="chip" data-mx="1" aria-label="Move right">&rarr;</button></div>
+              <div class="row rotSteps"><button class="chip" data-s="-10">&minus;10%</button><button class="chip" data-s="-1">&minus;1%</button><button class="chip" data-s="1">+1%</button><button class="chip" data-s="10">+10%</button><button class="chip" id="szReset">100%</button></div>
+              <span class="lbl">Offset</span>
+              <div class="row rotSteps"><span class="hint">X</span><input type="number" id="offX" step="1" value="0" aria-label="Offset X in pixels"><span class="hint">Y</span><input type="number" id="offY" step="1" value="0" aria-label="Offset Y in pixels"><span class="hint">px</span>
+                <button class="chip" data-mx="-1" aria-label="Move left">&larr;</button><button class="chip" data-my="-1" aria-label="Move up">&uarr;</button><button class="chip" data-my="1" aria-label="Move down">&darr;</button><button class="chip" data-mx="1" aria-label="Move right">&rarr;</button><button class="chip" id="offReset">Center</button></div>
+              <p class="hint" style="margin:0">Drag the piece preview above to move it, or Shift-click an arrow to move 10 px.</p>
               <span class="lbl">Angle</span>
               <div class="row"><input type="range" id="rotAngle" min="-180" max="180" step="0.5" value="0" aria-label="Angle in degrees"><input type="number" id="rotNum" min="-180" max="180" step="0.5" value="0" aria-label="Angle in degrees"><span class="hint">&deg;</span></div>
               <div class="row rotSteps"><button class="chip" data-d="-90">&minus;90&deg;</button><button class="chip" data-d="-15">&minus;15</button><button class="chip" data-d="-1">&minus;1</button><button class="chip" data-d="1">+1</button><button class="chip" data-d="15">+15</button><button class="chip" data-d="90">+90&deg;</button><button class="chip" id="rotFlipH" aria-pressed="false">Flip &harr;</button><button class="chip" id="rotFlipV" aria-pressed="false">Flip &varr;</button></div>
               <div class="seg" id="rotMode" role="group" aria-label="Rotation quality"></div>
               <div class="seg" id="rotFit" role="group" aria-label="What happens to corners outside the box"></div>
               <div class="row"><button class="btn primary" id="rotApply">Keep changes</button><button class="btn ghost" id="rotCancel">Cancel</button></div>
-              <p class="hint" id="rotHint">Size, angle and position are applied in one pass from the piece as it was when you started, so adjusting many times never adds blur. Right angles and flips at 100% are lossless. Anything that grows past the box is cut at its edge.</p>
+              <p class="hint" id="rotHint">Size, angle and offset are applied in one pass from the piece as it was when you started, so adjusting many times never adds blur. Right angles and flips at 100% are lossless. Anything that grows past the box is cut at its edge.</p>
             </div>
           </details>
           <p class="hint" id="pieceHint">Edits go on your own copy of the sheet and are kept in this browser. The original stays as it is.</p>
@@ -777,7 +782,7 @@ function restorePiece() {
 }
 function refreshPieceTools(live) {
   if (!live && rot && (!st.sel || rectKey(cellOf(st.sel.table, st.sel.key) || []) !== rot.rk)) rotEnd(true);
-  const t = workingTarget(); $('pieceTools').hidden = !t; $('pieceExport').hidden = !st.sel;
+  const t = workingTarget(); $('pieceTools').hidden = !t; $('pieceExport').hidden = !st.sel; $('pieceCv').classList.toggle('dragme', !!t);
   const pc = $('pieceCv'); const ctx = pc.getContext('2d'); ctx.clearRect(0, 0, 96, 96);
   if (st.sel && st.data) { const c = cellOf(st.sel.table, st.sel.key); if (c) { const [img, x, y, w, h] = srcFor(st.sel.table, st.sel.key, false); const s = Math.min(88 / w, 88 / h); ctx.imageSmoothingEnabled = true; ctx.drawImage(img, x, y, w, h, (96 - w * s) / 2, (96 - h * s) / 2, w * s, h * s); } }
   if (!t) return;
@@ -875,7 +880,7 @@ function rotEnd(keep) {
   const m = st.mine[r.id];
   if (m && !keep) { m.img.getContext('2d').putImageData(r.snap, r.box[0], r.box[1]); if (r.hadEdit) m.edits[r.rk] = r.hadEdit; else delete m.edits[r.rk]; }
   if (m) { bumpEdits(); persist(r.id); }
-  $('rotAngle').value = 0; $('rotNum').value = 0; $('szRange').value = 100; $('szNum').value = 100; $('rotFlipH').setAttribute('aria-pressed', 'false'); $('rotFlipV').setAttribute('aria-pressed', 'false');
+  $('rotAngle').value = 0; $('rotNum').value = 0; $('szRange').value = 100; $('szNum').value = 100; $('offX').value = 0; $('offY').value = 0; $('rotFlipH').setAttribute('aria-pressed', 'false'); $('rotFlipV').setAttribute('aria-pressed', 'false');
   $('rotHint').textContent = keep ? `Changes kept on ${r.name || 'the piece'}. Restore original still brings back the game's version.` : 'Changes cancelled.';
   renderControls(); drawAtlas(); refreshPieceTools(); if (r.kind !== 'common') status(r.kind);
 }
@@ -897,7 +902,24 @@ $('szRange').addEventListener('input', e => szSet(+e.target.value));
 $('szNum').addEventListener('change', e => szSet(+e.target.value || 100));
 document.querySelectorAll('.rotSteps [data-s]').forEach(b => b.onclick = () => szSet((rot ? rot.size * 100 : 100) + +b.dataset.s));
 $('szReset').onclick = () => szSet(100);
-document.querySelectorAll('.rotSteps [data-mx], .rotSteps [data-my]').forEach(b => b.onclick = () => { if (!rotBegin()) return; rot.dx += +(b.dataset.mx || 0); rot.dy += +(b.dataset.my || 0); rotRender(); });
+function offSet(x, y) {
+  if (!rotBegin()) return; rot.dx = Math.round(x); rot.dy = Math.round(y);
+  $('offX').value = rot.dx; $('offY').value = rot.dy; rotRender();
+}
+document.querySelectorAll('.rotSteps [data-mx], .rotSteps [data-my]').forEach(b => b.onclick = e => {
+  const k = e.shiftKey ? 10 : 1; offSet((rot ? rot.dx : 0) + k * +(b.dataset.mx || 0), (rot ? rot.dy : 0) + k * +(b.dataset.my || 0)); });
+$('offX').addEventListener('change', e => offSet(+e.target.value || 0, rot ? rot.dy : 0));
+$('offY').addEventListener('change', e => offSet(rot ? rot.dx : 0, +e.target.value || 0));
+$('offReset').onclick = () => offSet(0, 0);
+// drag the piece preview to move the piece inside its box
+(() => {
+  const cv = $('pieceCv'); let last = null, px = 1;
+  cv.addEventListener('pointerdown', e => { const t = workingTarget(); if (!t) return; cv.setPointerCapture(e.pointerId);
+    const [img, , , w, h] = srcFor(st.sel.table, st.sel.key, false); px = Math.min(88 / w, 88 / h) / (cv.width / cv.getBoundingClientRect().width); // screen px per sheet px
+    if (!rotBegin()) return; last = [e.clientX, e.clientY, rot.dx, rot.dy]; e.preventDefault(); });
+  cv.addEventListener('pointermove', e => { if (!last) return; offSet(last[2] + (e.clientX - last[0]) / px, last[3] + (e.clientY - last[1]) / px); });
+  const end = () => { last = null; }; cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+})();
 $('rotApply').onclick = () => rotEnd(true);
 $('rotCancel').onclick = () => rotEnd(false);
 
