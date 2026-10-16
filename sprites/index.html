@@ -15,7 +15,7 @@
   --f-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
   color-scheme:dark;
 }
-html,body{height:100%}
+html,body{min-height:100%}
 body{background:var(--ink);color:var(--tx);font-family:var(--f-body);font-size:14px;margin:0}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -47,6 +47,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;fl
 .zoomctl button{border:0;background:transparent;color:var(--tx);min-width:34px;height:32px;border-radius:7px;font-weight:700;font-size:15px;padding:0 8px}
 .zoomctl button.txt{font-size:12px}
 .zoomctl button:hover{background:var(--panel2)}
+.zoomctl button[aria-pressed="true"]{background:var(--ember-soft);color:var(--ember-tx)}
 .zoomctl span{font-family:var(--f-mono);font-size:11px;color:var(--tx2);min-width:42px;text-align:center}
 .stage .tag{position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);background:rgba(14,16,22,.72);padding:4px 8px;border-radius:6px;pointer-events:none}
 .stage.checker{background:conic-gradient(#2a2f3a 25%,#20242d 0 50%,#2a2f3a 0 75%,#20242d 0) 0 0/20px 20px}
@@ -186,8 +187,8 @@ dialog.lock input{width:100%;background:var(--panel2);border:1px solid var(--lin
       <div class="atlascol">
         <div class="seg" id="atlasSeg" role="group" aria-label="Which sheet to show"></div>
         <div class="atlas"><canvas id="atlasCv" aria-label="Sprite sheet with the selected part outlined. Tap a box to select that piece."></canvas>
-          <div class="zoomctl" role="group" aria-label="Sheet zoom"><button id="aOut" aria-label="Zoom out">&minus;</button><span id="aLbl">100%</span><button id="aIn" aria-label="Zoom in">+</button><button class="txt" id="aFocus">Piece</button><button class="txt" id="aReset">Reset</button></div></div>
-        <p class="hint">Drag to move, scroll or pinch to zoom. Tap any box on the sheet to select that piece, even if it isn&rsquo;t in this frame.</p>
+          <div class="zoomctl" role="group" aria-label="Sheet zoom"><button id="aOut" aria-label="Zoom out">&minus;</button><span id="aLbl">100%</span><button id="aIn" aria-label="Zoom in">+</button><button class="txt" id="aFocus">Piece</button><button class="txt" id="areaBtn" aria-pressed="false" title="Drag on the sheet to pick any area">Draw a box</button><button class="txt" id="aReset">Reset</button></div></div>
+        <p class="hint">Drag to move, scroll or pinch to zoom. Tap any box on the sheet to select that piece, even if it isn&rsquo;t in this frame. To edit an area that isn&rsquo;t a piece, turn on Draw a box and drag over it.</p>
         <div class="row" id="exportRow"><button class="btn ghost" id="saveAtlas">Save this sheet as PNG</button><button class="btn ghost" id="discardCommon" hidden>Discard my edits</button><span class="status" id="atlasName"></span></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
@@ -435,7 +436,9 @@ function makeNav(cvs, v, o) {
       const unit = e.deltaMode === 1 ? 16 : 1; zoomAt(v, cv.width, cv.height, px, py, Math.exp(-e.deltaY * unit * (e.ctrlKey ? 0.01 : 0.0015)), o.lo, o.hi); o.changed(); }, { passive: false });
   }
 }
-function cellOf(table, key) { const f = table === 'fx' ? fxInfo() : null; return table === 'fx' ? (f ? f.cells[key] : undefined) : st.data.cells[key]; }
+function cellOf(table, key) {
+  if (table === 'area') { const [k, x, y, w, h] = key.split('|'); return [k, +x, +y, +w, +h, `area ${x},${y} ${w}${X}${h}`]; }
+  const f = table === 'fx' ? fxInfo() : null; return table === 'fx' ? (f ? f.cells[key] : undefined) : st.data.cells[key]; }
 function srcFor(table, key, orig) {
   const c = cellOf(table, key); const img = sheetFor(c[0], orig), base = baseTex(c[0]);
   const k = W(img) / W(base), kh = H(img) / H(base);
@@ -498,6 +501,12 @@ function drawAtlas() {
     const e = editOf(c); ctx.strokeStyle = e === 'deleted' ? 'rgba(255,110,90,.75)' : e ? 'rgba(120,220,160,.8)' : 'rgba(255,255,255,.16)';
     ctx.setLineDash(e === 'deleted' ? [4, 3] : []); ctx.strokeRect(ox + c[1] * s + .5, oy + c[2] * s + .5, c[3] * s - 1, c[4] * s - 1); }
   ctx.setLineDash([]);
+  const mm = st.mine[slotId(A.kind)];
+  if (mm && modeOf(A.kind) === 'custom') for (const [rk, e] of Object.entries(mm.edits)) {
+    const [x, y, w, hh] = rk.split(',').map(Number); ctx.strokeStyle = e === 'deleted' ? 'rgba(255,110,90,.75)' : 'rgba(120,220,160,.8)';
+    ctx.setLineDash(e === 'deleted' ? [4, 3] : []); ctx.strokeRect(ox + x * s + .5, oy + y * s + .5, w * s - 1, hh * s - 1); }
+  ctx.setLineDash([]);
+  if (areaDraft) { const [x, y, w, hh] = areaDraft; ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.strokeRect(ox + x * s, oy + y * s, w * s, hh * s); ctx.setLineDash([]); ctx.lineWidth = 1; }
   if (st.sel) {
     const c = cellOf(st.sel.table, st.sel.key);
     if (c && c[0] === A.kind) { ctx.strokeStyle = '#FF7A3D'; ctx.lineWidth = 2.5; ctx.strokeRect(ox + c[1] * s - 2, oy + c[2] * s - 2, c[3] * s + 4, c[4] * s + 4); ctx.fillStyle = 'rgba(255,122,61,.18)'; ctx.fillRect(ox + c[1] * s, oy + c[2] * s, c[3] * s, c[4] * s); }
@@ -552,7 +561,7 @@ function select(table, key, note) {
   const c = cellOf(table, key); if (!c) return; st.sel = { table, key }; st.atlasKind = c[0];
   const pi = $('partInfo'); pi.replaceChildren();
   const n = document.createElement('span'); n.className = 'name'; n.textContent = c[5] || key; pi.append(n, document.createElement('br'));
-  const where = c[0] === 'chr' ? 'Character sheet' : c[0] === 'fx' ? (fxInfo().name + '.png (effect sheet)') : 'Shared hit/slash sheet (every unit uses it)';
+  const where = (table === 'area' ? 'Your box on the ' : '') + (c[0] === 'chr' ? 'Character sheet' : c[0] === 'fx' ? (fxInfo().name + '.png (effect sheet)') : 'Shared hit/slash sheet (every unit uses it)');
   pi.append(where, document.createElement('br'), `Box x ${c[1]}, y ${c[2]}, ${c[3]}${X}${c[4]} px`);
   if (note) pi.append(document.createElement('br'), note);
   renderControls(); drawAtlas(); $('partList').dataset.sig = ''; updateParts(); refreshPieceTools();
@@ -808,7 +817,9 @@ $('unlockBtn').onclick = () => {
     getJSON('data/units.json').then(u => { st.units = u; selectUnit(st.unit.key); });
     return;
   }
-  $('lockMsg').textContent = ''; $('lockPw').value = ''; const d = $('lockDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', ''); $('lockPw').focus();
+  $('lockMsg').textContent = ''; $('lockPw').value = ''; const d = $('lockDlg');
+  try { const fe = window.frameElement; if (fe) { const top = Math.max(0, -fe.getBoundingClientRect().top) + 90; d.style.margin = '0 auto'; d.style.top = top + 'px'; } } catch (e) {}
+  if (d.showModal) d.showModal(); else d.setAttribute('open', ''); $('lockPw').focus();
 };
 $('lockCancel').onclick = () => $('lockDlg').close();
 $('lockForm').addEventListener('submit', async e => {
@@ -834,6 +845,19 @@ $('fitBtn').onclick = () => { st.fit = !st.fit; computeBounds(); renderControls(
 const stageZoom = f => { const cv = $('cvA'); zoomAt(st.view, cv.width, cv.height, cv.width / 2, cv.height / 2, f, 0.25, 24); renderControls(); };
 const atlasZoom = f => { const cv = $('atlasCv'); zoomAt(st.av, cv.width, cv.height, cv.width / 2, cv.height / 2, f, 1, 32); drawAtlas(); };
 makeNav([$('cvA'), $('cvB')], st.view, { lo: 0.25, hi: 24, changed: () => { $('zLbl').textContent = Math.round(st.view.z * 100) + '%'; }, tap: (e, cv) => { if (cv.id === 'cvA') hit(e); } });
+let areaDraft = null;
+(() => {
+  const cv = $('atlasCv'); let start = null;
+  const toSheet = e => { const r = cv.getBoundingClientRect(); const k = cv.width / r.width; const A = atlasSheet(); const { s, ox, oy } = atlasCam(cv.width, cv.height, A.base);
+    return [Math.max(0, Math.min(W(A.base), ((e.clientX - r.left) * k - ox) / s)), Math.max(0, Math.min(H(A.base), ((e.clientY - r.top) * k - oy) / s))]; };
+  const box = (a, b) => { const x = Math.floor(Math.min(a[0], b[0])), y = Math.floor(Math.min(a[1], b[1])); return [x, y, Math.ceil(Math.max(a[0], b[0])) - x, Math.ceil(Math.max(a[1], b[1])) - y]; };
+  cv.addEventListener('pointerdown', e => { if (!st.areaMode || e.button > 0) return; e.stopImmediatePropagation(); cv.setPointerCapture(e.pointerId); start = toSheet(e); areaDraft = [...start, 0, 0]; });
+  cv.addEventListener('pointermove', e => { if (!st.areaMode || !start) return; e.stopImmediatePropagation(); areaDraft = box(start, toSheet(e)); drawAtlas(); });
+  const end = e => { if (!st.areaMode || !start) return; e.stopImmediatePropagation(); const b = box(start, toSheet(e)); start = null; areaDraft = null;
+    if (b[2] >= 2 && b[3] >= 2) { const A = atlasSheet(); select('area', [A.kind, ...b].join('|')); } else drawAtlas(); };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  $('areaBtn').onclick = () => { st.areaMode = !st.areaMode; $('areaBtn').setAttribute('aria-pressed', String(st.areaMode)); cv.style.cursor = st.areaMode ? 'cell' : ''; };
+})();
 makeNav([$('atlasCv')], st.av, { lo: 1, hi: 32, changed: drawAtlas, tap: atlasTap });
 $('zIn').onclick = () => stageZoom(1.4); $('zOut').onclick = () => stageZoom(1 / 1.4); $('zReset').onclick = () => { resetView(st.view); renderControls(); };
 $('aIn').onclick = () => atlasZoom(1.5); $('aOut').onclick = () => atlasZoom(1 / 1.5); $('aReset').onclick = () => { resetView(st.av); drawAtlas(); }; $('aFocus').onclick = focusPiece;

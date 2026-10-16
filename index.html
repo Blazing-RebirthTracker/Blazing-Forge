@@ -64,7 +64,7 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--line);
 nav.tabs .beta{font:600 10px var(--body);color:var(--chakra);margin-left:4px;vertical-align:2px}
 .sprites-tab{display:flex;flex-direction:column;gap:10px}
 .sprites-note{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
-.sprites-frame{display:block;width:100%;height:calc(100dvh - 150px);min-height:640px;border:0;border-radius:var(--r);background:#0E1016}
+.sprites-frame{display:block;width:100%;height:900px;border:0;border-radius:var(--r);background:#0E1016;overflow:hidden}
 #theme-toggle{font-size:12.5px;padding:5px 9px;border-color:var(--line)}
 .status{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
@@ -201,7 +201,8 @@ table.hist th{font:600 12px var(--display);text-transform:uppercase;letter-spaci
       <h4>Sprites (beta)</h4>
       <ul>
         <li>New Sprites tab: play a unit's battle animations (idle, move, attack, chain, Ninjutsu, Secret Technique) with their effects, at full, half or quarter speed, facing either way.</li>
-        <li>Tap any piece on the stage or on the sheet to find it. Tap the same spot again to reach the piece underneath, or list every piece on the sheet.</li>
+        <li>Tap any piece on the stage or on the sheet to find it. Tap the same spot again to reach the piece underneath, or list every piece on the sheet, including ones these animations don't use.</li>
+        <li>Draw a box: drag over any area of a sheet to replace or delete it, even where there's no piece.</li>
         <li>Replace a single piece with your own image, delete it, or restore the original. This works on the character sheet, each technique's effect sheet and the shared hit/slash sheet.</li>
         <li>Your edits are kept in this browser, so they're still there after a reload. Save any sheet or single piece as a PNG (on iPhone it opens the share sheet: Save to Files or Save Image).</li>
         <li>Drop in a whole edited sheet to see it animate right away. On a computer, Watch a file reloads it every time you save in your editor.</li>
@@ -1231,7 +1232,15 @@ async function importPack(file){
 let SPRITES_EL=null;
 function renderSprites(){
   if (!SPRITES_EL){
-    const frame=h("iframe",{class:"sprites-frame",src:"sprites/index.html",title:"Sprite editor",allow:"web-share; clipboard-write; fullscreen"});
+    const frame=h("iframe",{class:"sprites-frame",src:"sprites/index.html",title:"Sprite editor",scrolling:"no",allow:"web-share; clipboard-write; fullscreen"});
+    // grow the frame to the editor's full height so the Studio page scrolls, not a box inside it
+    frame.addEventListener("load",()=>{
+      try{
+        const doc=frame.contentDocument, wrap=doc.querySelector(".wrap")||doc.body;
+        const fit=()=>{ frame.style.height=Math.ceil(wrap.getBoundingClientRect().height)+"px"; };
+        new frame.contentWindow.ResizeObserver(fit).observe(wrap); fit();
+      }catch(e){ frame.style.height="calc(100dvh - 150px)"; }
+    });
     SPRITES_EL=h("section",{class:"sprites-tab"},
       h("p",{class:"sprites-note"},"Play a unit's battle animations and effects, swap or delete single pieces of its sheets, and save the PNGs. Your edits stay in this browser. ",
         h("a",{href:"sprites/index.html",target:"_blank",rel:"noopener"},"Open in its own tab"),
