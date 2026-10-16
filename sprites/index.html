@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Blazing Forge Sprites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a battle "stage" on the left that you scrub and click; controls rail on the right; atlas inspector below. Single dark look, deliberately (it's a game-tool stage). */
+:root{
+  --ink:#0E1016; --panel:#161A22; --panel2:#1E232E; --line:#2A3040;
+  --tx:#ECEEF3; --tx2:#A6ADBC; --tx3:#7F889A;
+  --ember:#FF7A3D; --ember-tx:#FFA273; --ember-soft:rgba(255,122,61,.14);
+  --sky1:#232B3B; --sky2:#141821; --ground:#2C3446;
+  --f-disp:'Chakra Petch', 'Rajdhani', system-ui, sans-serif;
+  --f-body:'Manrope', system-ui, -apple-system, sans-serif;
+  --f-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--ink);color:var(--tx);font-family:var(--f-body);font-size:14px;margin:0}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ember-tx);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto;padding-block:16px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{flex:none}
+.brand h1{font-family:var(--f-disp);font-weight:700;font-size:20px;letter-spacing:.06em;margin:0;text-transform:uppercase}
+.brand small{color:var(--tx3);font-size:12px;font-family:var(--f-mono)}
+.seg{display:flex;gap:3px;background:var(--panel);border-radius:12px;padding:3px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;color:var(--tx2);border-radius:9px;padding:8px 12px;font-weight:700;font-size:13px;min-height:36px}
+.seg button[aria-pressed="true"]{background:var(--panel2);color:var(--tx)}
+.seg button[aria-pressed="true"] .k{color:var(--ember-tx)}
+.k{font-family:var(--f-mono);font-weight:500;font-size:11px;color:var(--tx3);margin-left:6px}
+
+.main{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start}
+@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
+
+.stagebox{background:var(--panel);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.stages{display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.stages.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stage{position:relative;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,var(--sky1),var(--sky2));aspect-ratio:4/3;max-width:100%}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:none}
+.stage canvas.dragging,.atlas canvas.dragging{cursor:grabbing}
+.zoomctl{position:absolute;right:8px;top:8px;display:flex;gap:2px;align-items:center;background:rgba(14,16,22,.8);border-radius:10px;padding:3px;z-index:2}
+.zoomctl button{border:0;background:transparent;color:var(--tx);min-width:34px;height:32px;border-radius:7px;font-weight:700;font-size:15px;padding:0 8px}
+.zoomctl button.txt{font-size:12px}
+.zoomctl button:hover{background:var(--panel2)}
+.zoomctl span{font-family:var(--f-mono);font-size:11px;color:var(--tx2);min-width:42px;text-align:center}
+.stage .tag{position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);background:rgba(14,16,22,.72);padding:4px 8px;border-radius:6px;pointer-events:none}
+.stage.checker{background:conic-gradient(#2a2f3a 25%,#20242d 0 50%,#2a2f3a 0 75%,#20242d 0) 0 0/20px 20px}
+.stage.light{background:linear-gradient(180deg,#cfd6e2,#aeb8c8)}
+
+.transport{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.icon{width:40px;height:40px;border:0;border-radius:11px;background:var(--panel2);display:grid;place-items:center;flex:none}
+.icon.primary{background:var(--ember);color:#1B0D05}
+.icon svg{width:18px;height:18px}
+.scrub{flex:1 1 180px;display:flex;align-items:center;gap:10px;min-width:0}
+.scrub input{flex:1;min-width:0;accent-color:var(--ember)}
+.fr{font-family:var(--f-mono);font-size:12px;color:var(--tx2);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+.rail{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--panel);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.lbl{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3)}
+.moves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.moves button{border:1px solid var(--line);background:transparent;color:var(--tx2);border-radius:10px;padding:8px 10px;min-height:38px;text-align:left;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.moves button[aria-pressed="true"]{border-color:rgba(255,122,61,.55);background:var(--ember-soft);color:var(--ember-tx)}
+.moves .len{font-family:var(--f-mono);font-size:10.5px;color:var(--tx3);font-weight:400}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:transparent;color:var(--tx2);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12.5px;min-height:34px}
+.chip[aria-pressed="true"]{border-color:rgba(255,122,61,.55);background:var(--ember-soft);color:var(--ember-tx)}
+.drop{border:1.5px dashed #3A4256;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;transition:border-color .15s,background .15s}
+.drop.over{border-color:var(--ember);background:var(--ember-soft)}
+.drop p{margin:0;color:var(--tx2);line-height:1.45;font-size:13px}
+.btn{border:0;border-radius:11px;padding:10px 14px;font-weight:800;font-size:13.5px;min-height:40px}
+.btn.primary{background:var(--ember);color:#1B0D05}
+.btn.ghost{background:var(--panel2);color:var(--tx)}
+.status{font-size:12.5px;color:var(--tx2);line-height:1.45}
+.status b{color:var(--tx)}
+.status.warn b{color:var(--ember-tx)}
+
+.inspect{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:900px){.inspect{grid-template-columns:minmax(0,1fr)}}
+.atlas{position:relative;background:conic-gradient(#232833 25%,#1b1f28 0 50%,#232833 0 75%,#1b1f28 0) 0 0/16px 16px;border-radius:14px;overflow:hidden;aspect-ratio:1/1;max-width:100%}
+.atlas canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:none}
+.atlascol{display:flex;flex-direction:column;gap:8px;min-width:0}
+.partinfo{font-family:var(--f-mono);font-size:12px;color:var(--tx2);line-height:1.6;word-break:break-word}
+.partinfo .name{font-family:var(--f-disp);font-size:18px;font-weight:600;color:var(--tx);letter-spacing:.02em}
+.list{max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:2px;font-family:var(--f-mono);font-size:11.5px}
+.list button{border:0;background:transparent;text-align:left;color:var(--tx2);padding:5px 8px;border-radius:7px;display:flex;justify-content:space-between;gap:8px}
+.list button:hover,.list button[aria-pressed="true"]{background:var(--panel2);color:var(--tx)}
+.hint{color:var(--tx3);font-size:12px;line-height:1.5;margin:0}
+.pieceRow{display:flex;gap:12px;align-items:flex-start}
+#pieceCv{width:96px;height:96px;flex:none;border-radius:10px;background:conic-gradient(#232833 25%,#1b1f28 0 50%,#232833 0 75%,#1b1f28 0) 0 0/12px 12px}
+.pieceTools{display:flex;flex-direction:column;gap:10px}
+.hidden-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.list .tag{color:var(--ember-tx)}
+dialog.lock{border:0;border-radius:16px;background:var(--panel);color:var(--tx);padding:18px;width:min(360px,calc(100vw - 32px))}
+dialog.lock::backdrop{background:rgba(5,7,10,.6)}
+dialog.lock h2{font-family:var(--f-disp);font-size:18px;letter-spacing:.04em;margin:0 0 6px}
+dialog.lock input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0 6px}
+#unlockBtn[aria-pressed="true"]{color:var(--ember-tx)}
+</style>
+</head><body>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l7 10-7 10-7-10z" fill="#FF7A3D"/></svg>
+      <h1>Forge Sprites</h1>
+      <small id="unitMeta"></small>
+    </div>
+    <div class="row"><div class="seg" id="unitSeg" role="group" aria-label="Unit"></div><button class="chip" id="unlockBtn" type="button" aria-haspopup="dialog">Test units</button></div>
+  </header>
+
+  <div class="main">
+    <section class="stagebox" aria-label="Animation stage">
+      <div class="stages" id="stages">
+        <div class="stage" id="stageA"><canvas id="cvA" aria-label="Animated preview, click a part to inspect it"></canvas><span class="tag" id="tagA">Your sheet</span><div class="zoomctl" role="group" aria-label="Stage zoom"><button id="zOut" aria-label="Zoom out">&minus;</button><span id="zLbl">100%</span><button id="zIn" aria-label="Zoom in">+</button><button class="txt" id="zReset">Reset</button></div></div>
+        <div class="stage" id="stageB" hidden><canvas id="cvB" aria-label="Original sheet preview"></canvas><span class="tag">Original</span></div>
+      </div>
+      <div class="transport">
+        <button class="icon primary" id="play" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor" id="playIco"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <button class="icon" id="prev" aria-label="Previous frame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14M18 6l-8 6 8 6z"/></svg></button>
+        <button class="icon" id="next" aria-label="Next frame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5v14M6 6l8 6-8 6z"/></svg></button>
+        <div class="scrub"><input type="range" id="scrub" min="0" max="0" value="0" aria-label="Frame"><span class="fr" id="frLbl">0 / 0</span></div>
+        <div class="seg" id="speedSeg" role="group" aria-label="Speed"></div>
+      </div>
+      <p class="hint">Drag to move the camera, scroll or pinch to zoom, tap a piece to inspect it. Keys: + and &minus; zoom, 0 resets.</p>
+    </section>
+
+    <aside class="rail">
+      <div class="card">
+        <span class="lbl">Move</span>
+        <div class="moves" id="moves"></div>
+        <div class="row">
+          <div class="seg" id="sideSeg" role="group" aria-label="Side"></div>
+          <button class="chip" id="loopBtn" aria-pressed="true">Loop</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="lbl">Sheet</span>
+        <div class="seg" id="sheetSeg" role="group" aria-label="Sheet"></div>
+        <div class="drop" id="drop">
+          <p>Drop an edited 1024&times;1024 sheet here, paste it, or pick a file. It updates the animation right away.</p>
+          <div class="row">
+            <label class="btn primary" for="file" tabindex="0" id="pickLbl">Choose PNG</label>
+            <input type="file" id="file" accept="image/png,image/*" class="hidden-file">
+            <button class="btn ghost" id="watchBtn">Watch a file</button>
+          </div>
+          <div class="status" id="sheetStatus">Loading…</div>
+          <div class="row"><button class="btn ghost" id="saveSheet">Save this sheet as PNG</button><button class="btn ghost" id="discardSheet" hidden>Discard my edits</button></div>
+        </div>
+      </div>
+      <div class="card" id="fxCard" hidden>
+        <span class="lbl" id="fxLbl">Effect sheet</span>
+        <div class="seg" id="fxSeg" role="group" aria-label="Effect sheet"></div>
+        <div class="drop" id="fxDrop">
+          <p id="fxHint">Drop an edited effect sheet here. It replaces this technique&rsquo;s effects only.</p>
+          <div class="row">
+            <label class="btn primary" for="fxFile" tabindex="0" id="fxPickLbl">Choose PNG</label>
+            <input type="file" id="fxFile" accept="image/png,image/*" class="hidden-file">
+            <button class="btn ghost" id="fxWatchBtn">Watch a file</button>
+          </div>
+          <div class="status" id="fxStatus"></div>
+          <div class="row"><button class="btn ghost" id="saveFx">Save this effect sheet as PNG</button><button class="btn ghost" id="discardFx" hidden>Discard my edits</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="lbl">View</span>
+        <div id="layerRow" hidden><div class="seg" id="layerSeg" role="group" aria-label="What to show"></div></div>
+        <div class="row">
+          <button class="chip" id="cmpBtn" aria-pressed="false">Compare with original</button>
+          <button class="chip" id="fitBtn" aria-pressed="true">Frame the whole move</button>
+        </div>
+        <div class="seg" id="bgSeg" role="group" aria-label="Background"></div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="card" aria-label="Part inspector">
+    <span class="lbl">Part inspector</span>
+    <div class="inspect">
+      <div class="atlascol">
+        <div class="seg" id="atlasSeg" role="group" aria-label="Which sheet to show"></div>
+        <div class="atlas"><canvas id="atlasCv" aria-label="Sprite sheet with the selected part outlined. Tap a box to select that piece."></canvas>
+          <div class="zoomctl" role="group" aria-label="Sheet zoom"><button id="aOut" aria-label="Zoom out">&minus;</button><span id="aLbl">100%</span><button id="aIn" aria-label="Zoom in">+</button><button class="txt" id="aFocus">Piece</button><button class="txt" id="aReset">Reset</button></div></div>
+        <p class="hint">Drag to move, scroll or pinch to zoom. Tap any box on the sheet to select that piece, even if it isn&rsquo;t in this frame.</p>
+        <div class="row" id="exportRow"><button class="btn ghost" id="saveAtlas">Save this sheet as PNG</button><button class="btn ghost" id="discardCommon" hidden>Discard my edits</button><span class="status" id="atlasName"></span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+        <div class="pieceRow">
+          <canvas id="pieceCv" width="96" height="96" aria-label="The selected piece as it looks now"></canvas>
+          <div class="partinfo" id="partInfo"><span class="name">Click a part</span><br>Click anything on the stage, or pick a piece below, to find it on the sheet.</div>
+        </div>
+        <div class="row" id="pieceExport" hidden><button class="btn ghost" id="savePiece">Save this piece as PNG</button></div>
+        <div class="pieceTools" id="pieceTools" hidden>
+          <div class="row">
+            <label class="btn primary" for="pieceFile" tabindex="0" id="piecePickLbl">Replace this piece</label>
+            <input type="file" id="pieceFile" accept="image/png,image/*" class="hidden-file">
+            <button class="btn ghost" id="pieceDelete">Delete this piece</button>
+            <button class="btn ghost" id="pieceRestore" hidden>Restore original</button>
+          </div>
+          <div class="seg" id="fitSeg" role="group" aria-label="How the new image fills the box"></div>
+          <p class="hint" id="pieceHint">Edits go on your own copy of the sheet and are kept in this browser. The original stays as it is.</p>
+        </div>
+        <div class="seg" id="listSeg" role="group" aria-label="Which pieces to list"></div>
+        <div class="list" id="partList"></div>
+      </div>
+    </div>
+  </section>
+</div>
+<dialog class="lock" id="lockDlg" aria-labelledby="lockTitle">
+  <form method="dialog" id="lockForm">
+    <h2 id="lockTitle">Test units</h2>
+    <p class="hint">Enter the password to load the test unit sheets.</p>
+    <input type="password" id="lockPw" autocomplete="current-password" aria-label="Password" required>
+    <div class="status" id="lockMsg"></div>
+    <div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn ghost" type="button" id="lockCancel">Cancel</button><button class="btn primary" type="submit" id="lockGo">Unlock</button></div>
+  </form>
+</dialog>
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const X = '×';
+const W = i => i.naturalWidth || i.width, H = i => i.naturalHeight || i.height;
+
+// ---- state
+// A "sheet slot" is one texture the editor can change: the unit's character sheet ('chr|unit'),
+// one technique's effect sheet ('fx|unit|role') or the shared hit/slash sheet ('common').
+// Each slot shows one of: 'orig' (game sheet), 'test' (unlocked test sheet) or 'custom' (your copy).
+const st = { units: [], unit: null, data: null, role: 0, side: 'R', frame: 0, playing: true, speed: 1, loop: true,
+  compare: false, fit: true, show: 'all', atlasKind: 'chr', listMode: 'frame', pieceFit: 'contain',
+  view: { z: 1, x: 0, y: 0 }, av: { z: 1, x: 0, y: 0 }, bg: 'stage',
+  mode: {}, mine: {}, sel: null, last: 0, acc: 0 };
+const tex = { orig: null, common: null, fx: {}, test: null, testFx: {} };
+const cache = {};
+let unlocked = null; // decrypted test payload {label, units: {key: {sheet, fx: {role: dataURL}}}}
+
+function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
+async function getJSON(p) { const r = await fetch(p); if (!r.ok) throw new Error(p + ' ' + r.status); return r.json(); }
+function seg(el, items, cur, on) {
+  el.replaceChildren(...items.map(([v, label, k]) => {
+    const b = document.createElement('button'); b.type = 'button';
+    b.setAttribute('aria-pressed', String(v === cur)); b.textContent = label;
+    if (k) { const s = document.createElement('span'); s.className = 'k'; s.textContent = k; b.append(s); }
+    b.onclick = () => on(v); return b;
+  }));
+}
+
+async function init() {
+  st.units = await getJSON('data/units.json');
+  tex.common = await loadImg('tex/common.png');
+  await tryResumeUnlock();
+  await loadSaved('common');
+  await selectUnit(st.units[0].key);
+  requestAnimationFrame(tick);
+}
+
+async function selectUnit(key) {
+  const u = st.units.find(x => x.key === key); const tok = (selectUnit.tok = (selectUnit.tok || 0) + 1);
+  // load everything first, then swap in one step so a frame never mixes two units
+  if (!cache[key]) cache[key] = await getJSON('data/' + key + '.json');
+  const data = cache[key];
+  const orig = await loadImg('tex/' + key + '.png');
+  const fxTex = {};
+  for (const [role, f] of Object.entries(data.fx || {})) fxTex[role] = await loadImg(f.tex);
+  const tu = unlocked && unlocked.units[key];
+  const test = tu && tu.sheet ? await loadImg(tu.sheet) : null;
+  const testFx = {};
+  if (tu && tu.fx) for (const [role, src] of Object.entries(tu.fx)) testFx[role] = await loadImg(src);
+  if (tok !== selectUnit.tok) return;
+  st.sel = null; st.unit = u; st.data = data; tex.orig = orig; tex.fx = fxTex; tex.test = test; tex.testFx = testFx; $('partList').dataset.sig = '';
+  await loadSaved('chr|' + key);
+  for (const role of Object.keys(data.fx || {})) await loadSaved('fx|' + key + '|' + role);
+  if (tok !== selectUnit.tok) return;
+  st.role = Math.min(st.role, st.data.roles.length - 1); st.frame = 0; st.atlasKind = 'chr'; resetView(st.view); resetView(st.av);
+  $('unitMeta').textContent = 'unit ' + u.id;
+  renderControls(); computeBounds(); drawAtlas(); refreshPieceTools(); statusAll();
+}
+
+const roleName = () => st.data.roles[st.role].role;
+const fxInfo = () => st.data.fx && st.data.fx[roleName()];
+function anim() { const r = st.data.roles[st.role]; return st.data.anims[r[st.side]]; }
+function frameCount() { return anim().frames.length; }
+
+// ---- sheet slots
+function slotId(kind) { return kind === 'chr' ? 'chr|' + st.unit.key : kind === 'fx' ? 'fx|' + st.unit.key + '|' + roleName() : 'common'; }
+function baseTex(kind) { return kind === 'chr' ? tex.orig : kind === 'fx' ? tex.fx[roleName()] : tex.common; }
+function testTex(kind) { return kind === 'chr' ? tex.test : kind === 'fx' ? tex.testFx[roleName()] || null : null; }
+function modeOf(kind) {
+  const id = slotId(kind); let m = st.mode[id];
+  if (m === 'custom' && !st.mine[id]) m = null;
+  if (m === 'test' && !testTex(kind)) m = null;
+  return m || (kind === 'chr' && tex.test ? 'test' : 'orig');
+}
+function sheetFor(kind, orig) {
+  if (orig) return baseTex(kind);
+  const m = modeOf(kind);
+  if (m === 'custom') return st.mine[slotId(kind)].img;
+  if (m === 'test') return testTex(kind);
+  return baseTex(kind);
+}
+function fileBase(kind) {
+  if (kind === 'chr') return st.unit.tex + (modeOf('chr') === 'test' ? '-' + unlocked.label.toLowerCase() : '');
+  if (kind === 'fx') return fxInfo().name + (modeOf('fx') === 'test' ? '-' + unlocked.label.toLowerCase() : '');
+  return 'common_unit';
+}
+function shownFile(kind) { const m = st.mine[slotId(kind)]; return modeOf(kind) === 'custom' ? m.name : fileBase(kind) + '.png'; }
+const rectKey = c => c[1] + ',' + c[2] + ',' + c[3] + ',' + c[4];
+function editOf(c) { const kind = c[0]; const m = st.mine[slotId(kind)]; return m && modeOf(kind) === 'custom' ? m.edits[rectKey(c)] : undefined; }
+
+// layers drawn for this frame: [[cellTable, draws, alphaMult], ...] in paint order
+// show: 'all' | 'fx' (effects only) | 'ghost' (effects + faint character) | 'chr'
+function layersAt(f) {
+  const out = []; const info = fxInfo(); const fx = st.show !== 'chr' && info;
+  const chrMult = !fx || st.show === 'all' ? 1 : st.show === 'ghost' ? 0.22 : 0;
+  const pick = (names) => { if (!fx) return; for (const n of names) { const a = fx.anims[n]; if (a) out.push(['fx', a.frames[Math.min(f, a.frames.length - 1)] || [], 1]); } };
+  if (fx) { pick(fx.layers[st.side].back); pick(fx.layers[st.side].mid); }
+  if (chrMult > 0) out.push(['chr', anim().frames[f] || [], chrMult]);
+  if (fx) pick(fx.layers[st.side].front);
+  return out;
+}
+
+function sheetChoices(kind) {
+  const id = slotId(kind); const opts = [['orig', 'Original']];
+  if (testTex(kind)) opts.push(['test', unlocked.label]);
+  opts.push(['custom', st.mine[id] ? 'Yours' : 'Yours (empty)']);
+  return opts;
+}
+function pickMode(kind, v, fileInput) {
+  const id = slotId(kind);
+  if (v === 'custom' && !st.mine[id]) { fileInput.click(); return; }
+  st.mode[id] = v; renderControls(); drawAtlas(); refreshPieceTools(); statusAll();
+}
+
+function renderControls() {
+  if (!st.data) return;
+  seg($('unitSeg'), st.units.map(u => [u.key, u.label, u.id]), st.unit.key, k => selectUnit(k));
+  $('moves').replaceChildren(...st.data.roles.map((r, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(i === st.role));
+    const a = st.data.anims[r[st.side]]; const n = document.createElement('span'); n.textContent = r.role;
+    const l = document.createElement('span'); l.className = 'len'; l.textContent = (a.frames.length / a.fps).toFixed(1) + 's';
+    b.append(n, l); b.onclick = () => { st.role = i; st.frame = 0; st.acc = 0; st.sel = null; if (!st.data.fx || !st.data.fx[r.role]) { if (st.atlasKind === 'fx') st.atlasKind = 'chr'; } computeBounds(); renderControls(); drawAtlas(); refreshPieceTools(); statusAll(); }; return b;
+  }));
+  seg($('sideSeg'), [['R', 'Facing left'], ['L', 'Facing right']], st.side, v => { st.side = v; st.frame = 0; computeBounds(); renderControls(); });
+  seg($('speedSeg'), [[0.25, '¼' + X], [0.5, '½' + X], [1, '1' + X]], st.speed, v => { st.speed = v; renderControls(); });
+  seg($('sheetSeg'), sheetChoices('chr'), modeOf('chr'), v => pickMode('chr', v, $('file')));
+  seg($('bgSeg'), [['stage', 'Stage'], ['checker', 'Checker'], ['light', 'Light']], st.bg, v => { st.bg = v; ['stageA', 'stageB'].forEach(id => { $(id).classList.toggle('checker', v === 'checker'); $(id).classList.toggle('light', v === 'light'); }); renderControls(); });
+  const fx = fxInfo(); $('fxCard').hidden = !fx; $('layerRow').hidden = !fx;
+  if (fx) {
+    seg($('layerSeg'), [['all', 'Everything'], ['fx', 'Effects only'], ['ghost', 'Effects + faint character'], ['chr', 'Character only']], st.show, v => { st.show = v; computeBounds(); renderControls(); });
+    $('fxLbl').textContent = roleName() + ' effect sheet';
+    seg($('fxSeg'), sheetChoices('fx'), modeOf('fx'), v => pickMode('fx', v, $('fxFile')));
+  }
+  if (st.atlasKind === 'fx' && !fx) st.atlasKind = 'chr';
+  const opts = [['chr', 'Character sheet']]; if (fx) opts.push(['fx', 'Effect sheet']); opts.push(['common', 'Shared hit/slash']);
+  seg($('atlasSeg'), opts, st.atlasKind, v => { st.atlasKind = v; resetView(st.av); renderControls(); drawAtlas(); $('partList').dataset.sig = ''; });
+  seg($('listSeg'), [['frame', 'In this frame'], ['sheet', 'Whole sheet']], st.listMode, v => { st.listMode = v; $('partList').dataset.sig = ''; renderControls(); });
+  $('scrub').max = frameCount() - 1;
+  $('loopBtn').setAttribute('aria-pressed', String(st.loop));
+  $('cmpBtn').setAttribute('aria-pressed', String(st.compare));
+  $('fitBtn').setAttribute('aria-pressed', String(st.fit));
+  $('zLbl').textContent = Math.round(st.view.z * 100) + '%'; $('aLbl').textContent = Math.round(st.av.z * 100) + '%';
+  $('stageB').hidden = !st.compare; $('stages').classList.toggle('two', st.compare);
+  const cm = modeOf('chr'); $('tagA').textContent = cm === 'orig' ? 'Original' : cm === 'test' ? unlocked.label + ' sheet' : 'Your sheet';
+  $('discardSheet').hidden = !st.mine[slotId('chr')];
+  $('discardFx').hidden = !(fx && st.mine[slotId('fx')]);
+  $('unlockBtn').setAttribute('aria-pressed', String(!!unlocked)); $('unlockBtn').textContent = unlocked ? 'Test units on' : 'Test units';
+}
+
+function statusAll() { if (!st.data) return; status('chr'); if (fxInfo()) status('fx'); }
+function status(kind, note, warn) {
+  const el = kind === 'fx' ? $('fxStatus') : $('sheetStatus'); if (kind === 'common') return drawAtlas();
+  el.classList.toggle('warn', !!warn); el.textContent = '';
+  const b = document.createElement('b'); b.textContent = shownFile(kind);
+  const m = st.mine[slotId(kind)]; const n = m ? Object.keys(m.edits).length : 0;
+  el.append('Showing ', b, modeOf(kind) === 'custom' && n ? ` · ${n} piece${n === 1 ? '' : 's'} changed, kept in this browser.` : '.', note || '');
+}
+
+// ---- camera bounds over the whole move
+let bounds = null;
+function computeBounds() {
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  // full-screen flashes and fades are skipped so the camera frames the fighter and the effect
+  const big = q => Math.max(Math.abs(q[2] - q[0]), Math.abs(q[4] - q[2]), Math.abs(q[5] - q[3]), Math.abs(q[7] - q[1])) > 700;
+  const take = f => { for (const d of f) { const q = d[1]; if (big(q)) continue; for (let i = 0; i < 8; i += 2) { x0 = Math.min(x0, q[i]); x1 = Math.max(x1, q[i]); y0 = Math.min(y0, q[i + 1]); y1 = Math.max(y1, q[i + 1]); } } };
+  if (st.fit || (st.show !== 'all' && st.show !== 'chr' && fxInfo())) { const n = frameCount(); for (let f = 0; f < n; f++) for (const [, d] of layersAt(f)) take(d); }
+  else take(st.data.anims[st.data.roles[0][st.side]].frames[0]);
+  if (x0 > x1) { x0 = -100; x1 = 100; y0 = 0; y1 = 200; }
+  bounds = { x0, y0: Math.min(y0, 0), x1, y1 };
+}
+
+// ---- drawing
+function sizeCanvas(cv) { const r = cv.getBoundingClientRect(); const dpr = Math.min(2, devicePixelRatio || 1); const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr)); if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; } return [w, h]; }
+function camera(w, h) {
+  const b = bounds, pad = 0.08; const bw = (b.x1 - b.x0) || 1, bh = (b.y1 - b.y0) || 1;
+  let s = Math.min(w * (1 - 2 * pad) / bw, h * (1 - 2 * pad) / bh); if (!st.fit) s = Math.min(s, h * 0.55 / 160);
+  return applyView(st.view, w, h, { s, ox: w / 2 - (b.x0 + b.x1) / 2 * s, oy: h / 2 + (b.y0 + b.y1) / 2 * s });
+}
+// ---- zoom & pan (pan stored as a fraction of canvas width so it survives resizes and compare mode)
+function resetView(v) { v.z = 1; v.x = 0; v.y = 0; }
+function applyView(v, w, h, c) { return { s: c.s * v.z, ox: (c.ox - w / 2) * v.z + w / 2 + v.x * w, oy: (c.oy - h / 2) * v.z + h / 2 + v.y * w }; }
+function zoomAt(v, w, h, px, py, factor, lo, hi) {
+  const z2 = Math.max(lo, Math.min(hi, v.z * factor)); if (z2 === v.z) return;
+  const panX = v.x * w, panY = v.y * w;
+  const sx = (px - w / 2 - panX) / v.z + w / 2, sy = (py - h / 2 - panY) / v.z + h / 2;
+  v.x = (px - w / 2 - (sx - w / 2) * z2) / w; v.y = (py - h / 2 - (sy - h / 2) * z2) / w; v.z = z2;
+}
+function makeNav(cvs, v, o) {
+  for (const cv of cvs) {
+    const pts = new Map(); let start = null, moved = false;
+    const dev = (cv, x, y) => { const r = cv.getBoundingClientRect(); const k = cv.width / r.width; return [(x - r.left) * k, (y - r.top) * k]; };
+    cv.addEventListener('pointerdown', e => { if (e.button > 0) return; cv.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]);
+      if (pts.size === 1) { start = [e.clientX, e.clientY]; moved = false; } else moved = true; });
+    cv.addEventListener('pointermove', e => { const prev = pts.get(e.pointerId); if (!prev) return; const r = cv.getBoundingClientRect();
+      if (pts.size === 1) {
+        if (!moved && Math.hypot(e.clientX - start[0], e.clientY - start[1]) > 5) { moved = true; cv.classList.add('dragging'); }
+        if (moved) { v.x += (e.clientX - prev[0]) / r.width; v.y += (e.clientY - prev[1]) / r.width; o.changed(); }
+        pts.set(e.pointerId, [e.clientX, e.clientY]);
+      } else if (pts.size === 2) {
+        const [a, b] = [...pts.values()]; const other = a === prev ? b : a;
+        const d0 = Math.hypot(prev[0] - other[0], prev[1] - other[1]), d1 = Math.hypot(e.clientX - other[0], e.clientY - other[1]);
+        const m0 = [(prev[0] + other[0]) / 2, (prev[1] + other[1]) / 2], m1 = [(e.clientX + other[0]) / 2, (e.clientY + other[1]) / 2];
+        v.x += (m1[0] - m0[0]) / r.width; v.y += (m1[1] - m0[1]) / r.width;
+        if (d0 > 2) { const [px, py] = dev(cv, m1[0], m1[1]); zoomAt(v, cv.width, cv.height, px, py, d1 / d0, o.lo, o.hi); }
+        pts.set(e.pointerId, [e.clientX, e.clientY]); o.changed();
+      } });
+    const end = e => { if (!pts.has(e.pointerId)) return; const tap = pts.size === 1 && !moved && e.type === 'pointerup'; pts.delete(e.pointerId);
+      if (!pts.size) cv.classList.remove('dragging'); if (tap && o.tap) o.tap(e, cv); };
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    cv.addEventListener('wheel', e => { e.preventDefault(); const [px, py] = dev(cv, e.clientX, e.clientY);
+      const unit = e.deltaMode === 1 ? 16 : 1; zoomAt(v, cv.width, cv.height, px, py, Math.exp(-e.deltaY * unit * (e.ctrlKey ? 0.01 : 0.0015)), o.lo, o.hi); o.changed(); }, { passive: false });
+  }
+}
+function cellOf(table, key) { const f = table === 'fx' ? fxInfo() : null; return table === 'fx' ? (f ? f.cells[key] : undefined) : st.data.cells[key]; }
+function srcFor(table, key, orig) {
+  const c = cellOf(table, key); const img = sheetFor(c[0], orig), base = baseTex(c[0]);
+  const k = W(img) / W(base), kh = H(img) / H(base);
+  return [img, c[1] * k, c[2] * kh, c[3] * k, c[4] * kh, c];
+}
+function drawTri(ctx, img, sx0, sy0, sx1, sy1, sx2, sy2, dx0, dy0, dx1, dy1, dx2, dy2) {
+  ctx.save(); ctx.beginPath(); ctx.moveTo(dx0, dy0); ctx.lineTo(dx1, dy1); ctx.lineTo(dx2, dy2); ctx.closePath(); ctx.clip();
+  const den = sx0 * (sy2 - sy1) - sx1 * sy2 + sx2 * sy1 + (sx1 - sx2) * sy0; if (Math.abs(den) < 1e-6) { ctx.restore(); return; }
+  const a = -(sy0 * (dx2 - dx1) - sy1 * dx2 + sy2 * dx1 + (sy1 - sy2) * dx0) / den;
+  const b = (sy1 * dy2 + sy0 * (dy1 - dy2) - sy2 * dy1 + (sy2 - sy1) * dy0) / den;
+  const c = (sx0 * (dx2 - dx1) - sx1 * dx2 + sx2 * dx1 + (sx1 - sx2) * dx0) / den;
+  const d = -(sx1 * dy2 + sx0 * (dy1 - dy2) - sx2 * dy1 + (sx2 - sx1) * dy0) / den;
+  const e = (sx0 * (sy2 * dx1 - sy1 * dx2) + sy0 * (sx1 * dx2 - sx2 * dx1) + (sx2 * sy1 - sx1 * sy2) * dx0) / den;
+  const f = (sx0 * (sy2 * dy1 - sy1 * dy2) + sy0 * (sx1 * dy2 - sx2 * dy1) + (sx2 * sy1 - sx1 * sy2) * dy0) / den;
+  ctx.transform(a, b, c, d, e, f); ctx.drawImage(img, 0, 0); ctx.restore();
+}
+let lastScreen = [];
+function drawFrame(cv, orig, record) {
+  const [w, h] = sizeCanvas(cv); const ctx = cv.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, w, h);
+  const { s, ox, oy } = camera(w, h);
+  ctx.strokeStyle = st.bg === 'light' ? 'rgba(20,24,32,.25)' : 'rgba(255,255,255,.10)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+  const scr = []; ctx.imageSmoothingEnabled = true;
+  for (const [table, draws, mult] of layersAt(st.frame)) {
+    for (const d of draws) {
+      const [key, q, a0, blend] = d; const al = a0 * mult; if (!cellOf(table, key)) continue; const [img, x, y, cw, ch] = srcFor(table, key, orig); if (!img) continue;
+      const P = []; for (let i = 0; i < 8; i += 2) P.push([ox + q[i] * s, oy - q[i + 1] * s]);
+      ctx.globalAlpha = al; ctx.globalCompositeOperation = blend === 1 ? 'lighter' : 'source-over';
+      const para = Math.abs(P[0][0] + P[2][0] - P[1][0] - P[3][0]) + Math.abs(P[0][1] + P[2][1] - P[1][1] - P[3][1]) < 0.5;
+      if (para) {
+        ctx.setTransform((P[1][0] - P[0][0]) / cw, (P[1][1] - P[0][1]) / cw, (P[3][0] - P[0][0]) / ch, (P[3][1] - P[0][1]) / ch, P[0][0], P[0][1]);
+        ctx.drawImage(img, x, y, cw, ch, 0, 0, cw, ch); ctx.setTransform(1, 0, 0, 1, 0, 0);
+      } else {
+        drawTri(ctx, img, x, y, x + cw, y, x + cw, y + ch, P[0][0], P[0][1], P[1][0], P[1][1], P[2][0], P[2][1]);
+        drawTri(ctx, img, x, y, x + cw, y + ch, x, y + ch, P[0][0], P[0][1], P[2][0], P[2][1], P[3][0], P[3][1]);
+      }
+      if (mult === 1) scr.push({ table, key, P });
+    }
+  }
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  if (st.sel) for (const it of scr) if (it.table === st.sel.table && it.key === st.sel.key) {
+    ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash(editOf(cellOf(it.table, it.key)) === 'deleted' ? [5, 4] : []);
+    ctx.beginPath(); it.P.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.stroke(); ctx.setLineDash([]); }
+  if (record) lastScreen = scr;
+}
+
+// ---- sheet inspector
+function atlasSheet() {
+  const kind = st.atlasKind === 'fx' && fxInfo() ? 'fx' : st.atlasKind === 'common' ? 'common' : 'chr';
+  const cells = kind === 'fx' ? fxInfo().cells : st.data.cells;
+  return { kind, img: sheetFor(kind, false), base: baseTex(kind), table: kind === 'fx' ? 'fx' : 'chr', cells, file: shownFile(kind) };
+}
+function atlasCam(w, h, base) { const s = Math.min(w / W(base), h / H(base)); return applyView(st.av, w, h, { s, ox: (w - W(base) * s) / 2, oy: (h - H(base) * s) / 2 }); }
+function drawAtlas() {
+  if (!st.data) return;
+  const cv = $('atlasCv'); const [w, h] = sizeCanvas(cv); const ctx = cv.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, w, h);
+  const A = atlasSheet(); if (!A.img || !A.base) return; const { s, ox, oy } = atlasCam(w, h, A.base);
+  ctx.imageSmoothingEnabled = s < 2; ctx.drawImage(A.img, ox, oy, W(A.base) * s, H(A.base) * s);
+  ctx.lineWidth = 1;
+  for (const c of Object.values(A.cells)) if (c[0] === A.kind) {
+    const e = editOf(c); ctx.strokeStyle = e === 'deleted' ? 'rgba(255,110,90,.75)' : e ? 'rgba(120,220,160,.8)' : 'rgba(255,255,255,.16)';
+    ctx.setLineDash(e === 'deleted' ? [4, 3] : []); ctx.strokeRect(ox + c[1] * s + .5, oy + c[2] * s + .5, c[3] * s - 1, c[4] * s - 1); }
+  ctx.setLineDash([]);
+  if (st.sel) {
+    const c = cellOf(st.sel.table, st.sel.key);
+    if (c && c[0] === A.kind) { ctx.strokeStyle = '#FF7A3D'; ctx.lineWidth = 2.5; ctx.strokeRect(ox + c[1] * s - 2, oy + c[2] * s - 2, c[3] * s + 4, c[4] * s + 4); ctx.fillStyle = 'rgba(255,122,61,.18)'; ctx.fillRect(ox + c[1] * s, oy + c[2] * s, c[3] * s, c[4] * s); }
+  }
+  $('aLbl').textContent = Math.round(st.av.z * 100) + '%';
+  const m = st.mine[slotId(A.kind)]; const n = m && modeOf(A.kind) === 'custom' ? Object.keys(m.edits).length : 0;
+  $('atlasName').textContent = A.file + ' · ' + W(A.base) + X + H(A.base) + (n ? ` · ${n} changed` : '');
+  $('discardCommon').hidden = !(A.kind === 'common' && st.mine.common);
+}
+function atlasTap(e, cv) {
+  const r = cv.getBoundingClientRect(); const k = cv.width / r.width; const A = atlasSheet(); const { s, ox, oy } = atlasCam(cv.width, cv.height, A.base);
+  const x = ((e.clientX - r.left) * k - ox) / s, y = ((e.clientY - r.top) * k - oy) / s; let best = null, area = 1e12;
+  for (const [key, c] of Object.entries(A.cells)) if (c[0] === A.kind && x >= c[1] && x < c[1] + c[3] && y >= c[2] && y < c[2] + c[4] && c[3] * c[4] < area) { best = key; area = c[3] * c[4]; }
+  if (best) select(A.table, best);
+}
+function focusPiece() {
+  if (!st.sel) return; const c = cellOf(st.sel.table, st.sel.key); if (!c) return;
+  st.atlasKind = c[0]; const cv = $('atlasCv'); const A = atlasSheet(); resetView(st.av); const w = cv.width, h = cv.height;
+  const base = atlasCam(w, h, A.base); const z = Math.max(1, Math.min(12, 0.55 * Math.min(w / (c[3] * base.s), h / (c[4] * base.s))));
+  const cx = base.ox + (c[1] + c[3] / 2) * base.s, cy = base.oy + (c[2] + c[4] / 2) * base.s;
+  st.av.z = z; st.av.x = -((cx - w / 2) * z) / w; st.av.y = -((cy - h / 2) * z) / w; renderControls(); drawAtlas();
+}
+
+function listItems() {
+  const items = [];
+  if (st.listMode === 'sheet') {
+    const A = atlasSheet(); const seen = new Set();
+    for (const [key, c] of Object.entries(A.cells)) { if (c[0] !== A.kind) continue; const rk = rectKey(c); if (seen.has(rk)) continue; seen.add(rk); items.push([A.table, key]); }
+    items.sort((a, b) => (cellOf(...a)[5] || '').localeCompare(cellOf(...b)[5] || ''));
+    return items;
+  }
+  const seen = new Set(); const ls = layersAt(st.frame);
+  for (let li = ls.length - 1; li >= 0; li--) { const [table, draws, mult] = ls[li]; if (mult !== 1) continue; for (let i = draws.length - 1; i >= 0; i--) { const id = table + '|' + draws[i][0]; if (seen.has(id)) continue; seen.add(id); items.push([table, draws[i][0]]); } }
+  return items.filter(([t, k]) => cellOf(t, k));
+}
+function updateParts() {
+  const items = listItems();
+  const list = $('partList'); const sig = st.listMode + st.atlasKind + items.map(i => i.join('|')).join(',') + '|' + (st.sel ? st.sel.table + st.sel.key : '') + '|' + editSig();
+  if (list.dataset.sig === sig) return; list.dataset.sig = sig;
+  list.replaceChildren(...items.map(([table, key]) => { const c = cellOf(table, key); const b = document.createElement('button'); b.type = 'button';
+    b.setAttribute('aria-pressed', String(!!st.sel && st.sel.table === table && st.sel.key === key));
+    const n = document.createElement('span'); n.textContent = (c[0] === 'fx' ? '✦ ' : c[0] === 'common' ? '◇ ' : '') + (c[5] || key);
+    const m = document.createElement('span'); const e = editOf(c);
+    m.textContent = (c[0] === 'common' ? 'shared ' : '') + c[3] + X + c[4]; if (e) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = e === 'deleted' ? ' · deleted' : ' · edited'; m.append(t); }
+    b.append(n, m); b.onclick = () => select(table, key); return b; }));
+}
+let editSigCache = '';
+function editSig() { return editSigCache; }
+function bumpEdits() { editSigCache = String(Date.now() + Math.random()); }
+
+function select(table, key, note) {
+  const c = cellOf(table, key); if (!c) return; st.sel = { table, key }; st.atlasKind = c[0];
+  const pi = $('partInfo'); pi.replaceChildren();
+  const n = document.createElement('span'); n.className = 'name'; n.textContent = c[5] || key; pi.append(n, document.createElement('br'));
+  const where = c[0] === 'chr' ? 'Character sheet' : c[0] === 'fx' ? (fxInfo().name + '.png (effect sheet)') : 'Shared hit/slash sheet (every unit uses it)';
+  pi.append(where, document.createElement('br'), `Box x ${c[1]}, y ${c[2]}, ${c[3]}${X}${c[4]} px`);
+  if (note) pi.append(document.createElement('br'), note);
+  renderControls(); drawAtlas(); $('partList').dataset.sig = ''; updateParts(); refreshPieceTools();
+}
+
+// tap the stage: picks the top piece; tapping the same spot again steps to the piece underneath
+let lastTap = null;
+function hit(ev) {
+  const cv = ev.currentTarget || $('cvA'); const r = cv.getBoundingClientRect(); const dpr = cv.width / r.width;
+  const px = (ev.clientX - r.left) * dpr, py = (ev.clientY - r.top) * dpr; const under = [];
+  for (let i = lastScreen.length - 1; i >= 0; i--) { const P = lastScreen[i].P; let inside = false;
+    for (let a = 0, b = 3; a < 4; b = a++) { if ((P[a][1] > py) !== (P[b][1] > py) && px < (P[b][0] - P[a][0]) * (py - P[a][1]) / (P[b][1] - P[a][1]) + P[a][0]) inside = !inside; }
+    if (inside) { const it = lastScreen[i]; if (!under.some(u => u.table === it.table && u.key === it.key)) under.push(it); } }
+  if (!under.length) return;
+  let idx = 0;
+  if (lastTap && Math.hypot(lastTap.x - ev.clientX, lastTap.y - ev.clientY) < 10 && st.sel) {
+    const cur = under.findIndex(u => u.table === st.sel.table && u.key === st.sel.key); if (cur >= 0) idx = (cur + 1) % under.length; }
+  lastTap = { x: ev.clientX, y: ev.clientY };
+  if (st.playing) togglePlay();
+  select(under[idx].table, under[idx].key, under.length > 1 ? `${idx + 1} of ${under.length} pieces here. Tap the same spot again for the next one.` : '');
+}
+
+function render() {
+  drawFrame($('cvA'), false, true);
+  if (st.compare) drawFrame($('cvB'), true, false);
+  $('scrub').value = st.frame; $('frLbl').textContent = (st.frame + 1) + ' / ' + frameCount();
+  updateParts();
+}
+function tick(t) {
+  const dt = st.last ? Math.min(0.25, (t - st.last) / 1000) : 0; st.last = t;
+  if (st.data) {
+    const a = anim(), n = frameCount();
+    if (st.playing) { st.acc += dt * st.speed * a.fps; while (st.acc >= 1) { st.acc -= 1; st.frame++; if (st.frame >= n) { if (st.loop) st.frame = 0; else { st.frame = n - 1; togglePlay(); break; } } } }
+    try { render(); } catch (e) { console.error(e); }
+  }
+  requestAnimationFrame(tick);
+}
+function togglePlay() { st.playing = !st.playing; $('play').setAttribute('aria-label', st.playing ? 'Pause' : 'Play');
+  $('playIco').innerHTML = st.playing ? '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>' : '<path d="M8 5l11 7-11 7z"/>'; }
+
+// ---- your copies: uploaded sheets and per-piece edits, saved in this browser (IndexedDB)
+const DB = (() => {
+  let p = null;
+  const open = () => p || (p = new Promise((res, rej) => { const r = indexedDB.open('blazing-forge-sprites', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('sheets'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }));
+  const run = (mode, fn) => open().then(db => new Promise((res, rej) => { const tx = db.transaction('sheets', mode); const q = fn(tx.objectStore('sheets')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
+  return { get: id => run('readonly', s => s.get(id)).catch(() => null), put: (id, v) => run('readwrite', s => s.put(v, id)).catch(e => { console.warn(e); throw e; }), del: id => run('readwrite', s => s.delete(id)).catch(() => null) };
+})();
+const toBlob = cv => new Promise(r => cv.toBlob(r, 'image/png'));
+function canvasOf(img) { const cv = document.createElement('canvas'); cv.width = W(img); cv.height = H(img); cv.getContext('2d').drawImage(img, 0, 0); return cv; }
+async function loadSaved(id) {
+  if (st.mine[id]) return;
+  const v = await DB.get(id); if (!v || !v.work) return;
+  try {
+    const work = await loadImg(URL.createObjectURL(v.work)); const start = v.start ? await loadImg(URL.createObjectURL(v.start)) : work;
+    st.mine[id] = { img: Object.keys(v.edits || {}).length ? canvasOf(work) : work, name: v.name, start, startBlob: v.start, edits: v.edits || {} };
+    st.mode[id] = 'custom'; bumpEdits();
+  } catch (e) { console.warn('could not reload saved sheet', id, e); }
+}
+const saveTimers = {};
+function persist(id) {
+  clearTimeout(saveTimers[id]);
+  saveTimers[id] = setTimeout(async () => {
+    const m = st.mine[id]; if (!m) return;
+    try {
+      const work = m.img instanceof HTMLCanvasElement ? await toBlob(m.img) : await toBlob(canvasOf(m.img));
+      if (!m.startBlob) m.startBlob = await toBlob(canvasOf(m.start));
+      await DB.put(id, { name: m.name, work, start: m.startBlob, edits: m.edits, at: Date.now() });
+      $('pieceHint').dataset.saved = '1';
+    } catch (e) { $('pieceHint').textContent = 'Your edit is on screen, but this browser wouldn’t keep it (private browsing or storage full). Save the sheet as PNG before closing.'; }
+  }, 400);
+}
+async function discard(kind) {
+  const id = slotId(kind); delete st.mine[id]; delete st.mode[id]; await DB.del(id); bumpEdits();
+  renderControls(); drawAtlas(); refreshPieceTools(); statusAll();
+}
+
+// ---- loading whole sheets
+function stamp() { return new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' }); }
+async function readImg(f) {
+  if (!f || (f.type && !/^image\//.test(f.type))) return null;
+  return loadImg(URL.createObjectURL(f)).catch(() => null);
+}
+async function useSheet(kind, f, how) {
+  const img = await readImg(f); const el = kind === 'fx' ? $('fxStatus') : $('sheetStatus');
+  if (!img) { el.classList.add('warn'); el.textContent = 'That file isn’t a readable image. Export it again as PNG.'; return; }
+  const id = slotId(kind); const base = baseTex(kind);
+  st.mine[id] = { img, name: f.name || 'pasted image.png', start: img, startBlob: f, edits: {} }; st.mode[id] = 'custom'; bumpEdits();
+  persist(id); renderControls(); drawAtlas(); refreshPieceTools();
+  const odd = W(img) !== W(base) || H(img) !== H(base);
+  status(kind, ` ${how[0].toUpperCase() + how.slice(1)} ${stamp()}.` + (odd ? ` It’s ${W(img)}${X}${H(img)}, so pieces are scaled; ${W(base)}${X}${H(base)} lines up exactly.` : ''), odd);
+}
+const useChar = (f, how) => useSheet('chr', f, how);
+const useFx = (f, how) => { if (fxInfo()) return useSheet('fx', f, how); };
+// a dropped/pasted image goes to the effect slot when it matches the effect sheet size
+async function useAuto(f, how) {
+  const fx = fxInfo(); if (fx && f) { const img = await readImg(f); const o = tex.fx[roleName()];
+    if (img && W(img) === W(o) && H(img) === H(o) && W(o) !== W(tex.orig)) return useFx(f, how); }
+  return useChar(f, how);
+}
+function wireDrop(zone, input, label, fn) {
+  input.onchange = e => { fn(e.target.files[0], 'loaded'); e.target.value = ''; };
+  label.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } };
+  ['dragenter', 'dragover'].forEach(n => zone.addEventListener(n, e => { e.preventDefault(); e.stopPropagation(); zone.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(n => zone.addEventListener(n, e => { e.preventDefault(); zone.classList.remove('over'); }));
+  zone.addEventListener('drop', e => { e.stopPropagation(); fn(e.dataTransfer.files[0], 'dropped'); });
+}
+wireDrop($('drop'), $('file'), $('pickLbl'), useChar);
+wireDrop($('fxDrop'), $('fxFile'), $('fxPickLbl'), useFx);
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files[0]) useAuto(e.dataTransfer.files[0], 'dropped'); });
+document.addEventListener('paste', async e => { const it = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/')); if (!it) return; const f = it.getAsFile();
+  const t = workingTarget(); if (t) { const img = await readImg(f); if (img && W(img) < W(baseTex(t.kind)) * 0.6) return replacePiece(f); }
+  useAuto(f, 'pasted'); });
+
+function watcher(btn, kind) {
+  let timer = null; const el = kind === 'fx' ? $('fxStatus') : $('sheetStatus');
+  btn.onclick = async () => {
+    if (!window.showOpenFilePicker) { el.classList.add('warn'); el.textContent = 'Live watch needs Chrome or Edge on a computer. Here, drop the file again after each save.'; return; }
+    try {
+      const [h] = await window.showOpenFilePicker({ types: [{ description: 'PNG', accept: { 'image/png': ['.png'] } }] });
+      let last = 0; clearInterval(timer);
+      const poll = async () => { try { const f = await h.getFile(); if (f.lastModified !== last) { last = f.lastModified; await useSheet(kind, f, 'updated'); } } catch (e) { clearInterval(timer); btn.textContent = 'Watch a file'; el.classList.add('warn'); el.textContent = 'Lost access to the watched file. Pick it again.'; } };
+      await poll(); timer = setInterval(poll, 700); btn.textContent = 'Watching';
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+      el.classList.add('warn'); el.textContent = 'This browser blocked file watching. Open the Sprites page in its own tab, or drop the file again after each save.';
+    }
+  };
+}
+watcher($('watchBtn'), 'chr');
+watcher($('fxWatchBtn'), 'fx');
+
+// ---- edit one piece on your copy of the sheet
+function workingTarget() {
+  if (!st.sel) return null; const c = cellOf(st.sel.table, st.sel.key); if (!c) return null;
+  return { kind: c[0], id: slotId(c[0]), c };
+}
+// edits always land on "Yours": reuse it if it exists, otherwise copy the sheet you're looking at
+function ensureWork(t) {
+  let m = st.mine[t.id];
+  if (!m) {
+    const cur = sheetFor(t.kind, false);
+    m = st.mine[t.id] = { img: canvasOf(cur), name: fileBase(t.kind) + '-edited.png', start: cur, startBlob: null, edits: {} };
+  } else if (!(m.img instanceof HTMLCanvasElement)) m.img = canvasOf(m.img);
+  st.mode[t.id] = 'custom';
+  return m;
+}
+function boxOf(t, cv) { const base = baseTex(t.kind); const k = W(cv) / W(base), kh = H(cv) / H(base); return [Math.round(t.c[1] * k), Math.round(t.c[2] * kh), Math.round(t.c[3] * k), Math.round(t.c[4] * kh)]; }
+function afterEdit(t, msg) {
+  bumpEdits(); persist(t.id); $('pieceHint').textContent = msg;
+  renderControls(); drawAtlas(); refreshPieceTools(); if (t.kind === 'common') drawAtlas(); else status(t.kind);
+}
+async function replacePiece(f) {
+  const t = workingTarget(); if (!t) return; const img = await readImg(f);
+  if (!img) { $('pieceHint').textContent = 'That file isn’t a readable image. Export it again as PNG.'; return; }
+  const m = ensureWork(t); const ctx = m.img.getContext('2d'); const [x, y, w, h] = boxOf(t, m.img);
+  ctx.clearRect(x, y, w, h);
+  let dw = w, dh = h, dx = x, dy = y;
+  if (st.pieceFit === 'contain') { const s = Math.min(w / W(img), h / H(img)); dw = W(img) * s; dh = H(img) * s; dx = x + (w - dw) / 2; dy = y + (h - dh) / 2; }
+  ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(img, dx, dy, dw, dh); ctx.restore();
+  m.edits[rectKey(t.c)] = 'replaced';
+  afterEdit(t, `Replaced ${t.c[5] || 'this piece'} (${w}${X}${h} box) with ${f.name || 'the pasted image'}.`);
+}
+function deletePiece() {
+  const t = workingTarget(); if (!t) return; const m = ensureWork(t); const [x, y, w, h] = boxOf(t, m.img);
+  m.img.getContext('2d').clearRect(x, y, w, h); m.edits[rectKey(t.c)] = 'deleted';
+  afterEdit(t, `Deleted ${t.c[5] || 'this piece'}. It’s see-through now; Restore original brings it back.`);
+}
+function restorePiece() {
+  const t = workingTarget(); if (!t) return; const m = st.mine[t.id]; if (!m || !m.edits[rectKey(t.c)]) return;
+  ensureWork(t); const [x, y, w, h] = boxOf(t, m.img); const ctx = m.img.getContext('2d');
+  const ks = W(m.start) / W(m.img), kh = H(m.start) / H(m.img);
+  ctx.clearRect(x, y, w, h); ctx.drawImage(m.start, x * ks, y * kh, w * ks, h * kh, x, y, w, h);
+  delete m.edits[rectKey(t.c)];
+  afterEdit(t, 'Restored the original piece.');
+}
+function refreshPieceTools() {
+  const t = workingTarget(); $('pieceTools').hidden = !t; $('pieceExport').hidden = !st.sel;
+  const pc = $('pieceCv'); const ctx = pc.getContext('2d'); ctx.clearRect(0, 0, 96, 96);
+  if (st.sel && st.data) { const c = cellOf(st.sel.table, st.sel.key); if (c) { const [img, x, y, w, h] = srcFor(st.sel.table, st.sel.key, false); const s = Math.min(88 / w, 88 / h); ctx.imageSmoothingEnabled = true; ctx.drawImage(img, x, y, w, h, (96 - w * s) / 2, (96 - h * s) / 2, w * s, h * s); } }
+  if (!t) return;
+  const e = editOf(t.c);
+  $('pieceRestore').hidden = !e; $('pieceDelete').hidden = e === 'deleted';
+  $('piecePickLbl').textContent = e === 'deleted' ? 'Put a new piece here' : 'Replace this piece';
+  seg($('fitSeg'), [['contain', 'Fit inside the box'], ['stretch', 'Stretch to the box']], st.pieceFit, v => { st.pieceFit = v; refreshPieceTools(); });
+}
+$('pieceFile').onchange = e => { replacePiece(e.target.files[0]); e.target.value = ''; };
+$('piecePickLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pieceFile').click(); } };
+$('pieceRestore').onclick = restorePiece;
+$('pieceDelete').onclick = deletePiece;
+$('discardSheet').onclick = () => discard('chr');
+$('discardFx').onclick = () => discard('fx');
+$('discardCommon').onclick = () => discard('common');
+const pieceZone = document.querySelector('.inspect');
+pieceZone.addEventListener('dragover', e => { if (workingTarget()) { e.preventDefault(); e.stopPropagation(); } });
+pieceZone.addEventListener('drop', e => { if (workingTarget() && e.dataTransfer.files[0]) { e.preventDefault(); e.stopPropagation(); replacePiece(e.dataTransfer.files[0]); } });
+
+// ---- save PNGs: a normal download; on iPhone/iPad the share sheet (Save to Files / Save Image)
+const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+async function saveBlob(blob, filename) {
+  const file = new File([blob], filename, { type: 'image/png' });
+  if (isIOS && navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
+  const u = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = u; a.download = filename; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 10000);
+}
+async function saveImg(img, name, btn, crop) {
+  let cv;
+  if (crop) { const [x, y, w, h] = crop; cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(w)); cv.height = Math.max(1, Math.round(h)); cv.getContext('2d').drawImage(img, x, y, w, h, 0, 0, cv.width, cv.height); }
+  else cv = img instanceof HTMLCanvasElement ? img : canvasOf(img);
+  const old = btn.textContent;
+  try { await saveBlob(await toBlob(cv), /\.png$/i.test(name) ? name : name + '.png'); btn.textContent = 'Saved'; }
+  catch (e) { btn.textContent = e && e.name === 'AbortError' ? 'Not saved' : 'Couldn’t save'; console.warn(e); }
+  setTimeout(() => { btn.textContent = old; }, 2000);
+}
+$('saveSheet').onclick = () => saveImg(sheetFor('chr', false), shownFile('chr'), $('saveSheet'));
+$('saveFx').onclick = () => saveImg(sheetFor('fx', false), shownFile('fx'), $('saveFx'));
+$('saveAtlas').onclick = () => { const A = atlasSheet(); if (A.img) saveImg(A.img, A.file, $('saveAtlas')); };
+$('savePiece').onclick = () => { if (!st.sel) return; const [img, x, y, w, h, c] = srcFor(st.sel.table, st.sel.key, false);
+  saveImg(img, (c[5] || 'piece').replace(/[^\w.-]+/g, '_') + '.png', $('savePiece'), [x, y, w, h]); };
+
+// ---- test units: an encrypted bundle (AES-GCM, key from the password with PBKDF2) unlocked in the browser
+const LOCK_FILE = 'locked/test-units.bin';
+async function deriveKey(pw, salt, iter) {
+  const raw = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations: iter }, raw, { name: 'AES-GCM', length: 256 }, true, ['decrypt']);
+}
+async function openLocked(getKey) {
+  const buf = new Uint8Array(await (await fetch(LOCK_FILE, { cache: 'no-cache' })).arrayBuffer());
+  if (String.fromCharCode(...buf.slice(0, 4)) !== 'BFL1') throw new Error('bad file');
+  const iter = new DataView(buf.buffer).getUint32(4); const salt = buf.slice(8, 24), iv = buf.slice(24, 36), body = buf.slice(36);
+  const key = await getKey(salt, iter);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, body);
+  return { payload: JSON.parse(new TextDecoder().decode(plain)), key };
+}
+async function applyUnlock(payload) {
+  unlocked = payload;
+  for (const u of st.units) if (payload.units[u.key] && payload.units[u.key].label) u.label = payload.units[u.key].label;
+  if (st.unit) await selectUnit(st.unit.key);
+}
+async function tryResumeUnlock() {
+  let saved = null; try { saved = sessionStorage.getItem('bf-sprites-key'); } catch (e) {}
+  if (!saved) return;
+  try {
+    const raw = Uint8Array.from(atob(saved), ch => ch.charCodeAt(0));
+    const { payload } = await openLocked(async () => crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']));
+    unlocked = payload;
+  } catch (e) { try { sessionStorage.removeItem('bf-sprites-key'); } catch (_) {} }
+}
+$('unlockBtn').onclick = () => {
+  if (unlocked) { // lock again
+    unlocked = null; try { sessionStorage.removeItem('bf-sprites-key'); } catch (e) {}
+    getJSON('data/units.json').then(u => { st.units = u; selectUnit(st.unit.key); });
+    return;
+  }
+  $('lockMsg').textContent = ''; $('lockPw').value = ''; const d = $('lockDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', ''); $('lockPw').focus();
+};
+$('lockCancel').onclick = () => $('lockDlg').close();
+$('lockForm').addEventListener('submit', async e => {
+  e.preventDefault(); const pw = $('lockPw').value; if (!pw) return;
+  $('lockGo').disabled = true; $('lockMsg').classList.remove('warn'); $('lockMsg').textContent = 'Checking…';
+  try {
+    const { payload, key } = await openLocked((salt, iter) => deriveKey(pw, salt, iter));
+    try { const raw = new Uint8Array(await crypto.subtle.exportKey('raw', key)); sessionStorage.setItem('bf-sprites-key', btoa(String.fromCharCode(...raw))); } catch (_) {}
+    $('lockDlg').close(); await applyUnlock(payload);
+  } catch (err) {
+    $('lockMsg').classList.add('warn'); $('lockMsg').textContent = err && err.name === 'OperationError' ? 'That password isn’t right.' : 'Couldn’t load the test units. Check your connection and try again.';
+  } finally { $('lockGo').disabled = false; }
+});
+
+// ---- transport
+$('play').onclick = togglePlay;
+$('prev').onclick = () => { if (st.playing) togglePlay(); const n = frameCount(); st.frame = (st.frame - 1 + n) % n; };
+$('next').onclick = () => { if (st.playing) togglePlay(); const n = frameCount(); st.frame = (st.frame + 1) % n; };
+$('scrub').oninput = e => { if (st.playing) togglePlay(); st.frame = +e.target.value; };
+$('loopBtn').onclick = () => { st.loop = !st.loop; renderControls(); };
+$('cmpBtn').onclick = () => { st.compare = !st.compare; renderControls(); };
+$('fitBtn').onclick = () => { st.fit = !st.fit; computeBounds(); renderControls(); };
+const stageZoom = f => { const cv = $('cvA'); zoomAt(st.view, cv.width, cv.height, cv.width / 2, cv.height / 2, f, 0.25, 24); renderControls(); };
+const atlasZoom = f => { const cv = $('atlasCv'); zoomAt(st.av, cv.width, cv.height, cv.width / 2, cv.height / 2, f, 1, 32); drawAtlas(); };
+makeNav([$('cvA'), $('cvB')], st.view, { lo: 0.25, hi: 24, changed: () => { $('zLbl').textContent = Math.round(st.view.z * 100) + '%'; }, tap: (e, cv) => { if (cv.id === 'cvA') hit(e); } });
+makeNav([$('atlasCv')], st.av, { lo: 1, hi: 32, changed: drawAtlas, tap: atlasTap });
+$('zIn').onclick = () => stageZoom(1.4); $('zOut').onclick = () => stageZoom(1 / 1.4); $('zReset').onclick = () => { resetView(st.view); renderControls(); };
+$('aIn').onclick = () => atlasZoom(1.5); $('aOut').onclick = () => atlasZoom(1 / 1.5); $('aReset').onclick = () => { resetView(st.av); drawAtlas(); }; $('aFocus').onclick = focusPiece;
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input,select,textarea,dialog')) return;
+  if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+  else if (e.key === 'ArrowRight') $('next').click(); else if (e.key === 'ArrowLeft') $('prev').click();
+  else if (e.key === '+' || e.key === '=') stageZoom(1.4); else if (e.key === '-' || e.key === '_') stageZoom(1 / 1.4); else if (e.key === '0') { resetView(st.view); renderControls(); }
+  else if ((e.key === 'Delete' || e.key === 'Backspace') && workingTarget()) { e.preventDefault(); deletePiece(); }
+});
+addEventListener('resize', () => drawAtlas());
+init().catch(err => { const s = $('sheetStatus'); s.classList.add('warn'); s.textContent = 'Couldn’t load the animation data. Reload the page to try again.'; console.error(err); });
+})();
+</script>
+</body></html>
