@@ -103,6 +103,13 @@ dialog.lock::backdrop{background:rgba(5,7,10,.6)}
 dialog.lock h2{font-family:var(--f-disp);font-size:18px;letter-spacing:.04em;margin:0 0 6px}
 dialog.lock input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0 6px}
 #unlockBtn[aria-pressed="true"]{color:var(--ember-tx)}
+details.rot{border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+details.rot summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--tx)}
+.rotBody{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+#rotAngle{flex:1;min-width:120px;accent-color:var(--ember)}
+#rotNum,#rfAngle{width:76px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:7px 8px}
+.rotSteps .chip{min-height:30px;padding:4px 10px}
+#rfCv{width:100%;max-width:100%;height:auto;border-radius:10px;background:conic-gradient(#232833 25%,#1b1f28 0 50%,#232833 0 75%,#1b1f28 0) 0 0/12px 12px}
 </style>
 </head><body>
 
@@ -170,6 +177,14 @@ dialog.lock input{width:100%;background:var(--panel2);border:1px solid var(--lin
         </div>
       </div>
       <div class="card">
+        <span class="lbl">Clean rotate a PNG</span>
+        <p class="hint">For any image, like a piece you're about to drop in. It's rotated on a canvas big enough to keep the corners, then saved.</p>
+        <div class="row"><label class="btn ghost" for="rfFile" tabindex="0" id="rfPick">Choose PNG</label><input type="file" id="rfFile" accept="image/png,image/*" class="hidden-file"><input type="number" id="rfAngle" step="0.5" value="15" aria-label="Angle in degrees" style="width:84px"><span class="hint">&deg;</span></div>
+        <div class="seg" id="rfMode" role="group" aria-label="Rotation quality"></div>
+        <canvas id="rfCv" width="240" height="160" aria-label="Rotated preview" hidden></canvas>
+        <div class="row"><button class="btn primary" id="rfSave" hidden>Save rotated PNG</button><span class="status" id="rfStatus"></span></div>
+      </div>
+      <div class="card">
         <span class="lbl">View</span>
         <div id="layerRow" hidden><div class="seg" id="layerSeg" role="group" aria-label="What to show"></div></div>
         <div class="row">
@@ -205,6 +220,18 @@ dialog.lock input{width:100%;background:var(--panel2);border:1px solid var(--lin
             <button class="btn ghost" id="pieceRestore" hidden>Restore original</button>
           </div>
           <div class="seg" id="fitSeg" role="group" aria-label="How the new image fills the box"></div>
+
+          <details class="rot" id="rotBox">
+            <summary>Rotate or flip this piece</summary>
+            <div class="rotBody">
+              <div class="row"><input type="range" id="rotAngle" min="-180" max="180" step="0.5" value="0" aria-label="Angle in degrees"><input type="number" id="rotNum" min="-180" max="180" step="0.5" value="0" aria-label="Angle in degrees"><span class="hint">&deg;</span></div>
+              <div class="row rotSteps"><button class="chip" data-d="-90">&minus;90&deg;</button><button class="chip" data-d="-15">&minus;15</button><button class="chip" data-d="-1">&minus;1</button><button class="chip" data-d="1">+1</button><button class="chip" data-d="15">+15</button><button class="chip" data-d="90">+90&deg;</button><button class="chip" id="rotFlipH" aria-pressed="false">Flip &harr;</button><button class="chip" id="rotFlipV" aria-pressed="false">Flip &varr;</button></div>
+              <div class="seg" id="rotMode" role="group" aria-label="Rotation quality"></div>
+              <div class="seg" id="rotFit" role="group" aria-label="What happens to corners outside the box"></div>
+              <div class="row"><button class="btn primary" id="rotApply">Keep rotation</button><button class="btn ghost" id="rotCancel">Cancel</button></div>
+              <p class="hint" id="rotHint">Always rotates from the piece as it was when you started, so turning it many times never adds blur. Right angles and flips are lossless.</p>
+            </div>
+          </details>
           <p class="hint" id="pieceHint">Edits go on your own copy of the sheet and are kept in this browser. The original stays as it is.</p>
         </div>
         <div class="seg" id="listSeg" role="group" aria-label="Which pieces to list"></div>
@@ -716,6 +743,7 @@ function afterEdit(t, msg) {
   renderControls(); drawAtlas(); refreshPieceTools(); if (t.kind === 'common') drawAtlas(); else status(t.kind);
 }
 async function replacePiece(f) {
+  if (rot) rotEnd(true);
   const t = workingTarget(); if (!t) return; const img = await readImg(f);
   if (!img) { $('pieceHint').textContent = 'That file isn’t a readable image. Export it again as PNG.'; return; }
   const m = ensureWork(t); const ctx = m.img.getContext('2d'); const [x, y, w, h] = boxOf(t, m.img);
@@ -727,11 +755,13 @@ async function replacePiece(f) {
   afterEdit(t, `Replaced ${t.c[5] || 'this piece'} (${w}${X}${h} box) with ${f.name || 'the pasted image'}.`);
 }
 function deletePiece() {
+  if (rot) rotEnd(true);
   const t = workingTarget(); if (!t) return; const m = ensureWork(t); const [x, y, w, h] = boxOf(t, m.img);
   m.img.getContext('2d').clearRect(x, y, w, h); m.edits[rectKey(t.c)] = 'deleted';
   afterEdit(t, `Deleted ${t.c[5] || 'this piece'}. It’s see-through now; Restore original brings it back.`);
 }
 function restorePiece() {
+  if (rot) rotEnd(true);
   const t = workingTarget(); if (!t) return; const m = st.mine[t.id]; if (!m || !m.edits[rectKey(t.c)]) return;
   ensureWork(t); const [x, y, w, h] = boxOf(t, m.img); const ctx = m.img.getContext('2d');
   const ks = W(m.start) / W(m.img), kh = H(m.start) / H(m.img);
@@ -739,7 +769,8 @@ function restorePiece() {
   delete m.edits[rectKey(t.c)];
   afterEdit(t, 'Restored the original piece.');
 }
-function refreshPieceTools() {
+function refreshPieceTools(live) {
+  if (!live && rot && (!st.sel || rectKey(cellOf(st.sel.table, st.sel.key) || []) !== rot.rk)) rotEnd(true);
   const t = workingTarget(); $('pieceTools').hidden = !t; $('pieceExport').hidden = !st.sel;
   const pc = $('pieceCv'); const ctx = pc.getContext('2d'); ctx.clearRect(0, 0, 96, 96);
   if (st.sel && st.data) { const c = cellOf(st.sel.table, st.sel.key); if (c) { const [img, x, y, w, h] = srcFor(st.sel.table, st.sel.key, false); const s = Math.min(88 / w, 88 / h); ctx.imageSmoothingEnabled = true; ctx.drawImage(img, x, y, w, h, (96 - w * s) / 2, (96 - h * s) / 2, w * s, h * s); } }
@@ -753,6 +784,125 @@ $('pieceFile').onchange = e => { replacePiece(e.target.files[0]); e.target.value
 $('piecePickLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pieceFile').click(); } };
 $('pieceRestore').onclick = restorePiece;
 $('pieceDelete').onclick = deletePiece;
+// ---- clean rotation: one resample per edit, always from the untouched pixels
+// smooth: premultiplied Lanczos-3 (sharp, no dark fringes). pixel: RotSprite-style (8x EPX upscale, nearest), no new colors.
+function epx2(src, w, h) {
+  const out = new Uint32Array(w * 2 * h * 2); const at = (x, y) => src[Math.min(h - 1, Math.max(0, y)) * w + Math.min(w - 1, Math.max(0, x))];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const P = at(x, y), A = at(x, y - 1), B = at(x + 1, y), C = at(x - 1, y), D = at(x, y + 1);
+    let o1 = P, o2 = P, o3 = P, o4 = P;
+    if (C === A && C !== D && A !== B) o1 = A; if (A === B && A !== C && B !== D) o2 = B;
+    if (D === C && D !== B && C !== A) o3 = C; if (B === D && B !== A && D !== C) o4 = D;
+    const i = (y * 2) * w * 2 + x * 2; out[i] = o1; out[i + 1] = o2; out[i + w * 2] = o3; out[i + w * 2 + 1] = o4;
+  }
+  return out;
+}
+function rotateData(src, deg, opt) {
+  const { outW, outH, scale = 1, flipH = false, flipV = false, mode = 'smooth' } = opt;
+  const w = src.width, h = src.height, sd = src.data, out = new ImageData(outW, outH), od = out.data;
+  const q = ((deg % 360) + 360) % 360; const exact = scale === 1 && q % 90 === 0;
+  const r = deg * Math.PI / 180, cs = exact ? Math.round(Math.cos(r)) : Math.cos(r), sn = exact ? Math.round(Math.sin(r)) : Math.sin(r);
+  const map = (x, y) => { const dx = x + 0.5 - outW / 2, dy = y + 0.5 - outH / 2;
+    let sx = (cs * dx + sn * dy) / scale + w / 2, sy = (-sn * dx + cs * dy) / scale + h / 2;
+    if (flipH) sx = w - sx; if (flipV) sy = h - sy; return [sx, sy]; };
+  if (mode === 'pixel' || exact) {
+    let big = new Uint32Array(sd.buffer.slice(0)), bw = w, bh = h, f = 1;
+    if (mode === 'pixel' && !exact) for (let i = 0; i < 3; i++) { big = epx2(big, bw, bh); bw *= 2; bh *= 2; f *= 2; }
+    const o32 = new Uint32Array(od.buffer);
+    for (let y = 0; y < outH; y++) for (let x = 0; x < outW; x++) {
+      const [sx, sy] = map(x, y); const bx = Math.floor(sx * f), by = Math.floor(sy * f);
+      if (bx >= 0 && by >= 0 && bx < bw && by < bh) o32[y * outW + x] = big[by * bw + bx];
+    }
+    return out;
+  }
+  // premultiplied float copy
+  const pm = new Float32Array(w * h * 4);
+  for (let i = 0; i < w * h; i++) { const a = sd[i * 4 + 3] / 255; pm[i * 4] = sd[i * 4] * a; pm[i * 4 + 1] = sd[i * 4 + 1] * a; pm[i * 4 + 2] = sd[i * 4 + 2] * a; pm[i * 4 + 3] = sd[i * 4 + 3]; }
+  const k = Math.max(1, 1 / scale), A = 3, R = Math.ceil(A * k);
+  const L = t => { t = Math.abs(t / k); if (t < 1e-6) return 1; if (t >= A) return 0; const p = Math.PI * t; return A * Math.sin(p) * Math.sin(p / A) / (p * p); };
+  const wx = new Float32Array(2 * R + 1), wy = new Float32Array(2 * R + 1);
+  for (let y = 0; y < outH; y++) for (let x = 0; x < outW; x++) {
+    const [sx, sy] = map(x, y); const u = sx - 0.5, v = sy - 0.5;
+    if (u < -R || v < -R || u > w + R || v > h + R) continue;
+    const ix = Math.floor(u), iy = Math.floor(v); let sw = 0, swy = 0;
+    for (let j = -R + 1; j <= R; j++) { wx[j + R] = L(ix + j - u); sw += wx[j + R]; wy[j + R] = L(iy + j - v); swy += wy[j + R]; }
+    let r0 = 0, g0 = 0, b0 = 0, a0 = 0;
+    for (let jy = -R + 1; jy <= R; jy++) { const yy = iy + jy; if (yy < 0 || yy >= h) continue; const wyv = wy[jy + R];
+      for (let jx = -R + 1; jx <= R; jx++) { const xx = ix + jx; if (xx < 0 || xx >= w) continue; const ww = wx[jx + R] * wyv, i = (yy * w + xx) * 4;
+        r0 += pm[i] * ww; g0 += pm[i + 1] * ww; b0 += pm[i + 2] * ww; a0 += pm[i + 3] * ww; } }
+    const n = sw * swy || 1; a0 /= n; if (a0 <= 0.5) continue; r0 /= n; g0 /= n; b0 /= n;
+    const a = Math.min(255, a0), inv = 255 / Math.max(a, 1e-3), o = (y * outW + x) * 4;
+    od[o] = Math.max(0, Math.min(255, r0 * inv)); od[o + 1] = Math.max(0, Math.min(255, g0 * inv)); od[o + 2] = Math.max(0, Math.min(255, b0 * inv)); od[o + 3] = a;
+  }
+  return out;
+}
+const rotSize = (w, h, deg) => { const r = deg * Math.PI / 180, c = Math.abs(Math.cos(r)), s = Math.abs(Math.sin(r)); return [w * c + h * s, w * s + h * c]; };
+st.rotMode = 'smooth'; st.rotFit = 'crop';
+let rot = null; // {id, rk, box:[x,y,w,h], snap:ImageData, angle, flipH, flipV, hadEdit}
+function rotBegin() {
+  const t = workingTarget(); if (!t) return null; const rk = rectKey(t.c);
+  if (rot && rot.id === t.id && rot.rk === rk) return rot;
+  if (rot) rotEnd(true);
+  const m = ensureWork(t); const box = boxOf(t, m.img);
+  rot = { id: t.id, rk, kind: t.kind, name: t.c[5], box, snap: m.img.getContext('2d').getImageData(...box), angle: 0, flipH: false, flipV: false, hadEdit: m.edits[rk] };
+  return rot;
+}
+let rotRaf = 0;
+function rotRender() {
+  cancelAnimationFrame(rotRaf);
+  rotRaf = requestAnimationFrame(() => {
+    if (!rot) return; const m = st.mine[rot.id]; if (!m) return; const [x, y, w, h] = rot.box;
+    let scale = 1; if (st.rotFit === 'fit') { const [bw, bh] = rotSize(w, h, rot.angle); scale = Math.min(1, w / bw, h / bh); }
+    const data = rotateData(rot.snap, rot.angle, { outW: w, outH: h, scale, flipH: rot.flipH, flipV: rot.flipV, mode: st.rotMode });
+    m.img.getContext('2d').putImageData(data, x, y);
+    if (rot.angle || rot.flipH || rot.flipV) m.edits[rot.rk] = m.edits[rot.rk] || 'replaced'; else if (!rot.hadEdit) delete m.edits[rot.rk];
+    bumpEdits(); drawAtlas(); refreshPieceTools(true);
+  });
+}
+function rotSet(angle) {
+  if (!rotBegin()) return; let a = Math.round(angle * 2) / 2; while (a > 180) a -= 360; while (a < -180) a += 360;
+  rot.angle = a; $('rotAngle').value = a; $('rotNum').value = a; rotRender();
+}
+function rotEnd(keep) {
+  if (!rot) return; const r = rot; rot = null; cancelAnimationFrame(rotRaf);
+  const m = st.mine[r.id];
+  if (m && !keep) { m.img.getContext('2d').putImageData(r.snap, r.box[0], r.box[1]); if (r.hadEdit) m.edits[r.rk] = r.hadEdit; else delete m.edits[r.rk]; }
+  if (m) { bumpEdits(); persist(r.id); }
+  $('rotAngle').value = 0; $('rotNum').value = 0; $('rotFlipH').setAttribute('aria-pressed', 'false'); $('rotFlipV').setAttribute('aria-pressed', 'false');
+  $('rotHint').textContent = keep ? `Rotation kept on ${r.name || 'the piece'}. Restore original still brings back the game's version.` : 'Rotation cancelled.';
+  renderControls(); drawAtlas(); refreshPieceTools(); if (r.kind !== 'common') status(r.kind);
+}
+function rotUI() {
+  seg($('rotMode'), [['smooth', 'Smooth (HD art)'], ['pixel', 'Pixel (no new colors)']], st.rotMode, v => { st.rotMode = v; rotUI(); if (rot) rotRender(); });
+  seg($('rotFit'), [['crop', 'Keep size, crop corners'], ['fit', 'Shrink to fit the box']], st.rotFit, v => { st.rotFit = v; rotUI(); if (rot) rotRender(); });
+}
+rotUI();
+$('rotAngle').addEventListener('input', e => rotSet(+e.target.value));
+$('rotNum').addEventListener('change', e => rotSet(+e.target.value || 0));
+document.querySelectorAll('.rotSteps [data-d]').forEach(b => b.onclick = () => rotSet((rot ? rot.angle : 0) + +b.dataset.d));
+$('rotFlipH').onclick = () => { if (!rotBegin()) return; rot.flipH = !rot.flipH; $('rotFlipH').setAttribute('aria-pressed', String(rot.flipH)); rotRender(); };
+$('rotFlipV').onclick = () => { if (!rotBegin()) return; rot.flipV = !rot.flipV; $('rotFlipV').setAttribute('aria-pressed', String(rot.flipV)); rotRender(); };
+$('rotApply').onclick = () => rotEnd(true);
+$('rotCancel').onclick = () => rotEnd(false);
+
+// rotate any PNG file onto a canvas big enough for its corners
+let rf = null;
+seg($('rfMode'), [['smooth', 'Smooth (HD art)'], ['pixel', 'Pixel']], 'smooth', function pick(v) { rfMode = v; seg($('rfMode'), [['smooth', 'Smooth (HD art)'], ['pixel', 'Pixel']], v, pick); rfDraw(); });
+let rfMode = 'smooth';
+function rfDraw() {
+  if (!rf) return; const a = +$('rfAngle').value || 0; const [bw, bh] = rotSize(rf.width, rf.height, a);
+  const ow = Math.ceil(bw - 1e-6), oh = Math.ceil(bh - 1e-6); const data = rotateData(rf, a, { outW: ow, outH: oh, mode: rfMode });
+  const cv = $('rfCv'); cv.width = ow; cv.height = oh; cv.getContext('2d').putImageData(data, 0, 0); cv.hidden = false; $('rfSave').hidden = false;
+  $('rfStatus').textContent = `${rf.width}${X}${rf.height} → ${ow}${X}${oh}`;
+}
+$('rfFile').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; const img = await readImg(f);
+  if (!img) { $('rfStatus').textContent = 'That file isn\u2019t a readable image.'; return; }
+  const c = canvasOf(img); rf = c.getContext('2d').getImageData(0, 0, c.width, c.height); rfName = (f.name || 'image').replace(/\.[^.]+$/, ''); rfDraw(); };
+let rfName = 'image';
+$('rfPick').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('rfFile').click(); } };
+$('rfAngle').addEventListener('input', rfDraw);
+$('rfSave').onclick = () => saveImg($('rfCv'), rfName + '-rot' + String(+$('rfAngle').value || 0).replace('-', 'm') + '.png', $('rfSave'));
+
 $('discardSheet').onclick = () => discard('chr');
 $('discardFx').onclick = () => discard('fx');
 $('discardCommon').onclick = () => discard('common');
