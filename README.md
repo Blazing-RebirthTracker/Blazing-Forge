@@ -53,7 +53,8 @@ Your work is saved in your browser. **Save mod pack** also works as a backup, an
 | [`forgecore/`](forgecore/) | The mod pack builder in portable C (bundles, type trees, tables, art, banners, summon re-skin). Builds and tests on Linux too |
 | [`forge/`](forge/) | The original Python builder (`forge.py build/verify/donors/slots`) |
 | [`sprites/`](sprites/) | The Sprites tab: battle-animation player and per-piece sheet editor. `sprites/cat/` holds the unit catalog: `index.json.gz`, gzipped rig models and animation clips, and the sprite atlases |
-| [`tools/`](tools/) | `studio.py` (Studio data ⇄ mod folder), `export_catalog.py` (regenerate `docs/catalog.json`), `cmp_builds.py` (compare two builds), `build_sprite_catalog.py` (rebuild `sprites/cat/` from an animation export), `lock_sprites.py` (password-locked test sheets) |
+| [`stages/`](stages/) | The Stages tab: stage builder (beta). `stages/cat/` holds the mission list, one gzipped file per mission with its maps and enemy line-ups, the enemy table and background previews |
+| [`tools/`](tools/) | `studio.py` (Studio data ⇄ mod folder), `export_catalog.py` (regenerate `docs/catalog.json`), `cmp_builds.py` (compare two builds), `build_sprite_catalog.py` (rebuild `sprites/cat/` from an animation export), `lock_sprites.py` (password-locked test sheets), `build_stage_catalog.py` (rebuild `stages/cat/` from a stage-builder export) |
 
 ### Mod pack format
 
@@ -78,4 +79,4 @@ python3 ../forge/forge.py verify --base <base> --out <out>
 
 `<base>` holds a clean `BlazingData` folder (`python3 forge/forge.py fetch --base base/` pulls just the files Forge needs from the Blazing:Rebirth data release).
 
-No game binaries are stored in this repository. The only game data files are the sprite atlases, rig models and animation clips in `sprites/cat/`, used by the Sprites tab. `docs/catalog.json` holds unit, skill and ability names and descriptions for the Studio's pickers.
+No game binaries are stored in this repository. The only game data files are the sprite atlases, rig models and animation clips in `sprites/cat/`, used by the Sprites tab, and the mission, map, enemy and background data in `stages/cat/`, used by the Stages tab. `docs/catalog.json` holds unit, skill and ability names and descriptions for the Studio's pickers.
