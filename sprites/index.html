@@ -113,6 +113,25 @@ details.rot summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--tx
 #rotNum,#rfAngle,#szNum,#rfSize{width:76px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:7px 8px}
 .rotSteps .chip{min-height:30px;padding:4px 10px}
 #rfCv{width:100%;max-width:100%;height:auto;border-radius:10px;background:conic-gradient(#232833 25%,#1b1f28 0 50%,#232833 0 75%,#1b1f28 0) 0 0/12px 12px}
+.unitbar{background:var(--panel);border-radius:16px;padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.unitNow{display:flex;flex-direction:column;gap:2px;min-width:0}
+.uname{font-family:var(--f-disp);font-weight:700;font-size:19px;letter-spacing:.03em}
+.utitle{color:var(--tx2);font-size:13px}
+.utitle .k{margin-left:0}
+.picker{display:flex;gap:6px;align-items:center;flex:1 1 360px;max-width:560px;min-width:0}
+.search{position:relative;flex:1;min-width:0}
+.search input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:10px 12px;min-height:40px}
+.ulist{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;background:var(--panel2);border:1px solid var(--line);border-radius:12px;max-height:min(420px,60vh);overflow:auto;padding:4px;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.ulist button{display:flex;gap:10px;align-items:baseline;justify-content:space-between;width:100%;border:0;background:transparent;text-align:left;padding:8px 10px;border-radius:8px;color:var(--tx)}
+.ulist button[aria-selected="true"],.ulist button:hover{background:var(--panel)}
+.ulist .nm{font-weight:700;font-size:13.5px;min-width:0}
+.ulist .nm small{display:block;color:var(--tx2);font-weight:500;font-size:12px}
+.ulist .meta{font-family:var(--f-mono);font-size:11px;color:var(--tx3);white-space:nowrap}
+.ulist .grp{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);padding:8px 10px 4px}
+.ulist .empty{color:var(--tx2);padding:10px;font-size:13px}
+.stars{color:var(--ember-tx);letter-spacing:.02em}
+.moves button:disabled{opacity:.38;cursor:not-allowed}
+.loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:12.5px;color:var(--tx2);background:rgba(14,16,22,.8);padding:6px 10px;border-radius:8px;pointer-events:none}
 </style>
 </head><body>
 
@@ -123,13 +142,21 @@ details.rot summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--tx
       <h1>Forge Sprites</h1>
       <small id="unitMeta"></small>
     </div>
-    <div class="row"><div class="seg" id="unitSeg" role="group" aria-label="Unit"></div><button class="chip" id="unlockBtn" type="button" aria-haspopup="dialog">Test units</button></div>
+    <div class="row"><button class="chip" id="unlockBtn" type="button" aria-haspopup="dialog">Test units</button></div>
   </header>
+  <section class="unitbar" aria-label="Unit">
+    <div class="unitNow"><span class="uname" id="uName">Loading units…</span><span class="utitle" id="uTitle"></span></div>
+    <div class="picker">
+      <button class="icon" id="uPrev" aria-label="Previous unit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="search"><input type="search" id="uSearch" placeholder="Search units by name, title or number" autocomplete="off" aria-label="Search units" aria-controls="uList" aria-expanded="false" role="combobox"><div class="ulist" id="uList" role="listbox" hidden></div></div>
+      <button class="icon" id="uNext" aria-label="Next unit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </section>
 
   <div class="main">
     <section class="stagebox" aria-label="Animation stage">
       <div class="stages" id="stages">
-        <div class="stage" id="stageA"><canvas id="cvA" aria-label="Animated preview, click a part to inspect it"></canvas><span class="tag" id="tagA">Your sheet</span><div class="zoomctl" role="group" aria-label="Stage zoom"><button id="zOut" aria-label="Zoom out">&minus;</button><span id="zLbl">100%</span><button id="zIn" aria-label="Zoom in">+</button><button class="txt" id="zReset">Reset</button></div></div>
+        <div class="stage" id="stageA"><canvas id="cvA" aria-label="Animated preview, click a part to inspect it"></canvas><span class="tag" id="tagA">Your sheet</span><span class="loading" id="loadMsg" hidden>Loading…</span><div class="zoomctl" role="group" aria-label="Stage zoom"><button id="zOut" aria-label="Zoom out">&minus;</button><span id="zLbl">100%</span><button id="zIn" aria-label="Zoom in">+</button><button class="txt" id="zReset">Reset</button></div></div>
         <div class="stage" id="stageB" hidden><canvas id="cvB" aria-label="Original sheet preview"></canvas><span class="tag">Original</span></div>
       </div>
       <div class="transport">
@@ -139,7 +166,8 @@ details.rot summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--tx
         <div class="scrub"><input type="range" id="scrub" min="0" max="0" value="0" aria-label="Frame"><span class="fr" id="frLbl">0 / 0</span></div>
         <div class="seg" id="speedSeg" role="group" aria-label="Speed"></div>
       </div>
-      <p class="hint">Drag to move the camera, scroll or pinch to zoom, tap a piece to inspect it. Keys: + and &minus; zoom, 0 resets.</p>
+      <p class="hint" id="moveNote">Drag to move the camera, scroll or pinch to zoom, tap a piece to inspect it. Keys: + and &minus; zoom, 0 resets.</p>
+      <p class="hint">This shows the sprite animation itself. Battle cameras, targets, hit reactions, sound and cut-in movies aren&rsquo;t played here.</p>
     </section>
 
     <aside class="rail">
@@ -155,7 +183,7 @@ details.rot summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--tx
         <span class="lbl">Sheet</span>
         <div class="seg" id="sheetSeg" role="group" aria-label="Sheet"></div>
         <div class="drop" id="drop">
-          <p>Drop an edited 1024&times;1024 sheet here, paste it, or pick a file. It updates the animation right away.</p>
+          <p id="dropTxt">Drop an edited sheet here, paste it, or pick a file. It updates the animation right away.</p>
           <div class="row">
             <label class="btn primary" for="file" tabindex="0" id="pickLbl">Choose PNG</label>
             <input type="file" id="file" accept="image/png,image/*" class="hidden-file">
@@ -261,187 +289,370 @@ details.rot summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--tx
   </form>
 </dialog>
 <script>
+/* Shared read-only SpriteStudio curve player. No game state or project mutations. */
+(function(root){'use strict';
+const I=()=>[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+function mul(a,b){const c=new Array(16).fill(0);for(let r=0;r<4;r++)for(let k=0;k<4;k++)for(let j=0;j<4;j++)c[r*4+j]+=a[r*4+k]*b[k*4+j];return c;}
+function sample(keys,time){let lo=0,hi=keys.length;while(lo+1<hi){const m=(lo+hi)>>1;if(keys[m][0]<=time)lo=m;else hi=m;}const k=keys[lo],dt=Math.max(0,time-k[0]);if(k.length===5)return ((k[1]*dt+k[2])*dt+k[3])*dt+k[4];const next=keys[lo+1];return next&&next[0]>k[0]?k[1]+(next[1]-k[1])*Math.min(1,dt/(next[0]-k[0])):k[1];}
+function local(v,part){
+ const g=(k,d=0)=>v[k]===undefined?d:v[k],prefix=part?'SSPart.':'Transform.m_Local',p=part?'pos':'Position',s='Transform.m_LocalScale.';let r;
+ if(part||Object.keys(v).some(k=>k.startsWith('Transform.localEulerAnglesRaw.'))){
+  const a=part?'SSPart.rot.':'Transform.localEulerAnglesRaw.',x=g(a+'x')*Math.PI/180,y=g(a+'y')*Math.PI/180,z=g(a+'z')*Math.PI/180,cx=Math.cos(x),sx=Math.sin(x),cy=Math.cos(y),sy=Math.sin(y),cz=Math.cos(z),sz=Math.sin(z);
+  r=[cy*cz+sy*sx*sz,-cy*sz+sy*sx*cz,sy*cx,cx*sz,cx*cz,-sx,-sy*cz+cy*sx*sz,sy*sz+cy*sx*cz,cy*cx];
+ }else{const q='Transform.m_LocalRotation.',x=g(q+'x'),y=g(q+'y'),z=g(q+'z'),w=g(q+'w',1);r=[1-2*(y*y+z*z),2*(x*y-z*w),2*(x*z+y*w),2*(x*y+z*w),1-2*(x*x+z*z),2*(y*z-x*w),2*(x*z-y*w),2*(y*z+x*w),1-2*(x*x+y*y)];}
+ return [r[0]*g(s+'x',1),r[1]*g(s+'y',1),r[2]*g(s+'z',1),g(prefix+p+'.x'),r[3]*g(s+'x',1),r[4]*g(s+'y',1),r[5]*g(s+'z',1),g(prefix+p+'.y'),r[6]*g(s+'x',1),r[7]*g(s+'y',1),r[8]*g(s+'z',1),g(prefix+p+'.z'),0,0,0,1];
+}
+function pose(model,clip,time){
+ const vals=model.nodes.map(n=>({...n.v})),t=Math.max(clip.start||0,Math.min((clip.start||0)+clip.duration,time+(clip.start||0)));
+ for(const [n,k,keys]of clip.tracks)vals[n][k]=sample(keys,t);
+ const matrices=[],alphas=[],active=[],parts=[];
+ for(let i=0;i<model.nodes.length;i++){
+  const node=model.nodes[i],v=vals[i],g=(k,d=0)=>v['SSPart.'+k]===undefined?d:v['SSPart.'+k],parent=node.parent;
+  let m=local(v,node.part);if(parent>=0)m=mul(matrices[parent],m);matrices.push(m);
+  active[i]=v['GameObject.m_IsActive']>0&&(parent<0||active[parent]);let alpha=node.part?g('alpha',1):1;
+  if(parent>=0&&(!node.part||g('inheritType')===0))alpha*=alphas[parent];alphas[i]=alpha;
+  if(!node.part||!active[i]||!v['MeshRenderer.m_Enabled']||!g('m_Enabled',1)||alpha<=0)continue;
+  const cell=model.cells[String(Math.trunc(g('cellId')))];if(!cell||!model.textures[String(cell.mapId)])continue;
+  const w=g('siz.x')||cell.size.x,h=g('siz.y')||cell.size.y,fx=!!g('flpH'),fy=!!g('flpV'),px=cell.pivot.x*(fx?-1:1)+g('pvt.x'),py=cell.pivot.y*(fy?-1:1)+g('pvt.y'),quad=[];
+  for(const [name,x,y]of [['vertLT',-.5,.5],['vertRT',.5,.5],['vertRB',.5,-.5],['vertLB',-.5,-.5]]){const vx=(x-px)*w+g(name+'.x'),vy=(y-py)*h+g(name+'.y');quad.push([m[0]*vx+m[1]*vy+m[3],-(m[4]*vx+m[5]*vy+m[7])]);}
+  const texture=model.textures[String(cell.mapId)];parts.push({cell:String(Math.trunc(g('cellId'))),name:node.path,map:cell.mapId,rect:[cell.pos.x+g('uvt.x')*texture.width,cell.pos.y+g('uvt.y')*texture.height,cell.size.x,cell.size.y],quad,flipX:fx,flipY:fy,alpha,color:[g('vcol.r'),g('vcol.g'),g('vcol.b'),g('vcol.a')],blend:g('alphaBlendType'),order:g('prio'),partIndex:g('arrayIndex')});
+ }
+ parts.sort((a,b)=>a.order-b.order||a.partIndex-b.partIndex);return {parts,bounds:bounds(parts)};
+}
+function bounds(parts){const b=[Infinity,Infinity,-Infinity,-Infinity];for(const p of parts)for(const [x,y]of p.quad){b[0]=Math.min(b[0],x);b[1]=Math.min(b[1],y);b[2]=Math.max(b[2],x);b[3]=Math.max(b[3],y);}return b.every(Number.isFinite)?b:[-100,-100,100,100];}
+function scenePose(scene,time){const parts=[];for(let i=0;i<scene.layers.length;i++){const layer=scene.layers[i];if(time>layer.clip.duration)continue;for(const p of pose(layer.model,layer.clip,time).parts)parts.push({...p,map:i+':'+p.map});}return {parts,bounds:scene.bounds||bounds(parts)};}
+function prepare(scene){
+ scene.duration=Math.max(...scene.layers.map(l=>l.clip.duration));const points=[];
+ for(let i=0;i<=32;i++){const p=scenePose(scene,scene.duration*i/32);points.push(...p.parts);}
+ scene.bounds=bounds(points);const [l,t,r,b]=scene.bounds,pad=Math.max(r-l,b-t)*.05;scene.bounds=[l-pad,t-pad,r+pad,b+pad];
+ return scene;
+}
+function player(canvas,scene,controls){
+ prepare(scene);let elapsed=0,playing=false,raf=0,last=0,disposed=false;const duration=scene.duration;
+ const play=document.createElement('button'),slider=document.createElement('input'),clock=document.createElement('span'),focus=document.createElement('button');play.textContent='Play';play.type='button';slider.type='range';slider.min=0;slider.max=duration;slider.step=1/60;slider.value=0;slider.setAttribute('aria-label','Animation position');clock.className='animation-clock';focus.type='button';focus.textContent='Focus sprite';focus.setAttribute('aria-pressed','false');controls.replaceChildren(play,slider,clock,focus);let focused=false;
+ function draw(){const p=scenePose(scene,elapsed);if(focused){const b=bounds(p.parts.filter(part=>String(part.map).startsWith('0:'))),x=(b[0]+b[2])/2,y=(b[1]+b[3])/2,size=Math.max(160,b[2]-b[0],b[3]-b[1])*1.15;p.bounds=[x-size/2,y-size/2,x+size/2,y+size/2];}root.ForgeSpritePreview.draw(canvas,p,scene.images);slider.value=elapsed;clock.textContent=elapsed.toFixed(1)+' / '+duration.toFixed(1)+'s';}
+ focus.onclick=()=>{focused=!focused;focus.setAttribute('aria-pressed',String(focused));focus.textContent=focused?'Fit whole move':'Focus sprite';draw();};
+ function stop(){playing=false;play.textContent='Play';cancelAnimationFrame(raf);raf=0;}
+ function tick(now){if(disposed||!canvas.isConnected||document.hidden){stop();return;}if(last)elapsed+=(now-last)/1000;last=now;if(elapsed>duration)elapsed=0;draw();raf=requestAnimationFrame(tick);}
+ play.onclick=()=>{if(playing){stop();return;}playing=true;play.textContent='Pause';last=0;raf=requestAnimationFrame(tick);};slider.oninput=()=>{stop();elapsed=Number(slider.value);draw();};
+ const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);draw();
+ return {dispose(){disposed=true;stop();document.removeEventListener('visibilitychange',hide);controls.replaceChildren();},play(){if(!playing)play.click();},seek(t){stop();elapsed=Math.max(0,Math.min(duration,t));draw();},scene};
+}
+root.ForgeAnimationPreview={sample,pose,scenePose,prepare,player};
+})(typeof window==='undefined'?globalThis:window);
+</script>
+<script>
 (() => {
 const $ = id => document.getElementById(id);
 const X = '×';
 const W = i => i.naturalWidth || i.width, H = i => i.naturalHeight || i.height;
+const FAP = window.ForgeAnimationPreview;
+const CAT = 'cat/';
+const KINDS = [['idle', 'Idle'], ['attack', 'Attack'], ['jutsu', 'Jutsu'], ['ultimate', 'Secret Technique']];
+const COMMON = { file: 'tex/common.png', width: 256, height: 512, name: 'common_unit', common: true };
+const DEFAULT_UNIT = 12396;
 
 // ---- state
-// A "sheet slot" is one texture the editor can change: the unit's character sheet ('chr|unit'),
-// one technique's effect sheet ('fx|unit|role') or the shared hit/slash sheet ('common').
-// Each slot shows one of: 'orig' (game sheet), 'test' (unlocked test sheet) or 'custom' (your copy).
-const st = { units: [], unit: null, data: null, role: 0, side: 'R', frame: 0, playing: true, speed: 1, loop: true,
-  compare: false, fit: true, show: 'all', atlasKind: 'chr', listMode: 'frame', pieceFit: 'contain',
+// A "sheet slot" is one texture the editor can change. Slots are keyed by the game atlas they replace
+// ('a:<atlas id>'), or 'common' for the shared hit/slash sheet, so an edited sheet follows that atlas to
+// every unit and move that uses it. Each slot shows 'orig' (game sheet), 'test' (unlocked test sheet)
+// or 'custom' (your copy).
+const st = { cat: null, list: [], donor: null, entry: null, kind: 'idle', scene: null, side: 'R', t: 0, playing: true, speed: 1, loop: true,
+  compare: false, fit: true, show: 'all', atlasSlot: null, listMode: 'frame', pieceFit: 'contain',
   view: { z: 1, x: 0, y: 0 }, av: { z: 1, x: 0, y: 0 }, bg: 'stage',
-  mode: {}, mine: {}, sel: null, last: 0, acc: 0 };
-const tex = { orig: null, common: null, fx: {}, test: null, testFx: {} };
-const cache = {};
-let unlocked = null; // decrypted test payload {label, units: {key: {sheet, fx: {role: dataURL}}}}
+  mode: {}, mine: {}, sel: null, last: 0, durs: {} };
+const slots = {};   // slot id -> { id, file, name, common, role, base: Image }
+const testImg = {}; // atlas file -> unlocked test sheet
+let unlocked = null; // decrypted test payload { v: 2, label, units: { id: { label } }, sheets: { atlasFile: dataURL } }
 
-function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
-async function getJSON(p) { const r = await fetch(p); if (!r.ok) throw new Error(p + ' ' + r.status); return r.json(); }
+// small caches so browsing hundreds of units doesn't keep everything in memory
+function lru(max) { const m = new Map(); return {
+  get(k) { if (!m.has(k)) return undefined; const v = m.get(k); m.delete(k); m.set(k, v); return v; },
+  set(k, v) { m.delete(k); if (v !== undefined) m.set(k, v); while (m.size > max) m.delete(m.keys().next().value); } }; }
+const jsonCache = lru(40), imgCache = lru(24);
+
+function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('image ' + src)); i.src = src; }); }
+function atlasImg(src) { let p = imgCache.get(src); if (!p) { p = loadImg(src); imgCache.set(src, p); p.catch(() => imgCache.set(src, undefined)); } return p; }
+// catalog JSON is stored gzipped; servers may or may not decode it on the way, so check the bytes
+function getData(path) {
+  let p = jsonCache.get(path); if (p) return p;
+  p = (async () => {
+    const r = await fetch(path); if (!r.ok) throw new Error(path + ' ' + r.status);
+    const buf = new Uint8Array(await r.arrayBuffer());
+    const text = buf[0] === 0x1f && buf[1] === 0x8b
+      ? await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).text()
+      : new TextDecoder().decode(buf);
+    return JSON.parse(text);
+  })();
+  jsonCache.set(path, p); p.catch(() => jsonCache.set(path, undefined)); return p;
+}
 function seg(el, items, cur, on) {
-  el.replaceChildren(...items.map(([v, label, k]) => {
+  el.replaceChildren(...items.map(([v, label, k, dis]) => {
     const b = document.createElement('button'); b.type = 'button';
-    b.setAttribute('aria-pressed', String(v === cur)); b.textContent = label;
+    b.setAttribute('aria-pressed', String(v === cur)); b.textContent = label; if (dis) b.disabled = true;
     if (k) { const s = document.createElement('span'); s.className = 'k'; s.textContent = k; b.append(s); }
     b.onclick = () => on(v); return b;
   }));
 }
+const errText = e => /ultimate/i.test(e) ? 'This unit has no Secret Technique.' : /atlas/i.test(e) ? 'This unit’s sprite sheet isn’t included in the preview.' : 'This move isn’t available in the preview.';
 
 async function init() {
-  st.units = await getJSON('data/units.json');
-  tex.common = await loadImg('tex/common.png');
+  if (!('DecompressionStream' in window)) throw new Error('old browser');
+  const ix = await getData(CAT + 'index.json.gz'); st.cat = ix.donors;
+  st.list = Object.values(ix.donors).sort((a, b) => (a.number || 1e9) - (b.number || 1e9) || a.id - b.id);
+  await migrateOld();
   await tryResumeUnlock();
   await loadSaved('common');
-  await selectUnit(st.units[0].key);
+  let q = null; try { q = new URLSearchParams(location.search); } catch (e) {}
+  const want = q && +q.get('unit'), kind = q && q.get('move');
+  await selectDonor(st.cat[want] ? want : DEFAULT_UNIT, KINDS.some(k => k[0] === kind) ? kind : 'idle');
   requestAnimationFrame(tick);
 }
 
-async function selectUnit(key) {
-  const u = st.units.find(x => x.key === key); const tok = (selectUnit.tok = (selectUnit.tok || 0) + 1);
-  // load everything first, then swap in one step so a frame never mixes two units
-  if (!cache[key]) cache[key] = await getJSON('data/' + key + '.json');
-  const data = cache[key];
-  const orig = await loadImg('tex/' + key + '.png');
-  const fxTex = {};
-  for (const [role, f] of Object.entries(data.fx || {})) fxTex[role] = await loadImg(f.tex);
-  const tu = unlocked && unlocked.units[key];
-  const test = tu && tu.sheet ? await loadImg(tu.sheet) : null;
-  const testFx = {};
-  if (tu && tu.fx) for (const [role, src] of Object.entries(tu.fx)) testFx[role] = await loadImg(src);
-  if (tok !== selectUnit.tok) return;
-  st.sel = null; st.unit = u; st.data = data; tex.orig = orig; tex.fx = fxTex; tex.test = test; tex.testFx = testFx; $('partList').dataset.sig = '';
-  await loadSaved('chr|' + key);
-  for (const role of Object.keys(data.fx || {})) await loadSaved('fx|' + key + '|' + role);
-  if (tok !== selectUnit.tok) return;
-  st.role = Math.min(st.role, st.data.roles.length - 1); st.frame = 0; st.atlasKind = 'chr'; resetView(st.view); resetView(st.av);
-  $('unitMeta').textContent = 'unit ' + u.id;
-  renderControls(); computeBounds(); drawAtlas(); refreshPieceTools(); statusAll();
+// ---- loading a unit and move
+function showLoading(on, msg) { const el = $('loadMsg'); el.hidden = !on; if (msg) el.textContent = msg; }
+function addCommon(model) {
+  if (model._common) return; model._common = true;
+  const byMap = {};
+  for (const c of Object.values(model.cells)) if (!byMap[c.mapId]) byMap[c.mapId] = c;
+  for (const [mid, c] of Object.entries(byMap)) if (!model.textures[mid] && c.pixelSize && c.pixelSize.x === COMMON.width && c.pixelSize.y === COMMON.height) model.textures[mid] = { ...COMMON };
+}
+async function buildScene(kind, mv) {
+  const layers = await Promise.all(mv.layers.map(async L => {
+    const [model, clip] = await Promise.all([getData(CAT + L.model + '.gz'), getData(CAT + L.clip + '.gz')]);
+    addCommon(model); return { role: L.role, model, clip };
+  }));
+  const sc = { kind, layers, mapSlot: {}, ids: [], cells: {}, chr: null, fx: null, warnings: mv.warnings || [] };
+  const waits = [];
+  layers.forEach((L, i) => {
+    for (const [mid, t] of Object.entries(L.model.textures)) {
+      const sid = t.common ? 'common' : 'a:' + t.file.replace(/^.*\//, '').replace(/\.png$/i, '');
+      sc.mapSlot[i + ':' + mid] = sid; if (!sc.ids.includes(sid)) sc.ids.push(sid);
+      if (!t.common) { if (L.role === 'character' && !sc.chr) sc.chr = sid; if (L.role === 'effect' && !sc.fx) sc.fx = sid; }
+      if (!slots[sid]) slots[sid] = { id: sid, file: t.file, name: t.name || sid, common: !!t.common, role: t.common ? 'common' : L.role, base: null };
+      const s = slots[sid];
+      if (!s.base) waits.push(atlasImg(t.common ? t.file : CAT + t.file).then(img => { s.base = img; }));
+      if (unlocked && unlocked.sheets && unlocked.sheets[t.file] && !testImg[t.file]) waits.push(loadImg(unlocked.sheets[t.file]).then(img => { testImg[t.file] = img; }));
+      const cells = sc.cells[sid] || (sc.cells[sid] = {});
+      for (const [ck, c] of Object.entries(L.model.cells)) if (String(c.mapId) === mid)
+        cells[i + '.' + ck] = [sid, Math.round(c.pos.x), Math.round(c.pos.y), Math.round(c.size.x), Math.round(c.size.y), c.name || ('cell ' + ck)];
+    }
+  });
+  await Promise.all(waits);
+  const rank = id => id === sc.chr ? 0 : id === sc.fx ? 1 : slots[id].common ? 3 : 2;
+  sc.ids.sort((a, b) => rank(a) - rank(b));
+  sc.dur = Math.max(1 / 30, ...layers.map(L => L.clip.duration || 0));
+  sc.fps = layers[0] && layers[0].clip.fps || 30;
+  return sc;
+}
+async function selectDonor(id, kind) {
+  const e = st.cat[id]; if (!e) return;
+  const tok = (selectDonor.tok = (selectDonor.tok || 0) + 1);
+  kind = kind || st.kind;
+  const okKinds = KINDS.map(k => k[0]).filter(k => e.moves[k] && !e.moves[k].error);
+  if (!okKinds.includes(kind)) kind = okKinds[0] || 'idle';
+  const mv = e.moves[kind];
+  showLoading(true, 'Loading…'); $('sheetStatus').classList.remove('warn');
+  let scene = null, err = null;
+  try { if (!mv || mv.error) throw Object.assign(new Error(mv ? mv.error : 'missing'), { game: true }); scene = await buildScene(kind, mv); }
+  catch (x) { err = x; }
+  if (tok !== selectDonor.tok) return;
+  if (scene) for (const sid of scene.ids) await loadSaved(sid);
+  if (tok !== selectDonor.tok) return;
+  if (rot) rotEnd(true);
+  st.donor = id; st.entry = e; st.kind = kind; st.scene = scene; st.sel = null; st.t = 0; poseCache.t = null; $('partList').dataset.sig = '';
+  for (const sid of Object.keys(slots)) if (!(scene && scene.ids.includes(sid)) && !st.mine[sid] && sid !== 'common') delete slots[sid];
+  if (scene) { st.durs[id + '|' + kind] = scene.dur; if (!scene.ids.includes(st.atlasSlot)) st.atlasSlot = scene.chr || scene.ids[0]; }
+  resetView(st.view); resetView(st.av);
+  showLoading(false);
+  updateUnitBar(); renderControls(); computeBounds(); drawAtlas(); refreshPieceTools(); statusAll();
+  if (err) { const s = $('sheetStatus'); s.classList.add('warn'); s.textContent = err.game ? errText(err.message) : 'Couldn’t load this move. Check your connection and try again.'; if (!err.game) console.error(err); }
+  $('moveNote').textContent = scene && scene.warnings.length ? 'Some parts of this move couldn’t be matched to the rig and are skipped, so a piece may be missing.' : 'Drag to move the camera, scroll or pinch to zoom, tap a piece to inspect it. Keys: + and − zoom, 0 resets.';
+  try { const q = new URLSearchParams(location.search); q.set('unit', id); q.set('move', kind); history.replaceState(null, '', '?' + q.toString().replace(/=(&|$)/g, '$1')); } catch (x) {}
 }
 
-const roleName = () => st.data.roles[st.role].role;
-const fxInfo = () => st.data.fx && st.data.fx[roleName()];
-function anim() { const r = st.data.roles[st.role]; return st.data.anims[r[st.side]]; }
-function frameCount() { return anim().frames.length; }
+// ---- unit picker
+const stars = n => '★'.repeat(Math.max(0, Math.min(7, n || 0)));
+const testLabel = id => unlocked && unlocked.units && unlocked.units[id] && unlocked.units[id].label;
+function updateUnitBar() {
+  const e = st.entry; if (!e) return;
+  $('uName').textContent = e.name;
+  const t = $('uTitle'); t.replaceChildren(e.title + ' · ');
+  const s = document.createElement('span'); s.className = 'stars'; s.textContent = stars(e.rarity); t.append(s, ` · No. ${e.number} · id ${e.id}`);
+  const tl = testLabel(e.id); if (tl) t.append(' · ' + tl + ' test sheet');
+  $('unitMeta').textContent = st.list.length.toLocaleString() + ' units';
+}
+const hay = u => u._h || (u._h = (u.name + ' ' + u.title).toLowerCase());
+// words match the name or title; numbers match the start of the album number or unit id
+const matches = (u, t) => /^#?\d+$/.test(t) ? (t = t.replace('#', ''), String(u.number).startsWith(t) || String(u.id).startsWith(t)) : hay(u).includes(t);
+let pick = { items: [], at: -1 };
+function openList() {
+  const q = $('uSearch').value.trim().toLowerCase(); const toks = q.split(/\s+/).filter(Boolean);
+  const list = $('uList'); const out = []; pick = { items: [], at: -1 };
+  const add = u => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'option'); b.setAttribute('aria-selected', 'false');
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = u.name; const sm = document.createElement('small'); sm.textContent = u.title + (testLabel(u.id) ? ' · ' + testLabel(u.id) + ' test' : ''); nm.append(sm);
+    const meta = document.createElement('span'); meta.className = 'meta'; meta.textContent = stars(u.rarity) + '  No. ' + u.number;
+    b.append(nm, meta); b.onmousedown = ev => ev.preventDefault(); b.onclick = () => choose(u.id); pick.items.push([b, u.id]); out.push(b); };
+  const grp = txt => { const g = document.createElement('div'); g.className = 'grp'; g.textContent = txt; out.push(g); };
+  if (!toks.length && unlocked && unlocked.units) { const tu = st.list.filter(u => testLabel(u.id)); if (tu.length) { grp('Test units'); tu.forEach(add); grp('All units'); } }
+  const res = toks.length ? st.list.filter(u => toks.every(t => matches(u, t))) : st.list;
+  res.slice(0, 120).forEach(add);
+  if (!res.length) { const d = document.createElement('div'); d.className = 'empty'; d.textContent = 'No units match “' + q + '”.'; out.push(d); }
+  else if (res.length > 120) { const d = document.createElement('div'); d.className = 'empty'; d.textContent = `Showing 120 of ${res.length.toLocaleString()}. Type more of the name to narrow it down.`; out.push(d); }
+  list.replaceChildren(...out); list.hidden = false; $('uSearch').setAttribute('aria-expanded', 'true');
+  if (pick.items.length) moveSel(0);
+}
+function closeList() { $('uList').hidden = true; $('uSearch').setAttribute('aria-expanded', 'false'); }
+function moveSel(i) {
+  if (!pick.items.length) return; if (pick.at >= 0) pick.items[pick.at][0].setAttribute('aria-selected', 'false');
+  pick.at = (i + pick.items.length) % pick.items.length; const b = pick.items[pick.at][0]; b.setAttribute('aria-selected', 'true'); b.scrollIntoView({ block: 'nearest' });
+}
+function choose(id) { closeList(); $('uSearch').value = ''; $('uSearch').blur(); selectDonor(id, st.kind); }
+$('uSearch').addEventListener('focus', openList);
+$('uSearch').addEventListener('input', openList);
+$('uSearch').addEventListener('blur', () => setTimeout(closeList, 120));
+$('uSearch').addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); if ($('uList').hidden) openList(); else moveSel(pick.at + 1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); moveSel(pick.at - 1); }
+  else if (e.key === 'Enter') { e.preventDefault(); if (pick.at >= 0) choose(pick.items[pick.at][1]); }
+  else if (e.key === 'Escape') { closeList(); $('uSearch').blur(); }
+});
+const stepUnit = d => { const i = st.list.findIndex(u => u.id === st.donor); const u = st.list[(i + d + st.list.length) % st.list.length]; if (u) selectDonor(u.id, st.kind); };
+$('uPrev').onclick = () => stepUnit(-1); $('uNext').onclick = () => stepUnit(1);
 
 // ---- sheet slots
-function slotId(kind) { return kind === 'chr' ? 'chr|' + st.unit.key : kind === 'fx' ? 'fx|' + st.unit.key + '|' + roleName() : 'common'; }
-function baseTex(kind) { return kind === 'chr' ? tex.orig : kind === 'fx' ? tex.fx[roleName()] : tex.common; }
-function testTex(kind) { return kind === 'chr' ? tex.test : kind === 'fx' ? tex.testFx[roleName()] || null : null; }
-function modeOf(kind) {
-  const id = slotId(kind); let m = st.mode[id];
+const sc = () => st.scene;
+const kindId = kind => !sc() ? null : kind === 'chr' ? sc().chr : kind === 'fx' ? sc().fx : 'common';
+function roleLabel(id) {
+  const s = slots[id]; if (!s) return 'Sheet'; if (s.common) return 'Shared hit/slash sheet';
+  if (id === (sc() && sc().fx)) return (st.kind === 'ultimate' ? 'Secret Technique' : st.kind === 'jutsu' ? 'Jutsu' : 'Move') + ' effect sheet';
+  return 'Character sheet';
+}
+const baseTex = id => slots[id] && slots[id].base;
+const testTex = id => (slots[id] && testImg[slots[id].file]) || null;
+function modeOf(id) {
+  let m = st.mode[id];
   if (m === 'custom' && !st.mine[id]) m = null;
-  if (m === 'test' && !testTex(kind)) m = null;
-  return m || (kind === 'chr' && tex.test ? 'test' : 'orig');
+  if (m === 'test' && !testTex(id)) m = null;
+  return m || (testTex(id) ? 'test' : 'orig');
 }
-function sheetFor(kind, orig) {
-  if (orig) return baseTex(kind);
-  const m = modeOf(kind);
-  if (m === 'custom') return st.mine[slotId(kind)].img;
-  if (m === 'test') return testTex(kind);
-  return baseTex(kind);
+function sheetFor(id, orig) {
+  if (orig) return baseTex(id);
+  const m = modeOf(id);
+  if (m === 'custom') return st.mine[id].img;
+  if (m === 'test') return testTex(id);
+  return baseTex(id);
 }
-function fileBase(kind) {
-  if (kind === 'chr') return st.unit.tex + (modeOf('chr') === 'test' ? '-' + unlocked.label.toLowerCase() : '');
-  if (kind === 'fx') return fxInfo().name + (modeOf('fx') === 'test' ? '-' + unlocked.label.toLowerCase() : '');
-  return 'common_unit';
-}
-function shownFile(kind) { const m = st.mine[slotId(kind)]; return modeOf(kind) === 'custom' ? m.name : fileBase(kind) + '.png'; }
+function fileBase(id) { const s = slots[id]; return (s ? s.name : 'sheet') + (modeOf(id) === 'test' ? '-' + unlocked.label.toLowerCase() : ''); }
+function shownFile(id) { const m = st.mine[id]; return modeOf(id) === 'custom' ? m.name : fileBase(id) + '.png'; }
 const rectKey = c => c[1] + ',' + c[2] + ',' + c[3] + ',' + c[4];
-function editOf(c) { const kind = c[0]; const m = st.mine[slotId(kind)]; return m && modeOf(kind) === 'custom' ? m.edits[rectKey(c)] : undefined; }
+function editOf(c) { const m = st.mine[c[0]]; return m && modeOf(c[0]) === 'custom' ? m.edits[rectKey(c)] : undefined; }
 
-// layers drawn for this frame: [[cellTable, draws, alphaMult], ...] in paint order
-// show: 'all' | 'fx' (effects only) | 'ghost' (effects + faint character) | 'chr'
-function layersAt(f) {
-  const out = []; const info = fxInfo(); const fx = st.show !== 'chr' && info;
-  const chrMult = !fx || st.show === 'all' ? 1 : st.show === 'ghost' ? 0.22 : 0;
-  const pick = (names) => { if (!fx) return; for (const n of names) { const a = fx.anims[n]; if (a) out.push(['fx', a.frames[Math.min(f, a.frames.length - 1)] || [], 1]); } };
-  if (fx) { pick(fx.layers[st.side].back); pick(fx.layers[st.side].mid); }
-  if (chrMult > 0) out.push(['chr', anim().frames[f] || [], chrMult]);
-  if (fx) pick(fx.layers[st.side].front);
-  return out;
-}
-
-function sheetChoices(kind) {
-  const id = slotId(kind); const opts = [['orig', 'Original']];
-  if (testTex(kind)) opts.push(['test', unlocked.label]);
+function sheetChoices(id) {
+  const opts = [['orig', 'Original']];
+  if (testTex(id)) opts.push(['test', unlocked.label]);
   opts.push(['custom', st.mine[id] ? 'Yours' : 'Yours (empty)']);
   return opts;
 }
-function pickMode(kind, v, fileInput) {
-  const id = slotId(kind);
+function pickMode(id, v, fileInput) {
   if (v === 'custom' && !st.mine[id]) { fileInput.click(); return; }
   st.mode[id] = v; renderControls(); drawAtlas(); refreshPieceTools(); statusAll();
 }
+const frames = () => sc() ? Math.max(1, Math.round(sc().dur * sc().fps)) : 1;
+const frameNo = () => sc() ? Math.min(frames() - 1, Math.floor(st.t * sc().fps + 1e-4)) : 0;
 
 function renderControls() {
-  if (!st.data) return;
-  seg($('unitSeg'), st.units.map(u => [u.key, u.label, u.id]), st.unit.key, k => selectUnit(k));
-  $('moves').replaceChildren(...st.data.roles.map((r, i) => {
-    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(i === st.role));
-    const a = st.data.anims[r[st.side]]; const n = document.createElement('span'); n.textContent = r.role;
-    const l = document.createElement('span'); l.className = 'len'; l.textContent = (a.frames.length / a.fps).toFixed(1) + 's';
-    b.append(n, l); b.onclick = () => { st.role = i; st.frame = 0; st.acc = 0; st.sel = null; if (!st.data.fx || !st.data.fx[r.role]) { if (st.atlasKind === 'fx') st.atlasKind = 'chr'; } computeBounds(); renderControls(); drawAtlas(); refreshPieceTools(); statusAll(); }; return b;
+  const e = st.entry, s = sc();
+  $('moves').replaceChildren(...KINDS.map(([k, label]) => {
+    const mv = e && e.moves[k]; const ok = mv && !mv.error;
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(k === st.kind && !!s)); b.disabled = !ok;
+    if (!ok && mv) b.title = errText(mv.error);
+    const n = document.createElement('span'); n.textContent = label;
+    const l = document.createElement('span'); l.className = 'len'; const d = e && st.durs[e.id + '|' + k]; l.textContent = !ok ? '—' : d ? d.toFixed(1) + 's' : '';
+    b.append(n, l); b.onclick = () => { if (k !== st.kind || !s) selectDonor(st.donor, k); }; return b;
   }));
-  seg($('sideSeg'), [['R', 'Facing left'], ['L', 'Facing right']], st.side, v => { st.side = v; st.frame = 0; computeBounds(); renderControls(); });
+  seg($('sideSeg'), [['R', 'Facing left'], ['L', 'Facing right']], st.side, v => { st.side = v; renderControls(); });
   seg($('speedSeg'), [[0.25, '¼' + X], [0.5, '½' + X], [1, '1' + X]], st.speed, v => { st.speed = v; renderControls(); });
-  seg($('sheetSeg'), sheetChoices('chr'), modeOf('chr'), v => pickMode('chr', v, $('file')));
   seg($('bgSeg'), [['stage', 'Stage'], ['checker', 'Checker'], ['light', 'Light']], st.bg, v => { st.bg = v; ['stageA', 'stageB'].forEach(id => { $(id).classList.toggle('checker', v === 'checker'); $(id).classList.toggle('light', v === 'light'); }); renderControls(); });
-  const fx = fxInfo(); $('fxCard').hidden = !fx; $('layerRow').hidden = !fx;
+  if (!s) { $('sheetSeg').replaceChildren(); $('fxCard').hidden = true; $('layerRow').hidden = true; $('atlasSeg').replaceChildren(); return; }
+  seg($('sheetSeg'), sheetChoices(s.chr), modeOf(s.chr), v => pickMode(s.chr, v, $('file')));
+  const b = baseTex(s.chr); if (b) $('dropTxt').textContent = `Drop an edited ${W(b)}${X}${H(b)} sheet here, paste it, or pick a file. It updates the animation right away, on every move that uses this sheet.`;
+  const fx = s.fx; $('fxCard').hidden = !fx; $('layerRow').hidden = !fx;
   if (fx) {
     seg($('layerSeg'), [['all', 'Everything'], ['fx', 'Effects only'], ['ghost', 'Effects + faint character'], ['chr', 'Character only']], st.show, v => { st.show = v; computeBounds(); renderControls(); });
-    $('fxLbl').textContent = roleName() + ' effect sheet';
-    seg($('fxSeg'), sheetChoices('fx'), modeOf('fx'), v => pickMode('fx', v, $('fxFile')));
-  }
-  if (st.atlasKind === 'fx' && !fx) st.atlasKind = 'chr';
-  const opts = [['chr', 'Character sheet']]; if (fx) opts.push(['fx', 'Effect sheet']); opts.push(['common', 'Shared hit/slash']);
-  seg($('atlasSeg'), opts, st.atlasKind, v => { st.atlasKind = v; resetView(st.av); renderControls(); drawAtlas(); $('partList').dataset.sig = ''; });
+    $('fxLbl').textContent = roleLabel(fx);
+    seg($('fxSeg'), sheetChoices(fx), modeOf(fx), v => pickMode(fx, v, $('fxFile')));
+  } else if (st.show !== 'all') { st.show = 'all'; computeBounds(); }
+  if (!s.ids.includes(st.atlasSlot)) st.atlasSlot = s.chr || s.ids[0];
+  const short = id => id === s.chr ? 'Character sheet' : id === s.fx ? 'Effect sheet' : slots[id] && slots[id].common ? 'Shared hit/slash' : 'Sheet';
+  seg($('atlasSeg'), s.ids.map(id => [id, short(id)]), st.atlasSlot, v => { st.atlasSlot = v; resetView(st.av); renderControls(); drawAtlas(); $('partList').dataset.sig = ''; });
   seg($('listSeg'), [['frame', 'In this frame'], ['sheet', 'Whole sheet']], st.listMode, v => { st.listMode = v; $('partList').dataset.sig = ''; renderControls(); });
-  $('scrub').max = frameCount() - 1;
+  $('scrub').max = frames() - 1;
   $('loopBtn').setAttribute('aria-pressed', String(st.loop));
   $('cmpBtn').setAttribute('aria-pressed', String(st.compare));
   $('fitBtn').setAttribute('aria-pressed', String(st.fit));
   $('zLbl').textContent = Math.round(st.view.z * 100) + '%'; $('aLbl').textContent = Math.round(st.av.z * 100) + '%';
   $('stageB').hidden = !st.compare; $('stages').classList.toggle('two', st.compare);
-  const cm = modeOf('chr'); $('tagA').textContent = cm === 'orig' ? 'Original' : cm === 'test' ? unlocked.label + ' sheet' : 'Your sheet';
-  $('discardSheet').hidden = !st.mine[slotId('chr')];
-  $('discardFx').hidden = !(fx && st.mine[slotId('fx')]);
+  const cm = modeOf(s.chr); $('tagA').textContent = cm === 'orig' ? 'Original' : cm === 'test' ? unlocked.label + ' sheet' : 'Your sheet';
+  $('discardSheet').hidden = !st.mine[s.chr];
+  $('discardFx').hidden = !(fx && st.mine[fx]);
   $('unlockBtn').setAttribute('aria-pressed', String(!!unlocked)); $('unlockBtn').textContent = unlocked ? 'Test units on' : 'Test units';
 }
 
-function statusAll() { if (!st.data) return; status('chr'); if (fxInfo()) status('fx'); }
-function status(kind, note, warn) {
-  const el = kind === 'fx' ? $('fxStatus') : $('sheetStatus'); if (kind === 'common') return drawAtlas();
+function statusAll() { const s = sc(); if (!s) return; status(s.chr); if (s.fx) status(s.fx); }
+function status(id, note, warn) {
+  const s = sc(); if (!s) return;
+  const el = id === s.chr ? $('sheetStatus') : id === s.fx ? $('fxStatus') : null; if (!el) return drawAtlas();
   el.classList.toggle('warn', !!warn); el.textContent = '';
-  const b = document.createElement('b'); b.textContent = shownFile(kind);
-  const m = st.mine[slotId(kind)]; const n = m ? Object.keys(m.edits).length : 0;
-  el.append('Showing ', b, modeOf(kind) === 'custom' && n ? ` · ${n} piece${n === 1 ? '' : 's'} changed, kept in this browser.` : '.', note || '');
+  const b = document.createElement('b'); b.textContent = shownFile(id);
+  const m = st.mine[id]; const n = m ? Object.keys(m.edits).length : 0;
+  el.append('Showing ', b, modeOf(id) === 'custom' && n ? ` · ${n} piece${n === 1 ? '' : 's'} changed, kept in this browser.` : '.', note || '');
+}
+
+// ---- poses
+// parts for one moment, in paint order (character first, effects on top), with the sheet slot and piece key attached
+const poseCache = { t: null, parts: null };
+function partsAt(t) {
+  const s = sc(); if (!s) return [];
+  const out = [];
+  s.layers.forEach((L, i) => {
+    if (t > L.clip.duration + 1e-6) return;
+    for (const p of FAP.pose(L.model, L.clip, t).parts) out.push({ ...p, layer: i, role: L.role, slot: s.mapSlot[i + ':' + p.map], key: i + '.' + p.cell });
+  });
+  return out;
+}
+function framePose() { if (poseCache.t !== st.t || poseCache.scene !== sc()) { poseCache.t = st.t; poseCache.scene = sc(); poseCache.parts = partsAt(st.t); } return poseCache.parts; }
+// show: 'all' | 'fx' (effects only) | 'ghost' (effects + faint character) | 'chr'
+function multOf(p) {
+  const fx = sc() && sc().fx && st.show !== 'all';
+  if (!fx) return 1;
+  if (p.role === 'effect') return st.show === 'chr' ? 0 : 1;
+  return st.show === 'fx' ? 0 : st.show === 'ghost' ? 0.22 : 1;
 }
 
 // ---- camera bounds over the whole move
-let bounds = null;
+let bounds = { x0: -100, y0: -200, x1: 100, y1: 0 };
 function computeBounds() {
-  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  const s = sc(); let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
   // full-screen flashes and fades are skipped so the camera frames the fighter and the effect
-  const big = q => Math.max(Math.abs(q[2] - q[0]), Math.abs(q[4] - q[2]), Math.abs(q[5] - q[3]), Math.abs(q[7] - q[1])) > 700;
-  const take = f => { for (const d of f) { const q = d[1]; if (big(q)) continue; for (let i = 0; i < 8; i += 2) { x0 = Math.min(x0, q[i]); x1 = Math.max(x1, q[i]); y0 = Math.min(y0, q[i + 1]); y1 = Math.max(y1, q[i + 1]); } } };
-  if (st.fit || (st.show !== 'all' && st.show !== 'chr' && fxInfo())) { const n = frameCount(); for (let f = 0; f < n; f++) for (const [, d] of layersAt(f)) take(d); }
-  else take(st.data.anims[st.data.roles[0][st.side]].frames[0]);
-  if (x0 > x1) { x0 = -100; x1 = 100; y0 = 0; y1 = 200; }
-  bounds = { x0, y0: Math.min(y0, 0), x1, y1 };
+  const take = parts => { for (const p of parts) { if (!multOf(p)) continue; let a = 1e9, b = 1e9, c = -1e9, d = -1e9;
+    for (const [x, y] of p.quad) { a = Math.min(a, x); c = Math.max(c, x); b = Math.min(b, y); d = Math.max(d, y); }
+    if (c - a > 700 || d - b > 700) continue; x0 = Math.min(x0, a); x1 = Math.max(x1, c); y0 = Math.min(y0, b); y1 = Math.max(y1, d); } };
+  if (s) { if (st.fit) { for (let i = 0; i <= 40; i++) take(partsAt(s.dur * i / 40)); } else take(partsAt(0).filter(p => p.role === 'character')); }
+  if (x0 > x1) { x0 = -100; x1 = 100; y0 = -200; y1 = 0; }
+  bounds = { x0, y0, x1, y1: Math.max(y1, 0) };
 }
 
 // ---- drawing
 function sizeCanvas(cv) { const r = cv.getBoundingClientRect(); const dpr = Math.min(2, devicePixelRatio || 1); const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr)); if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; } return [w, h]; }
 function camera(w, h) {
-  const b = bounds, pad = 0.08; const bw = (b.x1 - b.x0) || 1, bh = (b.y1 - b.y0) || 1;
+  const b = bounds, pad = 0.08; const bw = (b.x1 - b.x0) || 1, bh = (b.y1 - b.y0) || 1; const mx = st.side === 'L' ? -1 : 1;
   let s = Math.min(w * (1 - 2 * pad) / bw, h * (1 - 2 * pad) / bh); if (!st.fit) s = Math.min(s, h * 0.55 / 160);
-  return applyView(st.view, w, h, { s, ox: w / 2 - (b.x0 + b.x1) / 2 * s, oy: h / 2 + (b.y0 + b.y1) / 2 * s });
+  return applyView(st.view, w, h, { s, mx, ox: w / 2 - mx * (b.x0 + b.x1) / 2 * s, oy: h / 2 - (b.y0 + b.y1) / 2 * s });
 }
 // ---- zoom & pan (pan stored as a fraction of canvas width so it survives resizes and compare mode)
 function resetView(v) { v.z = 1; v.x = 0; v.y = 0; }
-function applyView(v, w, h, c) { return { s: c.s * v.z, ox: (c.ox - w / 2) * v.z + w / 2 + v.x * w, oy: (c.oy - h / 2) * v.z + h / 2 + v.y * w }; }
+function applyView(v, w, h, c) { return { ...c, s: c.s * v.z, ox: (c.ox - w / 2) * v.z + w / 2 + v.x * w, oy: (c.oy - h / 2) * v.z + h / 2 + v.y * w }; }
 function zoomAt(v, w, h, px, py, factor, lo, hi) {
   const z2 = Math.max(lo, Math.min(hi, v.z * factor)); if (z2 === v.z) return;
   const panX = v.x * w, panY = v.y * w;
@@ -476,44 +687,73 @@ function makeNav(cvs, v, o) {
 }
 function cellOf(table, key) {
   if (table === 'area') { const [k, x, y, w, h] = key.split('|'); return [k, +x, +y, +w, +h, `area ${x},${y} ${w}${X}${h}`]; }
-  const f = table === 'fx' ? fxInfo() : null; return table === 'fx' ? (f ? f.cells[key] : undefined) : st.data.cells[key]; }
+  const s = sc(); return s && s.cells[table] ? s.cells[table][key] : undefined;
+}
 function srcFor(table, key, orig) {
   const c = cellOf(table, key); const img = sheetFor(c[0], orig), base = baseTex(c[0]);
   const k = W(img) / W(base), kh = H(img) / H(base);
   return [img, c[1] * k, c[2] * kh, c[3] * k, c[4] * kh, c];
 }
-function drawTri(ctx, img, sx0, sy0, sx1, sy1, sx2, sy2, dx0, dy0, dx1, dy1, dx2, dy2) {
-  ctx.save(); ctx.beginPath(); ctx.moveTo(dx0, dy0); ctx.lineTo(dx1, dy1); ctx.lineTo(dx2, dy2); ctx.closePath(); ctx.clip();
-  const den = sx0 * (sy2 - sy1) - sx1 * sy2 + sx2 * sy1 + (sx1 - sx2) * sy0; if (Math.abs(den) < 1e-6) { ctx.restore(); return; }
-  const a = -(sy0 * (dx2 - dx1) - sy1 * dx2 + sy2 * dx1 + (sy1 - sy2) * dx0) / den;
-  const b = (sy1 * dy2 + sy0 * (dy1 - dy2) - sy2 * dy1 + (sy2 - sy1) * dy0) / den;
-  const c = (sx0 * (dx2 - dx1) - sx1 * dx2 + sx2 * dx1 + (sx1 - sx2) * dx0) / den;
-  const d = -(sx1 * dy2 + sx0 * (dy1 - dy2) - sx2 * dy1 + (sx2 - sx1) * dy0) / den;
-  const e = (sx0 * (sy2 * dx1 - sy1 * dx2) + sy0 * (sx1 * dx2 - sx2 * dx1) + (sx2 * sy1 - sx1 * sy2) * dx0) / den;
-  const f = (sx0 * (sy2 * dy1 - sy1 * dy2) + sy0 * (sx1 * dy2 - sx2 * dy1) + (sx2 * sy1 - sx1 * sy2) * dy0) / den;
-  ctx.transform(a, b, c, d, e, f); ctx.drawImage(img, 0, 0); ctx.restore();
+// one textured triangle: source triangle s on the image -> screen triangle d
+function tri(ctx, img, s, d) {
+  const [s0, s1, s2] = s, [d0, d1, d2] = d, ux = s1[0] - s0[0], uy = s1[1] - s0[1], vx = s2[0] - s0[0], vy = s2[1] - s0[1], det = ux * vy - uy * vx;
+  if (Math.abs(det) < 1e-8) return;
+  const dx1 = d1[0] - d0[0], dy1 = d1[1] - d0[1], dx2 = d2[0] - d0[0], dy2 = d2[1] - d0[1];
+  const a = (dx1 * vy - dx2 * uy) / det, b = (dy1 * vy - dy2 * uy) / det, c = (dx2 * ux - dx1 * vx) / det, e = (dy2 * ux - dy1 * vx) / det;
+  // the clip is grown by half a pixel so neighbouring triangles overlap instead of leaving hairline seams
+  const cx = (d0[0] + d1[0] + d2[0]) / 3, cy = (d0[1] + d1[1] + d2[1]) / 3;
+  const grow = q => { const vx = q[0] - cx, vy = q[1] - cy, l = Math.hypot(vx, vy) || 1; return [q[0] + vx / l * 0.6, q[1] + vy / l * 0.6]; };
+  ctx.save(); ctx.beginPath(); ctx.moveTo(...grow(d0)); ctx.lineTo(...grow(d1)); ctx.lineTo(...grow(d2)); ctx.closePath(); ctx.clip();
+  ctx.transform(a, b, c, e, d0[0] - a * s0[0] - c * s0[1], d0[1] - b * s0[0] - e * s0[1]); ctx.drawImage(img, 0, 0); ctx.restore();
+}
+const tileCv = document.createElement('canvas'), subCv = document.createElement('canvas');
+// draws one sprite part: tint and out-of-sheet edges go through a small tile; parallelograms take the fast path
+function paintPart(ctx, p, img, base, Q) {
+  const k = W(img) / W(base), kh = H(img) / H(base);
+  let [x, y, w, h] = p.rect; x *= k; y *= kh; w *= k; h *= kh; let src = img;
+  const tint = p.color && p.color[3] > 0;
+  if (tint || x < 0 || y < 0 || x + w > W(img) || y + h > H(img)) {
+    const tw = Math.max(1, Math.ceil(w)), th = Math.max(1, Math.ceil(h)); tileCv.width = tw; tileCv.height = th; const tc = tileCv.getContext('2d');
+    const segs = (o, size, lim) => { const a = Math.max(0, Math.min(size, -o)), b = Math.max(0, Math.min(size, lim - o)); return [[0, a, 0, 1], [a, b - a, Math.max(0, o + a), b - a], [b, size - b, lim - 1, 1]]; };
+    for (const [dy, dh, sy, sh] of segs(y, th, H(img))) for (const [dx, dw, sx, sw] of segs(x, tw, W(img))) if (dw > 0 && dh > 0 && sw > 0 && sh > 0) { tc.imageSmoothingEnabled = sw === dw && sh === dh; tc.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh); }
+    if (tint) { tc.globalCompositeOperation = 'source-atop'; tc.globalAlpha = Math.min(1, p.color[3]); tc.fillStyle = 'rgb(' + p.color.slice(0, 3).map(v => Math.round(Math.max(0, Math.min(1, v)) * 255)).join(',') + ')'; tc.fillRect(0, 0, tw, th); }
+    src = tileCv; x = 0; y = 0;
+  }
+  const l = p.flipX ? x + w : x, r = p.flipX ? x : x + w, t = p.flipY ? y + h : y, b = p.flipY ? y : y + h;
+  const para = Math.abs(Q[0][0] + Q[2][0] - Q[1][0] - Q[3][0]) + Math.abs(Q[0][1] + Q[2][1] - Q[1][1] - Q[3][1]) < 0.5;
+  if (para && r !== l && b !== t) {
+    const ax = (Q[1][0] - Q[0][0]) / (r - l), ay = (Q[1][1] - Q[0][1]) / (r - l), cx = (Q[3][0] - Q[0][0]) / (b - t), cy = (Q[3][1] - Q[0][1]) / (b - t);
+    ctx.save(); ctx.setTransform(ax, ay, cx, cy, Q[0][0] - l * ax - t * cx, Q[0][1] - l * ay - t * cy); ctx.drawImage(src, x, y, w, h, x, y, w, h); ctx.restore();
+  } else {
+    const S = [[l, t], [r, t], [r, b], [l, b]], mid = Q.reduce((a, v) => [a[0] + v[0] / 4, a[1] + v[1] / 4], [0, 0]), sm = [x + w / 2, y + h / 2];
+    for (let i = 0; i < 4; i++) tri(ctx, src, [sm, S[i], S[(i + 1) % 4]], [mid, Q[i], Q[(i + 1) % 4]]);
+  }
 }
 let lastScreen = [];
 function drawFrame(cv, orig, record) {
   const [w, h] = sizeCanvas(cv); const ctx = cv.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, w, h);
-  const { s, ox, oy } = camera(w, h);
+  if (!sc()) { if (record) lastScreen = []; return; }
+  const { s, ox, oy, mx } = camera(w, h);
   ctx.strokeStyle = st.bg === 'light' ? 'rgba(20,24,32,.25)' : 'rgba(255,255,255,.10)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
   const scr = []; ctx.imageSmoothingEnabled = true;
-  for (const [table, draws, mult] of layersAt(st.frame)) {
-    for (const d of draws) {
-      const [key, q, a0, blend] = d; const al = a0 * mult; if (!cellOf(table, key)) continue; const [img, x, y, cw, ch] = srcFor(table, key, orig); if (!img) continue;
-      const P = []; for (let i = 0; i < 8; i += 2) P.push([ox + q[i] * s, oy - q[i + 1] * s]);
-      ctx.globalAlpha = al; ctx.globalCompositeOperation = blend === 1 ? 'lighter' : 'source-over';
-      const para = Math.abs(P[0][0] + P[2][0] - P[1][0] - P[3][0]) + Math.abs(P[0][1] + P[2][1] - P[1][1] - P[3][1]) < 0.5;
-      if (para) {
-        ctx.setTransform((P[1][0] - P[0][0]) / cw, (P[1][1] - P[0][1]) / cw, (P[3][0] - P[0][0]) / ch, (P[3][1] - P[0][1]) / ch, P[0][0], P[0][1]);
-        ctx.drawImage(img, x, y, cw, ch, 0, 0, cw, ch); ctx.setTransform(1, 0, 0, 1, 0, 0);
-      } else {
-        drawTri(ctx, img, x, y, x + cw, y, x + cw, y + ch, P[0][0], P[0][1], P[1][0], P[1][1], P[2][0], P[2][1]);
-        drawTri(ctx, img, x, y, x + cw, y + ch, x, y + ch, P[0][0], P[0][1], P[2][0], P[2][1], P[3][0], P[3][1]);
-      }
-      if (mult === 1) scr.push({ table, key, P });
+  for (const p of framePose()) {
+    const mult = multOf(p); if (!mult) continue;
+    const img = p.slot && sheetFor(p.slot, orig), base = p.slot && baseTex(p.slot); if (!img || !base) continue;
+    const Q = p.quad.map(([x, y]) => [ox + mx * x * s, oy + y * s]);
+    const al = Math.max(0, Math.min(1, p.alpha * mult)); if (al <= 0) continue;
+    if (p.blend === 2) { // subtract: draw on a scratch layer, then take it away from what's below
+      subCv.width = w; subCv.height = h; const sx = subCv.getContext('2d'); sx.globalAlpha = al; paintPart(sx, p, img, base, Q);
+      let a0 = w, b0 = h, a1 = 0, b1 = 0; for (const [qx, qy] of Q) { a0 = Math.min(a0, qx); a1 = Math.max(a1, qx); b0 = Math.min(b0, qy); b1 = Math.max(b1, qy); }
+      a0 = Math.max(0, Math.floor(a0)); b0 = Math.max(0, Math.floor(b0)); a1 = Math.min(w, Math.ceil(a1)); b1 = Math.min(h, Math.ceil(b1));
+      if (a1 > a0 && b1 > b0) { const src = sx.getImageData(a0, b0, a1 - a0, b1 - b0).data, dst = ctx.getImageData(a0, b0, a1 - a0, b1 - b0);
+        for (let i = 0; i < src.length; i += 4) { const a = src[i + 3] / 255; for (let c = 0; c < 3; c++) dst.data[i + c] = Math.max(0, dst.data[i + c] - src[i + c] * a); }
+        ctx.putImageData(dst, a0, b0); }
+    } else {
+      ctx.globalAlpha = al; ctx.globalCompositeOperation = p.blend === 1 ? 'lighter' : p.blend === 3 ? 'multiply' : 'source-over';
+      paintPart(ctx, p, img, base, Q);
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     }
+    if (mult === 1 && cellOf(p.slot, p.key)) scr.push({ table: p.slot, key: p.key, P: Q });
   }
   ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   if (st.sel) for (const it of scr) if (it.table === st.sel.table && it.key === st.sel.key) {
@@ -524,45 +764,44 @@ function drawFrame(cv, orig, record) {
 
 // ---- sheet inspector
 function atlasSheet() {
-  const kind = st.atlasKind === 'fx' && fxInfo() ? 'fx' : st.atlasKind === 'common' ? 'common' : 'chr';
-  const cells = kind === 'fx' ? fxInfo().cells : st.data.cells;
-  return { kind, img: sheetFor(kind, false), base: baseTex(kind), table: kind === 'fx' ? 'fx' : 'chr', cells, file: shownFile(kind) };
+  const s = sc(); const id = s && s.ids.includes(st.atlasSlot) ? st.atlasSlot : s && s.chr;
+  return { id, img: id && sheetFor(id, false), base: id && baseTex(id), table: id, cells: (s && s.cells[id]) || {}, file: id ? shownFile(id) : '' };
 }
 function atlasCam(w, h, base) { const s = Math.min(w / W(base), h / H(base)); return applyView(st.av, w, h, { s, ox: (w - W(base) * s) / 2, oy: (h - H(base) * s) / 2 }); }
 function drawAtlas() {
-  if (!st.data) return;
   const cv = $('atlasCv'); const [w, h] = sizeCanvas(cv); const ctx = cv.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, w, h);
+  if (!sc()) { $('atlasName').textContent = ''; return; }
   const A = atlasSheet(); if (!A.img || !A.base) return; const { s, ox, oy } = atlasCam(w, h, A.base);
   ctx.imageSmoothingEnabled = s < 2; ctx.drawImage(A.img, ox, oy, W(A.base) * s, H(A.base) * s);
-  ctx.lineWidth = 1;
-  for (const c of Object.values(A.cells)) if (c[0] === A.kind) {
+  ctx.lineWidth = 1; const seen = new Set();
+  for (const c of Object.values(A.cells)) { const rk = rectKey(c); if (seen.has(rk)) continue; seen.add(rk);
     const e = editOf(c); ctx.strokeStyle = e === 'deleted' ? 'rgba(255,110,90,.75)' : e ? 'rgba(120,220,160,.8)' : 'rgba(255,255,255,.16)';
     ctx.setLineDash(e === 'deleted' ? [4, 3] : []); ctx.strokeRect(ox + c[1] * s + .5, oy + c[2] * s + .5, c[3] * s - 1, c[4] * s - 1); }
   ctx.setLineDash([]);
-  const mm = st.mine[slotId(A.kind)];
-  if (mm && modeOf(A.kind) === 'custom') for (const [rk, e] of Object.entries(mm.edits)) {
-    const [x, y, w, hh] = rk.split(',').map(Number); ctx.strokeStyle = e === 'deleted' ? 'rgba(255,110,90,.75)' : 'rgba(120,220,160,.8)';
-    ctx.setLineDash(e === 'deleted' ? [4, 3] : []); ctx.strokeRect(ox + x * s + .5, oy + y * s + .5, w * s - 1, hh * s - 1); }
+  const mm = st.mine[A.id];
+  if (mm && modeOf(A.id) === 'custom') for (const [rk, e] of Object.entries(mm.edits)) {
+    const [x, y, ww, hh] = rk.split(',').map(Number); ctx.strokeStyle = e === 'deleted' ? 'rgba(255,110,90,.75)' : 'rgba(120,220,160,.8)';
+    ctx.setLineDash(e === 'deleted' ? [4, 3] : []); ctx.strokeRect(ox + x * s + .5, oy + y * s + .5, ww * s - 1, hh * s - 1); }
   ctx.setLineDash([]);
-  if (areaDraft) { const [x, y, w, hh] = areaDraft; ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.strokeRect(ox + x * s, oy + y * s, w * s, hh * s); ctx.setLineDash([]); ctx.lineWidth = 1; }
+  if (areaDraft) { const [x, y, ww, hh] = areaDraft; ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.strokeRect(ox + x * s, oy + y * s, ww * s, hh * s); ctx.setLineDash([]); ctx.lineWidth = 1; }
   if (st.sel) {
     const c = cellOf(st.sel.table, st.sel.key);
-    if (c && c[0] === A.kind) { ctx.strokeStyle = '#FF7A3D'; ctx.lineWidth = 2.5; ctx.strokeRect(ox + c[1] * s - 2, oy + c[2] * s - 2, c[3] * s + 4, c[4] * s + 4); ctx.fillStyle = 'rgba(255,122,61,.18)'; ctx.fillRect(ox + c[1] * s, oy + c[2] * s, c[3] * s, c[4] * s); }
+    if (c && c[0] === A.id) { ctx.strokeStyle = '#FF7A3D'; ctx.lineWidth = 2.5; ctx.strokeRect(ox + c[1] * s - 2, oy + c[2] * s - 2, c[3] * s + 4, c[4] * s + 4); ctx.fillStyle = 'rgba(255,122,61,.18)'; ctx.fillRect(ox + c[1] * s, oy + c[2] * s, c[3] * s, c[4] * s); }
   }
   $('aLbl').textContent = Math.round(st.av.z * 100) + '%';
-  const m = st.mine[slotId(A.kind)]; const n = m && modeOf(A.kind) === 'custom' ? Object.keys(m.edits).length : 0;
+  const n = mm && modeOf(A.id) === 'custom' ? Object.keys(mm.edits).length : 0;
   $('atlasName').textContent = A.file + ' · ' + W(A.base) + X + H(A.base) + (n ? ` · ${n} changed` : '');
-  $('discardCommon').hidden = !(A.kind === 'common' && st.mine.common);
+  $('discardCommon').hidden = !(A.id !== sc().chr && A.id !== sc().fx && st.mine[A.id]);
 }
 function atlasTap(e, cv) {
-  const r = cv.getBoundingClientRect(); const k = cv.width / r.width; const A = atlasSheet(); const { s, ox, oy } = atlasCam(cv.width, cv.height, A.base);
+  const r = cv.getBoundingClientRect(); const k = cv.width / r.width; const A = atlasSheet(); if (!A.base) return; const { s, ox, oy } = atlasCam(cv.width, cv.height, A.base);
   const x = ((e.clientX - r.left) * k - ox) / s, y = ((e.clientY - r.top) * k - oy) / s; let best = null, area = 1e12;
-  for (const [key, c] of Object.entries(A.cells)) if (c[0] === A.kind && x >= c[1] && x < c[1] + c[3] && y >= c[2] && y < c[2] + c[4] && c[3] * c[4] < area) { best = key; area = c[3] * c[4]; }
+  for (const [key, c] of Object.entries(A.cells)) if (x >= c[1] && x < c[1] + c[3] && y >= c[2] && y < c[2] + c[4] && c[3] * c[4] < area) { best = key; area = c[3] * c[4]; }
   if (best) select(A.table, best);
 }
 function focusPiece() {
   if (!st.sel) return; const c = cellOf(st.sel.table, st.sel.key); if (!c) return;
-  st.atlasKind = c[0]; const cv = $('atlasCv'); const A = atlasSheet(); resetView(st.av); const w = cv.width, h = cv.height;
+  st.atlasSlot = c[0]; const cv = $('atlasCv'); const A = atlasSheet(); if (!A.base) return; resetView(st.av); const w = cv.width, h = cv.height;
   const base = atlasCam(w, h, A.base); const z = Math.max(1, Math.min(12, 0.55 * Math.min(w / (c[3] * base.s), h / (c[4] * base.s))));
   const cx = base.ox + (c[1] + c[3] / 2) * base.s, cy = base.oy + (c[2] + c[4] / 2) * base.s;
   st.av.z = z; st.av.x = -((cx - w / 2) * z) / w; st.av.y = -((cy - h / 2) * z) / w; renderControls(); drawAtlas();
@@ -572,23 +811,24 @@ function listItems() {
   const items = [];
   if (st.listMode === 'sheet') {
     const A = atlasSheet(); const seen = new Set();
-    for (const [key, c] of Object.entries(A.cells)) { if (c[0] !== A.kind) continue; const rk = rectKey(c); if (seen.has(rk)) continue; seen.add(rk); items.push([A.table, key]); }
+    for (const [key, c] of Object.entries(A.cells)) { const rk = rectKey(c); if (seen.has(rk)) continue; seen.add(rk); items.push([A.table, key]); }
     items.sort((a, b) => (cellOf(...a)[5] || '').localeCompare(cellOf(...b)[5] || ''));
     return items;
   }
-  const seen = new Set(); const ls = layersAt(st.frame);
-  for (let li = ls.length - 1; li >= 0; li--) { const [table, draws, mult] = ls[li]; if (mult !== 1) continue; for (let i = draws.length - 1; i >= 0; i--) { const id = table + '|' + draws[i][0]; if (seen.has(id)) continue; seen.add(id); items.push([table, draws[i][0]]); } }
+  const seen = new Set(); const parts = framePose();
+  for (let i = parts.length - 1; i >= 0; i--) { const p = parts[i]; if (multOf(p) !== 1 || !p.slot) continue; const id = p.slot + '|' + p.key; if (seen.has(id)) continue; seen.add(id); items.push([p.slot, p.key]); }
   return items.filter(([t, k]) => cellOf(t, k));
 }
 function updateParts() {
   const items = listItems();
-  const list = $('partList'); const sig = st.listMode + st.atlasKind + items.map(i => i.join('|')).join(',') + '|' + (st.sel ? st.sel.table + st.sel.key : '') + '|' + editSig();
+  const list = $('partList'); const sig = st.listMode + st.atlasSlot + items.map(i => i.join('|')).join(',') + '|' + (st.sel ? st.sel.table + st.sel.key : '') + '|' + editSig();
   if (list.dataset.sig === sig) return; list.dataset.sig = sig;
   list.replaceChildren(...items.map(([table, key]) => { const c = cellOf(table, key); const b = document.createElement('button'); b.type = 'button';
     b.setAttribute('aria-pressed', String(!!st.sel && st.sel.table === table && st.sel.key === key));
-    const n = document.createElement('span'); n.textContent = (c[0] === 'fx' ? '✦ ' : c[0] === 'common' ? '◇ ' : '') + (c[5] || key);
+    const isFx = c[0] === sc().fx, isCommon = slots[c[0]] && slots[c[0]].common;
+    const n = document.createElement('span'); n.textContent = (isFx ? '✦ ' : isCommon ? '◇ ' : '') + (c[5] || key);
     const m = document.createElement('span'); const e = editOf(c);
-    m.textContent = (c[0] === 'common' ? 'shared ' : '') + c[3] + X + c[4]; if (e) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = e === 'deleted' ? ' · deleted' : ' · edited'; m.append(t); }
+    m.textContent = (isCommon ? 'shared ' : '') + c[3] + X + c[4]; if (e) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = e === 'deleted' ? ' · deleted' : ' · edited'; m.append(t); }
     b.append(n, m); b.onclick = () => select(table, key); return b; }));
 }
 let editSigCache = '';
@@ -596,10 +836,11 @@ function editSig() { return editSigCache; }
 function bumpEdits() { editSigCache = String(Date.now() + Math.random()); }
 
 function select(table, key, note) {
-  const c = cellOf(table, key); if (!c) return; st.sel = { table, key }; st.atlasKind = c[0];
+  const c = cellOf(table, key); if (!c) return; st.sel = { table, key }; st.atlasSlot = c[0];
   const pi = $('partInfo'); pi.replaceChildren();
   const n = document.createElement('span'); n.className = 'name'; n.textContent = c[5] || key; pi.append(n, document.createElement('br'));
-  const where = (table === 'area' ? 'Your box on the ' : '') + (c[0] === 'chr' ? 'Character sheet' : c[0] === 'fx' ? (fxInfo().name + '.png (effect sheet)') : 'Shared hit/slash sheet (every unit uses it)');
+  const s = slots[c[0]];
+  const where = (table === 'area' ? 'Your box on the ' : '') + (s && s.common ? 'Shared hit/slash sheet (every unit uses it)' : (s ? s.name + '.png' : '') + ' (' + roleLabel(c[0]).toLowerCase() + ')');
   pi.append(where, document.createElement('br'), `Box x ${c[1]}, y ${c[2]}, ${c[3]}${X}${c[4]} px`);
   if (note) pi.append(document.createElement('br'), note);
   renderControls(); drawAtlas(); $('partList').dataset.sig = ''; updateParts(); refreshPieceTools();
@@ -625,16 +866,14 @@ function hit(ev) {
 function render() {
   drawFrame($('cvA'), false, true);
   if (st.compare) drawFrame($('cvB'), true, false);
-  $('scrub').value = st.frame; $('frLbl').textContent = (st.frame + 1) + ' / ' + frameCount();
-  updateParts();
+  $('scrub').value = frameNo(); $('frLbl').textContent = sc() ? (frameNo() + 1) + ' / ' + frames() : '– / –';
+  if (sc()) updateParts();
 }
 function tick(t) {
   const dt = st.last ? Math.min(0.25, (t - st.last) / 1000) : 0; st.last = t;
-  if (st.data) {
-    const a = anim(), n = frameCount();
-    if (st.playing) { st.acc += dt * st.speed * a.fps; while (st.acc >= 1) { st.acc -= 1; st.frame++; if (st.frame >= n) { if (st.loop) st.frame = 0; else { st.frame = n - 1; togglePlay(); break; } } } }
-    try { render(); } catch (e) { console.error(e); }
-  }
+  const s = sc();
+  if (s && st.playing) { st.t += dt * st.speed; if (st.t > s.dur) { if (st.loop) st.t = st.t % s.dur; else { st.t = s.dur; togglePlay(); } } }
+  try { render(); } catch (e) { console.error(e); }
   requestAnimationFrame(tick);
 }
 function togglePlay() { st.playing = !st.playing; $('play').setAttribute('aria-label', st.playing ? 'Pause' : 'Play');
@@ -648,6 +887,13 @@ const DB = (() => {
   const run = (mode, fn) => open().then(db => new Promise((res, rej) => { const tx = db.transaction('sheets', mode); const q = fn(tx.objectStore('sheets')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
   return { get: id => run('readonly', s => s.get(id)).catch(() => null), put: (id, v) => run('readwrite', s => s.put(v, id)).catch(e => { console.warn(e); throw e; }), del: id => run('readwrite', s => s.delete(id)).catch(() => null) };
 })();
+// sheets saved by the first version of this page were keyed by unit; move them to the atlas they belong to
+const OLD_SLOTS = { 'chr|taka': 'a:0793adf647091be1376c68f5', 'chr|robe': 'a:b490035d81d5aae7475910d7', 'chr|hayate': 'a:364321f8c7063d0fc67bc4b2',
+  'fx|taka|Jutsu': 'a:016fac42b1344af2eca6878a', 'fx|taka|Secret Technique': 'a:f025f9ab0c0c35a2ceb97f62', 'fx|robe|Jutsu': 'a:0af95070f10f7e61c26700d3',
+  'fx|robe|Secret Technique': 'a:32672bf1a8a77ac6c8667ea0', 'fx|hayate|Jutsu': 'a:82df8c7c19cc60789667fa72', 'fx|hayate|Secret Technique': 'a:fc8216e21e26134da54b8f56' };
+async function migrateOld() {
+  try { for (const [o, n] of Object.entries(OLD_SLOTS)) { const v = await DB.get(o); if (!v) continue; if (!(await DB.get(n))) await DB.put(n, v); await DB.del(o); } } catch (e) { console.warn(e); }
+}
 const toBlob = cv => new Promise(r => cv.toBlob(r, 'image/png'));
 function canvasOf(img) { const cv = document.createElement('canvas'); cv.width = W(img); cv.height = H(img); cv.getContext('2d').drawImage(img, 0, 0); return cv; }
 async function loadSaved(id) {
@@ -672,8 +918,8 @@ function persist(id) {
     } catch (e) { $('pieceHint').textContent = 'Your edit is on screen, but this browser wouldn’t keep it (private browsing or storage full). Save the sheet as PNG before closing.'; }
   }, 400);
 }
-async function discard(kind) {
-  const id = slotId(kind); delete st.mine[id]; delete st.mode[id]; await DB.del(id); bumpEdits();
+async function discard(id) {
+  if (!id) return; delete st.mine[id]; delete st.mode[id]; await DB.del(id); bumpEdits();
   renderControls(); drawAtlas(); refreshPieceTools(); statusAll();
 }
 
@@ -683,21 +929,22 @@ async function readImg(f) {
   if (!f || (f.type && !/^image\//.test(f.type))) return null;
   return loadImg(URL.createObjectURL(f)).catch(() => null);
 }
-async function useSheet(kind, f, how) {
-  const img = await readImg(f); const el = kind === 'fx' ? $('fxStatus') : $('sheetStatus');
+async function useSheet(id, f, how) {
+  if (!id) return; const img = await readImg(f); const el = id === sc().fx ? $('fxStatus') : $('sheetStatus');
   if (!img) { el.classList.add('warn'); el.textContent = 'That file isn’t a readable image. Export it again as PNG.'; return; }
-  const id = slotId(kind); const base = baseTex(kind);
+  const base = baseTex(id);
   st.mine[id] = { img, name: f.name || 'pasted image.png', start: img, startBlob: f, edits: {} }; st.mode[id] = 'custom'; bumpEdits();
   persist(id); renderControls(); drawAtlas(); refreshPieceTools();
   const odd = W(img) !== W(base) || H(img) !== H(base);
-  status(kind, ` ${how[0].toUpperCase() + how.slice(1)} ${stamp()}.` + (odd ? ` It’s ${W(img)}${X}${H(img)}, so pieces are scaled; ${W(base)}${X}${H(base)} lines up exactly.` : ''), odd);
+  status(id, ` ${how[0].toUpperCase() + how.slice(1)} ${stamp()}.` + (odd ? ` It’s ${W(img)}${X}${H(img)}, so pieces are scaled; ${W(base)}${X}${H(base)} lines up exactly.` : ''), odd);
 }
-const useChar = (f, how) => useSheet('chr', f, how);
-const useFx = (f, how) => { if (fxInfo()) return useSheet('fx', f, how); };
+const useChar = (f, how) => sc() && useSheet(sc().chr, f, how);
+const useFx = (f, how) => { if (sc() && sc().fx) return useSheet(sc().fx, f, how); };
 // a dropped/pasted image goes to the effect slot when it matches the effect sheet size
 async function useAuto(f, how) {
-  const fx = fxInfo(); if (fx && f) { const img = await readImg(f); const o = tex.fx[roleName()];
-    if (img && W(img) === W(o) && H(img) === H(o) && W(o) !== W(tex.orig)) return useFx(f, how); }
+  const s = sc(); if (!s) return;
+  if (s.fx && f) { const img = await readImg(f); const o = baseTex(s.fx), c = baseTex(s.chr);
+    if (img && o && W(img) === W(o) && H(img) === H(o) && (!c || W(o) !== W(c) || H(o) !== H(c))) return useFx(f, how); }
   return useChar(f, how);
 }
 function wireDrop(zone, input, label, fn) {
@@ -711,18 +958,18 @@ wireDrop($('drop'), $('file'), $('pickLbl'), useChar);
 wireDrop($('fxDrop'), $('fxFile'), $('fxPickLbl'), useFx);
 document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files[0]) useAuto(e.dataTransfer.files[0], 'dropped'); });
-document.addEventListener('paste', async e => { const it = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/')); if (!it) return; const f = it.getAsFile();
-  const t = workingTarget(); if (t) { const img = await readImg(f); if (img && W(img) < W(baseTex(t.kind)) * 0.6) return replacePiece(f); }
+document.addEventListener('paste', async e => { if (e.target.closest && e.target.closest('input')) return; const it = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/')); if (!it) return; const f = it.getAsFile();
+  const t = workingTarget(); if (t) { const img = await readImg(f); const b = baseTex(t.id); if (img && b && W(img) < W(b) * 0.6) return replacePiece(f); }
   useAuto(f, 'pasted'); });
 
-function watcher(btn, kind) {
-  let timer = null; const el = kind === 'fx' ? $('fxStatus') : $('sheetStatus');
+function watcher(btn, which) {
+  let timer = null; const el = which === 'fx' ? $('fxStatus') : $('sheetStatus');
   btn.onclick = async () => {
     if (!window.showOpenFilePicker) { el.classList.add('warn'); el.textContent = 'Live watch needs Chrome or Edge on a computer. Here, drop the file again after each save.'; return; }
     try {
       const [h] = await window.showOpenFilePicker({ types: [{ description: 'PNG', accept: { 'image/png': ['.png'] } }] });
       let last = 0; clearInterval(timer);
-      const poll = async () => { try { const f = await h.getFile(); if (f.lastModified !== last) { last = f.lastModified; await useSheet(kind, f, 'updated'); } } catch (e) { clearInterval(timer); btn.textContent = 'Watch a file'; el.classList.add('warn'); el.textContent = 'Lost access to the watched file. Pick it again.'; } };
+      const poll = async () => { try { const f = await h.getFile(); if (f.lastModified !== last) { last = f.lastModified; await useSheet(kindId(which), f, 'updated'); } } catch (e) { clearInterval(timer); btn.textContent = 'Watch a file'; el.classList.add('warn'); el.textContent = 'Lost access to the watched file. Pick it again.'; } };
       await poll(); timer = setInterval(poll, 700); btn.textContent = 'Watching';
     } catch (e) {
       if (e && e.name === 'AbortError') return;
@@ -735,23 +982,23 @@ watcher($('fxWatchBtn'), 'fx');
 
 // ---- edit one piece on your copy of the sheet
 function workingTarget() {
-  if (!st.sel) return null; const c = cellOf(st.sel.table, st.sel.key); if (!c) return null;
-  return { kind: c[0], id: slotId(c[0]), c };
+  if (!st.sel) return null; const c = cellOf(st.sel.table, st.sel.key); if (!c || !slots[c[0]]) return null;
+  return { id: c[0], c };
 }
 // edits always land on "Yours": reuse it if it exists, otherwise copy the sheet you're looking at
 function ensureWork(t) {
   let m = st.mine[t.id];
   if (!m) {
-    const cur = sheetFor(t.kind, false);
-    m = st.mine[t.id] = { img: canvasOf(cur), name: fileBase(t.kind) + '-edited.png', start: cur, startBlob: null, edits: {} };
+    const cur = sheetFor(t.id, false);
+    m = st.mine[t.id] = { img: canvasOf(cur), name: fileBase(t.id) + '-edited.png', start: cur, startBlob: null, edits: {} };
   } else if (!(m.img instanceof HTMLCanvasElement)) m.img = canvasOf(m.img);
   st.mode[t.id] = 'custom';
   return m;
 }
-function boxOf(t, cv) { const base = baseTex(t.kind); const k = W(cv) / W(base), kh = H(cv) / H(base); return [Math.round(t.c[1] * k), Math.round(t.c[2] * kh), Math.round(t.c[3] * k), Math.round(t.c[4] * kh)]; }
+function boxOf(t, cv) { const base = baseTex(t.id); const k = W(cv) / W(base), kh = H(cv) / H(base); return [Math.round(t.c[1] * k), Math.round(t.c[2] * kh), Math.round(t.c[3] * k), Math.round(t.c[4] * kh)]; }
 function afterEdit(t, msg) {
   bumpEdits(); persist(t.id); $('pieceHint').textContent = msg;
-  renderControls(); drawAtlas(); refreshPieceTools(); if (t.kind === 'common') drawAtlas(); else status(t.kind);
+  renderControls(); drawAtlas(); refreshPieceTools(); status(t.id);
 }
 async function replacePiece(f) {
   if (rot) rotEnd(true);
@@ -782,10 +1029,10 @@ function restorePiece() {
 }
 function refreshPieceTools(live) {
   if (!live && rot && (!st.sel || rectKey(cellOf(st.sel.table, st.sel.key) || []) !== rot.rk)) rotEnd(true);
-  const t = workingTarget(); $('pieceTools').hidden = !t; $('pieceExport').hidden = !st.sel; $('pieceCv').classList.toggle('dragme', !!t);
+  const t = workingTarget(); $('pieceTools').hidden = !t; $('pieceExport').hidden = !t; $('pieceCv').classList.toggle('dragme', !!t);
   const pc = $('pieceCv'); const ctx = pc.getContext('2d'); ctx.clearRect(0, 0, 96, 96);
-  if (st.sel && st.data) { const c = cellOf(st.sel.table, st.sel.key); if (c) { const [img, x, y, w, h] = srcFor(st.sel.table, st.sel.key, false); const s = Math.min(88 / w, 88 / h); ctx.imageSmoothingEnabled = true; ctx.drawImage(img, x, y, w, h, (96 - w * s) / 2, (96 - h * s) / 2, w * s, h * s); } }
-  if (!t) return;
+  if (t) { const [img, x, y, w, h] = srcFor(st.sel.table, st.sel.key, false); if (img && w > 0 && h > 0) { const s = Math.min(88 / w, 88 / h); ctx.imageSmoothingEnabled = true; ctx.drawImage(img, x, y, w, h, (96 - w * s) / 2, (96 - h * s) / 2, w * s, h * s); } }
+  if (!t) { if (!st.sel) { const pi = $('partInfo'); if (!pi.dataset.idle) { pi.dataset.idle = '1'; } } return; }
   const e = editOf(t.c);
   $('pieceRestore').hidden = !e; $('pieceDelete').hidden = e === 'deleted';
   $('piecePickLbl').textContent = e === 'deleted' ? 'Put a new piece here' : 'Replace this piece';
@@ -855,7 +1102,7 @@ function rotBegin() {
   if (rot && rot.id === t.id && rot.rk === rk) return rot;
   if (rot) rotEnd(true);
   const m = ensureWork(t); const box = boxOf(t, m.img);
-  rot = { id: t.id, rk, kind: t.kind, name: t.c[5], box, snap: m.img.getContext('2d').getImageData(...box), angle: 0, size: 1, dx: 0, dy: 0, flipH: false, flipV: false, hadEdit: m.edits[rk] };
+  rot = { id: t.id, rk, name: t.c[5], box, snap: m.img.getContext('2d').getImageData(...box), angle: 0, size: 1, dx: 0, dy: 0, flipH: false, flipV: false, hadEdit: m.edits[rk] };
   return rot;
 }
 let rotRaf = 0;
@@ -882,7 +1129,7 @@ function rotEnd(keep) {
   if (m) { bumpEdits(); persist(r.id); }
   $('rotAngle').value = 0; $('rotNum').value = 0; $('szRange').value = 100; $('szNum').value = 100; $('offX').value = 0; $('offY').value = 0; $('rotFlipH').setAttribute('aria-pressed', 'false'); $('rotFlipV').setAttribute('aria-pressed', 'false');
   $('rotHint').textContent = keep ? `Changes kept on ${r.name || 'the piece'}. Restore original still brings back the game's version.` : 'Changes cancelled.';
-  renderControls(); drawAtlas(); refreshPieceTools(); if (r.kind !== 'common') status(r.kind);
+  renderControls(); drawAtlas(); refreshPieceTools(); status(r.id);
 }
 function rotUI() {
   seg($('rotMode'), [['smooth', 'Smooth (HD art)'], ['pixel', 'Pixel (no new colors)']], st.rotMode, v => { st.rotMode = v; rotUI(); if (rot) rotRender(); });
@@ -915,7 +1162,7 @@ $('offReset').onclick = () => offSet(0, 0);
 (() => {
   const cv = $('pieceCv'); let last = null, px = 1;
   cv.addEventListener('pointerdown', e => { const t = workingTarget(); if (!t) return; cv.setPointerCapture(e.pointerId);
-    const [img, , , w, h] = srcFor(st.sel.table, st.sel.key, false); px = Math.min(88 / w, 88 / h) / (cv.width / cv.getBoundingClientRect().width); // screen px per sheet px
+    const [, , , w, h] = srcFor(st.sel.table, st.sel.key, false); px = Math.min(88 / w, 88 / h) / (cv.width / cv.getBoundingClientRect().width); // screen px per sheet px
     if (!rotBegin()) return; last = [e.clientX, e.clientY, rot.dx, rot.dy]; e.preventDefault(); });
   cv.addEventListener('pointermove', e => { if (!last) return; offSet(last[2] + (e.clientX - last[0]) / px, last[3] + (e.clientY - last[1]) / px); });
   const end = () => { last = null; }; cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
@@ -924,9 +1171,8 @@ $('rotApply').onclick = () => rotEnd(true);
 $('rotCancel').onclick = () => rotEnd(false);
 
 // rotate any PNG file onto a canvas big enough for its corners
-let rf = null;
-seg($('rfMode'), [['smooth', 'Smooth (HD art)'], ['pixel', 'Pixel']], 'smooth', function pick(v) { rfMode = v; seg($('rfMode'), [['smooth', 'Smooth (HD art)'], ['pixel', 'Pixel']], v, pick); rfDraw(); });
-let rfMode = 'smooth';
+let rf = null, rfMode = 'smooth', rfName = 'image';
+seg($('rfMode'), [['smooth', 'Smooth (HD art)'], ['pixel', 'Pixel']], 'smooth', function pickRf(v) { rfMode = v; seg($('rfMode'), [['smooth', 'Smooth (HD art)'], ['pixel', 'Pixel']], v, pickRf); rfDraw(); });
 function rfDraw() {
   if (!rf) return; const a = +$('rfAngle').value || 0, k = Math.max(0.05, (+$('rfSize').value || 100) / 100); const [bw, bh] = rotSize(rf.width * k, rf.height * k, a);
   const ow = Math.ceil(bw - 1e-6), oh = Math.ceil(bh - 1e-6); const data = rotateData(rf, a, { outW: ow, outH: oh, scale: k, mode: rfMode });
@@ -934,16 +1180,15 @@ function rfDraw() {
   $('rfStatus').textContent = `${rf.width}${X}${rf.height} → ${ow}${X}${oh}`;
 }
 $('rfFile').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; const img = await readImg(f);
-  if (!img) { $('rfStatus').textContent = 'That file isn\u2019t a readable image.'; return; }
+  if (!img) { $('rfStatus').textContent = 'That file isn’t a readable image.'; return; }
   const c = canvasOf(img); rf = c.getContext('2d').getImageData(0, 0, c.width, c.height); rfName = (f.name || 'image').replace(/\.[^.]+$/, ''); rfDraw(); };
-let rfName = 'image';
 $('rfPick').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('rfFile').click(); } };
 $('rfAngle').addEventListener('input', rfDraw); $('rfSize').addEventListener('input', rfDraw);
 $('rfSave').onclick = () => saveImg($('rfCv'), rfName + ((+$('rfSize').value || 100) !== 100 ? '-' + (+$('rfSize').value) + 'pct' : '') + ((+$('rfAngle').value || 0) ? '-rot' + String(+$('rfAngle').value).replace('-', 'm') : '') + '.png', $('rfSave'));
 
-$('discardSheet').onclick = () => discard('chr');
-$('discardFx').onclick = () => discard('fx');
-$('discardCommon').onclick = () => discard('common');
+$('discardSheet').onclick = () => discard(kindId('chr'));
+$('discardFx').onclick = () => discard(kindId('fx'));
+$('discardCommon').onclick = () => discard(atlasSheet().id);
 const pieceZone = document.querySelector('.inspect');
 pieceZone.addEventListener('dragover', e => { if (workingTarget()) { e.preventDefault(); e.stopPropagation(); } });
 pieceZone.addEventListener('drop', e => { if (workingTarget() && e.dataTransfer.files[0]) { e.preventDefault(); e.stopPropagation(); replacePiece(e.dataTransfer.files[0]); } });
@@ -965,10 +1210,10 @@ async function saveImg(img, name, btn, crop) {
   catch (e) { btn.textContent = e && e.name === 'AbortError' ? 'Not saved' : 'Couldn’t save'; console.warn(e); }
   setTimeout(() => { btn.textContent = old; }, 2000);
 }
-$('saveSheet').onclick = () => saveImg(sheetFor('chr', false), shownFile('chr'), $('saveSheet'));
-$('saveFx').onclick = () => saveImg(sheetFor('fx', false), shownFile('fx'), $('saveFx'));
+$('saveSheet').onclick = () => { const id = kindId('chr'); if (id) saveImg(sheetFor(id, false), shownFile(id), $('saveSheet')); };
+$('saveFx').onclick = () => { const id = kindId('fx'); if (id) saveImg(sheetFor(id, false), shownFile(id), $('saveFx')); };
 $('saveAtlas').onclick = () => { const A = atlasSheet(); if (A.img) saveImg(A.img, A.file, $('saveAtlas')); };
-$('savePiece').onclick = () => { if (!st.sel) return; const [img, x, y, w, h, c] = srcFor(st.sel.table, st.sel.key, false);
+$('savePiece').onclick = () => { if (!workingTarget()) return; const [img, x, y, w, h, c] = srcFor(st.sel.table, st.sel.key, false);
   saveImg(img, (c[5] || 'piece').replace(/[^\w.-]+/g, '_') + '.png', $('savePiece'), [x, y, w, h]); };
 
 // ---- test units: an encrypted bundle (AES-GCM, key from the password with PBKDF2) unlocked in the browser
@@ -986,9 +1231,8 @@ async function openLocked(getKey) {
   return { payload: JSON.parse(new TextDecoder().decode(plain)), key };
 }
 async function applyUnlock(payload) {
-  unlocked = payload;
-  for (const u of st.units) if (payload.units[u.key] && payload.units[u.key].label) u.label = payload.units[u.key].label;
-  if (st.unit) await selectUnit(st.unit.key);
+  unlocked = payload && payload.sheets ? payload : null; for (const k of Object.keys(testImg)) delete testImg[k];
+  if (st.donor) await selectDonor(st.donor, st.kind);
 }
 async function tryResumeUnlock() {
   let saved = null; try { saved = sessionStorage.getItem('bf-sprites-key'); } catch (e) {}
@@ -996,14 +1240,13 @@ async function tryResumeUnlock() {
   try {
     const raw = Uint8Array.from(atob(saved), ch => ch.charCodeAt(0));
     const { payload } = await openLocked(async () => crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']));
-    unlocked = payload;
+    unlocked = payload && payload.sheets ? payload : null;
   } catch (e) { try { sessionStorage.removeItem('bf-sprites-key'); } catch (_) {} }
 }
 $('unlockBtn').onclick = () => {
   if (unlocked) { // lock again
-    unlocked = null; try { sessionStorage.removeItem('bf-sprites-key'); } catch (e) {}
-    getJSON('data/units.json').then(u => { st.units = u; selectUnit(st.unit.key); });
-    return;
+    try { sessionStorage.removeItem('bf-sprites-key'); } catch (e) {}
+    applyUnlock(null); return;
   }
   $('lockMsg').textContent = ''; $('lockPw').value = ''; const d = $('lockDlg');
   try { const fe = window.frameElement; if (fe) { const top = Math.max(0, -fe.getBoundingClientRect().top) + 90; d.style.margin = '0 auto'; d.style.top = top + 'px'; } } catch (e) {}
@@ -1023,10 +1266,11 @@ $('lockForm').addEventListener('submit', async e => {
 });
 
 // ---- transport
+const stepFrame = d => { if (!sc()) return; if (st.playing) togglePlay(); const n = frames(); st.t = ((frameNo() + d + n) % n) / sc().fps; };
 $('play').onclick = togglePlay;
-$('prev').onclick = () => { if (st.playing) togglePlay(); const n = frameCount(); st.frame = (st.frame - 1 + n) % n; };
-$('next').onclick = () => { if (st.playing) togglePlay(); const n = frameCount(); st.frame = (st.frame + 1) % n; };
-$('scrub').oninput = e => { if (st.playing) togglePlay(); st.frame = +e.target.value; };
+$('prev').onclick = () => stepFrame(-1);
+$('next').onclick = () => stepFrame(1);
+$('scrub').oninput = e => { if (!sc()) return; if (st.playing) togglePlay(); st.t = +e.target.value / sc().fps; };
 $('loopBtn').onclick = () => { st.loop = !st.loop; renderControls(); };
 $('cmpBtn').onclick = () => { st.compare = !st.compare; renderControls(); };
 $('fitBtn').onclick = () => { st.fit = !st.fit; computeBounds(); renderControls(); };
@@ -1039,10 +1283,10 @@ let areaDraft = null;
   const toSheet = e => { const r = cv.getBoundingClientRect(); const k = cv.width / r.width; const A = atlasSheet(); const { s, ox, oy } = atlasCam(cv.width, cv.height, A.base);
     return [Math.max(0, Math.min(W(A.base), ((e.clientX - r.left) * k - ox) / s)), Math.max(0, Math.min(H(A.base), ((e.clientY - r.top) * k - oy) / s))]; };
   const box = (a, b) => { const x = Math.floor(Math.min(a[0], b[0])), y = Math.floor(Math.min(a[1], b[1])); return [x, y, Math.ceil(Math.max(a[0], b[0])) - x, Math.ceil(Math.max(a[1], b[1])) - y]; };
-  cv.addEventListener('pointerdown', e => { if (!st.areaMode || e.button > 0) return; e.stopImmediatePropagation(); cv.setPointerCapture(e.pointerId); start = toSheet(e); areaDraft = [...start, 0, 0]; });
+  cv.addEventListener('pointerdown', e => { if (!st.areaMode || e.button > 0 || !atlasSheet().base) return; e.stopImmediatePropagation(); cv.setPointerCapture(e.pointerId); start = toSheet(e); areaDraft = [...start, 0, 0]; });
   cv.addEventListener('pointermove', e => { if (!st.areaMode || !start) return; e.stopImmediatePropagation(); areaDraft = box(start, toSheet(e)); drawAtlas(); });
   const end = e => { if (!st.areaMode || !start) return; e.stopImmediatePropagation(); const b = box(start, toSheet(e)); start = null; areaDraft = null;
-    if (b[2] >= 2 && b[3] >= 2) { const A = atlasSheet(); select('area', [A.kind, ...b].join('|')); } else drawAtlas(); };
+    if (b[2] >= 2 && b[3] >= 2) { const A = atlasSheet(); select('area', [A.id, ...b].join('|')); } else drawAtlas(); };
   cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
   $('areaBtn').onclick = () => { st.areaMode = !st.areaMode; $('areaBtn').setAttribute('aria-pressed', String(st.areaMode)); cv.style.cursor = st.areaMode ? 'cell' : ''; };
 })();
@@ -1055,9 +1299,13 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'ArrowRight') $('next').click(); else if (e.key === 'ArrowLeft') $('prev').click();
   else if (e.key === '+' || e.key === '=') stageZoom(1.4); else if (e.key === '-' || e.key === '_') stageZoom(1 / 1.4); else if (e.key === '0') { resetView(st.view); renderControls(); }
   else if ((e.key === 'Delete' || e.key === 'Backspace') && workingTarget()) { e.preventDefault(); deletePiece(); }
+  else if (e.key === '/' ) { e.preventDefault(); $('uSearch').focus(); }
 });
+document.addEventListener('pointerdown', e => { if (!e.target.closest('.search')) closeList(); });
 addEventListener('resize', () => drawAtlas());
-init().catch(err => { const s = $('sheetStatus'); s.classList.add('warn'); s.textContent = 'Couldn’t load the animation data. Reload the page to try again.'; console.error(err); });
+try { if (new URLSearchParams(location.search).has('debug')) window.__forge = { st, slots, partsAt, computeBounds, bounds: () => bounds }; } catch (e) {}
+init().catch(err => { const s = $('sheetStatus'); s.classList.add('warn'); showLoading(false);
+  s.textContent = err && err.message === 'old browser' ? 'This browser is too old for the sprite catalog. Update Safari, Chrome or Firefox and reload.' : 'Couldn’t load the animation data. Reload the page to try again.'; console.error(err); });
 })();
 </script>
 </body></html>

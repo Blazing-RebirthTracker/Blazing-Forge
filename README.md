@@ -52,8 +52,8 @@ Your work is saved in your browser. **Save mod pack** also works as a backup, an
 | [`addon/`](addon/) | `BlazingForge.dylib`: installs patches and builds mod packs inside the game. `build.sh` needs clang, lld and an iPhoneOS SDK |
 | [`forgecore/`](forgecore/) | The mod pack builder in portable C (bundles, type trees, tables, art, banners, summon re-skin). Builds and tests on Linux too |
 | [`forge/`](forge/) | The original Python builder (`forge.py build/verify/donors/slots`) |
-| [`sprites/`](sprites/) | The Sprites tab: battle-animation player and per-piece sheet editor, with baked animation data and sheets for a few sample units |
-| [`tools/`](tools/) | `studio.py` (Studio data ⇄ mod folder), `export_catalog.py` (regenerate `docs/catalog.json`), `cmp_builds.py` (compare two builds) |
+| [`sprites/`](sprites/) | The Sprites tab: battle-animation player and per-piece sheet editor. `sprites/cat/` holds the unit catalog: `index.json.gz`, gzipped rig models and animation clips, and the sprite atlases |
+| [`tools/`](tools/) | `studio.py` (Studio data ⇄ mod folder), `export_catalog.py` (regenerate `docs/catalog.json`), `cmp_builds.py` (compare two builds), `build_sprite_catalog.py` (rebuild `sprites/cat/` from an animation export), `lock_sprites.py` (password-locked test sheets) |
 
 ### Mod pack format
 
@@ -78,4 +78,4 @@ python3 ../forge/forge.py verify --base <base> --out <out>
 
 `<base>` holds a clean `BlazingData` folder (`python3 forge/forge.py fetch --base base/` pulls just the files Forge needs from the Blazing:Rebirth data release).
 
-No game binaries are stored in this repository. The only game data files are the sample unit sheets and baked animations in `sprites/`, used by the Sprites tab. `docs/catalog.json` holds unit, skill and ability names and descriptions for the Studio's pickers.
+No game binaries are stored in this repository. The only game data files are the sprite atlases, rig models and animation clips in `sprites/cat/`, used by the Sprites tab. `docs/catalog.json` holds unit, skill and ability names and descriptions for the Studio's pickers.

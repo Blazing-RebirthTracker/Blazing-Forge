@@ -273,7 +273,7 @@ function charWarnings(c, id){
   const sl = S.slotByR5.get(+c.slot5);
   if (sl?.impact) w.push(["w","This slot is an Impact event unit."]);
   const d = S.unitById.get(+c.donor);
-  if (d && d.ok && !d.ok[0]) w.push(["w","The build's asset audit flags this donor's battle sprite as missing. Earlier legacy units with flagged donors still worked, so test a battle."]);
+  if (d && d.ok && !d.ok[0]) w.push(["w","The build's asset audit flags this donor's battle sprite as missing. Earlier test units with flagged donors still worked, so test a battle."]);
   if (c.latent && !c.latent.from) w.push(["w","The latent skill has no animation source."]);
   if ((c.abilities||[]).length > 10) w.push(["e","Ten abilities at most."]);
   return w;
@@ -765,13 +765,7 @@ async function boot(){
     S.cat.units.forEach(u=>S.unitById.set(u.id,u)); S.cat.slots.forEach(s=>{S.slotByR5.set(s.r5,s);S.slotByR6.set(s.r6,s);});
   }catch(e){ setStatus("warn","Couldn't load the game catalog. Reload the page."); return; }
   render(); setStatus("busy","Connecting…");
-  const claude = window.claude;
-  if (claude && claude.use){
-    const [db, assets, downloads, user] = await Promise.all([claude.use("db"), claude.use("assets"), claude.use("downloads"), claude.use("user")]);
-    S.db=db; S.assets=assets; S.downloads=downloads;
-    if (user){ try{ const w=await user.can("data.write"); if (w===false) S.canWrite=false; }catch(e){} }
-  }
-  if (!window.claude){
+  {
     // a plain website (e.g. GitHub Pages): ordinary browser downloads
     S.downloads = { save: async ({filename, data}) => {
       const url=URL.createObjectURL(data instanceof Blob ? data : new Blob([data]));
