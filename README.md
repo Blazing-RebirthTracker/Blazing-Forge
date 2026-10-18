@@ -53,8 +53,12 @@ Your work is saved in your browser. **Save mod pack** also works as a backup, an
 | [`forgecore/`](forgecore/) | The mod pack builder in portable C (bundles, type trees, tables, art, banners, summon re-skin). Builds and tests on Linux too |
 | [`forge/`](forge/) | The original Python builder (`forge.py build/verify/donors/slots`) |
 | [`sprites/`](sprites/) | The Sprites tab: battle-animation player and per-piece sheet editor. `sprites/cat/` holds the unit catalog: `index.json.gz`, gzipped rig models and animation clips, and the sprite atlases |
-| [`stages/`](stages/) | The Stages tab: stage builder (beta). `stages/cat/` holds the mission list, one gzipped file per mission with its maps and enemy line-ups, the enemy table and background previews |
-| [`tools/`](tools/) | `studio.py` (Studio data ⇄ mod folder), `export_catalog.py` (regenerate `docs/catalog.json`), `cmp_builds.py` (compare two builds), `build_sprite_catalog.py` (rebuild `sprites/cat/` from an animation export), `lock_sprites.py` (password-locked test sheets), `build_stage_catalog.py` (rebuild `stages/cat/` from a stage-builder export) |
+| [`stages/`](stages/) | The Stages tab: stage builder (beta). `stages/cat/` holds the mission list, one gzipped file per mission with its maps and enemy line-ups, the enemy table, background previews and `app.json.gz` (the app's installable Emergency templates: map IDs, grids and rewards) |
+| [`tools/`](tools/) | `studio.py` (Studio data ⇄ mod folder), `export_catalog.py` (regenerate `docs/catalog.json`), `cmp_builds.py` (compare two builds), `build_sprite_catalog.py` (rebuild `sprites/cat/` from an animation export), `lock_sprites.py` (password-locked test sheets), `build_stage_catalog.py` (rebuild `stages/cat/` from a stage-builder export), `build_stage_app_catalog.py` (rebuild `stages/cat/app.json.gz` from the app's stage template catalog) |
+
+### Stage files
+
+The Stages tab saves stages for the app's **Import stages** as one `ForgeStage` JSON file (schema 2, profile `emergency-layout/1`) or a zip with `forge-mod.json` (`{"format":"ForgeStagePack","schema":1,"stages":[...]}`) and up to 20 `stages/*.json`. A stage names its template (`donorMissionId`), keeps every template map in order, and lists marker moves per map: start spots (chips 8–13) and enemy entry points (chips 16–25) to grid `[x, y]`. `localId` is the stage's permanent identity in the app's 20 stage slots. **Export draft file** keeps the editor's full draft (schema 1), including edits the app can't install yet.
 
 ### Mod pack format
 

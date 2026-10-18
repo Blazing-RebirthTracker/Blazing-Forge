@@ -116,6 +116,26 @@ dialog.bgs::backdrop{background:rgba(5,7,10,.6)}
 details.more summary{cursor:pointer;font-weight:700;font-size:13px}
 details.more[open] summary{margin-bottom:8px}
 input[type=range]{accent-color:var(--ember)}
+.pill{font:800 10.5px var(--f-body);letter-spacing:.08em;text-transform:uppercase;border-radius:6px;padding:3px 7px;background:var(--panel2);color:var(--tx2)}
+.pill.ok{background:var(--leaf-soft);color:var(--leaf)}
+.pill.no{background:var(--ember-soft);color:var(--ember-tx)}
+.issues{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.issues li{font-size:12.5px;line-height:1.45;color:var(--tx2);padding:7px 10px;border-radius:9px;background:var(--panel2);border-left:3px solid var(--line)}
+.issues li.err{border-left-color:var(--bad);color:var(--tx)}
+.issues li.lost{border-left-color:var(--ember)}
+.issues li.move{border-left-color:var(--leaf)}
+.issues code{font-family:var(--f-mono);font-size:11px;color:var(--bad);margin-right:6px}
+.rw{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;color:var(--tx2);margin:0}
+.rw dt{color:var(--tx3)}
+.rw dd{margin:0;color:var(--tx);min-width:0}
+ol.steps{margin:0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-height:1.55;display:flex;flex-direction:column;gap:4px}
+.packlist{display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow:auto;margin:10px 0}
+.packlist label{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:start;background:var(--panel2);border-radius:10px;padding:9px 11px;cursor:pointer}
+.packlist label input{margin-top:3px;accent-color:var(--ember);width:16px;height:16px}
+.packlist b{font-size:13.5px}
+.packlist small{display:block;color:var(--tx2);font-size:12px}
+.packlist .bad{color:var(--bad)}
+.game-hide{display:none!important}
 </style>
 </head><body>
 <div class="wrap">
@@ -126,12 +146,12 @@ input[type=range]{accent-color:var(--ember)}
       <small id="meta"></small>
     </div>
   </header>
-  <div class="note" id="betaNote">Stages are drafts for now: the Forge app can't install them yet. Placements use the game's own 11&times;11 map grid, so where enemies and your team start is exact. The background is lined up by eye until it's checked against in-game screenshots, so use the adjust controls if it looks off.</div>
+  <div class="note" id="betaNote">Stages can now go in the game. Start from a <b>game-ready</b> Emergency mission, move your team's start spots and the enemy entry points, name it, and press <b>Save for the game</b>. The Forge app adds it as its own Emergency mission, with the template's enemies and rewards. Other edits (enemies, waves, the field shape, backgrounds) stay as drafts here until the app can install them. The background is lined up by eye, so use the adjust controls if it looks off.</div>
   <section class="bar" aria-label="Mission">
     <div class="now"><span class="t" id="mName">Loading missions…</span><span class="s" id="mSub"></span></div>
     <div class="picker">
       <div class="search"><input type="search" id="mSearch" placeholder="Start from a mission: search by name, stage or ID" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="mList" aria-label="Search missions"><div class="drop-list" id="mList" role="listbox" hidden></div></div>
-      <button class="btn ghost" id="blankBtn" type="button">Blank stage</button>
+      <button class="chip" id="readyBtn" aria-pressed="false" type="button">Game-ready only</button><button class="btn ghost" id="blankBtn" type="button">Blank stage</button>
     </div>
   </section>
   <div class="main">
@@ -146,13 +166,43 @@ input[type=range]{accent-color:var(--ember)}
       <p class="hint" id="fieldHint">Drag an enemy or a start spot to move it. Drag empty space to pan, scroll or pinch to zoom. To add an enemy, drag it from the list on the right, or tap Add and then tap a spot.</p>
     </section>
     <aside class="rail">
-      <div class="card">
+      <div class="card" id="gameCard">
+        <div class="row" style="justify-content:space-between"><span class="lbl">In the game</span><span class="pill" id="gamePill"></span></div>
+        <div id="gameNo" hidden style="display:flex;flex-direction:column;gap:10px">
+          <p class="status" id="gameNoText"></p>
+          <div class="row"><button class="btn ghost" id="gameFind" type="button">Show game-ready missions</button></div>
+        </div>
+        <div id="gameYes" hidden style="display:flex;flex-direction:column;gap:10px">
+          <div class="row"><button class="chip" id="gameOnlyBtn" aria-pressed="true" type="button">Game edits only</button><button class="chip" id="keepGameBtn" type="button">Keep only game edits</button></div>
+          <div class="form">
+            <label class="wide">Name in the game<input type="text" id="gName" maxlength="96" autocomplete="off"></label>
+            <label>Shows in the game<select id="gOn"><option value="1">Yes</option><option value="0">Hidden</option></select></label>
+          </div>
+          <ul class="issues" id="gameIssues"></ul>
+          <div class="row"><button class="btn primary" id="gameSave" type="button">Save for the game</button><button class="btn ghost" id="packBtn" type="button">Game pack&hellip;</button></div>
+          <details class="more"><summary>Rewards from the template</summary><dl class="rw" id="gameRewards"></dl><p class="hint" style="margin-top:8px">Rewards, enemies and drop chances come from the template mission and can't be changed yet. First clear has its own reward group, so it pays out even if you've cleared the original.</p></details>
+          <details class="more"><summary>How to put it in the game</summary>
+            <ol class="steps">
+              <li>Save for the game (one stage) or make a game pack (up to 20 stages in one zip).</li>
+              <li>Get the file onto your phone, for example in Files &rsaquo; On My iPhone &rsaquo; Blazing:Rebirth.</li>
+              <li>In the app, open Forge Studio &rsaquo; Stages, choose <b>Import stages</b> and pick the file.</li>
+              <li>Build the mod, close the game completely and open it again.</li>
+              <li>Your stage is under <b>Emergency Missions</b>. The original mission stays as it is.</li>
+            </ol>
+          </details>
+          <details class="more"><summary>Stage ID</summary>
+            <div class="form"><label class="wide">Stage ID<input type="text" id="gId" maxlength="96" autocomplete="off" spellcheck="false"></label></div>
+            <p class="hint" style="margin-top:6px">The app gives each stage ID one of its 20 stage slots for good. Keep the same ID when you update a stage, so it replaces the old version instead of taking a new slot. Hiding a stage doesn't free its slot.</p>
+          </details>
+        </div>
+      </div>
+      <div class="card" id="mapCard">
         <span class="lbl">Map</span>
         <div class="row"><span class="status" id="mapInfo"></span></div>
         <div class="row"><button class="btn ghost" id="bgBtn" type="button">Change background</button><button class="chip" id="floorBtn" aria-pressed="false" type="button">Edit field shape</button></div>
         <div class="row"><button class="chip" id="addMapBtn" type="button">Add a map</button><button class="chip" id="delMapBtn" type="button">Remove this map</button></div>
       </div>
-      <div class="card">
+      <div class="card" id="enemyCard">
         <span class="lbl">Enemies</span>
         <div class="seg" id="encSeg" role="group" aria-label="Enemy line-up"></div>
         <div id="waves" style="display:flex;flex-direction:column;gap:8px"></div>
@@ -172,7 +222,7 @@ input[type=range]{accent-color:var(--ember)}
         <div class="stats" id="selStats"></div>
         <div class="row"><button class="btn ghost" id="dupBtn" type="button">Duplicate</button><button class="btn danger" id="delBtn" type="button">Remove</button></div>
       </div>
-      <div class="card">
+      <div class="card" id="palCard">
         <span class="lbl">Add enemies</span>
         <input type="search" class="field-in" id="palSearch" placeholder="Search 7,661 enemies by name or title" autocomplete="off" aria-label="Search enemies">
         <div class="pal" id="pal"></div>
@@ -185,9 +235,9 @@ input[type=range]{accent-color:var(--ember)}
           <label>Stamina<input type="number" id="stStamina" min="0" max="99" step="1"></label>
         </div>
         <div class="status" id="stInfo"></div>
-        <div class="row"><button class="btn primary" id="exportBtn" type="button">Export stage file</button><label class="btn ghost" for="importFile" tabindex="0" id="importLbl">Open a stage file</label><input type="file" id="importFile" accept=".json,application/json" class="hidden-file"></div>
+        <div class="row"><button class="btn ghost" id="exportBtn" type="button">Export draft file</button><label class="btn ghost" for="importFile" tabindex="0" id="importLbl">Open a stage file</label><input type="file" id="importFile" accept=".json,.zip,application/json,application/zip" class="hidden-file"></div>
         <div class="row"><button class="btn danger" id="resetBtn" type="button">Discard my changes</button></div>
-        <p class="hint">Your changes are kept in this browser. The stage file uses the proposed Forge stage format (stages/*.json in a mod pack), ready for when the app can install stages.</p>
+        <p class="hint">Your changes are kept in this browser. The draft file keeps every edit, including the ones the game can't install yet, so you can open it again here later. Open a stage file also takes files saved for the game and game packs.</p>
       </div>
       <div class="card">
         <span class="lbl">View</span>
@@ -206,6 +256,12 @@ input[type=range]{accent-color:var(--ember)}
     </aside>
   </div>
 </div>
+<dialog class="bgs" id="packDlg" aria-labelledby="packTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="packTitle">Game pack</span><button class="btn ghost" id="packClose" type="button">Close</button></div>
+  <p class="hint" style="margin-top:8px">Your game-ready stages in this browser. Tick up to 20 to save them as one zip for the app's Import stages.</p>
+  <div class="packlist" id="packList"></div>
+  <div class="row" style="justify-content:space-between"><span class="status" id="packCount"></span><button class="btn primary" id="packSave" type="button">Save game pack</button></div>
+</dialog>
 <dialog class="bgs" id="bgDlg" aria-labelledby="bgTitle">
   <div class="row" style="justify-content:space-between"><span class="lbl" id="bgTitle">Pick a background</span><button class="btn ghost" id="bgClose" type="button">Close</button></div>
   <div class="bggrid" id="bgGrid"></div>
@@ -275,6 +331,7 @@ const isPlayer = c => c >= 8 && c <= 13;
 const isEntry = c => c >= ENTRY0 + 1 && c <= ENTRY0 + MAX_ENTRY;
 const W = i => i.naturalWidth || i.width, H = i => i.naturalHeight || i.height;
 const clone = o => JSON.parse(JSON.stringify(o));
+const tagless = t => String(t || '').replace(/\[[0-9A-Fa-f]{6}\]|\[-\]/g, ''); // the game's inline colour tags
 
 // ---- loading
 function getData(path) {
@@ -292,7 +349,7 @@ const imgs = new Map();
 function img(src) { if (!imgs.has(src)) { const p = loadImg(src); imgs.set(src, p); p.catch(() => imgs.delete(src)); } return imgs.get(src); }
 
 const st = { idx: null, enemies: {}, mission: null, draft: null, key: null, mapI: 0, encI: 0, waveI: 0, sel: null,
-  view: { z: 1, x: 0, y: 0 }, floor: false, ghosts: false, anim: true, grid: true, placing: null, t: 0, last: 0 };
+  view: { z: 1, x: 0, y: 0 }, floor: false, gameOnly: true, readyOnly: false, ghosts: false, anim: true, grid: true, placing: null, t: 0, last: 0 };
 
 // ---- drafts kept in this browser
 const STORE = 'bf-stages-v1';
@@ -357,12 +414,14 @@ function placeAt(it, x, y) { // put an enemy on map point (x,y), reusing or crea
   m.chips[y][x] = ENTRY0 + free; it.enterId = free; return true;
 }
 function addEnemy(id, x, y) {
+  if (gm()) { toast('Game edits only is on: enemies come from the template. Turn it off to draft other edits.'); return; }
   const w = wave(); const it = { k: 'e', uid: uid(), enemy: String(id), level: 1, count: 1, enterId: 0, type: 0, way: 5, aiType: 0, enterType: 0, param: 0, dropRate: 0, bossId: 0, bossParts: 0, enabled: true, src: null };
   if (!placeAt(it, x, y)) return;
   w.items.push(it); st.sel = it.uid; changed(); toast(`${enemyInfo(it.enemy).n} added to wave ${st.waveI + 1}.`);
 }
 function moveEntry(id, x, y) {
   const m = map(), c = m.chips[y][x];
+  if (gm() && tplCount(ENTRY0 + id) > 1) { toast(`Entry point ${id} is in several spots in this template, so the game keeps it where it is.`); return; }
   if (c !== 1) { toast(c === 0 ? 'That spot is off the field.' : 'Something is already there.'); return; }
   for (const [cx, cy] of cellsOf(m, id)) m.chips[cy][cx] = 1;
   m.chips[y][x] = ENTRY0 + id; changed();
@@ -374,6 +433,7 @@ function movePlayer(slot, x, y) {
   m.chips[y][x] = 8 + slot; changed();
 }
 function toggleFloor(x, y) {
+  if (gm()) return;
   const m = map(), c = m.chips[y][x];
   if (c === 0) m.chips[y][x] = 1; else if (c === 1) m.chips[y][x] = 0;
   else { toast('Move the marker off this spot first.'); return; }
@@ -538,7 +598,8 @@ const endPtr = e => {
     return; }
   if (!d.to) { draw(); return; }
   const [x, y] = d.to;
-  if (d.kind === 'enemy') { const f = findSel(); const it = enc().waves.flatMap(w => w.items).find(i => i.uid === d.hit.uid); if (it && placeAt(it, x, y)) { st.sel = it.uid; changed(); } else draw(); void f; }
+  if (d.kind === 'enemy' && gm()) { const it = enc().waves.flatMap(w => w.items).find(i => i.uid === d.hit.uid); if (it) { st.sel = it.uid; moveEntry(it.enterId, x, y); } }
+  else if (d.kind === 'enemy') { const f = findSel(); const it = enc().waves.flatMap(w => w.items).find(i => i.uid === d.hit.uid); if (it && placeAt(it, x, y)) { st.sel = it.uid; changed(); } else draw(); void f; }
   else if (d.kind === 'entry') moveEntry(d.hit.id, x, y);
   else if (d.kind === 'player') movePlayer(d.hit.slot, x, y);
   else draw();
@@ -585,7 +646,7 @@ function renderRail() {
     const sm = document.createElement('small'); sm.textContent = wi === 0 ? 'at the start' : 'after the last wave is cleared'; nb.append(sm);
     nb.onclick = () => { st.waveI = wi; st.sel = null; renderRail(); draw(); };
     const del = document.createElement('button'); del.className = 'chip'; del.type = 'button'; del.textContent = 'Remove'; del.style.minHeight = '28px'; del.style.padding = '2px 10px';
-    del.disabled = enc().waves.length < 2; del.onclick = () => { enc().waves.splice(wi, 1); st.waveI = Math.min(st.waveI, enc().waves.length - 1); st.sel = null; changed(); };
+    del.disabled = enc().waves.length < 2 || gm(); del.onclick = () => { enc().waves.splice(wi, 1); st.waveI = Math.min(st.waveI, enc().waves.length - 1); st.sel = null; changed(); };
     head.append(nb, del); el.append(head);
     const n = w.items.filter(i => i.k === 'e').length;
     if (!n) { const p = document.createElement('p'); p.className = 'hint'; p.textContent = 'No enemies yet. Drag one in from Add enemies.'; el.append(p); }
@@ -604,8 +665,8 @@ function renderRail() {
   // stage fields
   if (document.activeElement !== $('stName')) $('stName').value = d.name || '';
   if (document.activeElement !== $('stStamina')) $('stStamina').value = d.stamina ?? 0;
-  $('stInfo').textContent = (d.objectives && d.objectives.length ? 'Objectives kept from the game: ' + d.objectives.join(' · ') + '. ' : '') + (st.mission ? 'Exports as a replacement for mission ' + st.mission.id + '.' : 'Exports as a new stage.');
-  renderSel();
+  $('stInfo').textContent = (d.objectives && d.objectives.length ? 'Objectives kept from the game: ' + d.objectives.map(tagless).join(' · ') + '. ' : '') + (tplOf(d.base) ? 'In the game this becomes a new Emergency mission built from mission ' + d.base + '; the original stays as it is.' : st.mission ? 'Draft based on mission ' + st.mission.id + '.' : 'Draft for a new stage.');
+  renderSel(); renderGame();
 }
 function levelStats(info, lv) {
   const seg = (info.p || []).find(s => lv >= (s[0] || 1) && lv <= (s[1] || 1)) || (info.p || [])[info.p.length - 1]; if (!seg) return null;
@@ -635,9 +696,9 @@ $('selEnter').onchange = e => { const f = findSel(); if (!f) return; f.it.enterI
 $('delBtn').onclick = () => { const f = findSel(); if (!f) return; const w = enc().waves[f.wi]; w.items.splice(w.items.indexOf(f.it), 1); st.sel = null; changed(); };
 $('dupBtn').onclick = () => { const f = findSel(); if (!f) return; const w = enc().waves[f.wi]; const c = { ...clone(f.it), uid: uid(), src: null }; w.items.splice(w.items.indexOf(f.it) + 1, 0, c); st.sel = c.uid; changed(); };
 $('addWaveBtn').onclick = () => { enc().waves.push({ items: [] }); st.waveI = enc().waves.length - 1; st.sel = null; changed(); };
-$('stName').addEventListener('input', e => { st.draft.name = e.target.value; save(); $('mName').textContent = e.target.value || 'Untitled stage'; });
+$('stName').addEventListener('input', e => { st.draft.name = e.target.value; save(); $('mName').textContent = e.target.value || 'Untitled stage'; renderGame(); });
 $('stStamina').addEventListener('change', e => { st.draft.stamina = Math.max(0, Math.min(99, Math.round(+e.target.value || 0))); changed(); });
-$('floorBtn').onclick = () => { st.floor = !st.floor; st.placing = null; $('fieldHint').textContent = st.floor ? 'Tap or drag over spots to add them to the field or take them off. Spots with markers stay as they are.' : 'Drag an enemy or a start spot to move it. Drag empty space to pan, scroll or pinch to zoom. To add an enemy, drag it from the list on the right, or tap Add and then tap a spot.'; renderRail(); draw(); };
+$('floorBtn').onclick = () => { if (gm()) return; st.floor = !st.floor; st.placing = null; $('fieldHint').textContent = st.floor ? 'Tap or drag over spots to add them to the field or take them off. Spots with markers stay as they are.' : 'Drag an enemy or a start spot to move it. Drag empty space to pan, scroll or pinch to zoom. To add an enemy, drag it from the list on the right, or tap Add and then tap a spot.'; renderRail(); draw(); };
 $('addMapBtn').onclick = () => { const m = clone(map()); for (const r of m.chips) for (let x = 0; x < COLS; x++) if (isEntry(r[x])) r[x] = 1; m.encounters = [{ set: null, rate: 1000, waves: [{ items: [] }] }];
   st.draft.maps.splice(st.mapI + 1, 0, m); st.mapI++; st.encI = 0; st.waveI = 0; st.sel = null; changed(); toast('Added a map with the same background and field. It has no enemies yet.'); };
 $('delMapBtn').onclick = () => { if (st.draft.maps.length < 2) return; st.draft.maps.splice(st.mapI, 1); st.mapI = Math.max(0, st.mapI - 1); st.encI = 0; st.waveI = 0; st.sel = null; changed(); };
@@ -683,8 +744,9 @@ $('selEnemy').addEventListener('blur', () => setTimeout(() => { $('selList').hid
 // ---- missions
 function missionItems(q) {
   const toks = q.toLowerCase().split(/\s+/).filter(Boolean);
-  const res = st.idx.missions.filter(m => { const h = (m.name + ' ' + m.stage + ' ' + m.id).toLowerCase(); return toks.every(t => h.includes(t)); });
-  return res.slice(0, 150).map(m => [m.id, m.name || 'Mission ' + m.id, m.stage || 'No stage listed', `${m.maps} map${m.maps === 1 ? '' : 's'} · ${m.id}`]);
+  const res = st.idx.missions.filter(m => { if (st.readyOnly && !tplOf(m.id)) return false; const h = (m.name + ' ' + m.stage + ' ' + m.id).toLowerCase(); return toks.every(t => h.includes(t)); });
+  if (!st.readyOnly) res.sort((a, b) => !!tplOf(b.id) - !!tplOf(a.id) || 0);
+  return res.slice(0, 150).map(m => [m.id, m.name || 'Mission ' + m.id, m.stage || 'No stage listed', `${tplOf(m.id) ? 'Game-ready · ' : ''}${m.maps} map${m.maps === 1 ? '' : 's'} · ${m.id}`]);
 }
 $('mSearch').addEventListener('focus', () => dropList($('mSearch'), $('mList'), missionItems($('mSearch').value), openMission));
 $('mSearch').addEventListener('input', () => dropList($('mSearch'), $('mList'), missionItems($('mSearch').value), openMission));
@@ -694,7 +756,7 @@ async function openMission(id, opts = {}) {
   $('mSearch').value = ''; $('mSearch').blur();
   let m; try { m = await getData(CAT + 'm/' + id + '.json.gz'); } catch (e) { toast('Couldn’t load that mission. Check your connection and try again.'); return; }
   const key = 'm' + id; const saved = !opts.fresh && readStore().drafts[key];
-  st.mission = m; st.key = key; st.draft = saved || draftFromMission(m); st.edited = !!saved;
+  st.mission = m; st.key = key; st.draft = saved || draftFromMission(m); st.edited = !!saved; ensureId(st.draft, key);
   st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; st.placing = null; st.view = { z: 1, x: 0, y: 0 };
   try { const q = new URLSearchParams(location.search); q.set('mission', id); history.replaceState(null, '', '?' + q.toString()); } catch (e) {}
   syncBgCtl(); renderRail(); draw();
@@ -744,43 +806,275 @@ function exportStage() {
   return out;
 }
 const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-$('exportBtn').onclick = async () => {
-  const blob = new Blob([JSON.stringify(exportStage(), null, 1)], { type: 'application/json' }); const name = 'stage-' + slug(st.draft.name) + '.json';
-  try { const file = new File([blob], name, { type: 'application/json' });
-    if (isIOS && navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
-    const u = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = u; a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 10000); toast('Saved ' + name + '.');
-  } catch (e) { if (!(e && e.name === 'AbortError')) toast('Couldn’t save the file.'); }
-};
+async function saveBlob(blob, name) {
+  try { const file = new File([blob], name, { type: blob.type });
+    if (isIOS && navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return true; }
+    const u = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = u; a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 10000); toast('Saved ' + name + '.'); return true;
+  } catch (e) { if (!(e && e.name === 'AbortError')) toast('Couldn’t save the file.'); return false; }
+}
+$('exportBtn').onclick = () => saveBlob(new Blob([JSON.stringify(exportStage(), null, 1)], { type: 'application/json' }), 'stage-draft-' + slug(st.draft.name) + '.json');
 $('importFile').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-  try { const j = JSON.parse(await f.text()); if (j.format !== 'ForgeStage') throw new Error('format');
+  try {
+    const buf = new Uint8Array(await f.arrayBuffer());
+    if (buf[0] === 0x50 && buf[1] === 0x4b) { await importPack(buf, f.name); return; }
+    const j = JSON.parse(new TextDecoder().decode(buf)); if (j.format !== 'ForgeStage') throw new Error('format');
+    if (j.schema === 2) { const r = await importGameStage(j); if (r.err) { toast(r.err); return; } await openMission(r.donor); toast('Opened ' + f.name + (r.skipped ? ` (${r.skipped} move${r.skipped === 1 ? '' : 's'} didn’t fit this template and were left out).` : '.')); return; }
     let d = j.native && j.native.editor;
     if (!d) d = { v: 1, base: j.targetMissionId, name: j.name, stamina: j.stamina, objectives: [], maps: j.maps.map(m => ({ donor: m.donorMapId, bg: m.backgroundId, chips: (m.native && m.native.chips) || blankMap().chips, deployWays: (m.native && m.native.deployWays) || [0, 0, 0, 0, 0, 0],
       encounters: m.encounters.map(en => ({ set: en.sourceEnemySetId || null, rate: en.weight ?? 1000, waves: en.waves.map(w => ({ items: [...w.placements.map(p => ({ k: 'e', uid: uid(), enemy: p.enemyId, level: p.level || 1, ...(p.native || {}), count: (p.native && p.native.count) || 1, enabled: !p.native || p.native.enabled !== false, enterId: (p.native && p.native.enterId) || 1, src: p.sourceEntry ? { set: p.sourceEntry.enemySetId, seq: p.sourceEntry.sequenceIndex } : null })), ...(w.nativeCommands || []).map(r => ({ k: 'c', raw: r }))] })) })) })) };
     for (const m of d.maps) for (const en of m.encounters) for (const w of en.waves) for (const it of w.items) if (it.k === 'e' && !it.uid) it.uid = uid();
     st.mission = d.base ? await getData(CAT + 'm/' + d.base + '.json.gz').catch(() => null) : null;
-    st.key = d.base ? 'm' + d.base : 'blank-' + Date.now().toString(36); st.draft = d; st.edited = true; st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null;
+    st.key = d.base ? 'm' + d.base : 'blank-' + Date.now().toString(36); st.draft = d; ensureId(d, st.key); st.edited = true; st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null;
     save(); syncBgCtl(); renderRail(); draw(); toast('Opened ' + f.name + '.');
   } catch (err) { toast('That file isn’t a Forge stage file.'); }
 };
 $('importLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('importFile').click(); } };
 
+
+// ---- the game's stage import: Emergency templates, profile emergency-layout/1
+// The app clones a template mission and can move its start spots (chips 8-13) and enemy entry points
+// (chips 16-25). These checks mirror the app's validator so a file that passes here imports there.
+let APP = null;
+const PROFILE = 'emergency-layout/1', MAX_MOVES = 16, MAX_PACK = 20;
+const isMark = c => (c >= 8 && c <= 13) || (c >= 16 && c <= 25);
+const tplOf = id => (APP && id != null && APP.donors[String(id)]) || null;
+const gm = () => !!(st.gameOnly && st.draft && tplOf(st.draft.base));
+const markName = c => c <= 13 ? `start spot ${c - 7}` : `entry point ${c - ENTRY0}`;
+const posOf = (G, c) => { const o = []; for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) if (G[y][x] === c) o.push([x, y]); return o; };
+function tplCount(c) { const t = tplOf(st.draft && st.draft.base); const m = t && t.maps[st.mapI]; return m ? posOf(m.chips, c).length : 0; }
+const ID_RE = /^[A-Za-z0-9_.:-]{1,96}$/, IDS = 'bf-stages-ids';
+function newId() { const r = new Uint8Array(8); crypto.getRandomValues(r); return 'forge-stages:' + [...r].map(b => b.toString(36).padStart(2, '0')).join('').slice(0, 14); }
+function ensureId(d, key) { // one stable stage ID per draft, kept even if the draft is discarded and restarted
+  if (!d || d.localId) return; let a = {}; try { a = JSON.parse(localStorage.getItem(IDS)) || {}; } catch (e) {}
+  d.localId = a[key] || newId(); a[key] = d.localId; try { localStorage.setItem(IDS, JSON.stringify(a)); } catch (e) {} }
+function rememberId(key, id) { try { const a = JSON.parse(localStorage.getItem(IDS)) || {}; a[key] = id; localStorage.setItem(IDS, JSON.stringify(a)); } catch (e) {} }
+const bytes = s => new TextEncoder().encode(s).length;
+
+// moves between the template grid O and the edited grid E, with the reasons any edit can't carry over
+function mapMoves(O, E, label) {
+  const moves = [], errs = [], lost = [], from = {};
+  for (let c = 8; c <= 25; c++) { if (!isMark(c)) continue;
+    const a = posOf(O, c), b = posOf(E, c);
+    if (!a.length && !b.length) continue;
+    if (!a.length) { lost.push(`${label}: new ${markName(c)}. The template has no ${markName(c)}, so the game leaves it out.`); continue; }
+    if (a.length > 1) { if (JSON.stringify(a) !== JSON.stringify(b)) lost.push(`${label}: ${markName(c)} is in ${a.length} spots in this template, so the game keeps it where it is.`); continue; }
+    if (b.length !== 1) { lost.push(`${label}: ${markName(c)} ${b.length ? 'is in more than one spot' : 'was taken off the field'}; the game keeps it where it is.`); continue; }
+    if (a[0][0] === b[0][0] && a[0][1] === b[0][1]) continue;
+    moves.push({ chip: c, grid: [b[0][0], b[0][1]] }); from[c] = a[0];
+  }
+  if (moves.length > MAX_MOVES) errs.push(['STAGE_MARKERS', `${label} moves ${moves.length} markers; the game takes up to ${MAX_MOVES} per map.`]);
+  const G = O.map(r => r.slice()); for (const mv of moves) { const [x, y] = from[mv.chip]; G[y][x] = 1; }
+  const used = new Set();
+  for (const mv of moves) { const [x, y] = mv.grid, k = x + ',' + y;
+    if (G[y][x] !== 1 || used.has(k)) errs.push(['STAGE_OCCUPIED', `${label}: ${markName(mv.chip)} is on a spot that isn't open floor in the template. Move it to a field spot.`]);
+    used.add(k); }
+  for (const mv of moves) G[mv.grid[1]][mv.grid[0]] = mv.chip;
+  let shape = 0; for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) if (E[y][x] !== G[y][x] && !isMark(E[y][x]) && !isMark(G[y][x])) shape++;
+  if (shape) lost.push(`${label}: the field shape changed in ${shape} spot${shape === 1 ? '' : 's'}; the game keeps the template's field.`);
+  return { moves, errs, lost };
+}
+const strip = v => JSON.stringify(v, (k, x) => (k === 'uid' ? undefined : x));
+function gameCheck(d, mission) {
+  const tpl = tplOf(d && d.base), out = { tpl, errs: [], lost: [], maps: [], moves: 0 };
+  if (!tpl) { out.errs.push(['STAGE_DONOR', 'This mission isn’t one of the game’s stage templates.']); return out; }
+  const name = (d.name || '').trim(), nb = bytes(name);
+  if (!nb) out.errs.push(['STAGE_NAME', 'Give the stage a name.']);
+  else if (nb > 96) out.errs.push(['STAGE_NAME', `The name is ${nb} bytes long; the game allows 96 (letters with accents or other scripts take more than one).`]);
+  else if (/[\u0000-\u001f\u007f]/.test(name)) out.errs.push(['STAGE_NAME', 'The name can’t contain control characters.']);
+  const id = d.localId || '';
+  if (!ID_RE.test(id) || !id.includes(':')) out.errs.push(['STAGE_ID', 'The stage ID needs a colon and at most 96 letters, numbers, colons, dots, underscores or hyphens.']);
+  const sameMaps = d.maps.length === tpl.maps.length && d.maps.every((m, i) => String(m.donor) === tpl.maps[i].id);
+  if (!sameMaps) out.errs.push(['STAGE_MAPS', `Game stages keep the template’s ${tpl.maps.length} map${tpl.maps.length === 1 ? '' : 's'} in order. Use Keep only game edits to put them back.`]);
+  else d.maps.forEach((m, i) => { const r = mapMoves(tpl.maps[i].chips, m.chips, 'Map ' + (i + 1)); out.maps.push(r.moves); out.moves += r.moves.length; out.errs.push(...r.errs); out.lost.push(...r.lost); });
+  if (mission && String(mission.id) === String(d.base)) { const f = draftFromMission(mission); const n = Math.min(f.maps.length, d.maps.length);
+    let en = 0, bg = 0; for (let i = 0; i < n; i++) { if (strip(f.maps[i].encounters) !== strip(d.maps[i].encounters)) en++; if (String(f.maps[i].bg) !== String(d.maps[i].bg)) bg++; }
+    if (en) out.lost.push(`Enemies or waves changed on ${en} map${en === 1 ? '' : 's'}; the game uses the template's enemies.`);
+    if (bg) out.lost.push(`Background changed on ${bg} map${bg === 1 ? '' : 's'}; the game uses the template's backgrounds.`);
+    if ((d.stamina ?? 0) !== (f.stamina ?? 0)) out.lost.push(`Stamina changed; the game uses the template's ${f.stamina}.`); }
+  return out;
+}
+function gameStage(d, chk) {
+  return { format: 'ForgeStage', schema: 2, profile: PROFILE, localId: d.localId, name: (d.name || '').trim(), donorMissionId: String(d.base),
+    enabled: d.enabled !== false, maps: chk.tpl.maps.map((m, i) => ({ donorMapId: m.id, markers: chk.maps[i] || [] })) };
+}
+// put moves onto a fresh copy of the template, skipping any that don't fit it
+function applyMoves(mission, spec) {
+  const d = draftFromMission(mission), tpl = tplOf(mission.id); let skipped = 0;
+  d.maps.forEach((m, i) => { const mv = (spec[i] || []).filter(v => v && isMark(v.chip) && Array.isArray(v.grid)); const O = tpl.maps[i].chips;
+    const ok = mv.filter(v => posOf(O, v.chip).length === 1 && v.grid.every(n => Number.isInteger(n) && n >= 0 && n <= 10)); skipped += mv.length - ok.length;
+    const G = O.map(r => r.slice()); for (const v of ok) { const [x, y] = posOf(O, v.chip)[0]; G[y][x] = 1; }
+    const used = new Set(), keep = [];
+    for (const v of ok) { const k = v.grid.join(','); if (G[v.grid[1]][v.grid[0]] === 1 && !used.has(k)) { used.add(k); keep.push(v); } else skipped++; }
+    for (const v of ok) if (!keep.includes(v)) { const [x, y] = posOf(O, v.chip)[0]; G[y][x] = v.chip; }
+    for (const v of keep) G[v.grid[1]][v.grid[0]] = v.chip; m.chips = G; });
+  return { d, skipped };
+}
+function keepGameEdits() {
+  const d = st.draft, tpl = tplOf(d.base); if (!tpl || !st.mission) return;
+  const spec = tpl.maps.map((t, i) => { const m = d.maps.find((x, j) => String(x.donor) === t.id && j === i) || d.maps.find(x => String(x.donor) === t.id);
+    return m ? mapMoves(t.chips, m.chips, '').moves : []; });
+  const { d: nd } = applyMoves(st.mission, spec); nd.name = d.name; nd.localId = d.localId; nd.enabled = d.enabled;
+  st.draft = nd; st.mapI = Math.min(st.mapI, nd.maps.length - 1); st.encI = 0; st.waveI = 0; st.sel = null; st.floor = false; changed(); toast('Kept your name and marker moves; everything else is back to the template.');
+}
+async function importGameStage(j) {
+  if (j.profile !== PROFILE) return { err: 'That stage file uses a profile this page doesn’t know.' };
+  const donor = String(j.donorMissionId || ''); const tpl = tplOf(donor); if (!tpl) return { err: `Mission ${donor || '?'} isn’t one of the game’s stage templates.` };
+  let mission; try { mission = await getData(CAT + 'm/' + donor + '.json.gz'); } catch (e) { return { err: 'Couldn’t load that stage’s template mission.' }; }
+  const spec = tpl.maps.map(t => { const m = (j.maps || []).find(x => String(x.donorMapId) === t.id); return m ? m.markers || [] : []; });
+  const { d, skipped } = applyMoves(mission, spec);
+  d.name = typeof j.name === 'string' ? j.name : d.name; d.enabled = j.enabled !== false;
+  d.localId = typeof j.localId === 'string' && ID_RE.test(j.localId) && j.localId.includes(':') ? j.localId : newId();
+  const key = 'm' + donor; rememberId(key, d.localId);
+  try { const s = readStore(); s.drafts[key] = d; s.last = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { return { err: 'This browser wouldn’t keep the stage (private browsing or storage full).' }; }
+  return { donor, skipped };
+}
+async function importPack(buf, fname) {
+  let files; try { files = await unzip(buf); } catch (e) { toast('That zip couldn’t be read.'); return; }
+  const man = files['forge-mod.json']; let list = [];
+  try { const m = JSON.parse(new TextDecoder().decode(man)); if (m.format === 'ForgeStagePack') list = m.stages || []; } catch (e) {}
+  if (!list.length) list = Object.keys(files).filter(n => /^stages\/[^/]+\.json$/.test(n));
+  let ok = 0, first = null; const bad = [];
+  for (const n of list) { try { const j = JSON.parse(new TextDecoder().decode(files[n])); if (j.format !== 'ForgeStage' || j.schema !== 2) throw new Error('x');
+      const r = await importGameStage(j); if (r.err) bad.push(r.err); else { ok++; first = first || r.donor; } } catch (e) { bad.push(n + ' isn’t a stage file.'); } }
+  if (first) await openMission(first);
+  toast(ok ? `Opened ${ok} stage${ok === 1 ? '' : 's'} from ${fname}.` + (bad.length ? ` ${bad.length} couldn’t be opened.` : '') : 'No stages in that zip could be opened.');
+}
+
+// zip files (stored, no compression) for game packs, and reading zips back
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function zipBlob(files) {
+  const enc = new TextEncoder(), parts = [], cen = []; let off = 0; const now = new Date();
+  const tm = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1), dt = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+  for (const f of files) { const nm = enc.encode(f.name), crc = crc32(f.data), n = f.data.length;
+    const h = new DataView(new ArrayBuffer(30)); h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(10, tm, true); h.setUint16(12, dt, true); h.setUint32(14, crc, true); h.setUint32(18, n, true); h.setUint32(22, n, true); h.setUint16(26, nm.length, true);
+    parts.push(new Uint8Array(h.buffer), nm, f.data);
+    const c = new DataView(new ArrayBuffer(46)); c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(12, tm, true); c.setUint16(14, dt, true); c.setUint32(16, crc, true); c.setUint32(20, n, true); c.setUint32(24, n, true); c.setUint16(28, nm.length, true); c.setUint32(42, off, true);
+    cen.push(new Uint8Array(c.buffer), nm); off += 30 + nm.length + n; }
+  const size = cen.reduce((a, b) => a + b.length, 0); const e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, size, true); e.setUint32(16, off, true);
+  return new Blob([...parts, ...cen, new Uint8Array(e.buffer)], { type: 'application/zip' });
+}
+async function unzip(buf) {
+  const v = new DataView(buf.buffer, buf.byteOffset, buf.byteLength); let e = -1;
+  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65557); i--) if (v.getUint32(i, true) === 0x06054b50) { e = i; break; }
+  if (e < 0) throw new Error('zip'); const n = v.getUint16(e + 10, true); let p = v.getUint32(e + 16, true); const out = {};
+  for (let k = 0; k < n; k++) { if (v.getUint32(p, true) !== 0x02014b50) throw new Error('zip');
+    const meth = v.getUint16(p + 10, true), csz = v.getUint32(p + 20, true), nl = v.getUint16(p + 28, true), xl = v.getUint16(p + 30, true), cl = v.getUint16(p + 32, true), lo = v.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(buf.subarray(p + 46, p + 46 + nl)); p += 46 + nl + xl + cl;
+    if (name.endsWith('/') || name.startsWith('__MACOSX/')) continue;
+    const ds = lo + 30 + v.getUint16(lo + 26, true) + v.getUint16(lo + 28, true), raw = buf.subarray(ds, ds + csz);
+    if (meth === 0) out[name] = raw; else if (meth === 8) out[name] = new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer()); }
+  return out;
+}
+function packZip(stages) { // [{stage}] -> zip blob with forge-mod.json and stages/<name>.json
+  const enc = new TextEncoder(), names = new Set(), files = [];
+  for (const s of stages) { let base = 'stages/' + slug(s.name), nm = base + '.json', i = 2; while (names.has(nm)) nm = base + '-' + (i++) + '.json'; names.add(nm);
+    files.push({ name: nm, data: enc.encode(JSON.stringify(s, null, 1)) }); }
+  const man = { format: 'ForgeStagePack', schema: 1, stages: files.map(f => f.name) };
+  return zipBlob([{ name: 'forge-mod.json', data: enc.encode(JSON.stringify(man, null, 1)) }, ...files]);
+}
+
+// the In the game card
+const unitName = id => (APP && APP.units[String(id)]) || 'Unit ' + id;
+function li(cls, text, code) { const l = document.createElement('li'); l.className = cls; if (code) { const c = document.createElement('code'); c.textContent = code; l.append(c); } l.append(text); return l; }
+function renderGame() {
+  const d = st.draft; if (!d) return; const tpl = tplOf(d.base);
+  $('gameNo').hidden = !!tpl; $('gameYes').hidden = !tpl;
+  const lock = gm();
+  for (const id of ['palCard']) $(id).classList.toggle('game-hide', lock);
+  for (const id of ['bgBtn', 'floorBtn', 'addMapBtn', 'addWaveBtn', 'stStamina']) $(id).disabled = lock || (id === 'delMapBtn' && d.maps.length < 2);
+  $('delMapBtn').disabled = lock || d.maps.length < 2;
+  for (const el of $('selCard').querySelectorAll('input,select,button')) el.disabled = lock;
+  $('fieldHint').textContent = st.floor ? 'Tap or drag over spots to add them to the field or take them off. Spots with markers stay as they are.' : lock
+    ? 'Game edits only: drag your team’s start spots (blue) and the enemy entry points (orange). Dragging an enemy moves its entry point. Enemies, waves and the field come from the template.'
+    : 'Drag an enemy or a start spot to move it. Drag empty space to pan, scroll or pinch to zoom. To add an enemy, drag it from the list on the right, or tap Add and then tap a spot.';
+  const pill = $('gamePill');
+  if (!tpl) { pill.className = 'pill'; pill.textContent = 'Draft only';
+    $('gameNoText').textContent = !APP ? 'The list of game-ready missions didn’t load, so this page can’t check stages for the game right now. Reload to try again.'
+      : (st.mission ? 'This mission isn’t a game template yet, so the stage stays a draft here. ' : 'Blank stages are drafts for now. ') + `Start from one of the ${Object.keys(APP.donors).length} game-ready Emergency missions to make a stage the app can install.`;
+    return; }
+  $('gameOnlyBtn').setAttribute('aria-pressed', String(st.gameOnly));
+  if (document.activeElement !== $('gName')) $('gName').value = d.name || '';
+  if (document.activeElement !== $('gId')) $('gId').value = d.localId || '';
+  $('gOn').value = d.enabled === false ? '0' : '1';
+  const chk = gameCheck(d, st.mission); const box = $('gameIssues'); box.replaceChildren();
+  for (const [code, t] of chk.errs) box.append(li('err', t, code));
+  chk.maps.forEach((mv, i) => { if (mv.length) box.append(li('move', `Map ${i + 1}: moves ${mv.map(v => markName(v.chip)).join(', ')}.`)); });
+  if (!chk.errs.length && !chk.moves) box.append(li('', 'No moves yet: the stage plays like the template. Drag start spots or entry points to change where everyone begins.'));
+  for (const t of chk.lost) box.append(li('lost', 'Not in the game: ' + t));
+  $('keepGameBtn').hidden = !chk.lost.length && !chk.errs.some(e => e[0] === 'STAGE_MAPS' || e[0] === 'STAGE_OCCUPIED');
+  pill.className = 'pill ' + (chk.errs.length ? 'no' : 'ok'); pill.textContent = chk.errs.length ? 'Fix to save' : 'Ready';
+  $('gameSave').disabled = !!chk.errs.length;
+  const r = tpl.r, rw = $('gameRewards'); rw.replaceChildren();
+  const add = (k, v) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; rw.append(dt, dd); };
+  const obj = r.objectives || [], objs = (st.mission && st.mission.objectives) || [];
+  add('Stamina', String(r.stamina)); add('EXP', `${(r.exp || 0).toLocaleString()} · units ${(r.unitExp || 0).toLocaleString()}`);
+  add('Ryo', r.coins[0] === r.coins[1] ? (r.coins[0] || 0).toLocaleString() : `${(r.coins[0] || 0).toLocaleString()}–${(r.coins[1] || 0).toLocaleString()}`);
+  add('First clear', `${r.firstClear} Ninja Pearl${r.firstClear === 1 ? '' : 's'}`);
+  if (obj.length) add('Objectives', obj.map((p, i) => (objs[i] ? tagless(objs[i]) + ' ' : 'Objective ' + (i + 1) + ' ') + `(${p} pearl${p === 1 ? '' : 's'})`).join(' · '));
+  if (r.drops.length) add('Can drop', r.drops.map(unitName).join(', '));
+}
+$('gameOnlyBtn').onclick = () => { st.gameOnly = !st.gameOnly; try { localStorage.setItem('bf-stages-gameonly', st.gameOnly ? '1' : '0'); } catch (e) {} st.floor = false; st.placing = null; renderRail(); draw(); };
+$('keepGameBtn').onclick = keepGameEdits;
+$('gameFind').onclick = () => { st.readyOnly = true; $('readyBtn').setAttribute('aria-pressed', 'true'); $('mSearch').focus(); };
+$('readyBtn').onclick = () => { st.readyOnly = !st.readyOnly; $('readyBtn').setAttribute('aria-pressed', String(st.readyOnly)); $('mSearch').focus(); };
+$('gName').addEventListener('input', e => { st.draft.name = e.target.value; save(); $('mName').textContent = e.target.value || 'Untitled stage'; if (document.activeElement !== $('stName')) $('stName').value = e.target.value; renderGame(); });
+$('gId').addEventListener('change', e => { const v = e.target.value.trim(); st.draft.localId = v; rememberId(st.key, v); save(); renderGame(); });
+$('gOn').onchange = e => { st.draft.enabled = e.target.value === '1'; save(); renderGame(); };
+$('gameSave').onclick = () => { const chk = gameCheck(st.draft, st.mission); if (chk.errs.length) { toast(chk.errs[0][1]); return; }
+  saveBlob(new Blob([JSON.stringify(gameStage(st.draft, chk), null, 1)], { type: 'application/json' }), 'stage-' + slug(st.draft.name) + '.json'); };
+async function packRows() {
+  const s = readStore(); if (st.draft && st.key) s.drafts[st.key] = st.draft;
+  const keys = Object.keys(s.drafts).filter(k => /^m\d+$/.test(k) && tplOf(k.slice(1)));
+  const rows = [];
+  for (const k of keys) { const d = s.drafts[k]; ensureId(d, k); let m = null; try { m = await getData(CAT + 'm/' + k.slice(1) + '.json.gz'); } catch (e) {}
+    const chk = gameCheck(d, m); rows.push({ k, d, chk }); }
+  const seen = {}; for (const r of rows) (seen[r.d.localId] = seen[r.d.localId] || []).push(r);
+  for (const list of Object.values(seen)) if (list.length > 1) for (const r of list) r.chk.errs.push(['STAGE_LEDGER', 'Another stage here has the same stage ID. Give one of them a new ID under Stage ID.']);
+  rows.sort((a, b) => (a.k === st.key ? -1 : b.k === st.key ? 1 : 0) || (a.d.name || '').localeCompare(b.d.name || ''));
+  return rows;
+}
+let packCache = [];
+function packCount() { const n = [...$('packList').querySelectorAll('input:checked')].length; $('packCount').textContent = `${n} of ${MAX_PACK} stage slots`; $('packSave').disabled = !n || n > MAX_PACK; if (n > MAX_PACK) $('packCount').textContent += ' — too many for one pack'; }
+$('packBtn').onclick = async () => {
+  packCache = await packRows(); const list = $('packList'); list.replaceChildren();
+  for (const [i, r] of packCache.entries()) { const l = document.createElement('label'); const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.i = i; cb.disabled = !!r.chk.errs.length; cb.checked = !r.chk.errs.length && (r.k === st.key || r.chk.moves > 0);
+    cb.onchange = packCount; const t = document.createElement('div'); const b = document.createElement('b'); b.textContent = (r.d.name || '').trim() || 'Untitled stage';
+    const sm = document.createElement('small'); const mi = st.idx.missions.find(m => m.id === r.k.slice(1)); sm.textContent = `From ${mi && mi.name ? mi.name : 'mission ' + r.k.slice(1)} · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'}${r.d.enabled === false ? ' · hidden in the game' : ''}`;
+    t.append(b, sm); for (const [code, e] of r.chk.errs) { const x = document.createElement('small'); x.className = 'bad'; x.textContent = code + ': ' + e; t.append(x); }
+    l.append(cb, t); list.append(l); }
+  if (!packCache.length) { const p = document.createElement('p'); p.className = 'hint'; p.textContent = 'No game-ready stages yet. Open a game-ready mission and move a marker.'; list.append(p); }
+  packCount();
+  const dd = $('packDlg'); try { const fe = window.frameElement; if (fe) { dd.style.margin = '0 auto'; dd.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; dd.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {}
+  dd.showModal();
+};
+$('packClose').onclick = () => $('packDlg').close();
+$('packSave').onclick = async () => {
+  const pick = [...$('packList').querySelectorAll('input:checked')].map(c => packCache[+c.dataset.i]); if (!pick.length || pick.length > MAX_PACK) return;
+  const blob = packZip(pick.map(r => gameStage(r.d, r.chk)));
+  if (blob.size > 2 * 1024 * 1024) { toast('That pack is over 2 MB. Save fewer stages at a time.'); return; }
+  if (await saveBlob(blob, 'Forge-stages.zip')) $('packDlg').close();
+};
+
 // ---- loop and start
 function tick(now) { const dt = st.last ? Math.min(0.1, (now - st.last) / 1000) : 0; st.last = now; if (st.anim && !document.hidden) { st.t += dt; if (st.draft) draw(); } requestAnimationFrame(tick); }
 async function init() {
   if (!('DecompressionStream' in window)) throw new Error('old browser');
-  const [idx, enemies] = await Promise.all([getData(CAT + 'index.json.gz'), getData(CAT + 'enemies.json.gz')]);
-  st.idx = idx; st.enemies = enemies;
-  $('meta').textContent = `${idx.counts.missions} missions · ${Object.keys(enemies).length.toLocaleString()} enemies`;
+  const [idx, enemies, app] = await Promise.all([getData(CAT + 'index.json.gz'), getData(CAT + 'enemies.json.gz'), getData(CAT + 'app.json.gz').catch(() => null)]);
+  st.idx = idx; st.enemies = enemies; APP = app;
+  try { const g = localStorage.getItem('bf-stages-gameonly'); if (g !== null) st.gameOnly = g === '1'; } catch (e) {}
+  $('meta').textContent = `${idx.counts.missions} missions · ${APP ? Object.keys(APP.donors).length + ' game-ready · ' : ''}${Object.keys(enemies).length.toLocaleString()} enemies`;
   renderPal();
   let q = null; try { q = new URLSearchParams(location.search); } catch (e) {}
   const s = readStore(); const want = q && q.get('mission');
   if (want && idx.missions.some(m => m.id === want)) await openMission(want);
-  else if (s.last && s.drafts[s.last] && s.last.startsWith('blank-')) { st.key = s.last; st.draft = s.drafts[s.last]; st.edited = true; syncBgCtl(); renderRail(); draw(); }
-  else await openMission(s.last && s.last.startsWith('m') && s.drafts[s.last] ? s.last.slice(1) : '100101');
+  else if (s.last && s.drafts[s.last] && s.last.startsWith('blank-')) { st.key = s.last; st.draft = s.drafts[s.last]; ensureId(st.draft, st.key); st.edited = true; syncBgCtl(); renderRail(); draw(); }
+  else await openMission(s.last && s.last.startsWith('m') && s.drafts[s.last] ? s.last.slice(1) : APP && APP.donors['300301'] ? '300301' : '100101');
   requestAnimationFrame(tick);
 }
-try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, exportStage, allEnemies, cellsOf }; } catch (e) {}
+try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, exportStage, allEnemies, cellsOf, gameCheck, gameStage, packZip, unzip, importGameStage, get APP() { return APP; } }; } catch (e) {}
 init().catch(err => { $('mName').textContent = err && err.message === 'old browser' ? 'This browser is too old for the stage catalog. Update it and reload.' : 'Couldn’t load the stage catalog. Reload the page to try again.'; console.error(err); });
 })();
 </script>
