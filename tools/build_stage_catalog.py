@@ -94,7 +94,7 @@ def main():
         save('m/' + mid + '.json.gz', rec)
         if maps:
             out_missions.append({'id': mid, 'name': rec['name'], 'stageId': sid, 'stage': rec['stage'], 'cat': rec['cat'],
-                                 'stamina': rec['stamina'], 'maps': len(maps)})
+                                 'stamina': rec['stamina'], 'maps': len(maps), 'bg': maps[0]['bg']})
     out_missions.sort(key=lambda r: (r['stageId'] is None, int(r['stageId'] or 0), int(r['id'])))
     save('index.json.gz', {'schema': 1, 'missions': out_missions, 'backgrounds': bgs,
                            'counts': {'missions': len(out_missions), 'enemies': len(enemies), 'backgrounds': len(bgs)}})

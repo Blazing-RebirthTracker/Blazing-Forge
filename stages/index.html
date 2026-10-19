@@ -137,6 +137,103 @@ ol.steps{margin:0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-heigh
 .packlist small{display:block;color:var(--tx2);font-size:12px}
 .packlist .bad{color:var(--bad)}
 .game-hide{display:none!important}
+.seg.mode button{min-height:36px;padding:7px 14px}
+.seg.mode button[aria-pressed="true"]{background:var(--ember);color:#1B0D05}
+.board{display:flex;flex-direction:column;gap:12px}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;align-items:start}
+.slot{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.slot.empty{border-style:dashed;background:transparent}
+.slot.on{border-color:var(--ember)}
+.slot .thumb{width:100%;aspect-ratio:16/9;object-fit:contain;background:#0b0d12;border-radius:9px;display:block}
+.slot .sh{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.slot .sn{font:700 11px var(--f-mono);color:var(--tx3)}
+.slot input.nm{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:6px 9px;font-weight:700;min-height:34px;width:100%}
+.slot small{color:var(--tx2);font-size:12px;line-height:1.4}
+.slot small.bad{color:var(--bad)}
+.slot .acts{display:flex;gap:6px;flex-wrap:wrap}
+.toggle{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--tx);cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--ember)}
+.form label.toggle{flex-direction:row;align-items:center;color:var(--tx);font-size:13px}
+.form .toggle input{width:18px;height:18px;min-height:0;padding:0;flex:none}
+.tpllist{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;max-height:60vh;overflow:auto;margin-top:10px}
+.tpllist button{display:flex;flex-direction:column;gap:4px;text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px;color:var(--tx)}
+.tpllist img{width:100%;aspect-ratio:16/9;object-fit:contain;background:#0b0d12;border-radius:7px}
+.tpllist small{color:var(--tx2);font-size:12px}
+.xrow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;align-items:start;background:var(--panel2);border-radius:10px;padding:9px 11px}
+.xrow img{width:72px;aspect-ratio:16/9;object-fit:contain;background:#0b0d12;border-radius:6px}
+.xrow b{font-size:13.5px}
+.xrow small{display:block;color:var(--tx2);font-size:12px}
+.xrow small.bad{color:var(--bad)}
+.drop-list .th{width:56px;height:32px;object-fit:contain;background:#0b0d12;border-radius:5px;flex:none}
+body.mode-custom .picker #mSearch,body.mode-custom #readyBtn,body.mode-custom #blankBtn,body.mode-custom .picker .search{display:none}
+body.mode-custom.no-stage .main,body.mode-custom.no-stage section.bar[aria-label="Mission"]{display:none!important}
+body.sbx-on #board{display:none!important}
+body.mode-custom:not(.no-stage) #boardBody{display:none}
+body.sbx-on #betaNote,body.sbx-on section.bar[aria-label="Mission"],body.sbx-on .main{display:none!important}
+.sbx{display:flex;flex-direction:column;gap:12px}
+.note.gate{border-left-color:var(--sky)}
+.status.msg{background:var(--leaf-soft);color:var(--tx);border-radius:10px;padding:8px 12px}
+.status.msg.bad{background:rgba(255,138,122,.14);color:var(--tx);border-left:3px solid var(--bad)}
+.qrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.qcard{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:8px;color:var(--tx);min-width:0}
+.qcard[aria-selected="true"]{border-color:var(--ember);background:var(--ember-soft)}
+.qcard img{width:120px;height:56px;object-fit:contain;background:#0b0d12;border-radius:8px;flex:none}
+.qcard .qt{display:flex;flex-direction:column;min-width:0}
+.qcard small{color:var(--tx2);font-size:12px}
+.strip{gap:8px}
+.go{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--tx2)}
+.go input{width:72px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:6px 8px;min-height:34px}
+.mstrip{overflow-x:auto;overflow-y:hidden;position:relative;height:78px;border-radius:10px;background:var(--ink)}
+.mstrip-in{position:relative;height:100%}
+.mchip{position:absolute;top:6px;width:116px;height:64px;border:1px solid var(--line);background:var(--panel2);border-radius:10px;color:var(--tx);text-align:left;padding:6px 8px;display:flex;flex-direction:column;gap:1px}
+.mchip.on{border-color:var(--ember);background:var(--ember-soft)}
+.mchip .mn{font-weight:800;font-size:13px}
+.mchip .ms{font-size:11px;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sxmain{display:grid;grid-template-columns:300px minmax(0,1fr) 370px;gap:14px;align-items:start}
+@media (max-width:1240px){.sxmain{grid-template-columns:minmax(0,1fr) 360px}.sxpal{grid-column:1/-1;order:3}}
+@media (max-width:960px){.sxmain{grid-template-columns:minmax(0,1fr)}.sxpal{order:3}}
+.sxpal .tabs button[aria-selected="true"],.sxins .tabs button[aria-selected="true"]{border-color:rgba(255,122,61,.55);background:var(--ember-soft);color:var(--ember-tx)}
+.pickbar{display:flex;gap:8px;align-items:center;justify-content:space-between;background:var(--ember-soft);border-radius:10px;padding:8px 10px;font-size:12.5px}
+.plist2{display:flex;flex-direction:column;gap:6px;max-height:70vh;overflow:auto}
+.pcard{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;align-items:start;background:var(--panel2);border-radius:10px;padding:8px}
+.pcard>img{width:64px;height:64px;object-fit:contain;background:#0b0d12;border-radius:8px}
+.pcard.wide,.pcard.art{grid-template-columns:minmax(0,1fr)}
+.pcard.wide>img,.pcard.art>img{width:100%;height:auto;max-height:180px;aspect-ratio:auto}
+.pcard .pb{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pcard b{font-size:13.5px}
+.pcard small{color:var(--tx2);font-size:12px;line-height:1.4}
+.pcard small.warn,.hint.warn{color:var(--ember-tx)}
+.pcard.reserved{opacity:.6}
+.adv summary{cursor:pointer;font-size:12px;color:var(--tx3);font-weight:700}
+.adv pre{white-space:pre-wrap;word-break:break-word;font:11px/1.45 var(--f-mono);color:var(--tx2);max-height:320px;overflow:auto;background:var(--ink);border-radius:8px;padding:8px}
+.chip.sm,.btn.sm{min-height:30px;padding:4px 10px;font-size:12px}
+.ins{display:flex;flex-direction:column;gap:10px}
+.isec{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.isec:first-child{border-top:0;padding-top:0}
+.isec h4{margin:0;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3)}
+.ihead{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;align-items:center}
+.ihead img{width:72px;height:72px;object-fit:contain;background:#0b0d12;border-radius:10px}
+.ihead b{display:block;font-size:15px}
+.ihead small{display:block;color:var(--tx2);font-size:12px}
+.ihead small.warn{color:var(--ember-tx)}
+.iline{display:inline-grid;grid-template-columns:36px minmax(0,1fr);gap:8px;align-items:center}
+.iline img{width:36px;height:36px;object-fit:contain;background:#0b0d12;border-radius:6px}
+.iline small{display:block;color:var(--tx2);font-size:11.5px}
+.rcard{background:var(--panel2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.rcard .form input{background:var(--ink)}
+.rhead b{display:block}
+.rhead small{color:var(--tx2);font-size:12px}
+.form.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:420px){.form.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pair{display:flex;gap:6px}
+.pct{font-size:11.5px;color:var(--tx2)}
+.pct.bad{color:var(--bad)}
+.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.linkish{border:0;background:transparent;color:var(--tx);text-align:left;padding:5px 6px;border-radius:7px;font-size:12.5px;width:100%}
+.linkish:hover:not(:disabled){background:var(--panel2)}
+.linkish:disabled{color:var(--tx3);cursor:default}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--panel2);border-radius:10px;padding:9px 11px;margin-bottom:6px}
+.prow small{display:block;color:var(--tx2);font-size:12px}
 #libMsg{background:var(--leaf-soft);color:var(--tx);border-radius:9px;padding:8px 11px;margin:6px 0 0}
 .libbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 8px}
 dialog.lib .packlist{max-height:52vh}
@@ -166,13 +263,36 @@ dialog.lib .packlist{max-height:52vh}
       <h1>Forge Stages</h1><span class="beta">beta</span>
       <small id="meta"></small>
     </div>
+    <div class="seg mode" id="modeSeg" role="group" aria-label="What you're editing"><button type="button" data-mode="game" aria-pressed="false">In-game stages</button><button type="button" data-mode="custom" aria-pressed="false">Custom stages</button></div>
   </header>
-  <div class="note" id="betaNote">Stages work in the game. Start from a <b>game-ready</b> Emergency mission, move your team's start spots and the enemy entry points, and name it. Then open <b>My stages &amp; packs</b> to export a pack of up to 20 stages for the app's Import stages, or to import a pack someone shared. The app adds each stage as its own Emergency mission with the template's enemies and rewards. Other edits (enemies, waves, the field shape, backgrounds) stay as drafts here for now.</div>
+  <div class="note" id="betaNote"></div>
   <section class="bar" aria-label="Mission">
     <div class="now"><span class="t" id="mName">Loading missions…</span><span class="s" id="mSub"></span></div>
     <div class="picker">
       <div class="search"><input type="search" id="mSearch" placeholder="Start from a mission: search by name, stage or ID" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="mList" aria-label="Search missions"><div class="drop-list" id="mList" role="listbox" hidden></div></div>
-      <button class="chip" id="readyBtn" aria-pressed="false" type="button">Game-ready only</button><button class="btn ghost" id="blankBtn" type="button">Blank stage</button><button class="btn primary" id="libBtn" type="button">My stages &amp; packs</button>
+      <button class="chip" id="readyBtn" aria-pressed="false" type="button">Game-ready only</button><button class="btn ghost" id="blankBtn" type="button">Blank stage</button><button class="btn ghost" id="backBtn" type="button" hidden>&larr; All custom stages</button>
+    </div>
+  </section>
+  <section class="board" id="board" aria-label="Custom stages" hidden>
+    <div class="bar">
+      <div class="now"><span class="t">Custom stages</span><span class="s" id="bdSub"></span></div>
+      <div class="row">
+        <button class="btn primary" id="bdExport" type="button">Export for the game&hellip;</button>
+        <button class="btn ghost" id="bdSave" type="button">Save editable project</button>
+        <label class="btn ghost" for="bdOpen" tabindex="0" id="bdOpenLbl">Open or import&hellip;</label><input type="file" id="bdOpen" accept=".zip,.json,application/zip,application/json" multiple class="hidden-file">
+      </div>
+    </div>
+    <div class="status msg" id="bdMsg" role="status" aria-live="polite" hidden></div>
+    <div class="board" id="boardBody">
+    <div class="slots" id="slotGrid"></div>
+    <div class="card" id="oldCard" hidden><span class="lbl">Stages from before slots</span><p class="hint">These were made before custom slots. Move one into a slot to keep editing and exporting it; it keeps its stage ID, so a copy already in the game is updated, not duplicated.</p><div id="oldList" class="packlist"></div></div>
+    <div class="card"><span class="lbl">Reserved quests</span>
+      <p class="hint">Stage IDs 3820&ndash;3822 belong to built-in event quests. They never use the 20 custom slots. Stage projects open here as a visual sandbox to edit and save; installing their edits needs a future app update.</p>
+      <div id="resList"></div></div>
+    <details class="card more"><summary>Slot ledger from a device</summary>
+      <p class="hint">Slots here are planned. The app gives each new stage ID the first free slot when it imports, so planned and real slots match on a device with no other custom stages if you import in slot order. To see the real assignment, load the app's slot ledger (.json).</p>
+      <div class="row"><label class="btn ghost" for="ledgerFile" tabindex="0" id="ledgerLbl">Load slot ledger</label><input type="file" id="ledgerFile" accept=".json,application/json" class="hidden-file"><button class="chip" id="ledgerClear" type="button">Forget ledger</button><span class="status" id="ledgerInfo"></span></div>
+    </details>
     </div>
   </section>
   <div class="main">
@@ -187,6 +307,12 @@ dialog.lib .packlist{max-height:52vh}
       <p class="hint" id="fieldHint">Drag an enemy or a start spot to move it. Drag empty space to pan, scroll or pinch to zoom. To add an enemy, drag it from the list on the right, or tap Add and then tap a spot.</p>
     </section>
     <aside class="rail">
+      <div class="card" id="copyCard" hidden>
+        <span class="lbl">Original mission</span>
+        <p class="status">You're editing the game's own mission as a draft. The app can't replace original stages, so these edits stay here. To put a version in the game, copy it to one of your 20 custom stages.</p>
+        <div class="row"><button class="btn primary" id="copyBtn" type="button">Copy to custom stage</button></div>
+        <p class="hint" id="copyHint"></p>
+      </div>
       <div class="card" id="gameCard">
         <div class="row" style="justify-content:space-between"><span class="lbl">In the game</span><span class="pill" id="gamePill"></span></div>
         <div id="gameNo" hidden style="display:flex;flex-direction:column;gap:10px">
@@ -197,14 +323,15 @@ dialog.lib .packlist{max-height:52vh}
           <div class="row"><button class="chip" id="gameOnlyBtn" aria-pressed="true" type="button">Game edits only</button><button class="chip" id="keepGameBtn" type="button">Keep only game edits</button></div>
           <div class="form">
             <label class="wide">Name in the game<input type="text" id="gName" maxlength="96" autocomplete="off"></label>
-            <label>Shows in the game<select id="gOn"><option value="1">Yes</option><option value="0">Hidden</option></select></label>
+            <label class="wide toggle"><input type="checkbox" id="gOn"> Show in game</label>
           </div>
           <ul class="issues" id="gameIssues"></ul>
-          <div class="row"><button class="btn primary" id="gameSave" type="button">Save for the game</button><button class="btn ghost" id="packBtn" type="button">Packs&hellip;</button></div>
+          <div class="row"><button class="btn primary" id="gameSave" type="button">Export for the game&hellip;</button></div>
+          <p class="hint" id="slotLine"></p>
           <details class="more"><summary>Rewards from the template</summary><dl class="rw" id="gameRewards"></dl><p class="hint" style="margin-top:8px">Rewards, enemies and drop chances come from the template mission and can't be changed yet. First clear has its own reward group, so it pays out even if you've cleared the original.</p></details>
           <details class="more"><summary>How to put it in the game</summary>
             <ol class="steps">
-              <li>Save for the game (one stage), or open My stages &amp; packs and export a pack (up to 20 stages in one zip).</li>
+              <li>Press Export for the game. The preview lists exactly which custom stages go in the pack; only stages with Show in game on are included.</li>
               <li>Get the file onto your phone, for example in Files &rsaquo; On My iPhone &rsaquo; Blazing:Rebirth.</li>
               <li>In the app, open Forge Studio &rsaquo; Stages, choose <b>Import stages</b> and pick the file.</li>
               <li>Build the mod, close the game completely and open it again.</li>
@@ -276,19 +403,68 @@ dialog.lib .packlist{max-height:52vh}
       </div>
     </aside>
   </div>
+  <section class="sbx" id="sbx" hidden aria-label="Stage project">
+    <div class="bar">
+      <div class="now"><span class="t" id="sxName">Stage project</span><span class="s" id="sxSub"></span></div>
+      <div class="row">
+        <button class="btn ghost" id="sxUndo" type="button" aria-keyshortcuts="Control+Z Meta+Z">Undo</button>
+        <button class="btn ghost" id="sxRedo" type="button" aria-keyshortcuts="Control+Shift+Z Control+Y">Redo</button>
+        <button class="btn primary" id="sxSave" type="button">Save editable project</button>
+        <button class="btn ghost" id="sxHandoff" type="button">Export developer handoff</button>
+        <button class="btn ghost" id="sxClose" type="button">Close project</button>
+      </div>
+    </div>
+    <div class="note gate"><b>Game export needs an updated app.</b> <span id="sxGameWhy"></span> You can edit and save this project now, and export a developer handoff for the game side. <button class="chip sm" id="sxGame" type="button">Why can't I export to the game?</button></div>
+    <div class="status msg" id="sxMsg" role="status" aria-live="polite" hidden></div>
+    <div class="qrow" id="sxQuests" role="tablist" aria-label="Quests in this project"></div>
+    <div class="card strip">
+      <div class="row" style="justify-content:space-between">
+        <span class="status" id="sxWhere"></span>
+        <div class="row"><button class="chip" id="sxPrev" type="button" aria-keyshortcuts="[">&larr; Previous map</button><button class="chip" id="sxNext" type="button" aria-keyshortcuts="]">Next map &rarr;</button>
+          <label class="go">Go to map <input type="number" id="sxGo" min="1" step="1" inputmode="numeric"></label><button class="chip" id="sxGoBtn" type="button">Go</button></div>
+      </div>
+      <div class="mstrip" id="sxStrip" tabindex="-1"><div class="mstrip-in" id="sxStripIn"></div></div>
+    </div>
+    <div class="sxmain">
+      <aside class="card sxpal" id="sxPal" aria-label="Assets">
+        <div class="tabs" id="sxTabs" role="tablist"><button type="button" role="tab" data-tab="enemies">Enemies</button><button type="button" role="tab" data-tab="backgrounds">Backgrounds</button><button type="button" role="tab" data-tab="rewards">Rewards</button><button type="button" role="tab" data-tab="art">Event art</button></div>
+        <div class="pickbar" id="sxPick" hidden><span>Choosing the item for <b id="sxPickWhat"></b></span><button class="chip sm" id="sxPickCancel" type="button">Cancel</button></div>
+        <input type="search" class="field-in" id="sxPalQ" placeholder="Search by name, type, rarity, element or ID" autocomplete="off" aria-label="Search assets">
+        <div class="plist2" id="sxPalList"></div>
+      </aside>
+      <section class="stagebox" aria-label="Layout preview">
+        <div class="row" style="justify-content:space-between"><span class="lbl">Layout preview</span>
+          <div class="row"><button class="chip" id="sxGrid" type="button" aria-pressed="true">Grid</button><button class="chip" id="sxAnim" type="button" aria-pressed="true">Animate</button><button class="chip" id="sxReset" type="button">Reset this map</button></div></div>
+        <div class="field"><canvas id="sxCv" tabindex="0" aria-label="Layout preview of the selected map. Drag markers or enemies to move them; arrow keys move the selected marker."></canvas>
+          <span class="tag">Layout preview</span>
+          <div class="zoomctl" role="group" aria-label="Zoom"><button id="sxZout" type="button" aria-label="Zoom out">&minus;</button><span id="sxZ">100%</span><button id="sxZin" type="button" aria-label="Zoom in">+</button><button class="txt" id="sxFit" type="button">Fit</button></div>
+        </div>
+        <div class="legend"><span><i style="background:var(--sky)"></i>Your team's start spots</span><span><i style="background:var(--ember)"></i>Enemy entry points</span><span><i style="background:#A6ADBC"></i>Shared entry cells (&#9733;)</span><span><i style="background:rgba(10,12,16,.7)"></i>Off the field</span></div>
+        <p class="hint" id="sxBgNote"></p>
+        <p class="hint">Positions use the game's 11&times;11 map grid; marker (x, y) sits at (x&times;75, y&times;105) in the game's logical field. This is a layout preview, not the phone's camera or a battle simulation. Enemies stand on their feet at each spawn candidate; when an enemy has several, the game picks one.</p>
+      </section>
+      <aside class="card sxins" aria-label="Inspector">
+        <div class="tabs" id="sxInsTabs" role="tablist"><button type="button" role="tab" data-tab="sel">Selected</button><button type="button" role="tab" data-tab="rewards">Rewards</button></div>
+        <div id="sxIns" class="ins"></div>
+      </aside>
+    </div>
+  </section>
 </div>
-<dialog class="bgs lib" id="libDlg" aria-labelledby="libTitle">
-  <div class="row" style="justify-content:space-between"><span class="lbl" id="libTitle">My stages &amp; packs</span><button class="btn ghost" id="libClose" type="button">Close</button></div>
-  <div class="libbar">
-    <label class="btn primary" for="libFile" tabindex="0" id="libImportLbl">Import a pack or stage</label><input type="file" id="libFile" accept=".zip,.json,application/zip,application/json" multiple class="hidden-file">
-    <button class="btn ghost" id="libExport" type="button">Export pack</button>
-    <button class="chip" id="libAll" type="button">Select all ready</button>
-    <button class="chip" id="libNone" type="button">Clear</button>
-  </div>
-  <p class="hint">Every stage in this browser. Tick the ready ones (up to 20) and press Export pack to get one zip for the app's Import stages, or to share. Import takes packs and single stage files, or drop them anywhere on this page.</p>
-  <div class="status" id="libMsg" role="status" aria-live="polite" hidden></div>
-  <div class="packlist" id="libList"></div>
-  <div class="row" style="justify-content:space-between"><span class="status" id="libCount"></span></div>
+<dialog class="bgs lib" id="xDlg" aria-labelledby="xTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="xTitle">Export for the game</span><button class="btn ghost" id="xClose" type="button">Close</button></div>
+  <p class="hint">Only configured custom stages with Show in game on go in the pack, in slot order. The pack holds just the stage files: the app already has each template's maps, enemies and art, and it rejects packs with extra files.</p>
+  <label class="toggle" style="margin:8px 0"><input type="checkbox" id="xHidden"> Also send hidden stages as hidden, so a device that already has them hides them</label>
+  <div class="status msg" id="xMsg" role="status" aria-live="polite" hidden></div>
+  <div class="lbl" style="margin-top:6px">Included</div><div class="packlist" id="xIn"></div>
+  <div class="lbl" style="margin-top:6px">Left out</div><div class="packlist" id="xOut"></div>
+  <p class="hint">Leaving a stage out of a pack doesn't remove it from a device that already has it. To hide one there, turn Show in game off and export with the option above; the app hides it after build and reopen, and its slot stays reserved.</p>
+  <div class="row" style="justify-content:space-between"><span class="status" id="xCount"></span><button class="btn primary" id="xSave" type="button">Save game pack</button></div>
+</dialog>
+<dialog class="bgs lib" id="tplDlg" aria-labelledby="tplTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="tplTitle">Pick a template</span><button class="btn ghost" id="tplClose" type="button">Close</button></div>
+  <p class="hint">Custom stages start from one of the game-ready Emergency missions. Its maps, enemies and rewards come along; you move start spots and entry points.</p>
+  <input type="search" class="field-in" id="tplQ" placeholder="Search game-ready missions" autocomplete="off" aria-label="Search game-ready missions" style="margin-top:8px">
+  <div class="tpllist" id="tplList"></div>
 </dialog>
 <div class="dropzone" id="dropZone" hidden><div>Drop stage packs or stage files to import them</div></div>
 <dialog class="bgs" id="bgDlg" aria-labelledby="bgTitle">
@@ -378,7 +554,7 @@ const imgs = new Map();
 function img(src) { if (!imgs.has(src)) { const p = loadImg(src); imgs.set(src, p); p.catch(() => imgs.delete(src)); } return imgs.get(src); }
 
 const st = { idx: null, enemies: {}, mission: null, draft: null, key: null, mapI: 0, encI: 0, waveI: 0, sel: null,
-  view: { z: 1, x: 0, y: 0 }, floor: false, gameOnly: true, readyOnly: false, ghosts: false, anim: true, grid: true, placing: null, t: 0, last: 0 };
+  view: { z: 1, x: 0, y: 0 }, floor: false, mode: 'game', gameOnly: true, readyOnly: false, ghosts: false, anim: true, grid: true, placing: null, t: 0, last: 0 };
 
 // ---- drafts kept in this browser
 const STORE = 'bf-stages-v1';
@@ -386,11 +562,12 @@ function readStore() { try { return JSON.parse(localStorage.getItem(STORE)) || {
 let saveTimer = 0;
 function save() {
   clearTimeout(saveTimer); st.pending = true;
-  saveTimer = setTimeout(() => { st.pending = false; try { const s = readStore(); s.drafts[st.key] = st.draft; s.last = st.key; localStorage.setItem(STORE, JSON.stringify(s)); }
+  saveTimer = setTimeout(() => { st.pending = false; if (st.mode === 'custom') setTimeout(renderBoard, 0); try { const s = readStore(); mark(); s.drafts[st.key] = st.draft; s.last = st.key; (s.lastByMode = s.lastByMode || {})[st.mode] = st.key; localStorage.setItem(STORE, JSON.stringify(s)); }
     catch (e) { toast('This browser wouldn’t keep your changes (private browsing or storage full). Export the stage file before closing.'); } }, 300);
 }
-function saveNow() { clearTimeout(saveTimer); if (!st.draft || !st.key || !st.pending) return; st.pending = false; try { const s = readStore(); s.drafts[st.key] = st.draft; s.last = st.key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
-function setLast(key) { try { const s = readStore(); s.last = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
+function saveNow() { clearTimeout(saveTimer); if (!st.draft || !st.key || !st.pending) return; st.pending = false; try { const s = readStore(); mark(); s.drafts[st.key] = st.draft; s.last = st.key; (s.lastByMode = s.lastByMode || {})[st.mode] = st.key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
+function mark() { if (st.draft && !st.draft.custom && !/^slot-/.test(st.key || '')) st.draft.inGame = true; } // drafts of the game's own missions
+function setLast(key) { try { const s = readStore(); s.last = key; (s.lastByMode = s.lastByMode || {})[/^slot-/.test(key) ? 'custom' : 'game'] = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
 function dropDraft(key) { try { const s = readStore(); delete s.drafts[key]; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
 function bgFit(key) { try { return (JSON.parse(localStorage.getItem('bf-stages-bgfit')) || {})[key] || { x: 0, y: 0, s: 1 }; } catch (e) { return { x: 0, y: 0, s: 1 }; } }
 function setBgFit(key, v) { try { const a = JSON.parse(localStorage.getItem('bf-stages-bgfit')) || {}; a[key] = v; localStorage.setItem('bf-stages-bgfit', JSON.stringify(a)); } catch (e) {} }
@@ -762,7 +939,8 @@ function renderPal() {
 }
 $('palSearch').addEventListener('input', renderPal);
 function dropList(input, list, items, onPick) {
-  list.replaceChildren(...items.map(([key, title, sub, meta]) => { const b = document.createElement('button'); b.type = 'button';
+  list.replaceChildren(...items.map(([key, title, sub, meta, thumb]) => { const b = document.createElement('button'); b.type = 'button';
+    if (thumb !== undefined) { const im = document.createElement('img'); im.className = 'th'; im.alt = ''; im.loading = 'lazy'; if (thumb) im.src = thumb; b.append(im); }
     const n = document.createElement('span'); n.className = 'nm'; n.textContent = title; const s = document.createElement('small'); s.textContent = sub; n.append(s);
     const m = document.createElement('span'); m.className = 'meta'; m.textContent = meta; b.append(n, m); b.onmousedown = e => e.preventDefault(); b.onclick = () => { list.hidden = true; onPick(key); }; return b; }));
   if (!items.length) { const d = document.createElement('div'); d.className = 'empty'; d.textContent = 'Nothing matches.'; list.append(d); }
@@ -777,7 +955,7 @@ function missionItems(q) {
   const toks = q.toLowerCase().split(/\s+/).filter(Boolean);
   const res = st.idx.missions.filter(m => { if (st.readyOnly && !tplOf(m.id)) return false; const h = (m.name + ' ' + m.stage + ' ' + m.id).toLowerCase(); return toks.every(t => h.includes(t)); });
   if (!st.readyOnly) res.sort((a, b) => !!tplOf(b.id) - !!tplOf(a.id) || 0);
-  return res.slice(0, 150).map(m => [m.id, m.name || 'Mission ' + m.id, m.stage || 'No stage listed', `${tplOf(m.id) ? 'Game-ready · ' : ''}${m.maps} map${m.maps === 1 ? '' : 's'} · ${m.id}`]);
+  return res.slice(0, 150).map(m => [m.id, m.name || 'Mission ' + m.id, m.stage || 'No stage listed', `${tplOf(m.id) ? 'Game-ready · ' : ''}${m.maps} map${m.maps === 1 ? '' : 's'} · ${m.id}`, bgThumb(m.bg)]);
 }
 $('mSearch').addEventListener('focus', () => dropList($('mSearch'), $('mList'), missionItems($('mSearch').value), openMission));
 $('mSearch').addEventListener('input', () => dropList($('mSearch'), $('mList'), missionItems($('mSearch').value), openMission));
@@ -789,7 +967,7 @@ async function openMission(id, opts = {}) { // opts.key opens one of several sta
   const key = opts.key || 'm' + id; const saved = !opts.fresh && readStore().drafts[key];
   saveNow(); st.mission = m; st.key = key; st.draft = saved || draftFromMission(m); st.edited = !!saved; ensureId(st.draft, key); if (saved) setLast(key);
   st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; st.placing = null; st.view = { z: 1, x: 0, y: 0 };
-  try { const q = new URLSearchParams(location.search); q.set('mission', id); history.replaceState(null, '', '?' + q.toString()); } catch (e) {}
+  try { const q = new URLSearchParams(location.search); if (st.mode === 'game') q.set('mission', id); else q.delete('mission'); history.replaceState(null, '', '?' + q.toString()); } catch (e) {}
   syncBgCtl(); renderRail(); draw();
 }
 function openBlank() {
@@ -798,7 +976,9 @@ function openBlank() {
   st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; save(); syncBgCtl(); renderRail(); draw(); toast('Blank stage: one map with your team on the left. Add enemies from the list.');
 }
 $('blankBtn').onclick = openBlank;
-$('resetBtn').onclick = () => { const keepId = st.draft && st.draft.localId, keepName = st.draft && st.draft.name, k = st.key; dropDraft(st.key); if (st.mission) openMission(st.mission.id, { fresh: true, key: k }).then(() => { if (/~/.test(k) && keepId) { st.draft.localId = keepId; st.draft.name = keepName; save(); renderRail(); } }); else openBlank(); toast('Your changes were discarded.'); };
+$('resetBtn').onclick = () => { const keepId = st.draft && st.draft.localId, keepName = st.draft && st.draft.name, keepCustom = st.draft && st.draft.custom, keepOn = st.draft && st.draft.enabled, k = st.key; dropDraft(st.key);
+  if (st.mission) openMission(st.mission.id, { fresh: true, key: k }).then(() => { if ((/~/.test(k) || keepCustom) && keepId) { st.draft.localId = keepId; st.draft.name = keepName; if (keepCustom) { st.draft.custom = keepCustom; st.draft.enabled = keepOn; } save(); renderRail(); renderBoard(); } });
+  else openBlank(); toast(keepCustom ? 'Back to the template. The stage kept its slot, name and stage ID.' : 'Your changes were discarded.'); };
 
 // ---- backgrounds
 $('bgBtn').onclick = () => {
@@ -847,27 +1027,47 @@ $('exportBtn').onclick = () => saveBlob(new Blob([JSON.stringify(exportStage(), 
 // one importer for every way a file comes in: the Stage card, My stages & packs, or a drop on the page
 async function importOne(f) { // -> { keys: [...], bad: [...] }
   const buf = new Uint8Array(await f.arrayBuffer());
-  if (buf[0] === 0x50 && buf[1] === 0x4b) return importPack(buf, f.name);
-  let j; try { j = JSON.parse(new TextDecoder().decode(buf)); } catch (e) { return { keys: [], bad: [f.name + ' isn’t a stage file.'] }; }
+  if (buf[0] === 0x50 && buf[1] === 0x4b) {
+    let files; try { files = await unzip(buf); } catch (e) { return { keys: [], bad: [f.name + ' couldn’t be read as a zip.'] }; }
+    if (files['forge-stages-workspace.json']) { let ws = null; try { ws = JSON.parse(new TextDecoder().decode(files['forge-stages-workspace.json'])); } catch (e) {} return restoreWorkspace(ws, files); }
+    if (window.ForgeSandboxUI) { const r = await window.ForgeSandboxUI.importZip(files, f.name); if (r) return r.err ? { keys: [], bad: [r.err] } : { keys: [], bad: [], project: r.name }; }
+    return importPack(files, f.name);
+  }
+  const text = new TextDecoder().decode(buf);
+  let j; try { j = JSON.parse(text); } catch (e) { return { keys: [], bad: [f.name + ' isn’t a stage file (it isn’t valid JSON).'] }; }
+  if (j && j.format === 'ForgeStageWorkspace') return restoreWorkspace(j, null);
+  if (j && j.format === 'ForgeStageSandbox') { if (!window.ForgeSandboxUI) return { keys: [], bad: ['Stage projects need IndexedDB, which this browser blocks.'] }; const r = await window.ForgeSandboxUI.importJSON(text, f.name); return r.err ? { keys: [], bad: [r.err] } : { keys: [], bad: [], project: r.name }; }
   if (!j || j.format !== 'ForgeStage') return { keys: [], bad: [f.name + ' isn’t a stage file.'] };
   if (j.schema === 2) { const r = await importGameStage(j); return r.err ? { keys: [], bad: [f.name + ': ' + r.err] } : { keys: [r.key], bad: [], skipped: r.skipped }; }
   let d = j.native && j.native.editor;
   if (!d) d = { v: 1, base: j.targetMissionId, name: j.name, stamina: j.stamina, objectives: [], maps: j.maps.map(m => ({ donor: m.donorMapId, bg: m.backgroundId, chips: (m.native && m.native.chips) || blankMap().chips, deployWays: (m.native && m.native.deployWays) || [0, 0, 0, 0, 0, 0],
     encounters: m.encounters.map(en => ({ set: en.sourceEnemySetId || null, rate: en.weight ?? 1000, waves: en.waves.map(w => ({ items: [...w.placements.map(p => ({ k: 'e', uid: uid(), enemy: p.enemyId, level: p.level || 1, ...(p.native || {}), count: (p.native && p.native.count) || 1, enabled: !p.native || p.native.enabled !== false, enterId: (p.native && p.native.enterId) || 1, src: p.sourceEntry ? { set: p.sourceEntry.enemySetId, seq: p.sourceEntry.sequenceIndex } : null })), ...(w.nativeCommands || []).map(r => ({ k: 'c', raw: r }))] })) })) })) };
   for (const m of d.maps) for (const en of m.encounters) for (const w of en.waves) for (const it of w.items) if (it.k === 'e' && !it.uid) it.uid = uid();
-  const key = d.base ? keyFor(d.base, d.localId) : 'blank-' + Date.now().toString(36); ensureId(d, key);
+  let key = d.base ? keyFor(d.base, d.localId) : 'blank-' + Date.now().toString(36);
+  if (d.custom && tplOf(d.base)) { const s0 = readStore(); let k2 = null; for (const [k, x] of Object.entries(s0.drafts)) if (isSlotKey(k) && x && x.localId && x.localId === d.localId) k2 = k;
+    if (!k2) { const want = slotKey(d.custom.slot); k2 = !s0.drafts[want] ? want : (firstEmptySlot(s0) ? slotKey(firstEmptySlot(s0)) : null); }
+    if (!k2) return { keys: [], bad: ['All 20 custom slots are in use.'] }; key = k2; d.custom = { ...d.custom, slot: +k2.slice(5) }; }
+  ensureId(d, key);
   try { const s = readStore(); s.drafts[key] = d; s.last = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { return { keys: [], bad: ['This browser wouldn’t keep the stage (private browsing or storage full).'] }; }
   return { keys: [key], bad: [] };
 }
 async function importFiles(list, where) {
   const files = [...(list || [])]; if (!files.length) return; saveNow();
-  const keys = [], bad = []; let skipped = 0;
-  for (const f of files) { try { const r = await importOne(f); keys.push(...r.keys); bad.push(...r.bad); skipped += r.skipped || 0; } catch (e) { bad.push(f.name + ' couldn’t be read.'); } }
-  const msg = (keys.length ? `Imported ${keys.length} stage${keys.length === 1 ? '' : 's'}.` : 'Nothing was imported.') + (skipped ? ` ${skipped} marker move${skipped === 1 ? '' : 's'} didn’t fit the template and ${skipped === 1 ? 'was' : 'were'} left out.` : '') + (bad.length ? ' ' + bad.join(' ') : '');
-  if (keys.length) await openKey(keys[0]);
-  if (where === 'lib' || keys.length > 1 || $('libDlg').open) await openLib(keys, msg); else toast(msg);
+  const keys = [], bad = [], projects = []; let skipped = 0, ws = null;
+  for (const f of files) { try { const r = await importOne(f); keys.push(...r.keys); bad.push(...r.bad); skipped += r.skipped || 0; if (r.project) projects.push(r.project); if (r.workspace) ws = r.workspace; } catch (e) { bad.push(f.name + ' couldn’t be read.'); } }
+  if (projects.length && !keys.length && !ws) { if (bad.length) toast(bad.join(' ')); return; }
+  const slotKeys = keys.filter(isSlotKey);
+  const msg = (ws ? `Opened the project: ${ws.slots} slot${ws.slots === 1 ? '' : 's'} with stages` + (ws.projects ? `, ${ws.projects} stage project${ws.projects === 1 ? '' : 's'}` : '') + '.' + (ws.kept.length ? ` Slot${ws.kept.length === 1 ? '' : 's'} ${ws.kept.join(', ')} kept the stage already in this browser (empty in the project).` : '')
+      : keys.length ? `Imported ${keys.length} stage${keys.length === 1 ? '' : 's'}` + (slotKeys.length ? ` into custom slot${slotKeys.length === 1 ? '' : 's'} ${slotKeys.map(k => k.slice(5)).join(', ')}.` : '.') : projects.length ? `Opened ${projects.join(', ')}.` : 'Nothing was imported.')
+    + (skipped ? ` ${skipped} marker move${skipped === 1 ? '' : 's'} didn’t fit the template and ${skipped === 1 ? 'was' : 'were'} left out.` : '') + (bad.length ? ' ' + bad.join(' ') : '');
+  if (window.ForgeSandboxUI && window.ForgeSandboxUI.isOpen() && (keys.length || ws)) window.ForgeSandboxUI.close();
+  if (ws || slotKeys.length) { await setMode('custom', { board: true }); bdMsg(msg, !keys.length && !ws); $('board').scrollIntoView({ block: 'start' }); return; }
+  if (keys.length) { await setMode('game', { key: keys[0] }); }
+  toast(msg);
 }
 $('importFile').onchange = e => { const fl = [...e.target.files]; e.target.value = ''; importFiles(fl); };
+$('bdOpen').onchange = e => { const fl = [...e.target.files]; e.target.value = ''; importFiles(fl); };
+$('bdOpenLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('bdOpen').click(); } };
 $('importLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('importFile').click(); } };
 
 
@@ -878,7 +1078,7 @@ let APP = null;
 const PROFILE = 'emergency-layout/1', MAX_MOVES = 16, MAX_PACK = 20;
 const isMark = c => (c >= 8 && c <= 13) || (c >= 16 && c <= 25);
 const tplOf = id => (APP && id != null && APP.donors[String(id)]) || null;
-const gm = () => !!(st.gameOnly && st.draft && tplOf(st.draft.base));
+const gm = () => !!(st.mode === 'custom' && st.gameOnly && st.draft && tplOf(st.draft.base));
 const markName = c => c <= 13 ? `start spot ${c - 7}` : `entry point ${c - ENTRY0}`;
 const posOf = (G, c) => { const o = []; for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) if (G[y][x] === c) o.push([x, y]); return o; };
 function tplCount(c) { const t = tplOf(st.draft && st.draft.base); const m = t && t.maps[st.mapI]; return m ? posOf(m.chips, c).length : 0; }
@@ -914,7 +1114,7 @@ function mapMoves(O, E, label) {
   return { moves, errs, lost };
 }
 const strip = v => JSON.stringify(v, (k, x) => (k === 'uid' ? undefined : x));
-function gameCheck(d, mission) {
+function gameCheck(d, mission, strict) {
   const tpl = tplOf(d && d.base), out = { tpl, errs: [], lost: [], maps: [], moves: 0 };
   if (!tpl) { out.errs.push(['STAGE_DONOR', 'This mission isn’t one of the game’s stage templates.']); return out; }
   const name = (d.name || '').trim(), nb = bytes(name);
@@ -931,6 +1131,7 @@ function gameCheck(d, mission) {
     if (en) out.lost.push(`Enemies or waves changed on ${en} map${en === 1 ? '' : 's'}; the game uses the template's enemies.`);
     if (bg) out.lost.push(`Background changed on ${bg} map${bg === 1 ? '' : 's'}; the game uses the template's backgrounds.`);
     if ((d.stamina ?? 0) !== (f.stamina ?? 0)) out.lost.push(`Stamina changed; the game uses the template's ${f.stamina}.`); }
+  if (strict) for (const t of out.lost) out.errs.push(['STAGE_UNSUPPORTED', t + ' Use Keep only game edits, or keep this as a draft.']);
   return out;
 }
 function gameStage(d, chk) {
@@ -964,8 +1165,11 @@ async function importGameStage(j) {
   const { d, skipped } = applyMoves(mission, spec);
   d.name = typeof j.name === 'string' ? j.name : d.name; d.enabled = j.enabled !== false;
   d.localId = typeof j.localId === 'string' && ID_RE.test(j.localId) && j.localId.includes(':') ? j.localId : newId();
-  const key = keyFor(donor, d.localId); rememberId(key, d.localId);
-  try { const s = readStore(); s.drafts[key] = d; s.last = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { return { err: 'This browser wouldn’t keep the stage (private browsing or storage full).' }; }
+  const s0 = readStore(); let key = null;
+  for (const [k, x] of Object.entries(s0.drafts)) if (isSlotKey(k) && x && x.localId === d.localId) key = k;
+  if (!key) { const n = firstEmptySlot(s0); if (!n) return { err: `All 20 custom slots are in use, so “${d.name}” wasn’t added. Clear a slot and import again.` }; key = slotKey(n); }
+  d.custom = { slot: +key.slice(5), show: d.enabled !== false }; rememberId(key, d.localId);
+  try { const s = readStore(); s.drafts[key] = d; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { return { err: 'This browser wouldn’t keep the stage (private browsing or storage full).' }; }
   return { donor, key, skipped };
 }
 // where an imported stage goes: the stage with the same stage ID if there is one, else this mission's
@@ -977,8 +1181,7 @@ function keyFor(donor, localId) {
   if (!md && !(st.key === main && st.edited)) return main;
   return main + '~' + Math.random().toString(36).slice(2, 8);
 }
-async function importPack(buf, fname) {
-  let files; try { files = await unzip(buf); } catch (e) { return { keys: [], bad: [fname + ' couldn’t be read as a zip.'] }; }
+async function importPack(files, fname) {
   let list = [];
   try { const m = JSON.parse(new TextDecoder().decode(files['forge-mod.json'])); if (m.format === 'ForgeStagePack') list = m.stages || []; } catch (e) {}
   if (!list.length) list = Object.keys(files).filter(n => /(^|\/)stages\/[^/]+\.json$/.test(n));
@@ -990,6 +1193,9 @@ async function importPack(buf, fname) {
 }
 async function openKey(key) {
   const d = readStore().drafts[key]; if (!d) return;
+  if (isSlotKey(key) && st.mode !== 'custom') { await setMode('custom', { key }); return; }
+  if (!isSlotKey(key) && st.mode !== 'game') { await setMode('game', { key }); return; }
+  document.body.classList.remove('no-stage'); setLast(key);
   if (d.base) { await openMission(String(d.base), { key }); return; }
   saveNow(); st.mission = null; st.key = key; st.draft = d; ensureId(d, key); st.edited = true; setLast(key); st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; st.placing = null; syncBgCtl(); renderRail(); draw();
 }
@@ -1034,6 +1240,10 @@ const unitName = id => (APP && APP.units[String(id)]) || 'Unit ' + id;
 function li(cls, text, code) { const l = document.createElement('li'); l.className = cls; if (code) { const c = document.createElement('code'); c.textContent = code; l.append(c); } l.append(text); return l; }
 function renderGame() {
   const d = st.draft; if (!d) return; const tpl = tplOf(d.base);
+  const custom = st.mode === 'custom'; $('gameCard').hidden = !custom; $('copyCard').hidden = custom;
+  $('copyBtn').disabled = !tpl; $('copyHint').textContent = tpl ? 'The copy gets its own stage ID and goes in your first empty custom slot. This draft stays as it is.' : 'This mission isn’t one of the game-ready Emergency templates, so it can’t become a custom stage yet.';
+  if (custom && d.custom) { const sl = slotList().find(x => x.slot === d.custom.slot) || {}; $('mSub').textContent = `Custom stage · slot ${d.custom.slot} (planned stage ${sl.stageId}, mission ${sl.missionId}) · from ${missionName(d.base)} · ${d.maps.length} map${d.maps.length === 1 ? '' : 's'}`;
+    $('slotLine').textContent = `Planned slot ${d.custom.slot}: the app confirms the real slot by stage ID when it imports.` + (ledgerSlot(d.localId) ? ` The loaded ledger shows slot ${ledgerSlot(d.localId)}.` : ''); }
   $('gameNo').hidden = !!tpl; $('gameYes').hidden = !tpl;
   const lock = gm();
   for (const id of ['palCard']) $(id).classList.toggle('game-hide', lock);
@@ -1051,15 +1261,13 @@ function renderGame() {
   $('gameOnlyBtn').setAttribute('aria-pressed', String(st.gameOnly));
   if (document.activeElement !== $('gName')) $('gName').value = d.name || '';
   if (document.activeElement !== $('gId')) $('gId').value = d.localId || '';
-  $('gOn').value = d.enabled === false ? '0' : '1';
-  const chk = gameCheck(d, st.mission); const box = $('gameIssues'); box.replaceChildren();
+  $('gOn').checked = showOf(d);
+  const chk = gameCheck(d, st.mission, true); const box = $('gameIssues'); box.replaceChildren();
   for (const [code, t] of chk.errs) box.append(li('err', t, code));
   chk.maps.forEach((mv, i) => { if (mv.length) box.append(li('move', `Map ${i + 1}: moves ${mv.map(v => markName(v.chip)).join(', ')}.`)); });
   if (!chk.errs.length && !chk.moves) box.append(li('', 'No moves yet: the stage plays like the template. Drag start spots or entry points to change where everyone begins.'));
-  for (const t of chk.lost) box.append(li('lost', 'Not in the game: ' + t));
   $('keepGameBtn').hidden = !chk.lost.length && !chk.errs.some(e => e[0] === 'STAGE_MAPS' || e[0] === 'STAGE_OCCUPIED');
-  pill.className = 'pill ' + (chk.errs.length ? 'no' : 'ok'); pill.textContent = chk.errs.length ? 'Fix to save' : 'Ready';
-  $('gameSave').disabled = !!chk.errs.length;
+  pill.className = 'pill ' + (chk.errs.length ? 'no' : showOf(d) ? 'ok' : ''); pill.textContent = chk.errs.length ? 'Can’t export' : showOf(d) ? 'Ready' : 'Hidden';
   const r = tpl.r, rw = $('gameRewards'); rw.replaceChildren();
   const add = (k, v) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; rw.append(dt, dd); };
   const obj = r.objectives || [], objs = (st.mission && st.mission.objectives) || [];
@@ -1074,85 +1282,218 @@ $('keepGameBtn').onclick = keepGameEdits;
 $('gameFind').onclick = () => { st.readyOnly = true; $('readyBtn').setAttribute('aria-pressed', 'true'); $('mSearch').focus(); };
 $('readyBtn').onclick = () => { st.readyOnly = !st.readyOnly; $('readyBtn').setAttribute('aria-pressed', String(st.readyOnly)); $('mSearch').focus(); };
 $('gName').addEventListener('input', e => { st.draft.name = e.target.value; save(); $('mName').textContent = e.target.value || 'Untitled stage'; if (document.activeElement !== $('stName')) $('stName').value = e.target.value; renderGame(); });
+$('gName').addEventListener('change', () => setTimeout(renderBoard, 350));
 $('gId').addEventListener('change', e => { const v = e.target.value.trim(); st.draft.localId = v; rememberId(st.key, v); save(); renderGame(); });
-$('gOn').onchange = e => { st.draft.enabled = e.target.value === '1'; save(); renderGame(); };
-$('gameSave').onclick = () => { const chk = gameCheck(st.draft, st.mission); if (chk.errs.length) { toast(chk.errs[0][1]); return; }
-  saveBlob(new Blob([JSON.stringify(gameStage(st.draft, chk), null, 1)], { type: 'application/json' }), 'stage-' + slug(st.draft.name) + '.json'); };
-// ---- My stages & packs: every stage in this browser; export a pack, import packs and stage files
-async function libRows() {
+$('gOn').onchange = e => { const on = e.target.checked; st.draft.custom = { ...(st.draft.custom || {}), show: on }; st.draft.enabled = on; save(); renderGame(); setTimeout(renderBoard, 350); };
+
+// ---- Custom stages: the app's 20 stage slots, each holding at most one custom stage
+// Slots here are planned destinations. The app gives each new stage ID the first free slot when it imports,
+// so a slot is only confirmed by the app's own allocation ledger.
+const slotList = () => (APP && APP.slotList) || Array.from({ length: 20 }, (_, i) => ({ slot: i + 1, stageId: String(3800 + i), missionId: String(380001 + i * 100) }));
+const slotKey = n => 'slot-' + n;
+const isSlotKey = k => /^slot-\d+$/.test(k || '');
+const showOf = d => !!(d && d.custom && d.custom.show !== false);
+const LEDGER = 'bf-stages-ledger';
+function readLedger() { try { return JSON.parse(localStorage.getItem(LEDGER)) || null; } catch (e) { return null; } }
+function ledgerSlot(localId) { const l = readLedger(); const a = l && (l.assignments || []).find(x => x && x.spec && x.spec.localId === localId); return a ? a.slot : null; }
+function readIds() { try { return JSON.parse(localStorage.getItem(IDS)) || {}; } catch (e) { return {}; } }
+function bgThumb(bgId) { const b = bgId && st.idx && st.idx.backgrounds[String(bgId)]; return b ? CAT + 'bg/t/' + b.f + '.webp' : ''; }
+function missionName(id) { const m = st.idx && st.idx.missions.find(x => x.id === String(id)); return m ? (m.name || 'Mission ' + id) : 'Mission ' + id; }
+function firstEmptySlot(s) { for (const sl of slotList()) if (!s.drafts[slotKey(sl.slot)]) return sl.slot; return 0; }
+function putDraft(key, d) { const s = readStore(); s.drafts[key] = d; localStorage.setItem(STORE, JSON.stringify(s)); }
+function lastKeyOf(mode) { const s = readStore(); const k = s.lastByMode && s.lastByMode[mode]; return k && s.drafts[k] ? k : null; }
+function setLastKeyOf(mode, key) { try { const s = readStore(); s.lastByMode = s.lastByMode || {}; s.lastByMode[mode] = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
+const el = (tag, attrs = {}, ...kids) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) { if (v == null || v === false) continue; if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v; else if (k.startsWith('on')) e[k] = v; else e.setAttribute(k, v === true ? '' : v); } for (const c of kids.flat()) if (c != null && c !== false) e.append(c); return e; };
+function bdMsg(t, bad) { const n = $('bdMsg'); n.textContent = t || ''; n.hidden = !t; n.classList.toggle('bad', !!bad); }
+
+// mode: the game's own missions, or your custom stages
+const NOTES = {
+  game: 'In-game stages: browse the game’s missions and edit them as drafts. The app can’t replace original stages, so drafts stay here. Use Copy to custom stage to make a version you can put in the game.',
+  custom: 'Custom stages: your 20 stage slots. Start one from a game-ready Emergency mission, move start spots and entry points, turn Show in game on, then Export for the game. The app adds each as its own Emergency mission with the template’s enemies and rewards.' };
+async function setMode(mode, opts = {}) {
+  saveNow(); st.mode = mode; try { localStorage.setItem('bf-stages-mode', mode); } catch (e) {}
+  if (window.ForgeSandboxUI && window.ForgeSandboxUI.isOpen()) window.ForgeSandboxUI.close();
+  document.body.classList.toggle('mode-custom', mode === 'custom'); document.body.classList.toggle('mode-game', mode === 'game');
+  for (const b of $('modeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+  $('betaNote').textContent = NOTES[mode]; $('board').hidden = mode !== 'custom'; $('backBtn').hidden = mode !== 'custom';
+  if (opts.key) { await openKey(opts.key); return; }
+  if (mode === 'custom') { const k = lastKeyOf('custom'); if (k && isSlotKey(k) && !opts.board) await openKey(k); else noStage(); renderBoard(); }
+  else { document.body.classList.remove('no-stage'); const k = lastKeyOf('game'); if (k && !isSlotKey(k)) await openKey(k); else if (!st.key || isSlotKey(st.key)) await openMission(APP && APP.donors['300301'] ? '300301' : '100101'); else { renderRail(); draw(); } }
+}
+function noStage() { saveNow(); document.body.classList.add('no-stage'); setLastKeyOf('custom', null); }
+$('modeSeg').onclick = e => { const b = e.target.closest('button'); if (b && b.dataset.mode !== st.mode) setMode(b.dataset.mode); else if (b && st.mode === 'custom') setMode('custom', { board: true }); };
+$('backBtn').onclick = () => { noStage(); renderBoard(); $('board').scrollIntoView({ block: 'start' }); };
+
+// the slot board
+async function slotRows() {
   saveNow(); const s = readStore(); const rows = [];
-  for (const [k, d] of Object.entries(s.drafts)) { if (!d || !d.maps) continue; ensureId(d, k);
+  for (const sl of slotList()) { const key = slotKey(sl.slot), d = s.drafts[key];
+    if (!d) { rows.push({ sl, key, d: null }); continue; }
     let m = null; if (d.base) try { m = await getData(CAT + 'm/' + d.base + '.json.gz'); } catch (e) {}
-    rows.push({ k, d, m, chk: tplOf(d.base) ? gameCheck(d, m) : null }); }
-  const seen = {}; for (const r of rows) if (r.chk) (seen[r.d.localId] = seen[r.d.localId] || []).push(r);
-  for (const list of Object.values(seen)) if (list.length > 1) for (const r of list) r.chk.errs.push(['STAGE_LEDGER', 'Another stage here has the same stage ID. Open one and give it a new ID under Stage ID.']);
-  rows.sort((a, b) => (a.k === st.key ? -1 : b.k === st.key ? 1 : 0) || (!!b.chk - !!a.chk) || (a.d.name || '').localeCompare(b.d.name || ''));
+    rows.push({ sl, key, d, m, chk: gameCheck(d, m, true) }); }
+  const seen = {}; for (const r of rows) if (r.d) (seen[r.d.localId] = seen[r.d.localId] || []).push(r);
+  for (const list of Object.values(seen)) if (list.length > 1) for (const r of list) r.chk.errs.push(['STAGE_LEDGER', `Slots ${list.map(x => x.sl.slot).join(' and ')} have the same stage ID. Give one a new ID under Stage ID.`]);
   return rows;
 }
-let libCache = [], libFresh = [];
-const libChecked = () => [...$('libList').querySelectorAll('input[type=checkbox]:checked')].map(c => libCache[+c.dataset.i]);
-function libCount() { const n = libChecked().length, ready = libCache.filter(r => r.chk && !r.chk.errs.length).length;
-  $('libCount').textContent = `${libCache.length} stage${libCache.length === 1 ? '' : 's'} here · ${ready} ready for the game · ${n} selected` + (n > MAX_PACK ? ` (a pack holds ${MAX_PACK})` : '');
-  $('libExport').disabled = !n || n > MAX_PACK; $('libExport').textContent = n ? `Export pack (${n})` : 'Export pack'; }
-function libMsg(t) { $('libMsg').textContent = t || ''; $('libMsg').hidden = !t; }
-function renderLib(checked) {
-  const list = $('libList'); list.replaceChildren();
-  libCache.forEach((r, i) => {
-    const row = document.createElement('div'); row.className = 'lrow' + (r.k === st.key ? ' cur' : '') + (libFresh.includes(r.k) ? ' new' : '');
-    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.i = i; const ok = !!(r.chk && !r.chk.errs.length); cb.disabled = !ok;
-    cb.checked = ok && (checked ? checked.has(r.k) : (libFresh.length ? libFresh.includes(r.k) : r.chk.moves > 0 || r.k === st.key));
-    cb.setAttribute('aria-label', 'Put ' + ((r.d.name || '').trim() || 'this stage') + ' in the pack'); cb.onchange = libCount;
-    const t = document.createElement('div'); const b = document.createElement('b'); b.textContent = (r.d.name || '').trim() || 'Untitled stage';
-    const tag = document.createElement('span'); tag.className = 'tagp' + (!r.chk ? ' dr' : r.chk.errs.length ? ' no' : ''); tag.textContent = !r.chk ? 'Draft only' : r.chk.errs.length ? 'Needs a fix' : r.d.enabled === false ? 'Ready · hidden' : 'Ready'; b.append(tag);
-    const mi = r.d.base && st.idx.missions.find(m => m.id === String(r.d.base));
-    const sm = document.createElement('small'); sm.textContent = (r.d.base ? `From ${mi && mi.name ? mi.name : 'mission ' + r.d.base}` : 'Blank stage') + (r.chk ? ` · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'}` : '') + (r.k === st.key ? ' · open now' : '');
-    t.append(b, sm);
-    if (r.chk) for (const [code, e] of r.chk.errs) { const x = document.createElement('small'); x.className = 'bad'; x.textContent = code + ': ' + e; t.append(x); }
-    const acts = document.createElement('div'); acts.className = 'acts';
-    const mk = (txt, cls, fn) => { const bb = document.createElement('button'); bb.type = 'button'; bb.textContent = txt; if (cls) bb.className = cls; bb.onclick = fn; acts.append(bb); return bb; };
-    mk('Open', '', async () => { $('libDlg').close(); await openKey(r.k); });
-    mk('Copy', '', () => { const d = clone(r.d); d.localId = newId(); d.name = ((d.name || '').trim() || 'Stage') + ' (copy)';
-      const key = (r.d.base ? 'm' + r.d.base : 'blank') + '~' + Math.random().toString(36).slice(2, 8); rememberId(key, d.localId);
-      try { const s = readStore(); s.drafts[key] = d; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { libMsg('This browser wouldn’t keep the copy (storage full?).'); return; }
-      openLib([key], 'Made a copy with its own stage ID, so it takes its own slot in the app.'); });
-    const del = mk('Delete', 'del', async () => {
-      if (!del.classList.contains('sure')) { del.classList.add('sure'); del.textContent = 'Delete for good?'; setTimeout(() => { del.classList.remove('sure'); del.textContent = 'Delete'; }, 4000); return; }
-      dropDraft(r.k); const was = r.k === st.key;
-      if (was) { if (st.mission) await openMission(st.mission.id, { key: 'm' + st.mission.id, fresh: r.k === 'm' + st.mission.id }); else openBlank(); }
-      await openLib([], `Deleted ${(r.d.name || '').trim() || 'the stage'} from this browser. If it's already in the game, it stays there until you hide it in the app or import a hidden copy.`);
-    });
-    row.append(cb, t, acts); list.append(row);
-  });
-  if (!libCache.length) { const p = document.createElement('p'); p.className = 'hint'; p.textContent = 'No stages here yet. Open a game-ready mission and move a marker, or import a pack.'; list.append(p); }
-  libCount();
+function statusOf(r) { if (!r.d) return ['Empty slot', '']; if (!r.chk.tpl) return ['Draft only: its mission isn’t a game-ready template', 'bad']; if (r.chk.errs.length) return [`Can’t export: ${r.chk.errs[0][1]}`, 'bad'];
+  return showOf(r.d) ? [`Ready · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'} · shown in the game`, ''] : [`Ready · hidden (Show in game is off)`, '']; }
+let boardBusy = 0;
+async function renderBoard() {
+  if (st.mode !== 'custom' || !st.idx) return; const my = ++boardBusy; const rows = await slotRows(); if (my !== boardBusy) return;
+  const used = rows.filter(r => r.d).length, shown = rows.filter(r => r.d && showOf(r.d)).length;
+  $('bdSub').textContent = `${used} of ${rows.length} slots used · ${shown} with Show in game on · stage IDs ${slotList()[0].stageId}–${slotList()[slotList().length - 1].stageId}`;
+  $('slotGrid').replaceChildren(...rows.map(r => slotCard(r)));
+  renderOld(); renderReserved(); syncLedgerInfo();
 }
-async function openLib(fresh = [], msg = '') {
-  const keep = $('libDlg').open && !fresh.length ? new Set(libChecked().map(r => r.k)) : null;
-  libFresh = fresh; libCache = await libRows(); renderLib(keep); libMsg(msg);
-  const dd = $('libDlg'); if (!dd.open) { try { const fe = window.frameElement; if (fe) { dd.style.margin = '0 auto'; dd.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; dd.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {} dd.showModal(); }
+function idDetails(r) { const dev = r.d ? ledgerSlot(r.d.localId) : null; const L = readLedger();
+  return el('details', { class: 'more' }, el('summary', { text: 'IDs' }), el('dl', { class: 'rw' },
+    el('dt', { text: 'Planned stage' }), el('dd', { text: r.sl.stageId }), el('dt', { text: 'Planned mission' }), el('dd', { text: r.sl.missionId }),
+    r.d ? [el('dt', { text: 'Stage ID' }), el('dd', { text: r.d.localId || '—' }), el('dt', { text: 'Template' }), el('dd', { text: `${missionName(r.d.base)} (${r.d.base})` }),
+      el('dt', { text: 'On a device' }), el('dd', { text: !L ? 'Not confirmed (no slot ledger loaded)' : dev ? `Slot ${dev} (from the loaded ledger)` + (dev !== r.sl.slot ? ' — differs from the plan' : '') : 'Not in the loaded ledger' })] : []),
+    el('p', { class: 'hint', text: 'The app assigns the real slot by stage ID when it imports; these are this browser’s planned destinations.' })); }
+function slotCard(r) {
+  const n = r.sl.slot, cur = r.key === st.key && !document.body.classList.contains('no-stage');
+  if (!r.d) return el('div', { class: 'slot empty' }, el('div', { class: 'sh' }, el('b', { text: `Slot ${n}` }), el('span', { class: 'sn', text: r.sl.missionId })),
+    el('small', { text: 'Empty slot' }), el('div', { class: 'acts' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Create', onclick: () => openTpl(n) })), idDetails(r));
+  const [stxt, scls] = statusOf(r); const tpl = tplOf(r.d.base);
+  const name = el('input', { class: 'nm', type: 'text', value: r.d.name || '', maxlength: '96', 'aria-label': `Name of the stage in slot ${n}` });
+  name.onchange = () => editSlot(r.key, d => { d.name = name.value; }, `Renamed slot ${n}.`);
+  const show = el('input', { type: 'checkbox' }); show.checked = showOf(r.d); show.onchange = () => editSlot(r.key, d => { d.custom = { ...(d.custom || {}), slot: n, show: show.checked }; d.enabled = show.checked; }, show.checked ? `Slot ${n} will be in the next game export.` : `Slot ${n} is hidden: it stays here but isn’t in game exports.`);
+  const clr = el('button', { type: 'button', class: 'chip sm', text: 'Clear slot' }); clr.style.color = 'var(--bad)';
+  clr.onclick = () => { if (clr.dataset.sure !== '1') { clr.dataset.sure = '1'; clr.textContent = 'Clear for good?'; setTimeout(() => { clr.dataset.sure = ''; clr.textContent = 'Clear slot'; }, 4000); return; }
+    const was = r.key === st.key; dropDraft(r.key); if (was) noStage(); bdMsg(`Cleared slot ${n} in this browser. If that stage is already in the game, it stays there: export it hidden first to hide it on the device.`); renderBoard(); };
+  return el('div', { class: 'slot' + (cur ? ' on' : '') }, el('div', { class: 'sh' }, el('b', { text: `Slot ${n}` }), el('span', { class: 'sn', text: r.sl.missionId })),
+    el('img', { class: 'thumb', alt: '', loading: 'lazy', src: bgThumb(tpl ? tpl.bg : (r.d.maps[0] && r.d.maps[0].bg)) || null }),
+    name, el('small', { text: `From ${missionName(r.d.base)} · ${r.d.maps.length} map${r.d.maps.length === 1 ? '' : 's'}` }), el('small', { class: scls, text: stxt }),
+    el('label', { class: 'toggle' }, show, 'Show in game'),
+    el('div', { class: 'acts' }, el('button', { type: 'button', class: 'btn ghost sm', text: cur ? 'Open now' : 'Open', onclick: () => openSlot(r.key) }), clr), idDetails(r));
 }
-$('libBtn').onclick = () => openLib(); $('packBtn').onclick = () => openLib();
-$('libClose').onclick = () => $('libDlg').close();
-$('libAll').onclick = () => { let n = 0; for (const c of $('libList').querySelectorAll('input[type=checkbox]')) { c.checked = !c.disabled && n < MAX_PACK; if (c.checked) n++; } libCount(); };
-$('libNone').onclick = () => { for (const c of $('libList').querySelectorAll('input[type=checkbox]')) c.checked = false; libCount(); };
-$('libFile').onchange = e => { const fl = [...e.target.files]; e.target.value = ''; importFiles(fl, 'lib'); };
-$('libImportLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('libFile').click(); } };
-$('libExport').onclick = async () => {
-  const pick = libChecked(); if (!pick.length || pick.length > MAX_PACK) return;
-  const blob = packZip(pick.map(r => gameStage(r.d, r.chk)));
-  if (blob.size > 2 * 1024 * 1024) { libMsg('That pack is over 2 MB. Export fewer stages at a time.'); return; }
-  const name = pick.length === 1 ? 'Forge-stage-' + slug(pick[0].d.name) + '.zip' : 'Forge-stages-' + pick.length + '.zip';
-  if (await saveBlob(blob, name)) libMsg(`Saved ${name} with ${pick.length} stage${pick.length === 1 ? '' : 's'}. In the app: Forge Studio › Stages › Import stages, then build and reopen.`);
+function editSlot(key, fn, msg) {
+  saveNow(); const s = readStore(); const d = s.drafts[key]; if (!d) return; fn(d); s.drafts[key] = d; try { localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { bdMsg('This browser wouldn’t keep the change.', true); return; }
+  if (st.key === key) { st.draft = d; renderRail(); draw(); } if (msg) bdMsg(msg); renderBoard();
+}
+async function openSlot(key) { if (st.mode !== 'custom') { await setMode('custom', { key }); } else await openKey(key); $('mapTabs').scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+// template picker for an empty slot
+let tplFor = 0;
+function openTpl(slot) { tplFor = slot; $('tplTitle').textContent = `Pick a template for slot ${slot}`; $('tplQ').value = ''; renderTpl(); const d = $('tplDlg');
+  try { const fe = window.frameElement; if (fe) { d.style.margin = '0 auto'; d.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; d.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {} d.showModal(); $('tplQ').focus(); }
+function renderTpl() { const toks = $('tplQ').value.toLowerCase().split(/\s+/).filter(Boolean);
+  const list = st.idx.missions.filter(m => tplOf(m.id) && toks.every(t => (m.name + ' ' + m.stage + ' ' + m.id).toLowerCase().includes(t))).slice(0, 120);
+  $('tplList').replaceChildren(...list.map(m => el('button', { type: 'button', onclick: () => createSlot(tplFor, m.id) }, el('img', { alt: '', loading: 'lazy', src: bgThumb(m.bg) || null }), el('b', { text: m.name || 'Mission ' + m.id }), el('small', { text: `${m.stage || ''} · ${m.maps} map${m.maps === 1 ? '' : 's'} · ${m.id}` }))));
+  if (!list.length) $('tplList').append(el('p', { class: 'hint', text: 'No game-ready mission matches.' })); }
+$('tplQ').addEventListener('input', renderTpl); $('tplClose').onclick = () => $('tplDlg').close();
+async function createSlot(slot, missionId) {
+  let m; try { m = await getData(CAT + 'm/' + missionId + '.json.gz'); } catch (e) { toast('Couldn’t load that mission.'); return; }
+  const key = slotKey(slot); const d = draftFromMission(m); d.localId = newId(); d.name = m.name || 'Mission ' + missionId; d.custom = { slot, show: true }; d.enabled = true;
+  try { putDraft(key, d); } catch (e) { bdMsg('This browser wouldn’t keep the stage (storage full?).', true); return; } rememberId(key, d.localId);
+  $('tplDlg').close(); bdMsg(`Slot ${slot} now holds a custom stage from ${d.name}. Move start spots or entry points, then export.`); await openSlot(key); renderBoard();
+}
+// copy an in-game draft into a custom slot (a new stage with its own stage ID)
+$('copyBtn').onclick = async () => {
+  saveNow(); const src = st.draft; if (!src || !tplOf(src.base)) { toast('Only game-ready Emergency missions can become custom stages.'); return; }
+  const s = readStore(), n = firstEmptySlot(s); if (!n) { toast('All 20 custom slots are in use. Clear one in Custom stages first.'); return; }
+  const d = clone(src); delete d.inGame; d.localId = newId(); d.custom = { slot: n, show: true }; d.enabled = true; if (!d.name) d.name = missionName(src.base);
+  const key = slotKey(n); try { putDraft(key, d); } catch (e) { toast('This browser wouldn’t keep the copy.'); return; } rememberId(key, d.localId);
+  await setMode('custom', { key }); renderBoard(); bdMsg(`Copied to slot ${n} as a new custom stage. The original mission draft is unchanged in In-game stages.` + (gameCheck(d, st.mission, true).lost.length ? ' Some of its edits can’t go in the game yet; they’re flagged in In the game.' : ''));
 };
+// stages made before slots existed
+function oldRows() { const s = readStore(); return Object.entries(s.drafts).filter(([k, d]) => d && !isSlotKey(k) && !d.custom && !d.inGame && tplOf(d.base)); }
+function renderOld() {
+  const rows = oldRows(); $('oldCard').hidden = !rows.length; if (!rows.length) return;
+  $('oldList').replaceChildren(...rows.map(([k, d]) => el('div', { class: 'prow' }, el('div', {}, el('b', { text: (d.name || '').trim() || missionName(d.base) }), el('small', { text: `From ${missionName(d.base)} · stage ID ${d.localId || '—'}` })),
+    el('div', { class: 'acts row' }, el('button', { type: 'button', class: 'chip sm', text: 'Move to a slot', onclick: () => { const s = readStore(), n = firstEmptySlot(s); if (!n) { bdMsg('All 20 slots are in use.', true); return; }
+      const nd = clone(d); nd.custom = { slot: n, show: nd.enabled !== false }; s.drafts[slotKey(n)] = nd; delete s.drafts[k]; try { localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { bdMsg('This browser wouldn’t keep the change.', true); return; }
+      rememberId(slotKey(n), nd.localId); if (st.key === k) noStage(); bdMsg(`Moved to slot ${n}. It kept its stage ID.`); renderBoard(); } }),
+      el('button', { type: 'button', class: 'chip sm', text: 'Keep as an in-game draft', onclick: () => editSlot(k, x => { x.inGame = true; }, 'Kept as an in-game draft (In-game stages).') }))))); }
+// reserved quests: stage projects, outside the 20 slots
+async function renderReserved() {
+  const box = $('resList'); if (!window.ForgeSandboxUI) { box.replaceChildren(); return; }
+  const list = await window.ForgeSandboxUI.listProjects();
+  if (!list.length) { box.replaceChildren(el('p', { class: 'hint', text: 'No stage projects in this browser. Import a stage project package (.zip) to open one.' })); return; }
+  box.replaceChildren(...list.map(p => { const del = el('button', { type: 'button', class: 'chip sm', text: 'Delete' }); del.style.color = 'var(--bad)';
+    del.onclick = async () => { if (del.dataset.sure !== '1') { del.dataset.sure = '1'; del.textContent = 'Delete for good?'; setTimeout(() => { del.dataset.sure = ''; del.textContent = 'Delete'; }, 4000); return; } await window.ForgeSandboxUI.deleteProject(p.id); bdMsg('Deleted the project and its stored files from this browser.'); renderReserved(); };
+    return el('div', { class: 'prow' }, el('div', {}, el('b', { text: p.name }), el('small', { text: `${p.quests} quests · ${p.maps} maps · saved ${new Date(p.savedAt).toLocaleString()}` }),
+      el('details', { class: 'more' }, el('summary', { text: 'Quests and IDs' }), el('ul', { class: 'plist' }, (p.questList || []).map(q => el('li', { class: 'hint', text: `${q.missionName || q.name} — stage ${q.stageId}, mission ${q.missionId}${slotList().some(sl => sl.stageId === String(q.stageId)) ? ' (uses a custom slot ID!)' : ' (reserved, not a custom slot)'}` }))))),
+      el('div', { class: 'acts row' }, el('button', { type: 'button', class: 'chip sm', text: 'Open', onclick: () => window.ForgeSandboxUI.openProject(p.id) }), del)); })); }
+// slot ledger from a device
+function syncLedgerInfo() { const l = readLedger(); $('ledgerInfo').textContent = l ? `Ledger loaded: ${(l.assignments || []).length} assigned slot${(l.assignments || []).length === 1 ? '' : 's'}.` : 'No ledger loaded: slots are planned, not confirmed.'; }
+$('ledgerFile').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { const j = JSON.parse(await f.text()); if (j.schema !== 1 || j.profile !== PROFILE || !Array.isArray(j.assignments)) throw new Error('x');
+    for (const a of j.assignments) if (!Number.isInteger(a.slot) || a.slot < 1 || a.slot > 20 || !a.spec || typeof a.spec.localId !== 'string') throw new Error('x');
+    localStorage.setItem(LEDGER, JSON.stringify(j)); bdMsg(`Loaded the slot ledger: ${j.assignments.length} stage${j.assignments.length === 1 ? '' : 's'} assigned on that device.`); renderBoard();
+  } catch (err) { bdMsg('That file isn’t an app slot ledger (schema 1, emergency-layout/1, with assignments).', true); } };
+$('ledgerLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('ledgerFile').click(); } };
+$('ledgerClear').onclick = () => { try { localStorage.removeItem(LEDGER); } catch (e) {} bdMsg('Forgot the slot ledger.'); renderBoard(); };
+
+// export preview: only configured, ready, shown custom stages, in slot order
+let xRows = [];
+async function exportRows(sendHidden) {
+  const rows = await slotRows();
+  for (const r of rows) { if (!r.d) { r.why = 'Empty slot'; continue; } if (!r.chk.tpl) { r.why = 'Draft only: its mission isn’t a game-ready template'; continue; }
+    if (r.chk.errs.length) { r.why = `Can’t export (${r.chk.errs[0][0]}): ${r.chk.errs[0][1]}`; continue; }
+    if (!showOf(r.d) && !sendHidden) { r.why = 'Hidden: Show in game is off'; continue; } r.include = true; }
+  return rows;
+}
+function xRow(r, inc) { const tpl = r.d && tplOf(r.d.base); const dev = r.d ? ledgerSlot(r.d.localId) : null;
+  const dest = `Planned slot ${r.sl.slot} → stage ${r.sl.stageId}, mission ${r.sl.missionId}` + (dev ? ` (ledger: slot ${dev})` : ' (the app confirms the slot when it imports)');
+  return el('div', { class: 'xrow' }, el('img', { alt: '', src: (r.d && bgThumb(tpl ? tpl.bg : r.d.maps[0] && r.d.maps[0].bg)) || null }), el('div', {},
+    el('b', { text: r.d ? ((r.d.name || '').trim() || 'Untitled stage') + (inc && !showOf(r.d) ? ' — sent hidden' : '') : `Slot ${r.sl.slot}` }),
+    r.d ? el('small', { text: `From ${missionName(r.d.base)} · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'} · stage ID ${r.d.localId}` }) : null,
+    inc ? el('small', { text: dest }) : el('small', { class: r.d ? 'bad' : '', text: r.why }))); }
+async function renderExport() {
+  xRows = await exportRows($('xHidden').checked); const inc = xRows.filter(r => r.include), out = xRows.filter(r => !r.include);
+  $('xIn').replaceChildren(...(inc.length ? inc.map(r => xRow(r, true)) : [el('p', { class: 'hint', text: 'Nothing to export: no configured custom stage is ready with Show in game on.' })]));
+  $('xOut').replaceChildren(...out.map(r => xRow(r, false)));
+  $('xCount').textContent = `${inc.length} stage${inc.length === 1 ? '' : 's'} in the pack · ${out.filter(r => r.d).length} configured left out · ${out.filter(r => !r.d).length} empty`; $('xSave').disabled = !inc.length; $('xMsg').hidden = true;
+}
+async function openExport() { saveNow(); await renderExport(); const d = $('xDlg');
+  try { const fe = window.frameElement; if (fe) { d.style.margin = '0 auto'; d.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; d.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {} d.showModal(); }
+$('bdExport').onclick = openExport; $('gameSave').onclick = openExport; $('xClose').onclick = () => $('xDlg').close(); $('xHidden').onchange = renderExport;
+$('xSave').onclick = async () => {
+  const inc = xRows.filter(r => r.include); if (!inc.length) return;
+  const blob = packZip(inc.map(r => gameStage({ ...r.d, enabled: showOf(r.d) }, r.chk)));
+  if (blob.size > 2 * 1024 * 1024) { $('xMsg').textContent = 'That pack is over 2 MB.'; $('xMsg').hidden = false; return; }
+  const name = 'Forge-stages-' + inc.length + '.zip';
+  if (await saveBlob(blob, name)) { $('xMsg').textContent = `Saved ${name}. In the app: Forge Studio › Stages › Import stages, then build and reopen.`; $('xMsg').hidden = false; }
+};
+
+// editable project: every slot (empty ones too), hidden drafts, in-game drafts, stage IDs, ledger and stage projects with their files
+async function saveWorkspace() {
+  saveNow(); const s = readStore(), enc = new TextEncoder(), files = [];
+  const ws = { format: 'ForgeStageWorkspace', schema: 1, savedAt: new Date().toISOString(), profile: PROFILE, mode: st.mode,
+    slots: slotList().map(sl => ({ slot: sl.slot, stageId: sl.stageId, missionId: sl.missionId, key: slotKey(sl.slot), stage: s.drafts[slotKey(sl.slot)] || null })),
+    drafts: Object.fromEntries(Object.entries(s.drafts).filter(([k]) => !isSlotKey(k))), ids: readIds(), ledger: readLedger(), projects: [] };
+  if (window.ForgeSandboxUI) for (const p of await window.ForgeSandboxUI.listProjects()) { const dir = 'projects/' + slug(p.id).replace(/[^a-z0-9._-]/g, '-') + '/';
+    for (const f of await window.ForgeSandboxUI.projectFiles(p.id)) files.push({ name: dir + f.name, data: f.data }); ws.projects.push({ id: p.id, name: p.name, dir }); }
+  files.unshift({ name: 'forge-stages-workspace.json', data: enc.encode(JSON.stringify(ws, null, 1) + '\n') });
+  if (await saveBlob(zipBlob(files), 'Forge-stages-project.zip')) bdMsg(`Saved Forge-stages-project.zip: all ${ws.slots.length} slots (${ws.slots.filter(x => x.stage).length} with stages, hidden ones included), ${Object.keys(ws.drafts).length} in-game draft${Object.keys(ws.drafts).length === 1 ? '' : 's'} and ${ws.projects.length} stage project${ws.projects.length === 1 ? '' : 's'}. This isn’t a game import; use Export for the game for that.`);
+}
+$('bdSave').onclick = saveWorkspace;
+async function restoreWorkspace(ws, files) {
+  if (!ws || ws.format !== 'ForgeStageWorkspace' || ws.schema !== 1 || !Array.isArray(ws.slots)) return { keys: [], bad: ['That isn’t a Forge stages project.'] };
+  const s = readStore(), kept = [], keys = [];
+  for (const sl of ws.slots) { const k = slotKey(sl.slot); if (!Number.isInteger(sl.slot) || sl.slot < 1 || sl.slot > 20) continue;
+    if (sl.stage && sl.stage.maps) { s.drafts[k] = sl.stage; keys.push(k); } else if (s.drafts[k]) kept.push(sl.slot); }
+  for (const [k, d] of Object.entries(ws.drafts || {})) if (d && d.maps && !isSlotKey(k)) s.drafts[k] = d;
+  try { localStorage.setItem(STORE, JSON.stringify(s)); const ids = { ...readIds(), ...(ws.ids || {}) }; localStorage.setItem(IDS, JSON.stringify(ids)); if (ws.ledger) localStorage.setItem(LEDGER, JSON.stringify(ws.ledger)); }
+  catch (e) { return { keys: [], bad: ['This browser wouldn’t keep the project (storage full?).'] }; }
+  const bad = []; let projects = 0;
+  if (files && window.ForgeSandboxUI) for (const p of ws.projects || []) { const sub = {}; for (const [n, data] of Object.entries(files)) if (n.startsWith(p.dir)) sub[n] = data;
+    const r = await window.ForgeSandboxUI.importZip(sub, p.name || p.id, { open: false }); if (r && r.err) bad.push(r.err); else if (r) projects++; }
+  return { keys, bad, workspace: { slots: keys.length, kept, projects } };
+}
+
 // drop packs or stage files anywhere on the page (the field keeps its own drop for enemies)
 let dragDepth = 0; const hasFiles = e => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
 addEventListener('dragenter', e => { if (!hasFiles(e)) return; dragDepth++; $('dropZone').hidden = false; });
 addEventListener('dragleave', e => { if (!hasFiles(e)) return; dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) $('dropZone').hidden = true; });
 addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
-addEventListener('drop', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth = 0; $('dropZone').hidden = true; importFiles(e.dataTransfer.files, $('libDlg').open ? 'lib' : ''); });
+addEventListener('drop', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth = 0; $('dropZone').hidden = true; importFiles(e.dataTransfer.files); });
+
+window.__forgeKit = { unzip, zipBlob, saveBlob };
 
 // ---- loop and start
-function tick(now) { const dt = st.last ? Math.min(0.1, (now - st.last) / 1000) : 0; st.last = now; if (st.anim && !document.hidden) { st.t += dt; if (st.draft) draw(); } requestAnimationFrame(tick); }
+function tick(now) { const dt = st.last ? Math.min(0.1, (now - st.last) / 1000) : 0; st.last = now; if (st.anim && !document.hidden && !document.body.classList.contains('sbx-on')) { st.t += dt; if (st.draft) draw(); } requestAnimationFrame(tick); }
 async function init() {
   if (!('DecompressionStream' in window)) throw new Error('old browser');
   const [idx, enemies, app] = await Promise.all([getData(CAT + 'index.json.gz'), getData(CAT + 'enemies.json.gz'), getData(CAT + 'app.json.gz').catch(() => null)]);
@@ -1162,13 +1503,748 @@ async function init() {
   renderPal();
   let q = null; try { q = new URLSearchParams(location.search); } catch (e) {}
   const s = readStore(); const want = q && q.get('mission');
-  if (want && idx.missions.some(m => m.id === want)) await openMission(want, s.last && s.drafts[s.last] && String(s.drafts[s.last].base) === want ? { key: s.last } : {});
-  else if (s.last && s.drafts[s.last]) await openKey(s.last);
-  else await openMission(APP && APP.donors['300301'] ? '300301' : '100101');
+  let mode = 'game'; try { mode = localStorage.getItem('bf-stages-mode') === 'custom' ? 'custom' : 'game'; } catch (e) {}
+  if (want && idx.missions.some(m => m.id === want)) { const k = s.lastByMode && s.lastByMode.game; await setMode('game', { key: k && s.drafts[k] && String(s.drafts[k].base) === want ? k : null }); if (!st.key || String(st.draft.base) !== want) await openMission(want); }
+  else await setMode(mode);
   requestAnimationFrame(tick);
 }
-try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, exportStage, allEnemies, cellsOf, gameCheck, gameStage, packZip, unzip, importGameStage, importFiles, openLib, readStore, get APP() { return APP; } }; } catch (e) {}
+try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, exportStage, allEnemies, cellsOf, gameCheck, gameStage, packZip, unzip, importGameStage, importFiles, readStore, setMode, renderBoard, exportRows, openSlot, createSlot, get APP() { return APP; } }; } catch (e) {}
 init().catch(err => { $('mName').textContent = err && err.message === 'old browser' ? 'This browser is too old for the stage catalog. Update it and reload.' : 'Couldn’t load the stage catalog. Reload the page to try again.'; console.error(err); });
+})();
+
+/* Stage sandbox projects (format ForgeStageSandbox, schema 1): website authoring data, never a game install file.
+   Adapted from the handoff's integration/stage-sandbox.mjs. Every edit returns a new project (for undo/redo) and
+   leaves the old one untouched. Raw records stay authoritative; derived client/server mirrors are rebuilt together. */
+(function (root) {
+'use strict';
+const clone = x => JSON.parse(JSON.stringify(x));
+const need = (ok, message) => { if (!ok) throw new Error(message); };
+const integer = (x, min, max, label) => need(Number.isSafeInteger(x) && x >= min && x <= max, `${label}: enter a whole number from ${min} to ${max}`);
+const id = x => String(x);
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const POLICY_MAX = 999;          // editor policy for quantities, levels, luck and bonuses; not a proven engine limit
+const CURRENCY_MAX = 99999999;   // editor policy for coins and EXP
+const PLUS = ['s', 'a', 'd', 'sp'];
+
+// JSON text -> object, refusing integers that a JS number can't hold exactly (64-bit IDs must arrive as strings)
+function parseText(text) {
+  let i = 0; const n = text.length;
+  while (i < n) {
+    const c = text.charCodeAt(i);
+    if (c === 34) { i++; while (i < n) { const d = text.charCodeAt(i); if (d === 92) i += 2; else if (d === 34) { i++; break; } else i++; } continue; }
+    if (c === 45 || (c >= 48 && c <= 57)) { let j = i + 1; while (j < n && /[0-9.eE+-]/.test(text[j])) j++;
+      const tok = text.slice(i, j); if (/^-?\d{16,}$/.test(tok) && !Number.isSafeInteger(Number(tok))) throw new Error(`The file has the number ${tok}, which is too large to keep exactly. Large IDs must be stored as text.`);
+      i = j; continue; }
+    i++;
+  }
+  return JSON.parse(text);
+}
+function stage(p, localId) { const s = p.catalog.stages.find(s => s.spec.localId === localId); need(s, 'Unknown quest'); return s; }
+function map(s, mapId) { const m = s.donor.maps.find(m => m.id === id(mapId)); need(m, 'Unknown map'); return m; }
+function enemy(p, enemyId) { const e = p.catalog.enemies.find(e => id(e.id) === id(enemyId)); need(e, 'Unknown enemy'); return e; }
+function item(library, itemId) {
+  const i = library && library.items && library.items[id(itemId)]; need(i, 'Select an item from the reward catalog');
+  need(i.availability !== 'reserved', 'Reserved material slots cannot be awarded'); return i;
+}
+function validateProject(p, library) {
+  need(p && p.format === 'ForgeStageSandbox' && p.schema === 1, 'Unsupported website project format');
+  need(p.compatibility && p.compatibility.directGameImport === false, 'This project must stay labeled as website authoring data');
+  need(p.catalog && typeof p.catalog.profile === 'string' && p.catalog.profile, 'The project has no source catalog profile');
+  need(Array.isArray(p.catalog.stages) && Array.isArray(p.catalog.enemies), 'The project has no quests or enemies');
+  const stages = new Set(), missions = new Set(), maps = new Set(), sets = new Set(), enemies = new Set();
+  for (const e of p.catalog.enemies) { need(!enemies.has(id(e.id)), 'Duplicate enemy ID ' + e.id); enemies.add(id(e.id)); }
+  for (const s of p.catalog.stages) {
+    need(s.slot && s.spec && s.donor, 'A quest is missing its slot, spec or source records');
+    need(!stages.has(s.slot.stageId) && !missions.has(s.slot.missionId), 'Duplicate stage or mission ID');
+    stages.add(s.slot.stageId); missions.add(s.slot.missionId);
+    const d = s.donor, mi = d.mission.missionInfo, sm = d.serverMission;
+    need(id(d.mission.missionId) === s.slot.missionId, 'Mission identity mismatch');
+    need(same(mi.mapList.map(id), d.maps.map(m => m.id)), 'Client map order mismatch');
+    need(same(sm.mapIds.map(id), d.maps.map(m => m.id)), 'Server map order mismatch');
+    need(same(mi.subMission, d.objective.objectives), 'Client/server objective mismatch');
+    need(mi.minCoin === sm.minimumCoin && mi.maxCoin === sm.maximumCoin && mi.exp === sm.experience && mi.charaExp === sm.characterExperience, 'Client/server coin or EXP mismatch');
+    for (const m of d.maps) {
+      need(!maps.has(m.id), 'Duplicate map ID'); maps.add(m.id);
+      need(m.raw.map.lines.length === 11 && m.raw.map.lines.every(l => l.chips.length === 11), 'Expected 11×11 grid');
+      for (const set of m.sets) {
+        need(!sets.has(set.id), 'Duplicate enemy-set ID'); sets.add(set.id);
+        for (const e of set.raw.enemySet) { need(enemies.has(id(e.id)), 'Missing enemy definition ' + e.id); integer(e.dropRate, 0, 1000, 'Drop chance per thousand'); }
+      }
+    }
+    for (const c of sm.dropCandidates) {
+      integer(c.chancePerThousand, 0, 1000, 'Drop chance per thousand');
+      const m = map(s, c.mapId), set = m.sets.find(x => x.id === id(c.enemySetId));
+      need(set && set.raw.enemySet.some(e => e.id === c.enemyId), 'Orphaned drop candidate');
+      need(enemy(p, c.enemyId).dropId === c.dropId, 'Client/server drop item mismatch');
+      if (library) need(library.items[id(c.dropId)], 'Unknown drop item ' + c.dropId);
+    }
+    need(same([...new Set(sm.dropCandidates.map(c => c.dropId))], d.drops.normalUnits), 'Normal drop summary doesn’t match the drop rows');
+    for (const r of d.drops.lucky || []) { integer(r.num, 1, POLICY_MAX, 'Lucky reward quantity'); if (library) need(library.items[id(r.chara_id)], 'Unknown lucky reward item ' + r.chara_id); }
+    for (const o of mi.subMission) for (const u of o.subMissionReward.units) { integer(u.unitNum, 0, POLICY_MAX, 'Challenge reward quantity'); if (u.unitId && library) need(library.items[id(u.unitId)], 'Unknown challenge reward item ' + u.unitId); }
+  }
+  return p;
+}
+const importProject = (text, library) => validateProject(parseText(text), library);
+const exportProject = (p, library) => { validateProject(p, library); return JSON.stringify(p, null, 2) + '\n'; };
+function edit(p, fn, library) { const next = clone(p); fn(next); validateProject(next, library); return next; }
+
+function questSummaries(p) {
+  return p.catalog.stages.map(s => ({ localId: s.spec.localId, stageId: s.slot.stageId, missionId: s.slot.missionId,
+    name: s.spec.name, missionName: s.spec.missionName, banner: s.banner, mapCount: s.donor.maps.length,
+    bosses: s.donor.maps.flatMap((m, i) => m.sets.some(x => x.raw.enemySet.some(e => e.type === 2)) ? [i + 1] : []) }));
+}
+function scene(p, localId, mapId, labels = { enemies: {} }) {
+  const s = stage(p, localId), m = map(s, mapId), players = [];
+  const cells = m.raw.map.lines.flatMap((l, y) => l.chips.map((chip, x) => ({ chip, grid: [x, y], field: [75 * x, 105 * y] })));
+  for (let slot = 0; slot < 6; slot++) {
+    const cell = cells.find(c => c.chip === 8 + slot);
+    players.push({ slot, chip: 8 + slot, grid: cell ? cell.grid : [5, 8], field: cell ? cell.field : [375, 840], fallback: !cell });
+  }
+  return { mapId: m.id, title: m.raw.title, backgroundId: id(m.raw.mapBgId), cells, players,
+    projection: 'logical-grid; not a calibrated phone camera',
+    enemies: m.sets.flatMap(set => set.raw.enemySet.map((entry, index) => {
+      const e = enemy(p, entry.id), label = labels.enemies[id(entry.id)];
+      return { key: `${set.id}:${index}`, enemyId: id(entry.id), setId: set.id, index, entry,
+        name: (label && label.name) || `Enemy ${entry.id}`, preview: label || null, boss: entry.type === 2, type: entry.type,
+        hp: e.hp.s, attack: e.atk.s, defense: e.def.s, level: entry.level, count: entry.count,
+        facing: entry.way, enterId: entry.enterId, spawnCandidates: cells.filter(c => c.chip === 2 || c.chip === 15 + entry.enterId),
+        selectedPosition: null, dropItemId: id(e.dropId), chancePerThousand: entry.dropRate };
+    })) };
+}
+function rebuildNormalDrops(p, s, library) {
+  const out = [];
+  for (const m of s.donor.maps) for (const set of m.sets) for (const entry of set.raw.enemySet) {
+    if (!entry.dropRate) continue;
+    const e = enemy(p, entry.id), i = item(library, e.dropId);
+    out.push({ mapId: Number(m.id), enemySetId: Number(set.id), enemyId: e.id, dropId: e.dropId, unitType3: i.type3,
+      chancePerThousand: entry.dropRate, enemyCount: entry.count, unitLevelMin: e.dropUnitLevelMin,
+      unitLevelMax: e.dropUnitLevelMax, luck: e.dropLuck, skillLevel: e.dropSkillLevel, ability: e.dropAbilityLevel,
+      plusS: e.dropPlus_s, plusA: e.dropPlus_a, plusD: e.dropPlus_d, plusSp: e.dropPlus_sp });
+  }
+  s.donor.serverMission.dropCandidates = out;
+  s.donor.drops.normalUnits = [...new Set(out.map(x => x.dropId))];
+}
+// maps (anywhere in the project) that use an enemy definition; a drop is per definition, so cross-map sharing blocks edits
+function usesOf(p, enemyId) { const out = []; for (const st of p.catalog.stages) for (const m of st.donor.maps) if (m.sets.some(x => x.raw.enemySet.some(t => id(t.id) === id(enemyId)))) out.push({ localId: st.spec.localId, mapId: m.id }); return out; }
+function soleMap(n, s, m, e) {
+  need(m.sets.some(x => x.raw.enemySet.some(t => t.id === e.id)), 'Enemy does not occur on the selected map');
+  for (const st of n.catalog.stages) for (const other of st.donor.maps)
+    if (other.id !== m.id) need(!other.sets.some(x => x.raw.enemySet.some(t => t.id === e.id)), 'This enemy is also used on another map. Editing it here would change that map too.');
+}
+function setNormalDrop(p, localId, mapId, enemyId, itemId, chancePerThousand, library) {
+  integer(chancePerThousand, 0, 1000, 'Drop chance per thousand'); const i = item(library, itemId);
+  return edit(p, n => {
+    const s = stage(n, localId), m = map(s, mapId), e = enemy(n, enemyId); soleMap(n, s, m, e);
+    if (id(e.dropId) !== id(i.id)) { e.dropId = Number(i.id); for (const k of PLUS) e['dropPlus_' + k] = i.defaultBonuses[k]; }
+    for (const set of m.sets) for (const t of set.raw.enemySet) if (t.id === e.id) t.dropRate = chancePerThousand;
+    rebuildNormalDrops(n, s, library);
+  }, library);
+}
+function setNormalDropDetails(p, localId, mapId, enemyId, v, library) {
+  integer(v.levelMin, 0, POLICY_MAX, 'Drop level (lowest)'); integer(v.levelMax, 0, POLICY_MAX, 'Drop level (highest)'); need(v.levelMin <= v.levelMax, 'The lowest drop level can’t be above the highest');
+  integer(v.luck, 0, POLICY_MAX, 'Drop luck'); for (const k of PLUS) integer(v.plus[k], 0, POLICY_MAX, 'Plus bonus');
+  return edit(p, n => {
+    const s = stage(n, localId), m = map(s, mapId), e = enemy(n, enemyId); soleMap(n, s, m, e);
+    Object.assign(e, { dropUnitLevelMin: v.levelMin, dropUnitLevelMax: v.levelMax, dropLuck: v.luck }); for (const k of PLUS) e['dropPlus_' + k] = v.plus[k];
+    rebuildNormalDrops(n, s, library);
+  }, library);
+}
+function setLuckyReward(p, localId, itemId, quantity, library) {
+  integer(quantity, 1, POLICY_MAX, 'Lucky reward quantity'); const i = item(library, itemId);
+  return edit(p, n => {
+    const drops = stage(n, localId).donor.drops;
+    need(drops.lucky.length === 1, 'This editor expects one lucky reward row');
+    const r = drops.lucky[0]; if (id(r.chara_id) !== id(i.id)) for (const k of PLUS) r['plus_' + k] = i.defaultBonuses[k];
+    Object.assign(r, { chara_id: Number(i.id), num: quantity });
+  }, library);
+}
+function setLuckyDetails(p, localId, v, library) {
+  integer(v.level, 1, POLICY_MAX, 'Lucky reward level'); integer(v.luck, 0, POLICY_MAX, 'Lucky reward luck'); for (const k of PLUS) integer(v.plus[k], 0, POLICY_MAX, 'Plus bonus');
+  return edit(p, n => { const r = stage(n, localId).donor.drops.lucky[0]; need(r, 'No lucky reward row');
+    Object.assign(r, { chara_level: v.level, luck: v.luck }); for (const k of PLUS) r['plus_' + k] = v.plus[k]; }, library);
+}
+function setObjectiveReward(p, localId, objectiveId, itemId, quantity, library) {
+  integer(quantity, 1, POLICY_MAX, 'Challenge reward quantity'); const i = item(library, itemId);
+  return edit(p, n => {
+    const d = stage(n, localId).donor;
+    const objective = d.mission.missionInfo.subMission.find(o => id(o.id) === id(objectiveId)); need(objective, 'Unknown objective');
+    const rows = objective.subMissionReward.units; need(rows.length > 0, 'Missing unit reward slots');
+    const keepBonus = id(rows[0].unitId) === id(i.id);
+    for (const u of rows) Object.assign(u, { unitId: 0, unitNum: 0 });
+    Object.assign(rows[0], { unitId: Number(i.id), unitNum: quantity });
+    if (!keepBonus) for (const k of PLUS) rows[0]['plus_' + k] = i.defaultBonuses[k];
+    d.objective.objectives = clone(d.mission.missionInfo.subMission);
+  }, library);
+}
+function setCurrency(p, localId, v, library) {
+  for (const [k, label] of [['minCoin', 'Lowest coins'], ['maxCoin', 'Highest coins'], ['exp', 'Player EXP'], ['charaExp', 'Unit EXP']]) integer(v[k], 0, CURRENCY_MAX, label);
+  need(v.minCoin <= v.maxCoin, 'Lowest coins can’t be above highest coins');
+  return edit(p, n => { const d = stage(n, localId).donor, mi = d.mission.missionInfo, sm = d.serverMission;
+    Object.assign(mi, { minCoin: v.minCoin, maxCoin: v.maxCoin, exp: v.exp, charaExp: v.charaExp });
+    Object.assign(sm, { minimumCoin: v.minCoin, maximumCoin: v.maxCoin, experience: v.exp, characterExperience: v.charaExp }); }, library);
+}
+function moveMarker(p, localId, mapId, chip, x, y) {
+  integer(x, 0, 10, 'Grid X'); integer(y, 0, 10, 'Grid Y');
+  need((chip >= 8 && chip <= 13) || (chip >= 16 && chip <= 25), 'Select a player or enemy-entry marker');
+  return edit(p, n => {
+    const m = map(stage(n, localId), mapId), grid = m.raw.map.lines; const found = [];
+    grid.forEach((l, cy) => l.chips.forEach((c, cx) => { if (c === chip) found.push([cx, cy]); }));
+    need(found.length === 1, 'This marker is in more than one spot, so it can’t be moved on its own'); const [sx, sy] = found[0];
+    if (sx === x && sy === y) return;
+    need(grid[y].chips[x] === 1, 'That spot isn’t open floor. Markers go on empty floor cells.');
+    grid[sy].chips[sx] = 1; grid[y].chips[x] = chip;
+  });
+}
+// put one map back the way the source had it (layout and drop chances), keeping edits elsewhere
+function resetMap(p, baseline, localId, mapId, library) {
+  const src = map(stage(baseline, localId), mapId);
+  return edit(p, n => { const s = stage(n, localId), i = s.donor.maps.findIndex(m => m.id === id(mapId)); need(i >= 0, 'Unknown map');
+    s.donor.maps[i] = clone(src); rebuildNormalDrops(n, s, library); }, library);
+}
+// source-relative change list: JSON path, before, after
+function changes(a, b, path = '', out = [], max = 5000) {
+  if (out.length >= max) return out;
+  if (same(a, b)) return out;
+  const oa = a && typeof a === 'object', ob = b && typeof b === 'object';
+  if (oa && ob && Array.isArray(a) === Array.isArray(b)) {
+    const keys = Array.isArray(a) ? [...Array(Math.max(a.length, b.length)).keys()] : [...new Set([...Object.keys(a), ...Object.keys(b)])];
+    for (const k of keys) changes(a[k], b[k], path + (Array.isArray(a) ? `[${k}]` : (path ? '.' : '') + k), out, max);
+    return out;
+  }
+  out.push({ path, before: a === undefined ? null : a, after: b === undefined ? null : b }); return out;
+}
+function gameExportStatus(p) {
+  return { allowed: false, reason: (p && p.compatibility && p.compatibility.reason) || 'Website project only. The app’s stage import takes layout edits; edited rewards, stats or backgrounds need a game-side installer update.' };
+}
+const api = { parseText, validateProject, importProject, exportProject, questSummaries, scene, rebuildNormalDrops, usesOf,
+  setNormalDrop, setNormalDropDetails, setLuckyReward, setLuckyDetails, setObjectiveReward, setCurrency, moveMarker, resetMap, changes, gameExportStatus,
+  POLICY_MAX, CURRENCY_MAX };
+if (typeof module === 'object' && module.exports) module.exports = api; else root.ForgeStageSandbox = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+// ---- Stage projects: a visual sandbox for ForgeStageSandbox projects (website authoring data, not game installs)
+(() => {
+const A = window.ForgeStageSandbox, FAP = window.ForgeAnimationPreview, KIT = window.__forgeKit;
+const $ = id => document.getElementById(id);
+const el = (tag, attrs = {}, ...kids) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) { if (v == null || v === false) continue; if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v; else if (k.startsWith('on')) e[k] = v; else e.setAttribute(k, v === true ? '' : v); } for (const c of kids.flat()) if (c != null && c !== false) e.append(c); return e; };
+const COLS = 11, ROWS = 11, CW = 75, CH = 105, FW = 750, FH = 1050;
+const ATTR = { 1: 'Heart', 2: 'Skill', 3: 'Body', 4: 'Bravery', 5: 'Wisdom' };
+const ATTR_COL = { 1: '#E0605A', 2: '#5FD3A0', 3: '#6FA8FF', 4: '#B98CFF', 5: '#F2C14E' };
+const TYPE3 = { 0: 'Unit', 91: 'Awakening material', 93: 'Speed boost', 95: 'Acquisition stone', 97: 'Luck item' };
+const typeLabel = t => TYPE3[t] || ('Item type ' + t);
+const stars = r => r ? r + '★' : '';
+const fmt = n => (n == null || n === '' ? '—' : Number(n).toLocaleString());
+const pctOf = n => (n / 10).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%';
+const OPEN_KEY = 'bf-stages-open-project';
+
+// ---- storage: projects and their package files in IndexedDB (a project with art is several MB)
+let dbp = null;
+function db() { return dbp || (dbp = new Promise((res, rej) => { const r = indexedDB.open('bf-stage-projects', 1);
+  r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('projects')) d.createObjectStore('projects', { keyPath: 'id' }); if (!d.objectStoreNames.contains('files')) d.createObjectStore('files'); };
+  r.onsuccess = () => res(r.result); r.onerror = () => { dbp = null; rej(r.error); }; })); }
+async function tx(store, mode, fn) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction(store, mode), s = t.objectStore(store); let out; const r = fn(s); if (r) r.onsuccess = () => { out = r.result; }; t.oncomplete = () => res(out); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error); }); }
+const fkey = (pid, path) => pid + '\n' + path;
+const getRec = pid => tx('projects', 'readonly', s => s.get(pid));
+const putRec = rec => tx('projects', 'readwrite', s => s.put(rec));
+const allRecs = () => tx('projects', 'readonly', s => s.getAll());
+const getFile = (pid, path) => tx('files', 'readonly', s => s.get(fkey(pid, path)));
+async function putFiles(pid, files) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction('files', 'readwrite'), s = t.objectStore('files'); for (const [p, b] of files) s.put(b, fkey(pid, p)); t.oncomplete = res; t.onerror = () => rej(t.error); t.onabort = () => rej(t.error); }); }
+async function delProject(pid) { const rec = await getRec(pid); const d = await db(); await new Promise((res, rej) => { const t = d.transaction(['projects', 'files'], 'readwrite'); t.objectStore('projects').delete(pid); for (const p of (rec && rec.files) || []) t.objectStore('files').delete(fkey(pid, p)); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+const MIME = { png: 'image/png', webp: 'image/webp', jpg: 'image/jpeg', json: 'application/json', md: 'text/markdown', gz: 'application/gzip', txt: 'text/plain', js: 'text/javascript', mjs: 'text/javascript', py: 'text/x-python' };
+const mimeOf = p => MIME[(p.split('.').pop() || '').toLowerCase()] || 'application/octet-stream';
+
+// ---- state
+const sb = { open: false, rec: null, p: null, base: null, lib: null, labels: { enemies: {} }, chars: null, bgIndex: [], undo: [], redo: [], qi: 0, mi: 0, sel: null, pick: null,
+  view: { z: 1, x: 0, y: 0 }, grid: true, anim: true, t: 0, last: 0, tab: 'enemies', ins: 'sel', urls: new Map(), missing: new Set(), scenes: new Map(), thumbs: new Map(), msg: '' };
+const quest = () => sb.p.catalog.stages[sb.qi];
+const qmap = () => quest().donor.maps[sb.mi];
+const enemyRow = eid => sb.p.catalog.enemies.find(e => String(e.id) === String(eid));
+const label = eid => (sb.labels.enemies || {})[String(eid)] || null;
+const strings = () => sb.p.catalog.strings || {};
+
+async function fileURL(path) { if (!path) return null; if (sb.urls.has(path)) return sb.urls.get(path);
+  const p = (async () => { const b = sb.rec ? await getFile(sb.rec.id, path).catch(() => null) : null; if (!b) { sb.missing.add(path); return null; } return URL.createObjectURL(b); })();
+  sb.urls.set(path, p); return p; }
+async function fileJSON(path) { const b = sb.rec && path ? await getFile(sb.rec.id, path).catch(() => null) : null; if (!b) { if (path) sb.missing.add(path); return null; }
+  let buf = new Uint8Array(await b.arrayBuffer()); if (buf[0] === 0x1f && buf[1] === 0x8b) buf = new Uint8Array(await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+  try { return A.parseText(new TextDecoder().decode(buf)); } catch (e) { return null; } }
+const imgCache = new Map();
+function image(url) { if (!url) return Promise.resolve(null); if (!imgCache.has(url)) imgCache.set(url, new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = url; })); return imgCache.get(url); }
+
+// ---- import: a package ZIP (project + assets) or a project JSON whose assets are already here
+function findProject(files) {
+  const names = Object.keys(files).filter(n => /\.json$/i.test(n) && !/(^|\/)(reference|catalogs|characters|animation|backgrounds|tests|exporter|renderer)\//.test(n));
+  names.sort((a, b) => (b.endsWith('.forge-stage-project.json') - a.endsWith('.forge-stage-project.json')) || a.length - b.length);
+  for (const n of names) { const f = files[n]; if (!f || f.length > 64 * 1024 * 1024) continue; const head = new TextDecoder().decode(f.subarray(0, 400));
+    if (/"format"\s*:\s*"ForgeStageSandbox"/.test(head)) return n; }
+  return null;
+}
+async function importZip(files, fname, opts = {}) {
+  const pf = findProject(files); if (!pf) return null; // not a stage project package
+  const root = pf.includes('/') ? pf.slice(0, pf.lastIndexOf('/') + 1) : '';
+  let p; try { p = A.importProject(new TextDecoder().decode(files[pf])); } catch (e) { return { err: `${fname}: ${e.message}` }; }
+  const stored = []; for (const [n, data] of Object.entries(files)) if (n.startsWith(root) && !n.endsWith('/')) stored.push([n.slice(root.length), new Blob([data], { type: mimeOf(n) })]);
+  const old = await getRec(p.projectId).catch(() => null);
+  const rec = { id: p.projectId, name: p.name || p.projectId, fileName: pf.slice(root.length), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: old && old.baseline ? old.baseline : p, files: stored.map(x => x[0]) };
+  try { await putFiles(rec.id, stored); await putRec(rec); } catch (e) { return { err: 'This browser wouldn’t store the project (storage full or private browsing). ' + (e && e.message || '') }; }
+  if (opts.open === false) return { ok: true, name: rec.name };
+  await openProject(rec.id, `Imported ${rec.name}: ${p.catalog.stages.length} quests, ${p.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0)} maps, ${stored.length} files.`);
+  return { ok: true, name: rec.name };
+}
+async function importJSON(text, fname) {
+  let p; try { p = A.importProject(text); } catch (e) { return { err: `${fname}: ${e.message}` }; }
+  const old = await getRec(p.projectId).catch(() => null);
+  const rec = old ? { ...old, project: p, savedAt: Date.now() } : { id: p.projectId, name: p.name || p.projectId, fileName: fname, savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: p, files: [] };
+  const prev = sb.open && sb.rec && sb.rec.id === rec.id ? sb.p : null;
+  try { await putRec(rec); } catch (e) { return { err: 'This browser wouldn’t store the project. ' + (e && e.message || '') }; }
+  await openProject(rec.id, old ? `Opened ${fname} with the art and catalogs already stored for this project.` : `Opened ${fname}. Its art and catalogs aren’t stored here yet: import the package ZIP to see them and to edit rewards.`);
+  if (prev) { sb.undo.push({ p: prev, what: 'import' }); syncUndo(); }
+  return { ok: true, name: rec.name };
+}
+
+// ---- open / close
+async function openProject(pid, msg = '') {
+  const rec = await getRec(pid); if (!rec) throw new Error('missing project');
+  for (const u of sb.urls.values()) u.then(x => x && URL.revokeObjectURL(x));
+  Object.assign(sb, { rec, p: rec.project, base: rec.baseline, undo: [], redo: [], qi: 0, mi: 0, sel: null, pick: null, view: { z: 1, x: 0, y: 0 }, urls: new Map(), missing: new Set(), scenes: new Map(), thumbs: new Map(), msg });
+  const L = rec.project.libraries || {};
+  const [lib, labels, chars, bg] = await Promise.all([fileJSON(L.rewards), fileJSON(L.enemies), fileJSON(L.characters), fileJSON(L.backgrounds)]);
+  sb.lib = lib && lib.items ? lib : null; sb.labels = labels && labels.enemies ? labels : { enemies: {} }; sb.chars = chars; sb.bgIndex = Array.isArray(bg) ? bg : [];
+  try { localStorage.setItem(OPEN_KEY, pid); } catch (e) {}
+  sb.open = true; document.body.classList.add('sbx-on'); $('sbx').hidden = false;
+  renderAll(); requestAnimationFrame(() => { draw(); $('sbx').scrollIntoView({ block: 'start' }); });
+}
+function closeProject() { flushSave(); sb.open = false; document.body.classList.remove('sbx-on'); $('sbx').hidden = true; try { localStorage.removeItem(OPEN_KEY); } catch (e) {} }
+let saveT = 0;
+function queueSave() { clearTimeout(saveT); saveT = setTimeout(flushSave, 400); }
+function flushSave() { clearTimeout(saveT); if (!sb.rec || !sb.p) return; sb.rec.project = sb.p; sb.rec.savedAt = Date.now(); putRec(sb.rec).catch(() => note('This browser wouldn’t save your latest change. Use Save editable project to keep a copy.', true)); }
+
+// ---- edits (each returns a new project; undo keeps the old one)
+function apply(fn, what) {
+  let next; try { next = fn(sb.p); } catch (e) { note(e.message, true); return false; }
+  if (next === sb.p) return false;
+  sb.undo.push({ p: sb.p, what }); if (sb.undo.length > 200) sb.undo.shift(); sb.redo = []; sb.p = next; queueSave(); note(''); renderAll(); return true;
+}
+function undo() { const u = sb.undo.pop(); if (!u) return; sb.redo.push({ p: sb.p, what: u.what }); sb.p = u.p; queueSave(); note('Undid: ' + u.what); renderAll(); }
+function redo() { const r = sb.redo.pop(); if (!r) return; sb.undo.push({ p: sb.p, what: r.what }); sb.p = r.p; queueSave(); note('Redid: ' + r.what); renderAll(); }
+function syncUndo() { $('sxUndo').disabled = !sb.undo.length; $('sxRedo').disabled = !sb.redo.length;
+  $('sxUndo').title = sb.undo.length ? 'Undo ' + sb.undo[sb.undo.length - 1].what : 'Nothing to undo'; $('sxRedo').title = sb.redo.length ? 'Redo ' + sb.redo[sb.redo.length - 1].what : 'Nothing to redo'; }
+function note(t, bad) { const n = $('sxMsg'); n.textContent = t || ''; n.hidden = !t; n.classList.toggle('bad', !!bad); }
+
+// ---- sprites: assembled idle previews only where the package binds a unit to exact assets
+function donorFor(eid) { const l = label(eid); if (!l || !l.previewAvailable || !l.catalogDonorId || !sb.chars || !sb.chars.donors) return null; const d = sb.chars.donors[l.catalogDonorId]; return d ? { id: l.catalogDonorId, d, root: l.previewRoot || 'characters/' } : null; }
+const COMMON = '../sprites/tex/common.png';
+function sceneFor(eid) {
+  const dn = donorFor(eid); if (!dn) return null; const key = dn.id; if (sb.scenes.has(key)) return sb.scenes.get(key);
+  sb.scenes.set(key, undefined);
+  (async () => { const L = dn.d.moves && dn.d.moves.idle && dn.d.moves.idle.layers.find(l => l.role === 'character'); if (!L) { sb.scenes.set(key, null); return; }
+    const [model, clip] = await Promise.all([fileJSON(dn.root + L.model), fileJSON(dn.root + L.clip)]); if (!model || !clip) { sb.scenes.set(key, null); return; }
+    const byMap = {}; for (const cc of Object.values(model.cells)) if (!byMap[cc.mapId]) byMap[cc.mapId] = cc;
+    const images = {}; for (const [mid, cc] of Object.entries(byMap)) { const t = model.textures[mid];
+      if (t) images[mid] = await image(await fileURL(dn.root + t.file)); else if (cc.pixelSize && cc.pixelSize.x === 256 && cc.pixelSize.y === 512) images[mid] = await image(COMMON); }
+    sb.scenes.set(key, { model, clip, images, dur: Math.max(0.1, clip.duration || 1) }); draw(); renderPalette(); })().catch(() => sb.scenes.set(key, null));
+  return undefined;
+}
+function tri(ctx, im, s, d) {
+  const [s0, s1, s2] = s, [d0, d1, d2] = d, ux = s1[0] - s0[0], uy = s1[1] - s0[1], vx = s2[0] - s0[0], vy = s2[1] - s0[1], det = ux * vy - uy * vx; if (Math.abs(det) < 1e-8) return;
+  const dx1 = d1[0] - d0[0], dy1 = d1[1] - d0[1], dx2 = d2[0] - d0[0], dy2 = d2[1] - d0[1];
+  const a = (dx1 * vy - dx2 * uy) / det, b = (dy1 * vy - dy2 * uy) / det, c = (dx2 * ux - dx1 * vx) / det, e = (dy2 * ux - dy1 * vx) / det;
+  const cx = (d0[0] + d1[0] + d2[0]) / 3, cy = (d0[1] + d1[1] + d2[1]) / 3; const g = q => { const x = q[0] - cx, y = q[1] - cy, l = Math.hypot(x, y) || 1; return [q[0] + x / l * 0.6, q[1] + y / l * 0.6]; };
+  ctx.save(); ctx.beginPath(); ctx.moveTo(...g(d0)); ctx.lineTo(...g(d1)); ctx.lineTo(...g(d2)); ctx.closePath(); ctx.clip();
+  ctx.transform(a, b, c, e, d0[0] - a * s0[0] - c * s0[1], d0[1] - b * s0[0] - e * s0[1]); ctx.drawImage(im, 0, 0); ctx.restore();
+}
+function drawSprite(ctx, sc, t, sx, sy, k, alpha) { // (sx, sy) is the unit's feet; parts keep their own aspect
+  for (const p of FAP.pose(sc.model, sc.clip, t % sc.dur).parts) {
+    const im = sc.images[p.map]; if (!im) continue; const [x, y, w, h] = p.rect; if (x < 0 || y < 0 || x + w > im.naturalWidth || y + h > im.naturalHeight) continue;
+    const Q = p.quad.map(([qx, qy]) => [sx + qx * k, sy + qy * k]);
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha * alpha)); ctx.globalCompositeOperation = p.blend === 1 ? 'lighter' : p.blend === 3 ? 'multiply' : 'source-over';
+    const l = p.flipX ? x + w : x, r = p.flipX ? x : x + w, tp = p.flipY ? y + h : y, b = p.flipY ? y : y + h;
+    const para = Math.abs(Q[0][0] + Q[2][0] - Q[1][0] - Q[3][0]) + Math.abs(Q[0][1] + Q[2][1] - Q[1][1] - Q[3][1]) < 0.5;
+    if (para && r !== l && b !== tp) { const ax = (Q[1][0] - Q[0][0]) / (r - l), ay = (Q[1][1] - Q[0][1]) / (r - l), cx = (Q[3][0] - Q[0][0]) / (b - tp), cy = (Q[3][1] - Q[0][1]) / (b - tp);
+      ctx.save(); ctx.setTransform(ax, ay, cx, cy, Q[0][0] - l * ax - tp * cx, Q[0][1] - l * ay - tp * cy); ctx.drawImage(im, x, y, w, h, x, y, w, h); ctx.restore(); }
+    else { const S = [[l, tp], [r, tp], [r, b], [l, b]], mid = Q.reduce((a, v) => [a[0] + v[0] / 4, a[1] + v[1] / 4], [0, 0]), sm = [x + w / 2, y + h / 2];
+      for (let i = 0; i < 4; i++) tri(ctx, im, [sm, S[i], S[(i + 1) % 4]], [mid, Q[i], Q[(i + 1) % 4]]); }
+  }
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+}
+// one still frame per unit for lists (no running players in lists)
+function thumbOf(eid) {
+  const dn = donorFor(eid); if (!dn) return null; if (sb.thumbs.has(dn.id)) return sb.thumbs.get(dn.id);
+  const sc = sceneFor(eid); if (!sc) return null;
+  const parts = FAP.pose(sc.model, sc.clip, 0).parts; let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (const p of parts) for (const [qx, qy] of p.quad) { x0 = Math.min(x0, qx); y0 = Math.min(y0, qy); x1 = Math.max(x1, qx); y1 = Math.max(y1, qy); }
+  const S = 96, c = document.createElement('canvas'); c.width = S; c.height = S; const k = Math.min((S - 8) / Math.max(1, x1 - x0), (S - 8) / Math.max(1, y1 - y0));
+  drawSprite(c.getContext('2d'), sc, 0, S / 2 - (x0 + x1) / 2 * k, S - 4 - y1 * k, k, 1); const u = c.toDataURL(); sb.thumbs.set(dn.id, u); return u;
+}
+const phCache = new Map();
+function placeholderThumb(name, attr) { const ck = (name || '?') + '|' + attr; if (phCache.has(ck)) return phCache.get(ck); const u = placeholderDraw(name, attr); phCache.set(ck, u); return u; }
+function placeholderDraw(name, attr) { const c = document.createElement('canvas'); c.width = 96; c.height = 96; const g = c.getContext('2d');
+  g.fillStyle = ATTR_COL[attr] || '#9AA3B5'; g.globalAlpha = .9; g.beginPath(); g.arc(48, 46, 30, 0, 7); g.fill(); g.globalAlpha = 1; g.fillStyle = '#10131A'; g.font = '800 24px Manrope,system-ui'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText((name || '?').split(/\s+/).map(s => s[0]).join('').slice(0, 2).toUpperCase(), 48, 47); return c.toDataURL(); }
+
+// ---- the layout preview
+const cv = () => $('sxCv');
+function cam() { const c = cv(), w = c.width, h = c.height, v = sb.view; const s0 = Math.min(w / FW, h / FH), ox0 = (w - FW * s0) / 2, oy0 = (h - FH * s0) / 2;
+  return { s: s0 * v.z, ox: (ox0 - w / 2) * v.z + w / 2 + v.x * w, oy: (oy0 - h / 2) * v.z + h / 2 + v.y * w }; }
+const toScreen = (c, x, y) => [c.ox + x * c.s, c.oy + y * c.s];
+function toWorld(e) { const c = cv(), r = c.getBoundingClientRect(), k = c.width / r.width, m = cam(); return [((e.clientX - r.left) * k - m.ox) / m.s, ((e.clientY - r.top) * k - m.oy) / m.s]; }
+const nearest = ([wx, wy]) => [Math.max(0, Math.min(COLS - 1, Math.round(wx / CW))), Math.max(0, Math.min(ROWS - 1, Math.round(wy / CH)))];
+let hits = [], drag = null, scn = null;
+function bgFor(bgId) { const b = sb.bgIndex.find(x => String(x.backgroundId) === String(bgId)); return b ? { path: b.thumbnail, label: b.label } : null; }
+const bgPics = new Map();
+function bgPic(path) { if (!bgPics.has(path)) { bgPics.set(path, null); fileURL(path).then(image).then(i => { bgPics.set(path, i); draw(); }); } return bgPics.get(path); }
+function sizeCanvas() { const c = cv(), r = c.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr)); if (c.width !== w || c.height !== h) { c.width = w; c.height = h; } }
+function draw() {
+  if (!sb.open || !sb.p) return; sizeCanvas(); const c = cv(), ctx = c.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, c.width, c.height);
+  const m = cam(); hits = []; scn = A.scene(sb.p, quest().spec.localId, qmap().id, sb.labels);
+  const bg = bgFor(scn.backgroundId); const pic = bg && bgPic(bg.path);
+  if (pic) { const k = Math.max(FW / pic.naturalWidth, FH / pic.naturalHeight); const dw = pic.naturalWidth * k, dh = pic.naturalHeight * k; const [x0, y0] = toScreen(m, (FW - dw) / 2, (FH - dh) / 2); ctx.drawImage(pic, x0, y0, dw * m.s, dh * m.s); }
+  else { ctx.fillStyle = '#1a1f2a'; const [x0, y0] = toScreen(m, -CW / 2, -CH / 2); ctx.fillRect(x0, y0, (FW + CW) * m.s, (FH + CH) * m.s); }
+  for (const cell of scn.cells) { const [gx, gy] = cell.grid; const [sx, sy] = toScreen(m, gx * CW - CW / 2, gy * CH - CH / 2); const ch = cell.chip;
+    const floor = ch > 7 || ((0x6e >> ch) & 1) === 1;
+    if (!floor || ch === 0) { ctx.fillStyle = 'rgba(10,12,16,.6)'; ctx.fillRect(sx, sy, CW * m.s + .5, CH * m.s + .5); }
+    else if (sb.grid) { ctx.fillStyle = 'rgba(95,211,160,.07)'; ctx.fillRect(sx, sy, CW * m.s, CH * m.s); ctx.strokeStyle = 'rgba(255,255,255,.15)'; ctx.lineWidth = 1; ctx.strokeRect(sx + .5, sy + .5, CW * m.s - 1, CH * m.s - 1); } }
+  const R = Math.max(9, 22 * m.s), selE = sb.sel && sb.sel.kind === 'enemy' ? scn.enemies.find(e => e.key === sb.sel.key) : null;
+  // spawn candidates of the selected enemy
+  if (selE) for (const cnd of selE.spawnCandidates) { const [sx, sy] = toScreen(m, cnd.grid[0] * CW, cnd.grid[1] * CH); ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.ellipse(sx, sy, 40 * m.s, 15 * m.s, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+  // your team's start spots that are on the map (missing slots fall back in the game and aren't drawn)
+  for (const pl of scn.players) { if (pl.fallback) continue; const [sx, sy] = toScreen(m, pl.field[0], pl.field[1]); const on = sb.sel && sb.sel.kind === 'marker' && sb.sel.chip === pl.chip;
+    ctx.fillStyle = 'rgba(122,184,255,.92)'; ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.fill(); if (on) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke(); }
+    ctx.fillStyle = '#0B1A2E'; ctx.font = `800 ${Math.round(R * 1.05)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(pl.slot + 1), sx, sy + 1);
+    hits.push({ kind: 'marker', chip: pl.chip, x: sx, y: sy, r: R * 1.3 }); }
+  // enemy entry points (chip 15+n) and shared entry cells (chip 2)
+  for (const cell of scn.cells) { const ch = cell.chip; if (!(ch === 2 || (ch >= 16 && ch <= 25))) continue; const [sx, sy] = toScreen(m, cell.field[0], cell.field[1]); const on = sb.sel && sb.sel.kind === 'marker' && sb.sel.chip === ch;
+    ctx.fillStyle = ch === 2 ? 'rgba(166,173,188,.9)' : 'rgba(255,122,61,.92)'; ctx.beginPath(); ctx.moveTo(sx, sy - R); ctx.lineTo(sx + R, sy); ctx.lineTo(sx, sy + R); ctx.lineTo(sx - R, sy); ctx.closePath(); ctx.fill(); if (on) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke(); }
+    ctx.fillStyle = '#1B0D05'; ctx.font = `800 ${Math.round(R * .85)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(ch === 2 ? '★' : String(ch - 15), sx, sy + 1);
+    hits.push({ kind: 'marker', chip: ch, x: sx, y: sy, r: R * 1.2 }); }
+  // enemies at their spawn candidates (all candidates when there are several; the game picks one)
+  const list = []; const per = {};
+  for (const e of scn.enemies) { const many = e.spawnCandidates.length > 1; for (const cnd of e.spawnCandidates) { const k = cnd.grid.join(','); (per[k] = per[k] || []).push({ e, cnd, many }); } }
+  for (const arr of Object.values(per)) arr.forEach((o, i) => list.push({ ...o, off: (i - (arr.length - 1) / 2) * 30 }));
+  list.sort((a, b) => a.cnd.grid[1] - b.cnd.grid[1] || a.off - b.off);
+  for (const o of list) { const e = o.e; const [sx, sy] = toScreen(m, o.cnd.field[0] + o.off, o.cnd.field[1]); const k = m.s; const row = enemyRow(e.enemyId) || {};
+    const alpha = (o.many ? .5 : 1) * (e.entry.enabled === false ? .4 : 1);
+    if (selE && selE.key === e.key) { ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.ellipse(sx, sy, 34 * k, 12 * k, 0, 0, 7); ctx.stroke(); }
+    const sc = sceneFor(e.enemyId);
+    if (sc) drawSprite(ctx, sc, sb.t + (o.off + o.cnd.grid[0]) * .13, sx, sy, k, alpha);
+    else { ctx.globalAlpha = alpha; ctx.fillStyle = ATTR_COL[row.attr] || '#9AA3B5'; ctx.beginPath(); ctx.arc(sx, sy - 34 * k, 26 * k, 0, 7); ctx.fill(); ctx.setLineDash([4, 3]); ctx.strokeStyle = '#ECEEF3'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = '#10131A'; ctx.font = `800 ${Math.round(16 * k)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(e.name.split(/\s+/).map(s => s[0]).join('').slice(0, 2).toUpperCase(), sx, sy - 33 * k); ctx.globalAlpha = 1; }
+    if (e.type === 2 || e.type === 3) { const t = e.type === 2 ? 'BOSS' : 'MINI BOSS'; ctx.font = `800 ${Math.max(9, Math.round(12 * k))}px Manrope,system-ui`; const tw = ctx.measureText(t).width + 10, ty = sy - 120 * k;
+      ctx.fillStyle = '#FF7A3D'; ctx.fillRect(sx - tw / 2, ty - 8 * Math.max(1, k), tw, 16 * Math.max(1, k)); ctx.fillStyle = '#1B0D05'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, sx, ty); }
+    hits.push({ kind: 'enemy', key: e.key, x: sx, y: sy - 55 * k, rx: 36 * k, ry: 70 * k }); }
+  if (drag && drag.moved && drag.to) { const [sx, sy] = toScreen(m, drag.to[0] * CW, drag.to[1] * CH); ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.strokeRect(sx - CW / 2 * m.s, sy - CH / 2 * m.s, CW * m.s, CH * m.s); ctx.setLineDash([]); }
+  $('sxBgNote').textContent = pic ? `Background ${scn.backgroundId}: ${bg.label || ''} — base texture only, not the composed game view` : `Background ${scn.backgroundId}: no picture in this package`;
+}
+function zoomAt(px, py, f) { const v = sb.view, c = cv(), w = c.width, h = c.height; const z2 = Math.max(.5, Math.min(6, v.z * f)); if (z2 === v.z) return;
+  const sx = (px - w / 2 - v.x * w) / v.z + w / 2, sy = (py - h / 2 - v.y * w) / v.z + h / 2; v.x = (px - w / 2 - (sx - w / 2) * z2) / w; v.y = (py - h / 2 - (sy - h / 2) * z2) / w; v.z = z2; $('sxZ').textContent = Math.round(z2 * 100) + '%'; draw(); }
+
+// moving markers: entry points are shared by every enemy that uses them
+function markerUsers(chip) { return scn ? scn.enemies.filter(e => e.spawnCandidates.some(c => c.chip === chip)) : []; }
+function moveChip(chip, x, y) {
+  const n = markerUsers(chip).length; const what = chip <= 13 ? `start spot ${chip - 7}` : `entry point ${chip - 15}`;
+  if (apply(p => A.moveMarker(p, quest().spec.localId, qmap().id, chip, x, y), `move ${what} on map ${sb.mi + 1}`)) {
+    if (chip <= 13) note(`Moved ${what}.`); else note(n > 1 ? `Moved ${what}. It’s the spawn spot for ${n} enemies on this map, so all of them moved.` : `Moved ${what}.`); }
+}
+function wireCanvas() {
+  const c = cv(), pts = new Map();
+  c.addEventListener('pointerdown', e => { if (e.button > 0 || !sb.open) return; c.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]); if (pts.size > 1) { drag = null; return; }
+    const r = c.getBoundingClientRect(), k = c.width / r.width, px = (e.clientX - r.left) * k, py = (e.clientY - r.top) * k; let hit = null;
+    for (let i = hits.length - 1; i >= 0; i--) { const h = hits[i]; if (h.kind === 'enemy' ? Math.abs(px - h.x) <= h.rx && Math.abs(py - h.y) <= h.ry : Math.hypot(px - h.x, py - h.y) <= h.r) { hit = h; break; } }
+    drag = { hit, start: [e.clientX, e.clientY], moved: false, to: null }; c.focus({ preventScroll: true }); });
+  c.addEventListener('pointermove', e => { const prev = pts.get(e.pointerId); if (!prev) return; const r = c.getBoundingClientRect();
+    if (pts.size === 2) { const [a, b] = [...pts.values()]; const o = a === prev ? b : a; const d0 = Math.hypot(prev[0] - o[0], prev[1] - o[1]), d1 = Math.hypot(e.clientX - o[0], e.clientY - o[1]); const k = c.width / r.width; if (d0 > 2) zoomAt(((e.clientX + o[0]) / 2 - r.left) * k, ((e.clientY + o[1]) / 2 - r.top) * k, d1 / d0); pts.set(e.pointerId, [e.clientX, e.clientY]); return; }
+    pts.set(e.pointerId, [e.clientX, e.clientY]); if (!drag) return;
+    if (!drag.moved && Math.hypot(e.clientX - drag.start[0], e.clientY - drag.start[1]) > 6) drag.moved = true; if (!drag.moved) return;
+    if (!drag.hit || (drag.hit.kind === 'marker' && drag.hit.chip === 2)) { sb.view.x += (e.clientX - prev[0]) / r.width; sb.view.y += (e.clientY - prev[1]) / r.width; draw(); return; }
+    drag.to = nearest(toWorld(e)); draw(); });
+  const end = e => { if (!pts.has(e.pointerId)) return; pts.delete(e.pointerId); const d = drag; drag = null; if (!d || pts.size) { draw(); return; }
+    if (!d.moved) { if (d.hit) select(d.hit.kind === 'enemy' ? { kind: 'enemy', key: d.hit.key } : { kind: 'marker', chip: d.hit.chip }); else if (sb.sel) select(null); return; }
+    if (!d.hit || !d.to) { draw(); return; } const [x, y] = d.to;
+    if (d.hit.kind === 'marker') { if (d.hit.chip === 2) { note('Shared entry cells (★) are part of the field and can’t be moved here.', true); draw(); return; } moveChip(d.hit.chip, x, y); }
+    else { const en = scn.enemies.find(q => q.key === d.hit.key); const chip = en && 15 + en.enterId; const cells = en ? en.spawnCandidates : [];
+      if (!en || cells.length !== 1 || cells[0].chip !== chip) { note('This enemy can spawn from several cells, so drag one of its entry markers instead.', true); draw(); return; }
+      select({ kind: 'enemy', key: en.key }); moveChip(chip, x, y); } };
+  c.addEventListener('pointerup', end); c.addEventListener('pointercancel', end);
+  c.addEventListener('wheel', e => { e.preventDefault(); const r = c.getBoundingClientRect(), k = c.width / r.width; zoomAt((e.clientX - r.left) * k, (e.clientY - r.top) * k, Math.exp(-e.deltaY * (e.deltaMode === 1 ? 16 : 1) * (e.ctrlKey ? .01 : .0015))); }, { passive: false });
+  c.addEventListener('keydown', e => { const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!d) return;
+    const chip = sb.sel && (sb.sel.kind === 'marker' ? sb.sel.chip : (() => { const en = scn && scn.enemies.find(q => q.key === sb.sel.key); return en && en.spawnCandidates.length === 1 ? en.spawnCandidates[0].chip : null; })());
+    if (!chip || chip === 2) return; e.preventDefault(); const cell = scn.cells.find(q => q.chip === chip); if (!cell) return; const x = cell.grid[0] + d[0], y = cell.grid[1] + d[1]; if (x < 0 || y < 0 || x > 10 || y > 10) return; moveChip(chip, x, y); });
+}
+
+// ---- selection and the map strip
+function select(s) { sb.sel = s; sb.ins = 'sel'; renderInspector(); draw(); }
+function goMap(i) { const n = quest().donor.maps.length; sb.mi = Math.max(0, Math.min(n - 1, i)); sb.sel = null; renderStrip(true); renderInspector(); renderPalette(); draw(); }
+const CHIP_W = 124;
+let mapStats = new WeakMap();
+function statsOf(m) { if (mapStats.has(m)) return mapStats.get(m); let boss = false, n = 0, hp = 0, lv = 0;
+  for (const s of m.sets) for (const e of s.raw.enemySet) { n += e.count || 1; if (e.type === 2) boss = true; const r = enemyRow(e.id); if (r && r.hp) hp = Math.max(hp, r.hp.s); lv = Math.max(lv, e.level || 0); }
+  const o = { boss, n, hp, lv }; mapStats.set(m, o); return o; }
+function renderStrip(scrollTo) {
+  const q = quest(), maps = q.donor.maps, vp = $('sxStrip'), inner = $('sxStripIn');
+  inner.style.width = (maps.length * CHIP_W) + 'px';
+  if (scrollTo) { const want = sb.mi * CHIP_W - vp.clientWidth / 2 + CHIP_W / 2; vp.scrollLeft = Math.max(0, want); }
+  const first = Math.max(0, Math.floor(vp.scrollLeft / CHIP_W) - 3), last = Math.min(maps.length - 1, Math.ceil((vp.scrollLeft + vp.clientWidth) / CHIP_W) + 3);
+  const kids = [];
+  for (let i = first; i <= last; i++) { const m = maps[i], st = statsOf(m);
+    const b = el('button', { type: 'button', class: 'mchip' + (i === sb.mi ? ' on' : ''), 'aria-current': i === sb.mi ? 'true' : null, style: `left:${i * CHIP_W}px`, onclick: () => goMap(i), 'aria-label': `Map ${i + 1}${st.boss ? ', boss' : ''}, ${st.n} enemies` },
+      el('span', { class: 'mn' }, 'Map ' + (i + 1), st.boss ? el('span', { class: 'badge boss', text: 'Boss' }) : null),
+      el('span', { class: 'ms', text: `${st.n} enem${st.n === 1 ? 'y' : 'ies'} · Lv ${st.lv}` }), el('span', { class: 'ms', text: `HP ${fmt(st.hp)}` }));
+    kids.push(b); }
+  inner.replaceChildren(...kids);
+  const bosses = A.questSummaries(sb.p)[sb.qi].bosses;
+  $('sxWhere').textContent = `Editing ${q.spec.name}${q.spec.missionName ? ' — ' + q.spec.missionName : ''} · Map ${sb.mi + 1} of ${maps.length}` + (bosses.length ? ` · bosses on map ${bosses.length > 6 ? bosses.slice(0, 5).join(', ') + ' … ' + bosses[bosses.length - 1] : bosses.join(', ')}` : '');
+  $('sxPrev').disabled = sb.mi === 0; $('sxNext').disabled = sb.mi === maps.length - 1; $('sxGo').max = maps.length;
+}
+
+// ---- left palette: Enemies, Backgrounds, Rewards, Event art
+const ENEMY_MAPS = new WeakMap();
+function enemyMaps() { if (ENEMY_MAPS.has(sb.p)) return ENEMY_MAPS.get(sb.p); const out = {};
+  sb.p.catalog.stages.forEach((s, qi) => s.donor.maps.forEach((m, mi) => { for (const set of m.sets) for (const e of set.raw.enemySet) { const k = String(e.id); (out[k] = out[k] || []); if (!out[k].some(x => x.qi === qi && x.mi === mi)) out[k].push({ qi, mi, boss: e.type === 2 }); } }));
+  ENEMY_MAPS.set(sb.p, out); return out; }
+function advanced(rows) { return el('details', { class: 'adv' }, el('summary', { text: 'Advanced details' }), el('dl', { class: 'rw' }, rows.flatMap(([k, v]) => [el('dt', { text: k }), el('dd', { text: v == null ? '—' : String(v) })]))); }
+function thumbImg(src, alt) { const i = el('img', { alt: alt || '', loading: 'lazy' }); if (src) i.src = src; return i; }
+function asyncImg(path, alt, fallback) { const i = el('img', { alt: alt || '', loading: 'lazy' }); if (fallback) i.src = fallback; if (path) fileURL(path).then(u => { if (u) i.src = u; }); return i; }
+function itemThumb(it) { if (it && it.thumbnail) return asyncImg(it.thumbnail, '', placeholderThumb(it.name, +it.attributeId)); return thumbImg(placeholderThumb(it ? it.name : '?', it ? +it.attributeId : 0), ''); }
+function renderPalette() {
+  if (!sb.open) return; const box = $('sxPalList'), q = ($('sxPalQ').value || '').trim().toLowerCase(), toks = q.split(/\s+/).filter(Boolean);
+  for (const b of document.querySelectorAll('#sxTabs button')) b.setAttribute('aria-selected', String(b.dataset.tab === sb.tab));
+  $('sxPick').hidden = !sb.pick; if (sb.pick) $('sxPickWhat').textContent = sb.pick.label;
+  const hit = h => toks.every(t => h.includes(t)); const rows = []; let total = 0;
+  if (sb.tab === 'enemies') {
+    const uses = enemyMaps();
+    for (const e of sb.p.catalog.enemies) { const l = label(e.id) || {}; const where = uses[String(e.id)] || []; const boss = where.some(w => w.boss);
+      const h = `${l.name || ''} ${l.title || ''} ${e.id} ${ATTR[e.attr] || ''} ${stars(e.rare)} ${boss ? 'boss' : 'normal'} ${where.map(w => 'map ' + (w.mi + 1)).join(' ')}`.toLowerCase(); if (!hit(h)) continue; total++; if (rows.length >= 120) continue;
+      const th = thumbOf(e.id); const name = l.name || ('Enemy ' + e.id);
+      rows.push(el('div', { class: 'pcard' }, th ? thumbImg(th, name) : thumbImg(placeholderThumb(name, e.attr), ''),
+        el('div', { class: 'pb' }, el('b', { text: name }), el('small', { text: [stars(e.rare), ATTR[e.attr], boss ? 'Boss' : 'Enemy'].filter(Boolean).join(' · ') }),
+          el('small', { class: th ? '' : 'warn', text: th ? 'Idle preview from its exact assets' : (l.previewAvailable ? 'Preview loading…' : 'Placeholder marker: preview not resolved yet') }),
+          el('small', { text: where.length ? 'Used on ' + where.slice(0, 4).map(w => (sb.p.catalog.stages[w.qi].spec.name || 'quest') + ' map ' + (w.mi + 1)).join(', ') + (where.length > 4 ? ` +${where.length - 4}` : '') : 'Not placed' }),
+          advanced([['Enemy ID', e.id], ['Shown with', l.catalogDonorId ? 'unit ' + l.catalogDonorId : 'no exact preview unit'], ['Rig / image', `${l.boneId ?? e.boneId} / ${l.imageId ?? e.imageId}`], ['Match basis', l.matchBasis], ['Title in catalog', l.title]]),
+          where.length ? el('button', { type: 'button', class: 'chip sm', text: 'Show on map', onclick: () => { const w = where[0]; sb.qi = w.qi; renderQuests(); goMap(w.mi); const en = scn && scn.enemies.find(x => x.enemyId === String(e.id)); if (en) select({ kind: 'enemy', key: en.key }); } }) : null))); }
+  } else if (sb.tab === 'backgrounds') {
+    for (const b of sb.bgIndex) { const h = `${b.label} ${b.backgroundId}`.toLowerCase(); if (!hit(h)) continue; total++;
+      rows.push(el('div', { class: 'pcard wide' }, asyncImg(b.thumbnail, b.label), el('div', { class: 'pb' }, el('b', { text: b.label || 'Background ' + b.backgroundId }), el('small', { text: 'Background ' + b.backgroundId + ' · ' + (b.thumbnailKind || 'base texture') }),
+        el('small', { text: 'Used by ' + (b.usedByMissions || []).length + ' mission(s) in this project. Changing backgrounds isn’t supported by the game import yet.' }),
+        advanced([['Definition', b.file], ['Base texture', b.thumbnail]])))); }
+    if (!rows.length) rows.push(el('p', { class: 'hint', text: 'No backgrounds in this package.' }));
+  } else if (sb.tab === 'rewards') {
+    if (!sb.lib) rows.push(el('p', { class: 'hint warn', text: 'The reward catalog isn’t stored for this project. Import the package ZIP to search and change rewards.' }));
+    else { const items = Object.values(sb.lib.items);
+      for (const it of items) { const h = `${it.name} ${it.title} ${typeLabel(it.type3)} ${stars(it.rarity)} ${it.rarity}star ${it.attribute} ${it.id}`.toLowerCase(); if (!hit(h)) continue; total++; if (rows.length >= 80) continue;
+        rows.push(el('div', { class: 'pcard' + (sb.pick ? ' pickable' : '') }, itemThumb(it), el('div', { class: 'pb' }, el('b', { text: it.name }), el('small', { text: [it.title, stars(it.rarity), it.attribute, typeLabel(it.type3)].filter(Boolean).join(' · ') }),
+          el('small', { text: it.thumbnail ? (it.thumbnailKind === 'supplied-original' ? 'Supplied art' : 'Exact card art') : 'No art in this package (named placeholder)' }),
+          advanced([['Item ID', it.id], ['Type (type3)', it.type3], ['Catalog status', it.availability], ['Default bonuses', JSON.stringify(it.defaultBonuses)], ['Card image', it.cardImageId]]),
+          sb.pick ? el('button', { type: 'button', class: 'btn primary sm', text: 'Use for ' + sb.pick.label, onclick: () => { const pk = sb.pick; sb.pick = null; pk.use(it); renderPalette(); } }) : null))); }
+      for (const mt of sb.p.catalog.materials || []) { if (mt.status === 'assigned') continue; const h = `${mt.name} ${mt.title} reserved ${mt.id}`.toLowerCase(); if (!hit(h)) continue; total++; if (rows.length >= 100) continue;
+        rows.push(el('div', { class: 'pcard reserved', 'aria-disabled': 'true' }, thumbImg(placeholderThumb('R', 0), ''), el('div', { class: 'pb' }, el('b', { text: 'Reserved — not configured' }), el('small', { text: `Material slot ${mt.slot} (${mt.id}). Not a finished reward item: it needs art and a game-side setup first.` })))); } }
+  } else {
+    for (const s of sb.p.catalog.stages) if (s.banner) { const h = `${s.spec.name} ${s.spec.missionName} banner`.toLowerCase(); if (!hit(h)) continue; total++;
+      rows.push(el('div', { class: 'pcard art' }, asyncImg(s.banner, s.spec.name + ' banner'), el('div', { class: 'pb' }, el('b', { text: s.spec.name }), el('small', { text: (s.spec.missionName || '') + ' · quest banner (separate from the battle background)' }), advanced([['File', s.banner], ['Stage ID', s.slot.stageId]])))); }
+    for (const mt of sb.p.catalog.materials || []) if (mt.status === 'assigned' && mt.icon) { const h = `${mt.name} ${mt.title} material`.toLowerCase(); if (!hit(h)) continue; total++;
+      rows.push(el('div', { class: 'pcard art' }, asyncImg(mt.icon, mt.name), el('div', { class: 'pb' }, el('b', { text: mt.name }), el('small', { text: (mt.title || '') + ' · material art' }), advanced([['File', mt.icon], ['Item ID', mt.id], ['Slot', mt.slot]])))); }
+  }
+  if (total > rows.length && sb.tab !== 'backgrounds') rows.push(el('p', { class: 'hint', text: `Showing ${rows.length} of ${total.toLocaleString()}. Type more to narrow it down.` }));
+  if (!total && !rows.length) rows.push(el('p', { class: 'hint', text: 'Nothing matches.' }));
+  box.replaceChildren(...rows);
+}
+
+// ---- right inspector: the selected object, or the quest's rewards
+const num = (id, v, attrs = {}) => el('input', { type: 'number', id, value: String(v ?? 0), step: '1', inputmode: 'numeric', ...attrs });
+function readInt(id, label) { const s = $(id).value.trim(); if (!/^-?\d+$/.test(s)) throw new Error(`${label}: enter a whole number`); return Number(s); }
+function section(title, ...kids) { return el('section', { class: 'isec' }, el('h4', { text: title }), ...kids); }
+function kv(rows) { return el('dl', { class: 'rw' }, rows.flatMap(([k, v]) => [el('dt', { text: k }), el('dd', {}, v instanceof Node ? v : document.createTextNode(v == null ? '—' : String(v)))])); }
+function itemLine(itemId) { const it = sb.lib && sb.lib.items[String(itemId)]; return el('span', { class: 'iline' }, itemThumb(it || { name: 'Item ' + itemId }), el('span', {}, el('b', { text: it ? it.name : 'Item ' + itemId }), el('small', { text: it ? [stars(it.rarity), it.attribute, typeLabel(it.type3), 'ID ' + it.id].filter(Boolean).join(' · ') : (sb.lib ? 'Not in the reward catalog' : 'Reward catalog not loaded') }))); }
+function pickItem(label, use) { if (!sb.lib) { note('Import the package ZIP to change reward items.', true); return; } sb.pick = { label, use }; sb.tab = 'rewards'; renderPalette(); $('sxPalQ').focus(); if (innerWidth < 1180) $('sxPal').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function renderInspector() {
+  if (!sb.open) return; for (const b of document.querySelectorAll('#sxInsTabs button')) b.setAttribute('aria-selected', String(b.dataset.tab === sb.ins));
+  const box = $('sxIns'); const kids = sb.ins === 'rewards' ? rewardsPanel() : selPanel(); box.replaceChildren(...kids);
+}
+function selPanel() {
+  const q = quest(), m = qmap(), s = scn = A.scene(sb.p, q.spec.localId, m.id, sb.labels); const out = [];
+  const en = sb.sel && sb.sel.kind === 'enemy' ? s.enemies.find(e => e.key === sb.sel.key) : null;
+  if (en) { const row = enemyRow(en.enemyId) || {}, l = en.preview || {}; const th = thumbOf(en.enemyId);
+    out.push(el('div', { class: 'ihead' }, th ? thumbImg(th, en.name) : thumbImg(placeholderThumb(en.name, row.attr), ''), el('div', {}, el('b', { text: en.name }), el('small', { text: [l.title, stars(row.rare), ATTR[row.attr]].filter(Boolean).join(' · ') }),
+      el('small', { class: th ? '' : 'warn', text: th ? 'Preview from its exact idle assets' : `${en.name} — preview not resolved yet; shown as a placeholder marker` }))));
+    out.push(section('In this map', kv([['Map', `Map ${sb.mi + 1} (one starting group: wave 1)`], ['Role', en.type === 2 ? 'Boss' : en.type === 3 ? 'Mini boss' : 'Normal enemy'], ['Level', en.level], ['Count', en.count],
+      ['Facing', en.facing === 5 ? 'Automatic (5)' : `Raw value ${en.facing}`], ['Enabled', en.entry.enabled === false ? 'No' : 'Yes']])));
+    out.push(section('Stats (configured in the enemy row)', kv([['HP', fmt(en.hp)], ['ATK', fmt(en.attack)], ['DEF', fmt(en.defense)]]), el('p', { class: 'hint', text: 'Battle can scale these; the preview doesn’t simulate it.' })));
+    out.push(section('Spawn', kv([['Entry point', `${en.enterId} (map chip ${15 + en.enterId})`], ['Spawn candidates', en.spawnCandidates.map(c => `[${c.grid.join(',')}]`).join(' ') || 'None on this map'], ['Entry motion', `type ${en.entry.enterType}, AI ${en.entry.aiType}, param ${en.entry.param}`]]),
+      el('p', { class: 'hint', text: en.spawnCandidates.length > 1 ? 'The game picks one of these cells. All of them are shown.' : 'Moving this entry point moves every enemy that shares it. Count, random selection and entry motion are kept as they are.' })));
+    out.push(section('Drop', kv([['Item', itemLine(en.dropItemId)], ['Chance', `${en.chancePerThousand}/1000 (${pctOf(en.chancePerThousand)})`]]), el('button', { type: 'button', class: 'chip', text: 'Edit drops', onclick: () => { sb.ins = 'rewards'; renderInspector(); } })));
+    out.push(el('details', { class: 'adv' }, el('summary', { text: 'Advanced: raw records (read-only)' }), el('p', { class: 'hint', text: 'Shown for reference. Editing raw JSON here isn’t supported, and nothing here makes a project installable.' }), el('pre', { text: JSON.stringify({ placement: en.entry, enemy: row, display: l }, null, 1) })));
+    return out; }
+  const mk = sb.sel && sb.sel.kind === 'marker' ? sb.sel.chip : null;
+  if (mk) { const cell = s.cells.find(c => c.chip === mk); const users = markerUsers(mk);
+    out.push(section(mk <= 13 ? `Start spot ${mk - 7}` : mk === 2 ? 'Shared entry cell' : `Entry point ${mk - 15}`, kv([['Cell', cell ? `[${cell.grid.join(',')}]` : '—'], ['Field position', cell ? `(${cell.field.join(', ')}) in the game’s logical field` : '—'], ['Used by', mk <= 13 ? 'Your unit in slot ' + (mk - 7) : `${users.length} enem${users.length === 1 ? 'y' : 'ies'} on this map`]]),
+      el('p', { class: 'hint', text: mk === 2 ? 'Every enemy can spawn here. It stays where it is.' : 'Drag it on the field, or use the arrow keys while the field has focus. It snaps to cells and only goes on open floor.' + (users.length > 1 ? ` Moving it moves all ${users.length} enemies that use it.` : '') })));
+    return out; }
+  out.push(section(`Map ${sb.mi + 1} of ${q.donor.maps.length}`, kv([['Quest', `${q.spec.name}${q.spec.missionName ? ' — ' + q.spec.missionName : ''}`], ['Enemy groups', 'One starting group (wave 1); no later waves'], ['Background', s.backgroundId], ['Title', s.title]])));
+  out.push(section('Your team', el('ul', { class: 'plist' }, s.players.map(pl => el('li', {}, el('button', { type: 'button', class: 'linkish', disabled: pl.fallback, onclick: () => select({ kind: 'marker', chip: pl.chip }), text: `Slot ${pl.slot + 1}: ` + (pl.fallback ? `no marker; the game falls back to [5,8] (not drawn)` : `[${pl.grid.join(',')}]`) }))))));
+  out.push(section('Enemies on this map', el('ul', { class: 'plist' }, s.enemies.map(e => el('li', {}, el('button', { type: 'button', class: 'linkish', onclick: () => select({ kind: 'enemy', key: e.key }), text: `${e.name}${e.type === 2 ? ' (boss)' : ''} · Lv ${e.level} · entry ${e.enterId}` }))))));
+  return out;
+}
+function bonusInputs(prefix, plus) { return el('div', { class: 'form four' }, ['s', 'a', 'd', 'sp'].map(k => el('label', {}, '+' + { s: 'HP', a: 'ATK', d: 'DEF', sp: 'Speed' }[k], num(prefix + k, plus[k], { min: 0, max: A.POLICY_MAX })))); }
+function guarded(fn) { return () => { try { fn(); } catch (e) { note(e.message, true); } }; }
+function rewardsPanel() {
+  const q = quest(), d = q.donor, mi = d.mission.missionInfo, sm = d.serverMission, out = [], lid = q.spec.localId, m = qmap();
+  if (!sb.lib) out.push(el('p', { class: 'hint warn', text: 'The reward catalog isn’t stored for this project, so rewards are read-only. Import the package ZIP to edit them.' }));
+  // enemy drops: per enemy definition on this map
+  const defs = []; for (const set of m.sets) for (const t of set.raw.enemySet) { let o = defs.find(x => x.id === String(t.id)); if (!o) defs.push(o = { id: String(t.id), n: 0, rate: t.dropRate }); o.n++; }
+  const dropBox = [];
+  for (const dfn of defs) { const e = enemyRow(dfn.id) || {}, l = label(dfn.id) || {}; const uses = A.usesOf(sb.p, dfn.id); const shared = uses.some(u => u.mapId !== m.id);
+    const pre = 'nd' + dfn.id + '_';
+    const chance = num(pre + 'ch', dfn.rate, { min: 0, max: 1000, 'aria-label': 'Drop chance per thousand' }); const pct = el('span', { class: 'pct', text: '= ' + pctOf(dfn.rate) });
+    chance.oninput = () => { const v = chance.value.trim(); pct.textContent = /^\d+$/.test(v) && +v <= 1000 ? '= ' + pctOf(+v) : 'Enter 0–1000'; pct.classList.toggle('bad', !(/^\d+$/.test(v) && +v <= 1000)); };
+    const dis = shared || !sb.lib;
+    dropBox.push(el('div', { class: 'rcard' }, el('div', { class: 'rhead' }, el('b', { text: (l.name || 'Enemy ' + dfn.id) }), el('small', { text: `${dfn.n} on map ${sb.mi + 1}` + (shared ? ' · also used on other maps' : '') })),
+      kv([['Item', itemLine(e.dropId)], ['Quantity', 'One per listed enemy (fixed)']]),
+      el('div', { class: 'form' }, el('label', {}, 'Chance per 1000', chance, pct), el('label', {}, 'Level (lowest–highest)', el('span', { class: 'pair' }, num(pre + 'l0', e.dropUnitLevelMin, { min: 0, max: A.POLICY_MAX, 'aria-label': 'Lowest level' }), num(pre + 'l1', e.dropUnitLevelMax, { min: 0, max: A.POLICY_MAX, 'aria-label': 'Highest level' }))), el('label', {}, 'Luck', num(pre + 'lk', e.dropLuck, { min: 0, max: A.POLICY_MAX }))),
+      bonusInputs(pre + 'p', { s: e.dropPlus_s, a: e.dropPlus_a, d: e.dropPlus_d, sp: e.dropPlus_sp }),
+      el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn ghost sm', disabled: dis, text: 'Change item…', onclick: () => pickItem(`${l.name || 'enemy'} drop`, it => apply(p => A.setNormalDrop(p, lid, m.id, dfn.id, it.id, dfn.rate, sb.lib), `change ${l.name || 'enemy'} drop to ${it.name}`)) }),
+        el('button', { type: 'button', class: 'btn primary sm', disabled: dis, text: 'Apply', onclick: guarded(() => { const ch = readInt(pre + 'ch', 'Chance'); const v = { levelMin: readInt(pre + 'l0', 'Lowest level'), levelMax: readInt(pre + 'l1', 'Highest level'), luck: readInt(pre + 'lk', 'Luck'), plus: { s: readInt(pre + 'ps', '+HP'), a: readInt(pre + 'pa', '+ATK'), d: readInt(pre + 'pd', '+DEF'), sp: readInt(pre + 'psp', '+Speed') } };
+          let next; try { next = A.setNormalDropDetails(A.setNormalDrop(sb.p, lid, m.id, dfn.id, String(enemyRow(dfn.id).dropId), ch, sb.lib), lid, m.id, dfn.id, v, sb.lib); } catch (e) { note(e.message, true); return; }
+          apply(() => next, `edit ${l.name || 'enemy'} drop on map ${sb.mi + 1}`); }) })),
+      el('p', { class: 'hint', text: shared ? 'This enemy definition is also used on another map, so editing it here would change that map too. That needs a separate copy of the enemy first.' : `Applies to all ${dfn.n} of this enemy on map ${sb.mi + 1}. Each listed enemy is its own drop roll.` })));
+  }
+  const totalRows = sm.dropCandidates.length;
+  out.push(section(`Enemy drops — map ${sb.mi + 1}`, el('p', { class: 'hint', text: `${totalRows} drop roll${totalRows === 1 ? '' : 's'} across this quest. Three enemies at 1000/1000 are three drops; that’s not the same as one enemy dropping 3.` }), ...dropBox));
+  // lucky reward
+  const L = d.drops.lucky || [];
+  if (L.length === 1) { const r = L[0], pre = 'lk_';
+    out.push(section('Lucky reward', el('p', { class: 'hint', text: `A separate luck-based reward, not guaranteed. Raw settings kept as they are: base rate ${d.drops.baseRate}, lucky supported ${d.drops.luckySupported}, luck required ${d.drops.luckRequired}.` }),
+      kv([['Item', itemLine(r.chara_id)]]), el('div', { class: 'form' }, el('label', {}, 'Quantity', num(pre + 'q', r.num, { min: 1, max: A.POLICY_MAX })), el('label', {}, 'Level', num(pre + 'lv', r.chara_level, { min: 1, max: A.POLICY_MAX })), el('label', {}, 'Luck', num(pre + 'lk', r.luck, { min: 0, max: A.POLICY_MAX }))),
+      bonusInputs(pre + 'p', { s: r.plus_s, a: r.plus_a, d: r.plus_d, sp: r.plus_sp }),
+      el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn ghost sm', disabled: !sb.lib, text: 'Change item…', onclick: () => pickItem('lucky reward', it => apply(p => A.setLuckyReward(p, lid, it.id, quest().donor.drops.lucky[0].num, sb.lib), `change lucky reward to ${it.name}`)) }),
+        el('button', { type: 'button', class: 'btn primary sm', disabled: !sb.lib, text: 'Apply', onclick: guarded(() => { const qn = readInt(pre + 'q', 'Quantity'); const v = { level: readInt(pre + 'lv', 'Level'), luck: readInt(pre + 'lk', 'Luck'), plus: { s: readInt(pre + 'ps', '+HP'), a: readInt(pre + 'pa', '+ATK'), d: readInt(pre + 'pd', '+DEF'), sp: readInt(pre + 'psp', '+Speed') } };
+          let next; try { next = A.setLuckyDetails(A.setLuckyReward(sb.p, lid, String(r.chara_id), qn, sb.lib), lid, v, sb.lib); } catch (e) { note(e.message, true); return; } apply(() => next, 'edit lucky reward'); }) })))); }
+  else out.push(section('Lucky reward', el('p', { class: 'hint', text: L.length ? `${L.length} lucky rows: shown read-only (this editor handles one row).` : 'This quest has no lucky reward.' })));
+  // challenge rewards
+  const objs = mi.subMission || [];
+  if (objs.length) out.push(section('Challenge rewards', el('p', { class: 'hint', text: 'Conditions and rewards are separate. Conditions are kept exactly (operators, state and limits); only the reward changes.' }),
+    ...objs.map(o => { const pre = 'ob' + o.id + '_', u = o.subMissionReward.units.find(x => x.unitId) || o.subMissionReward.units[0] || {}; const lim = (o.limited || []).filter(Boolean).length; const rwd = o.subMissionReward;
+      return el('div', { class: 'rcard' }, el('div', { class: 'rhead' }, el('b', { text: strings()[o.langSubMissionNameId] || o.name }), el('small', { text: `Condition (kept exactly): state ${o.state}, operator ${o.sign}, value ${o.value}, ${lim} limit flag${lim === 1 ? '' : 's'} set` })),
+        kv([['Reward item', u.unitId ? itemLine(u.unitId) : 'No item'], ['Other rewards (unchanged)', `${rwd.jewel || 0} pearls · ${rwd.coin || 0} coins`]]),
+        el('div', { class: 'form' }, el('label', {}, 'Quantity', num(pre + 'q', u.unitNum || 1, { min: 1, max: A.POLICY_MAX }))),
+        el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn ghost sm', disabled: !sb.lib, text: 'Change item…', onclick: () => pickItem('challenge reward', it => { let qn = 1; try { qn = readInt(pre + 'q', 'Quantity'); } catch (e) {} apply(p => A.setObjectiveReward(p, lid, o.id, it.id, qn, sb.lib), `change challenge reward to ${it.name}`); }) }),
+          el('button', { type: 'button', class: 'btn primary sm', disabled: !sb.lib || !u.unitId, text: 'Apply quantity', onclick: guarded(() => { const qn = readInt(pre + 'q', 'Quantity'); apply(p => A.setObjectiveReward(p, lid, o.id, String(u.unitId), qn, sb.lib), 'edit challenge reward quantity'); }) }))); })));
+  else out.push(section('Challenge rewards', el('p', { class: 'hint', text: 'This quest has no challenges.' })));
+  out.push(section('First clear', kv([['Group', `${d.firstClearGroup.id} (missions ${d.firstClearGroup.missionIds.join(', ')})`], ['Reward', `${d.firstClearGroup.reward} pearls`], ['Stage reward field', d.stage.rewardJewel]]), el('p', { class: 'hint', text: 'Read-only for now: changing first-clear payouts needs the full game-side contract first.' }),
+    d.firstClearGroup.reward > 0 ? null : el('p', { class: 'hint warn', text: 'Reward 0 means “no first-clear reward”. The game needs first-clear groups to have a positive reward, so a game build must leave this group out rather than send reward 0.' })));
+  out.push(section('Coins / EXP', el('div', { class: 'form' }, el('label', {}, 'Lowest coins', num('cx_min', mi.minCoin, { min: 0 })), el('label', {}, 'Highest coins', num('cx_max', mi.maxCoin, { min: 0 })), el('label', {}, 'Player EXP', num('cx_exp', mi.exp, { min: 0 })), el('label', {}, 'Unit EXP', num('cx_cexp', mi.charaExp, { min: 0 }))),
+    el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Apply', onclick: guarded(() => { const v = { minCoin: readInt('cx_min', 'Lowest coins'), maxCoin: readInt('cx_max', 'Highest coins'), exp: readInt('cx_exp', 'Player EXP'), charaExp: readInt('cx_cexp', 'Unit EXP') }; apply(p => A.setCurrency(p, lid, v, sb.lib), 'edit coins and EXP'); }) })),
+    el('p', { class: 'hint', text: 'Client and server copies change together.' })));
+  out.push(el('details', { class: 'adv' }, el('summary', { text: 'Advanced: raw reward records (read-only)' }), el('pre', { text: JSON.stringify({ drops: d.drops, firstClearGroup: d.firstClearGroup, objectives: d.objective.objectives, dropCandidates: sm.dropCandidates.slice(0, 40) }, null, 1) })));
+  return out;
+}
+
+// ---- top: quests, save, handoff, game export gate
+function renderQuests() {
+  const qs = A.questSummaries(sb.p);
+  $('sxQuests').replaceChildren(...qs.map((q, i) => el('button', { type: 'button', role: 'tab', class: 'qcard', 'aria-selected': String(i === sb.qi), onclick: () => { sb.qi = i; sb.mi = 0; sb.sel = null; renderAll(); } },
+    q.banner ? asyncImg(q.banner, q.name + ' banner') : null, el('span', { class: 'qt' }, el('b', { text: q.missionName || q.name }), el('small', { text: `${q.name} · ${q.mapCount} map${q.mapCount === 1 ? '' : 's'}${q.bosses.length ? ' · ' + q.bosses.length + ' boss map' + (q.bosses.length === 1 ? '' : 's') : ''}` })))));
+}
+function renderAll() {
+  if (!sb.open) return; mapStats = new WeakMap(); const p = sb.p;
+  $('sxName').textContent = p.name || p.projectId; const maps = p.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0);
+  $('sxSub').textContent = `Stage project · ${p.catalog.stages.length} quests · ${maps} maps · saved in this browser` + (sb.missing.size ? ` · ${sb.missing.size} file${sb.missing.size === 1 ? '' : 's'} missing` : '');
+  const g = A.gameExportStatus(p); $('sxGameWhy').textContent = g.reason;
+  if (sb.msg) { note(sb.msg); sb.msg = ''; }
+  renderQuests(); renderStrip(true); syncUndo(); scn = A.scene(p, quest().spec.localId, qmap().id, sb.labels); renderInspector(); renderPalette(); draw();
+}
+function slugName(s) { return (s || 'project').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'project'; }
+async function saveProject() {
+  let text; try { text = A.exportProject(sb.p, sb.lib); } catch (e) { note('Can’t save: ' + e.message, true); return; }
+  flushSave(); const name = sb.rec.fileName && /\.json$/i.test(sb.rec.fileName) ? sb.rec.fileName.split('/').pop() : slugName(sb.p.name) + '.forge-stage-project.json';
+  if (await KIT.saveBlob(new Blob([text], { type: 'application/json' }), name)) note(`Saved ${name}. Open it here again with Open a stage file or My stages & packs.`);
+}
+const HANDOFF_README = (p, n, srcName) => `# Stage project developer handoff
+
+Project: ${p.name || p.projectId} (${p.projectId})
+Exported from the Forge Studio Stages tab on ${new Date().toISOString()}.
+Source baseline: ${srcName}. CHANGES.json lists ${n} change${n === 1 ? '' : 's'} as JSON paths into the source catalog (before and after).
+
+This is website authoring data, **not** a game install file. The app's current stage import takes layout-only
+\`ForgeStage\` schema 2 files. These quests come from a separate, SHA-pinned catalog, so edited rewards, enemies or
+stats need a game-side importer extension before they can be installed. Nothing in this package bypasses or relaxes
+the game's own validation.
+
+## What the game side needs to add
+
+1. **Atomic compilation**: build client and server records together from one edit (enemy dropId and bonuses,
+   placement dropRate, server drop candidates, the normal-unit summary, lucky rows, client and server objectives,
+   first-clear group, coin and EXP fields, dependency lists). Reject any mix of old and new mirrors.
+2. **Registered references**: every reward and material must point at a registered item; reserved material slots
+   stay unusable until their art, recipe and material setup exist.
+3. **Persistent slots** for imported quests, separate from the built-in quests, with collision and capacity checks.
+4. **Correct catalog counts** for events, missions, maps and enemy sets after the import.
+5. **Existing saves**: recovery for saves made before the import; stable progress identities so updates keep progress.
+6. **Native reward checks** that keep the game's validation, with no blanket hash disabling. First-clear groups must have a
+   positive reward: a quest with no first-clear reward omits its group instead of sending \`reward: 0\`.
+7. **Phone verification**: opening, all maps, completion, rewards, retry and resume, on a real device.
+
+## Files
+
+- \`${'${project}'}\` is the edited project (the original stays in \`handoff/original-project.json\`).
+- \`reference/\` holds the original source files, byte for byte.
+- \`handoff/CHANGES.json\` is the change report.
+
+Browser checks only cover the website editor. They don't confirm rewards, a full run or camera matching in the game.
+`;
+async function exportHandoff() {
+  let text; try { text = A.exportProject(sb.p, sb.lib); } catch (e) { note('Can’t export: ' + e.message, true); return; }
+  note('Building the handoff…'); flushSave();
+  const enc = new TextEncoder(), files = [], srcFile = sb.p.source && sb.p.source.file;
+  let src = srcFile ? await fileJSON(srcFile) : null; const srcName = src ? srcFile : 'the project as first imported';
+  if (!src) src = sb.base.catalog;
+  const ch = A.changes(src, sb.p.catalog), projName = sb.rec.fileName && /\.json$/i.test(sb.rec.fileName) ? sb.rec.fileName : slugName(sb.p.name) + '.forge-stage-project.json';
+  for (const path of sb.rec.files) { if (path === projName) continue; const b = await getFile(sb.rec.id, path).catch(() => null); if (b) files.push({ name: path, data: new Uint8Array(await b.arrayBuffer()) }); }
+  files.push({ name: projName, data: enc.encode(text) });
+  files.push({ name: 'handoff/original-project.json', data: enc.encode(JSON.stringify(sb.base, null, 2) + '\n') });
+  files.push({ name: 'handoff/CHANGES.json', data: enc.encode(JSON.stringify({ format: 'ForgeStageSandboxChanges', schema: 1, projectId: sb.p.projectId, source: { file: srcName, sha256: sb.p.source && sb.p.source.sha256 }, generated: new Date().toISOString(), count: ch.length, truncated: ch.length >= 5000, changes: ch }, null, 1) + '\n') });
+  files.push({ name: 'handoff/README.md', data: enc.encode(HANDOFF_README(sb.p, ch.length, srcName).replace('${project}', projName)) });
+  const blob = KIT.zipBlob(files); const name = slugName(sb.p.name) + '-developer-handoff.zip';
+  if (await KIT.saveBlob(blob, name)) note(`Saved ${name}: the project, ${sb.rec.files.length} package files and a report of ${ch.length} change${ch.length === 1 ? '' : 's'}. It isn’t a game install file.`);
+}
+
+// ---- wiring
+function wire() {
+  wireCanvas();
+  $('sxUndo').onclick = undo; $('sxRedo').onclick = redo; $('sxSave').onclick = saveProject; $('sxHandoff').onclick = exportHandoff; $('sxClose').onclick = closeProject;
+  $('sxGame').onclick = () => { note('Game export needs an updated app: ' + A.gameExportStatus(sb.p).reason, true); };
+  $('sxPrev').onclick = () => goMap(sb.mi - 1); $('sxNext').onclick = () => goMap(sb.mi + 1);
+  $('sxGoBtn').onclick = () => { const v = +$('sxGo').value; if (Number.isInteger(v) && v >= 1) goMap(v - 1); };
+  $('sxGo').addEventListener('keydown', e => { if (e.key === 'Enter') $('sxGoBtn').click(); });
+  $('sxStrip').addEventListener('scroll', () => renderStrip(false), { passive: true });
+  $('sxFit').onclick = () => { sb.view = { z: 1, x: 0, y: 0 }; $('sxZ').textContent = '100%'; draw(); };
+  $('sxZin').onclick = () => zoomAt(cv().width / 2, cv().height / 2, 1.4); $('sxZout').onclick = () => zoomAt(cv().width / 2, cv().height / 2, 1 / 1.4);
+  $('sxGrid').onclick = () => { sb.grid = !sb.grid; $('sxGrid').setAttribute('aria-pressed', String(sb.grid)); draw(); };
+  $('sxAnim').onclick = () => { sb.anim = !sb.anim; $('sxAnim').setAttribute('aria-pressed', String(sb.anim)); };
+  $('sxReset').onclick = () => { const q = quest(), m = qmap(); if (!sb.lib) { note('Import the package ZIP to reset maps (the reward catalog is needed to rebuild drop rows).', true); return; }
+    apply(p => A.resetMap(p, sb.base, q.spec.localId, m.id, sb.lib), `reset map ${sb.mi + 1}`) && note(`Map ${sb.mi + 1} is back to how the project was imported. Undo brings your edits back.`); };
+  for (const b of document.querySelectorAll('#sxTabs button')) b.onclick = () => { sb.tab = b.dataset.tab; renderPalette(); };
+  for (const b of document.querySelectorAll('#sxInsTabs button')) b.onclick = () => { sb.ins = b.dataset.tab; renderInspector(); };
+  $('sxPalQ').addEventListener('input', renderPalette); $('sxPickCancel').onclick = () => { sb.pick = null; renderPalette(); };
+  addEventListener('keydown', e => { if (!sb.open) return; const t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT');
+    const mod = e.ctrlKey || e.metaKey;
+    if (mod && !typing && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
+    else if (mod && !typing && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
+    else if (!typing && !mod && e.key === '[') goMap(sb.mi - 1); else if (!typing && !mod && e.key === ']') goMap(sb.mi + 1);
+    else if (e.key === 'Escape' && !typing) { if (sb.pick) { sb.pick = null; renderPalette(); } else if (sb.sel) select(null); } });
+  addEventListener('resize', () => { if (sb.open) { renderStrip(false); draw(); } });
+  const tick = now => { const dt = sb.last ? Math.min(.1, (now - sb.last) / 1000) : 0; sb.last = now; if (sb.open && sb.anim && !document.hidden) { sb.t += dt; draw(); } requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+async function listProjects() { try { return (await allRecs()).map(r => ({ id: r.id, name: r.name, savedAt: r.savedAt, quests: r.project.catalog.stages.length, maps: r.project.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0), files: (r.files || []).length,
+  questList: r.project.catalog.stages.map(s => ({ name: s.spec.name, missionName: s.spec.missionName, stageId: s.slot.stageId, missionId: s.slot.missionId })) })); } catch (e) { return []; } }
+// every stored file of a project, with the edited project in place of the imported one (for a full project save)
+async function projectFiles(pid) { const rec = await getRec(pid); if (!rec) return []; const out = [], enc = new TextEncoder(), proj = rec.fileName && /\.json$/i.test(rec.fileName) ? rec.fileName : 'project.forge-stage-project.json';
+  for (const p of rec.files || []) { if (p === proj) continue; const b = await getFile(pid, p).catch(() => null); if (b) out.push({ name: p, data: new Uint8Array(await b.arrayBuffer()) }); }
+  out.push({ name: proj, data: enc.encode(JSON.stringify(sb.open && sb.rec && sb.rec.id === pid ? sb.p : rec.project, null, 2) + '\n') }); return out; }
+window.ForgeSandboxUI = { importZip, importJSON, projectFiles, openProject: id => openProject(id), deleteProject: async id => { if (sb.open && sb.rec && sb.rec.id === id) closeProject(); await delProject(id); }, listProjects, isOpen: () => sb.open,
+  _debug: () => sb, close: closeProject };
+wire();
+let want = null; try { want = localStorage.getItem(OPEN_KEY); } catch (e) {}
+if (want) openProject(want).catch(() => { try { localStorage.removeItem(OPEN_KEY); } catch (e) {} });
 })();
 </script>
 </body></html>

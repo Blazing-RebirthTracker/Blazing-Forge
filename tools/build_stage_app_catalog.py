@@ -35,7 +35,8 @@ for mid, d in cat['donors'].items():
     assert all(len(m['chips']) == 11 and all(len(r) == 11 for r in m['chips']) for m in maps), mid
     drops = [u for u in (mi.get('missionDropComplete') or {}).get('dropUnits') or [] if u]
     drop_ids.update(map(str, drops))
-    donors[mid] = {'maps': maps, 'r': {
+    bg = (d['maps'][0]['raw'] or {}).get('mapBgId') if d['maps'] else None
+    donors[mid] = {'maps': maps, 'bg': str(bg) if bg is not None else None, 'r': {
         'stamina': mi.get('stamina'), 'exp': mi.get('exp'), 'unitExp': mi.get('charaExp'),
         'coins': [mi.get('minCoin'), mi.get('maxCoin')],
         'firstClear': (d.get('firstClearGroup') or {}).get('reward'),
@@ -43,6 +44,7 @@ for mid, d in cat['donors'].items():
         'drops': drops}}
 
 res = {'schema': 1, 'profile': cat['profile'], 'slots': len(cat['slots']), 'donors': donors,
+       'slotList': [{'slot': x['slot'], 'stageId': str(x['stageId']), 'missionId': str(x['missionId'])} for x in cat['slots']],
        'units': {i: unit_names[i] for i in sorted(drop_ids) if i in unit_names}}
 os.makedirs(out, exist_ok=True)
 raw = json.dumps(res, separators=(',', ':'), ensure_ascii=False).encode()
