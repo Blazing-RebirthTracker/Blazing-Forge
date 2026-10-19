@@ -164,6 +164,20 @@ ol.steps{margin:0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-heigh
 .xrow b{font-size:13.5px}
 .xrow small{display:block;color:var(--tx2);font-size:12px}
 .xrow small.bad{color:var(--bad)}
+.slotpick{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.slotpick label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--tx2)}
+.slotpick select{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:6px 9px;min-height:36px}
+.slotpicks{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:10px}
+.slotpicks button{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px 10px;color:var(--tx)}
+.slotpicks button:disabled{opacity:.45;cursor:not-allowed}
+.slotpicks small{color:var(--tx2);font-size:11.5px}
+.slot .ids{font:600 11px var(--f-mono);color:var(--tx2)}
+.mlist{display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow:auto;margin:6px 0}
+.mrow{display:grid;grid-template-columns:auto 96px minmax(0,1fr);gap:10px;align-items:center;background:var(--panel2);border-radius:10px;padding:8px 10px;cursor:pointer}
+.mrow input{width:18px;height:18px;accent-color:var(--ember)}
+.mrow img{width:96px;aspect-ratio:16/9;object-fit:contain;background:#0b0d12;border-radius:6px}
+.mrow b{font-size:13px}
+.mrow small{display:block;color:var(--tx2);font-size:12px}
 .drop-list .th{width:56px;height:32px;object-fit:contain;background:#0b0d12;border-radius:5px;flex:none}
 body.mode-custom .picker #mSearch,body.mode-custom #readyBtn,body.mode-custom #blankBtn,body.mode-custom .picker .search{display:none}
 body.mode-custom.no-stage .main,body.mode-custom.no-stage section.bar[aria-label="Mission"]{display:none!important}
@@ -263,14 +277,14 @@ dialog.lib .packlist{max-height:52vh}
       <h1>Forge Stages</h1><span class="beta">beta</span>
       <small id="meta"></small>
     </div>
-    <div class="seg mode" id="modeSeg" role="group" aria-label="What you're editing"><button type="button" data-mode="game" aria-pressed="false">In-game stages</button><button type="button" data-mode="custom" aria-pressed="false">Custom stages</button></div>
+    <div class="seg mode" id="modeSeg" role="group" aria-label="What you're editing"><button type="button" data-mode="custom" aria-pressed="false">Custom stages</button><button type="button" data-mode="game" aria-pressed="false">In-game stages</button></div>
   </header>
   <div class="note" id="betaNote"></div>
   <section class="bar" aria-label="Mission">
     <div class="now"><span class="t" id="mName">Loading missions…</span><span class="s" id="mSub"></span></div>
     <div class="picker">
       <div class="search"><input type="search" id="mSearch" placeholder="Start from a mission: search by name, stage or ID" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="mList" aria-label="Search missions"><div class="drop-list" id="mList" role="listbox" hidden></div></div>
-      <button class="chip" id="readyBtn" aria-pressed="false" type="button">Game-ready only</button><button class="btn ghost" id="blankBtn" type="button">Blank stage</button><button class="btn ghost" id="backBtn" type="button" hidden>&larr; All custom stages</button>
+      <button class="chip" id="readyBtn" aria-pressed="false" type="button">Game-ready only</button><button class="btn ghost" id="backBtn" type="button" hidden>&larr; All custom stages</button>
     </div>
   </section>
   <section class="board" id="board" aria-label="Custom stages" hidden>
@@ -315,6 +329,7 @@ dialog.lib .packlist{max-height:52vh}
       </div>
       <div class="card" id="gameCard">
         <div class="row" style="justify-content:space-between"><span class="lbl">In the game</span><span class="pill" id="gamePill"></span></div>
+        <div class="slotpick"><label>Slot<select id="gSlot" aria-label="Custom slot this stage uses"></select></label><span class="status" id="gSlotIds"></span></div>
         <div id="gameNo" hidden style="display:flex;flex-direction:column;gap:10px">
           <p class="status" id="gameNoText"></p>
           <div class="row"><button class="btn ghost" id="gameFind" type="button">Show game-ready missions</button></div>
@@ -349,6 +364,8 @@ dialog.lib .packlist{max-height:52vh}
         <div class="row"><span class="status" id="mapInfo"></span></div>
         <div class="row"><button class="btn ghost" id="bgBtn" type="button">Change background</button><button class="chip" id="floorBtn" aria-pressed="false" type="button">Edit field shape</button></div>
         <div class="row"><button class="chip" id="addMapBtn" type="button">Add a map</button><button class="chip" id="delMapBtn" type="button">Remove this map</button></div>
+        <div class="row" id="pullRow"><button class="btn ghost" id="pullBtn" type="button">Add maps from another stage&hellip;</button></div>
+        <p class="hint" id="pullHint">Pull whole maps, with all their waves and enemies, from any mission onto the end of this stage. Good for boss rushes; remove any waves or maps you don't want afterwards.</p>
       </div>
       <div class="card" id="enemyCard">
         <span class="lbl">Enemies</span>
@@ -461,10 +478,27 @@ dialog.lib .packlist{max-height:52vh}
   <div class="row" style="justify-content:space-between"><span class="status" id="xCount"></span><button class="btn primary" id="xSave" type="button">Save game pack</button></div>
 </dialog>
 <dialog class="bgs lib" id="tplDlg" aria-labelledby="tplTitle">
-  <div class="row" style="justify-content:space-between"><span class="lbl" id="tplTitle">Pick a template</span><button class="btn ghost" id="tplClose" type="button">Close</button></div>
-  <p class="hint">Custom stages start from one of the game-ready Emergency missions. Its maps, enemies and rewards come along; you move start spots and entry points.</p>
-  <input type="search" class="field-in" id="tplQ" placeholder="Search game-ready missions" autocomplete="off" aria-label="Search game-ready missions" style="margin-top:8px">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="tplTitle">New stage</span><button class="btn ghost" id="tplClose" type="button">Close</button></div>
+  <p class="hint" id="tplHint">Start from a game-ready Emergency mission to make a stage the app can install, or start from any mission or a blank map to build something bigger (like a boss rush) as a draft.</p>
+  <div class="row" style="margin-top:8px"><input type="search" class="field-in" id="tplQ" placeholder="Search missions" autocomplete="off" aria-label="Search missions" style="flex:1 1 220px"><button class="chip" id="tplAll" type="button" aria-pressed="false">Show all missions</button><button class="btn ghost" id="tplBlank" type="button">Start blank</button></div>
   <div class="tpllist" id="tplList"></div>
+</dialog>
+<dialog class="bgs lib" id="slotDlg" aria-labelledby="slotDlgTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="slotDlgTitle">Pick a slot</span><button class="btn ghost" id="slotDlgClose" type="button">Close</button></div>
+  <p class="hint" id="slotDlgHint">Custom stages live in the 20 custom slots. Pick an empty one.</p>
+  <div class="slotpicks" id="slotDlgList"></div>
+</dialog>
+<dialog class="bgs lib" id="pullDlg" aria-labelledby="pullTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="pullTitle">Add maps from another stage</span><button class="btn ghost" id="pullClose" type="button">Close</button></div>
+  <p class="hint">Pick a mission, then the maps to add. Each map comes over whole &mdash; background, field, start spots and every wave and enemy &mdash; and goes after the maps you already have. Remove waves or maps you don't want afterwards.</p>
+  <div class="search" style="margin-top:8px"><input type="search" class="field-in" id="pullQ" placeholder="Search any mission by name, stage or ID" autocomplete="off" aria-label="Search missions to take maps from"></div>
+  <div class="tpllist" id="pullMissions"></div>
+  <div id="pullMaps" hidden>
+    <div class="row" style="justify-content:space-between;margin-top:10px"><span class="status" id="pullFrom"></span><button class="chip" id="pullBack" type="button">&larr; Other missions</button></div>
+    <div class="row" style="margin:6px 0"><button class="chip sm" id="pullAllMaps" type="button">All maps</button><button class="chip sm" id="pullBossMaps" type="button">Boss maps only</button><button class="chip sm" id="pullNoMaps" type="button">None</button></div>
+    <div class="mlist" id="pullList"></div>
+    <div class="row" style="justify-content:space-between"><span class="status" id="pullCount"></span><button class="btn primary" id="pullAdd" type="button">Add maps</button></div>
+  </div>
 </dialog>
 <div class="dropzone" id="dropZone" hidden><div>Drop stage packs or stage files to import them</div></div>
 <dialog class="bgs" id="bgDlg" aria-labelledby="bgTitle">
@@ -839,7 +873,7 @@ function renderRail() {
   $('mapTabs').replaceChildren(...d.maps.map((mp, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = 'Map ' + (i + 1); b.setAttribute('aria-pressed', String(i === st.mapI));
     b.onclick = () => { st.mapI = i; st.encI = 0; st.waveI = 0; st.sel = null; renderRail(); draw(); }; return b; }));
   const b = bgInfo(); const ents = allEnemies(m).length;
-  $('mapInfo').textContent = `Background ${m.bg}${b ? '' : ' (no preview)'} · ${entryIds(m).length} of 10 entry points used · ${ents} enem${ents === 1 ? 'y' : 'ies'} on this map`;
+  $('mapInfo').textContent = (m.from ? `From ${m.from.name || 'mission ' + m.from.mission}, map ${m.from.map + 1} · ` : '') + `Background ${m.bg}${b ? '' : ' (no preview)'} · ${entryIds(m).length} of 10 entry points used · ${ents} enem${ents === 1 ? 'y' : 'ies'} on this map`;
   $('delMapBtn').disabled = d.maps.length < 2; $('floorBtn').setAttribute('aria-pressed', String(st.floor));
   // enemy line-ups (the game picks one at random, by weight)
   const encs = m.encounters; $('encSeg').hidden = encs.length < 2;
@@ -975,10 +1009,10 @@ function openBlank() {
   st.draft = { v: 1, base: null, name: 'My stage', stamina: 10, objectives: [], maps: [blankMap(st.draft ? map() : null)] };
   st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; save(); syncBgCtl(); renderRail(); draw(); toast('Blank stage: one map with your team on the left. Add enemies from the list.');
 }
-$('blankBtn').onclick = openBlank;
 $('resetBtn').onclick = () => { const keepId = st.draft && st.draft.localId, keepName = st.draft && st.draft.name, keepCustom = st.draft && st.draft.custom, keepOn = st.draft && st.draft.enabled, k = st.key; dropDraft(st.key);
   if (st.mission) openMission(st.mission.id, { fresh: true, key: k }).then(() => { if ((/~/.test(k) || keepCustom) && keepId) { st.draft.localId = keepId; st.draft.name = keepName; if (keepCustom) { st.draft.custom = keepCustom; st.draft.enabled = keepOn; } save(); renderRail(); renderBoard(); } });
-  else openBlank(); toast(keepCustom ? 'Back to the template. The stage kept its slot, name and stage ID.' : 'Your changes were discarded.'); };
+  else if (keepCustom) { st.draft = { v: 1, base: null, name: keepName, stamina: 10, objectives: [], maps: [blankMap()], localId: keepId, custom: keepCustom, enabled: keepOn }; st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; changed(); }
+  else openBlank(); toast(keepCustom ? (st.mission ? 'Back to the template.' : 'Back to one blank map.') + ' The stage kept its slot, name and stage ID.' : 'Your changes were discarded.'); };
 
 // ---- backgrounds
 $('bgBtn').onclick = () => {
@@ -1044,7 +1078,8 @@ async function importOne(f) { // -> { keys: [...], bad: [...] }
     encounters: m.encounters.map(en => ({ set: en.sourceEnemySetId || null, rate: en.weight ?? 1000, waves: en.waves.map(w => ({ items: [...w.placements.map(p => ({ k: 'e', uid: uid(), enemy: p.enemyId, level: p.level || 1, ...(p.native || {}), count: (p.native && p.native.count) || 1, enabled: !p.native || p.native.enabled !== false, enterId: (p.native && p.native.enterId) || 1, src: p.sourceEntry ? { set: p.sourceEntry.enemySetId, seq: p.sourceEntry.sequenceIndex } : null })), ...(w.nativeCommands || []).map(r => ({ k: 'c', raw: r }))] })) })) })) };
   for (const m of d.maps) for (const en of m.encounters) for (const w of en.waves) for (const it of w.items) if (it.k === 'e' && !it.uid) it.uid = uid();
   let key = d.base ? keyFor(d.base, d.localId) : 'blank-' + Date.now().toString(36);
-  if (d.custom && tplOf(d.base)) { const s0 = readStore(); let k2 = null; for (const [k, x] of Object.entries(s0.drafts)) if (isSlotKey(k) && x && x.localId && x.localId === d.localId) k2 = k;
+  if (!d.base && !d.custom) d.custom = { slot: 1, show: true };
+  if (d.custom) { const s0 = readStore(); let k2 = null; for (const [k, x] of Object.entries(s0.drafts)) if (isSlotKey(k) && x && x.localId && x.localId === d.localId) k2 = k;
     if (!k2) { const want = slotKey(d.custom.slot); k2 = !s0.drafts[want] ? want : (firstEmptySlot(s0) ? slotKey(firstEmptySlot(s0)) : null); }
     if (!k2) return { keys: [], bad: ['All 20 custom slots are in use.'] }; key = k2; d.custom = { ...d.custom, slot: +k2.slice(5) }; }
   ensureId(d, key);
@@ -1124,7 +1159,8 @@ function gameCheck(d, mission, strict) {
   const id = d.localId || '';
   if (!ID_RE.test(id) || !id.includes(':')) out.errs.push(['STAGE_ID', 'The stage ID needs a colon and at most 96 letters, numbers, colons, dots, underscores or hyphens.']);
   const sameMaps = d.maps.length === tpl.maps.length && d.maps.every((m, i) => String(m.donor) === tpl.maps[i].id);
-  if (!sameMaps) out.errs.push(['STAGE_MAPS', `Game stages keep the template’s ${tpl.maps.length} map${tpl.maps.length === 1 ? '' : 's'} in order. Use Keep only game edits to put them back.`]);
+  if (!sameMaps && d.maps.some(m => m.from)) out.errs.push(['STAGE_MAPS', 'This stage has maps added from other stages. The app’s stage import only takes the template’s own maps in order, so it stays here as a draft for now (saved with your project).']);
+  else if (!sameMaps) out.errs.push(['STAGE_MAPS', `Game stages keep the template’s ${tpl.maps.length} map${tpl.maps.length === 1 ? '' : 's'} in order. Use Keep only game edits to put them back.`]);
   else d.maps.forEach((m, i) => { const r = mapMoves(tpl.maps[i].chips, m.chips, 'Map ' + (i + 1)); out.maps.push(r.moves); out.moves += r.moves.length; out.errs.push(...r.errs); out.lost.push(...r.lost); });
   if (mission && String(mission.id) === String(d.base)) { const f = draftFromMission(mission); const n = Math.min(f.maps.length, d.maps.length);
     let en = 0, bg = 0; for (let i = 0; i < n; i++) { if (strip(f.maps[i].encounters) !== strip(d.maps[i].encounters)) en++; if (String(f.maps[i].bg) !== String(d.maps[i].bg)) bg++; }
@@ -1242,19 +1278,24 @@ function renderGame() {
   const d = st.draft; if (!d) return; const tpl = tplOf(d.base);
   const custom = st.mode === 'custom'; $('gameCard').hidden = !custom; $('copyCard').hidden = custom;
   $('copyBtn').disabled = !tpl; $('copyHint').textContent = tpl ? 'The copy gets its own stage ID and goes in your first empty custom slot. This draft stays as it is.' : 'This mission isn’t one of the game-ready Emergency templates, so it can’t become a custom stage yet.';
-  if (custom && d.custom) { const sl = slotList().find(x => x.slot === d.custom.slot) || {}; $('mSub').textContent = `Custom stage · slot ${d.custom.slot} (planned stage ${sl.stageId}, mission ${sl.missionId}) · from ${missionName(d.base)} · ${d.maps.length} map${d.maps.length === 1 ? '' : 's'}`;
+  if (custom && d.custom) { const s0 = readStore(); $('gSlot').replaceChildren(...slotList().map(x => { const o = new Option(`Slot ${x.slot} — stage ${x.stageId}, mission ${x.missionId}` + (x.slot === d.custom.slot ? '' : s0.drafts[slotKey(x.slot)] ? ' (in use)' : ' (empty)'), String(x.slot)); o.disabled = x.slot !== d.custom.slot && !!s0.drafts[slotKey(x.slot)]; return o; }));
+    $('gSlot').value = String(d.custom.slot); $('gSlotIds').textContent = 'Pick an empty slot to move it; the stage ID stays the same.';
+    const sl = slotList().find(x => x.slot === d.custom.slot) || {}; $('mSub').textContent = `Custom stage · slot ${d.custom.slot} (planned stage ${sl.stageId}, mission ${sl.missionId}) · from ${missionName(d.base)} · ${d.maps.length} map${d.maps.length === 1 ? '' : 's'}`;
     $('slotLine').textContent = `Planned slot ${d.custom.slot}: the app confirms the real slot by stage ID when it imports.` + (ledgerSlot(d.localId) ? ` The loaded ledger shows slot ${ledgerSlot(d.localId)}.` : ''); }
   $('gameNo').hidden = !!tpl; $('gameYes').hidden = !tpl;
   const lock = gm();
   for (const id of ['palCard']) $(id).classList.toggle('game-hide', lock);
   for (const id of ['bgBtn', 'floorBtn', 'addMapBtn', 'addWaveBtn', 'stStamina']) $(id).disabled = lock || (id === 'delMapBtn' && d.maps.length < 2);
   $('delMapBtn').disabled = lock || d.maps.length < 2;
+  $('pullRow').hidden = !custom; $('pullHint').textContent = custom ? 'Pull whole maps, with all their waves and enemies, from any mission onto the end of this stage. Good for boss rushes; remove any waves or maps you don’t want afterwards.' : 'To build a boss rush from several stages, copy this one to a custom stage, then add maps from other stages there.';
   for (const el of $('selCard').querySelectorAll('input,select,button')) el.disabled = lock;
   $('fieldHint').textContent = st.floor ? 'Tap or drag over spots to add them to the field or take them off. Spots with markers stay as they are.' : lock
     ? 'Game edits only: drag your team’s start spots (blue) and the enemy entry points (orange). Dragging an enemy moves its entry point. Enemies, waves and the field come from the template.'
     : 'Drag an enemy or a start spot to move it. Drag empty space to pan, scroll or pinch to zoom. To add an enemy, drag it from the list on the right, or tap Add and then tap a spot.';
   const pill = $('gamePill');
   if (!tpl) { pill.className = 'pill'; pill.textContent = 'Draft only';
+    if (custom && d.custom) { $('gameNoText').textContent = `This stage is a draft in slot ${d.custom.slot}: ${d.base ? 'its mission isn’t one of the game-ready templates' : 'it starts from a blank map'}. Build it here and keep it with Save editable project; the app can’t install it yet.`; $('gameFind').hidden = true; return; }
+    $('gameFind').hidden = false;
     $('gameNoText').textContent = !APP ? 'The list of game-ready missions didn’t load, so this page can’t check stages for the game right now. Reload to try again.'
       : (st.mission ? 'This mission isn’t a game template yet, so the stage stays a draft here. ' : 'Blank stages are drafts for now. ') + `Start from one of the ${Object.keys(APP.donors).length} game-ready Emergency missions to make a stage the app can install.`;
     return; }
@@ -1312,6 +1353,7 @@ const NOTES = {
   custom: 'Custom stages: your 20 stage slots. Start one from a game-ready Emergency mission, move start spots and entry points, turn Show in game on, then Export for the game. The app adds each as its own Emergency mission with the template’s enemies and rewards.' };
 async function setMode(mode, opts = {}) {
   saveNow(); st.mode = mode; try { localStorage.setItem('bf-stages-mode', mode); } catch (e) {}
+  if (mode === 'custom') try { const q = new URLSearchParams(location.search); if (q.has('mission')) { q.delete('mission'); const qs = q.toString(); history.replaceState(null, '', qs ? '?' + qs : location.pathname); } } catch (e) {}
   if (window.ForgeSandboxUI && window.ForgeSandboxUI.isOpen()) window.ForgeSandboxUI.close();
   document.body.classList.toggle('mode-custom', mode === 'custom'); document.body.classList.toggle('mode-game', mode === 'game');
   for (const b of $('modeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
@@ -1335,7 +1377,7 @@ async function slotRows() {
   for (const list of Object.values(seen)) if (list.length > 1) for (const r of list) r.chk.errs.push(['STAGE_LEDGER', `Slots ${list.map(x => x.sl.slot).join(' and ')} have the same stage ID. Give one a new ID under Stage ID.`]);
   return rows;
 }
-function statusOf(r) { if (!r.d) return ['Empty slot', '']; if (!r.chk.tpl) return ['Draft only: its mission isn’t a game-ready template', 'bad']; if (r.chk.errs.length) return [`Can’t export: ${r.chk.errs[0][1]}`, 'bad'];
+function statusOf(r) { if (!r.d) return ['Empty slot', '']; if (!r.chk.tpl) return [r.d.base ? 'Draft only: its mission isn’t a game-ready template' : 'Draft only: blank start (the app needs a game-ready template)', 'bad']; if (r.chk.errs.length) return [`Can’t export: ${r.chk.errs[0][1]}`, 'bad'];
   return showOf(r.d) ? [`Ready · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'} · shown in the game`, ''] : [`Ready · hidden (Show in game is off)`, '']; }
 let boardBusy = 0;
 async function renderBoard() {
@@ -1353,7 +1395,8 @@ function idDetails(r) { const dev = r.d ? ledgerSlot(r.d.localId) : null; const 
     el('p', { class: 'hint', text: 'The app assigns the real slot by stage ID when it imports; these are this browser’s planned destinations.' })); }
 function slotCard(r) {
   const n = r.sl.slot, cur = r.key === st.key && !document.body.classList.contains('no-stage');
-  if (!r.d) return el('div', { class: 'slot empty' }, el('div', { class: 'sh' }, el('b', { text: `Slot ${n}` }), el('span', { class: 'sn', text: r.sl.missionId })),
+  const ids = el('span', { class: 'ids', text: `Stage ${r.sl.stageId} · Mission ${r.sl.missionId}` });
+  if (!r.d) return el('div', { class: 'slot empty' }, el('div', { class: 'sh' }, el('b', { text: `Slot ${n}` })), ids,
     el('small', { text: 'Empty slot' }), el('div', { class: 'acts' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Create', onclick: () => openTpl(n) })), idDetails(r));
   const [stxt, scls] = statusOf(r); const tpl = tplOf(r.d.base);
   const name = el('input', { class: 'nm', type: 'text', value: r.d.name || '', maxlength: '96', 'aria-label': `Name of the stage in slot ${n}` });
@@ -1362,9 +1405,9 @@ function slotCard(r) {
   const clr = el('button', { type: 'button', class: 'chip sm', text: 'Clear slot' }); clr.style.color = 'var(--bad)';
   clr.onclick = () => { if (clr.dataset.sure !== '1') { clr.dataset.sure = '1'; clr.textContent = 'Clear for good?'; setTimeout(() => { clr.dataset.sure = ''; clr.textContent = 'Clear slot'; }, 4000); return; }
     const was = r.key === st.key; dropDraft(r.key); if (was) noStage(); bdMsg(`Cleared slot ${n} in this browser. If that stage is already in the game, it stays there: export it hidden first to hide it on the device.`); renderBoard(); };
-  return el('div', { class: 'slot' + (cur ? ' on' : '') }, el('div', { class: 'sh' }, el('b', { text: `Slot ${n}` }), el('span', { class: 'sn', text: r.sl.missionId })),
+  return el('div', { class: 'slot' + (cur ? ' on' : '') }, el('div', { class: 'sh' }, el('b', { text: `Slot ${n}` })), ids,
     el('img', { class: 'thumb', alt: '', loading: 'lazy', src: bgThumb(tpl ? tpl.bg : (r.d.maps[0] && r.d.maps[0].bg)) || null }),
-    name, el('small', { text: `From ${missionName(r.d.base)} · ${r.d.maps.length} map${r.d.maps.length === 1 ? '' : 's'}` }), el('small', { class: scls, text: stxt }),
+    name, el('small', { text: `${r.d.base ? 'From ' + missionName(r.d.base) : 'Blank start'} · ${r.d.maps.length} map${r.d.maps.length === 1 ? '' : 's'}` + (r.d.maps.some(m => m.from) ? ` (${r.d.maps.filter(m => m.from).length} added from other stages)` : '') }), el('small', { class: scls, text: stxt }),
     el('label', { class: 'toggle' }, show, 'Show in game'),
     el('div', { class: 'acts' }, el('button', { type: 'button', class: 'btn ghost sm', text: cur ? 'Open now' : 'Open', onclick: () => openSlot(r.key) }), clr), idDetails(r));
 }
@@ -1373,37 +1416,100 @@ function editSlot(key, fn, msg) {
   if (st.key === key) { st.draft = d; renderRail(); draw(); } if (msg) bdMsg(msg); renderBoard();
 }
 async function openSlot(key) { if (st.mode !== 'custom') { await setMode('custom', { key }); } else await openKey(key); $('mapTabs').scrollIntoView({ block: 'start', behavior: 'smooth' }); }
-// template picker for an empty slot
+// new stage in a slot: a game-ready template, any mission (draft only), or a blank map (draft only)
 let tplFor = 0;
-function openTpl(slot) { tplFor = slot; $('tplTitle').textContent = `Pick a template for slot ${slot}`; $('tplQ').value = ''; renderTpl(); const d = $('tplDlg');
-  try { const fe = window.frameElement; if (fe) { d.style.margin = '0 auto'; d.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; d.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {} d.showModal(); $('tplQ').focus(); }
-function renderTpl() { const toks = $('tplQ').value.toLowerCase().split(/\s+/).filter(Boolean);
-  const list = st.idx.missions.filter(m => tplOf(m.id) && toks.every(t => (m.name + ' ' + m.stage + ' ' + m.id).toLowerCase().includes(t))).slice(0, 120);
-  $('tplList').replaceChildren(...list.map(m => el('button', { type: 'button', onclick: () => createSlot(tplFor, m.id) }, el('img', { alt: '', loading: 'lazy', src: bgThumb(m.bg) || null }), el('b', { text: m.name || 'Mission ' + m.id }), el('small', { text: `${m.stage || ''} · ${m.maps} map${m.maps === 1 ? '' : 's'} · ${m.id}` }))));
-  if (!list.length) $('tplList').append(el('p', { class: 'hint', text: 'No game-ready mission matches.' })); }
+function dlgOpen(d) { try { const fe = window.frameElement; if (fe) { d.style.margin = '0 auto'; d.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; d.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {} d.showModal(); }
+function openTpl(slot) { tplFor = slot; const sl = slotList().find(x => x.slot === slot); $('tplTitle').textContent = `New stage in slot ${slot} (stage ${sl.stageId}, mission ${sl.missionId})`; $('tplQ').value = ''; renderTpl(); dlgOpen($('tplDlg')); $('tplQ').focus(); }
+function renderTpl() { const toks = $('tplQ').value.toLowerCase().split(/\s+/).filter(Boolean), all = $('tplAll').getAttribute('aria-pressed') === 'true';
+  const list = st.idx.missions.filter(m => (all || tplOf(m.id)) && toks.every(t => (m.name + ' ' + m.stage + ' ' + m.id).toLowerCase().includes(t))).sort((a, b) => !!tplOf(b.id) - !!tplOf(a.id)).slice(0, 120);
+  $('tplList').replaceChildren(...list.map(m => el('button', { type: 'button', onclick: () => createSlot(tplFor, m.id) }, el('img', { alt: '', loading: 'lazy', src: bgThumb(m.bg) || null }), el('b', { text: m.name || 'Mission ' + m.id }),
+    el('small', { text: `${tplOf(m.id) ? 'Game-ready' : 'Draft only'} · ${m.stage || ''} · ${m.maps} map${m.maps === 1 ? '' : 's'} · ${m.id}` }))));
+  if (!list.length) $('tplList').append(el('p', { class: 'hint', text: 'No mission matches.' })); }
 $('tplQ').addEventListener('input', renderTpl); $('tplClose').onclick = () => $('tplDlg').close();
+$('tplAll').onclick = () => { $('tplAll').setAttribute('aria-pressed', String($('tplAll').getAttribute('aria-pressed') !== 'true')); renderTpl(); };
+$('tplBlank').onclick = () => createSlot(tplFor, null);
 async function createSlot(slot, missionId) {
-  let m; try { m = await getData(CAT + 'm/' + missionId + '.json.gz'); } catch (e) { toast('Couldn’t load that mission.'); return; }
-  const key = slotKey(slot); const d = draftFromMission(m); d.localId = newId(); d.name = m.name || 'Mission ' + missionId; d.custom = { slot, show: true }; d.enabled = true;
+  const key = slotKey(slot); if (readStore().drafts[key]) { bdMsg(`Slot ${slot} already holds a stage. Clear it first.`, true); return; }
+  let d;
+  if (missionId) { let m; try { m = await getData(CAT + 'm/' + missionId + '.json.gz'); } catch (e) { toast('Couldn’t load that mission.'); return; } d = draftFromMission(m); d.name = m.name || 'Mission ' + missionId; }
+  else d = { v: 1, base: null, name: 'My stage', stamina: 10, objectives: [], maps: [blankMap()] };
+  d.localId = newId(); d.custom = { slot, show: true }; d.enabled = true;
   try { putDraft(key, d); } catch (e) { bdMsg('This browser wouldn’t keep the stage (storage full?).', true); return; } rememberId(key, d.localId);
-  $('tplDlg').close(); bdMsg(`Slot ${slot} now holds a custom stage from ${d.name}. Move start spots or entry points, then export.`); await openSlot(key); renderBoard();
+  $('tplDlg').close(); bdMsg(`Slot ${slot} now holds “${d.name}”.` + (missionId && tplOf(missionId) ? ' Move start spots or entry points, then export.' : ' It’s a draft: build it here and save the project; the app can’t install it yet.')); await openSlot(key); renderBoard();
 }
+// pick a slot (for copies and moves)
+let slotPickDone = null;
+function pickSlot(title, hint, onPick, current) {
+  const s = readStore(); slotPickDone = onPick; $('slotDlgTitle').textContent = title; $('slotDlgHint').textContent = hint;
+  $('slotDlgList').replaceChildren(...slotList().map(sl => { const d = s.drafts[slotKey(sl.slot)], cur = sl.slot === current;
+    return el('button', { type: 'button', disabled: !!d && !cur ? true : cur ? true : null, onclick: () => { $('slotDlg').close(); const f = slotPickDone; slotPickDone = null; f && f(sl.slot); } },
+      el('b', { text: `Slot ${sl.slot}` }), el('small', { text: `Stage ${sl.stageId} · mission ${sl.missionId}` }), el('small', { text: cur ? 'This stage’s slot' : d ? `In use: ${(d.name || '').trim() || 'a stage'}` : 'Empty' })); }));
+  dlgOpen($('slotDlg'));
+}
+$('slotDlgClose').onclick = () => $('slotDlg').close();
+function moveToSlot(fromKey, n) {
+  saveNow(); const s = readStore(), d = s.drafts[fromKey], to = slotKey(n); if (!d) return false; if (s.drafts[to]) { toast(`Slot ${n} is in use.`); return false; }
+  d.custom = { ...(d.custom || {}), slot: n, show: d.custom ? d.custom.show !== false : d.enabled !== false }; s.drafts[to] = d; delete s.drafts[fromKey];
+  if (s.lastByMode && s.lastByMode.custom === fromKey) s.lastByMode.custom = to;
+  try { localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { toast('This browser wouldn’t keep the change.'); return false; }
+  rememberId(to, d.localId); if (st.key === fromKey) { st.key = to; st.draft = d; } return true;
+}
+$('gSlot').onchange = e => { const n = +e.target.value, from = st.key; if (!isSlotKey(from) || n === st.draft.custom.slot) return;
+  if (moveToSlot(from, n)) { renderRail(); renderBoard(); toast(`Moved to slot ${n} (stage ${slotList()[n - 1].stageId}, mission ${slotList()[n - 1].missionId}). The stage ID stays the same, so a device that already has it keeps its slot.`); } else renderGame(); };
 // copy an in-game draft into a custom slot (a new stage with its own stage ID)
-$('copyBtn').onclick = async () => {
-  saveNow(); const src = st.draft; if (!src || !tplOf(src.base)) { toast('Only game-ready Emergency missions can become custom stages.'); return; }
-  const s = readStore(), n = firstEmptySlot(s); if (!n) { toast('All 20 custom slots are in use. Clear one in Custom stages first.'); return; }
-  const d = clone(src); delete d.inGame; d.localId = newId(); d.custom = { slot: n, show: true }; d.enabled = true; if (!d.name) d.name = missionName(src.base);
-  const key = slotKey(n); try { putDraft(key, d); } catch (e) { toast('This browser wouldn’t keep the copy.'); return; } rememberId(key, d.localId);
-  await setMode('custom', { key }); renderBoard(); bdMsg(`Copied to slot ${n} as a new custom stage. The original mission draft is unchanged in In-game stages.` + (gameCheck(d, st.mission, true).lost.length ? ' Some of its edits can’t go in the game yet; they’re flagged in In the game.' : ''));
+$('copyBtn').onclick = () => {
+  saveNow(); const src = st.draft; if (!src) return; const s = readStore(); if (!firstEmptySlot(s)) { toast('All 20 custom slots are in use. Clear one in Custom stages first.'); return; }
+  pickSlot('Copy to which slot?', 'The copy becomes a custom stage with its own stage ID. Your draft of the original mission stays as it is.', async n => {
+    const d = clone(src); delete d.inGame; d.localId = newId(); d.custom = { slot: n, show: true }; d.enabled = true; if (!d.name) d.name = missionName(src.base);
+    const key = slotKey(n); try { putDraft(key, d); } catch (e) { toast('This browser wouldn’t keep the copy.'); return; } rememberId(key, d.localId);
+    await setMode('custom', { key }); renderBoard(); const chk = gameCheck(d, st.mission, true);
+    bdMsg(`Copied to slot ${n} (stage ${slotList()[n - 1].stageId}, mission ${slotList()[n - 1].missionId}).` + (!chk.tpl ? ' Its mission isn’t a game-ready template, so it’s a draft for now.' : chk.errs.length ? ' Some edits can’t go in the game yet; they’re listed in In the game.' : ''));
+  });
 };
+// pull whole maps from another mission onto the end of this stage (boss rushes and the like)
+let pullMission = null, pullMaps = [];
+function openPull() { pullMission = null; $('pullQ').value = ''; $('pullMaps').hidden = true; $('pullMissions').hidden = false; renderPullMissions(); dlgOpen($('pullDlg')); $('pullQ').focus(); }
+function renderPullMissions() { const toks = $('pullQ').value.toLowerCase().split(/\s+/).filter(Boolean);
+  const list = st.idx.missions.filter(m => toks.every(t => (m.name + ' ' + m.stage + ' ' + m.id).toLowerCase().includes(t))).slice(0, 90);
+  $('pullMissions').replaceChildren(...list.map(m => el('button', { type: 'button', onclick: () => choosePull(m.id) }, el('img', { alt: '', loading: 'lazy', src: bgThumb(m.bg) || null }), el('b', { text: m.name || 'Mission ' + m.id }), el('small', { text: `${m.stage || ''} · ${m.maps} map${m.maps === 1 ? '' : 's'} · ${m.id}` }))));
+  if (!list.length) $('pullMissions').append(el('p', { class: 'hint', text: 'No mission matches.' })); }
+$('pullQ').addEventListener('input', () => { $('pullMaps').hidden = true; $('pullMissions').hidden = false; renderPullMissions(); });
+async function choosePull(id) {
+  let m; try { m = await getData(CAT + 'm/' + id + '.json.gz'); } catch (e) { toast('Couldn’t load that mission.'); return; }
+  pullMission = m; pullMaps = draftFromMission(m).maps; $('pullMissions').hidden = true; $('pullMaps').hidden = false;
+  $('pullFrom').textContent = `${m.name || 'Mission ' + m.id}${m.stage ? ' · ' + m.stage : ''} · ${pullMaps.length} map${pullMaps.length === 1 ? '' : 's'}`;
+  $('pullList').replaceChildren(...pullMaps.map((mp, i) => { const ens = allEnemies(mp), boss = ens.filter(e => e.type === 2).length, waves = Math.max(...mp.encounters.map(e => e.waves.length));
+    const names = [...new Set(ens.filter(e => e.type === 2 || e.type === 3).map(e => enemyInfo(e.enemy).n))].slice(0, 3).join(', ');
+    const cb = el('input', { type: 'checkbox', 'data-i': i }); cb.checked = true; cb.onchange = pullCount;
+    return el('label', { class: 'mrow' }, cb, el('img', { alt: '', loading: 'lazy', src: bgThumb(mp.bg) || null }), el('div', {}, el('b', { text: `Map ${i + 1}${boss ? ' · boss' : ''}` }),
+      el('small', { text: `${ens.length} enem${ens.length === 1 ? 'y' : 'ies'} · ${waves} wave${waves === 1 ? '' : 's'}${mp.encounters.length > 1 ? ` · ${mp.encounters.length} line-ups` : ''}` }), names ? el('small', { text: names }) : null)); }));
+  pullCount();
+}
+function pullPicked() { return [...$('pullList').querySelectorAll('input:checked')].map(c => +c.dataset.i); }
+function pullCount() { const n = pullPicked().length; $('pullCount').textContent = `${n} of ${pullMaps.length} map${pullMaps.length === 1 ? '' : 's'} selected`; $('pullAdd').disabled = !n; $('pullAdd').textContent = n ? `Add ${n} map${n === 1 ? '' : 's'}` : 'Add maps'; }
+$('pullAllMaps').onclick = () => { for (const c of $('pullList').querySelectorAll('input')) c.checked = true; pullCount(); };
+$('pullNoMaps').onclick = () => { for (const c of $('pullList').querySelectorAll('input')) c.checked = false; pullCount(); };
+$('pullBossMaps').onclick = () => { for (const c of $('pullList').querySelectorAll('input')) c.checked = allEnemies(pullMaps[+c.dataset.i]).some(e => e.type === 2); pullCount(); };
+$('pullBack').onclick = () => { $('pullMaps').hidden = true; $('pullMissions').hidden = false; renderPullMissions(); };
+$('pullClose').onclick = () => $('pullDlg').close();
+$('pullAdd').onclick = () => {
+  const pick = pullPicked(); if (!pick.length || !pullMission) return; const at = st.draft.maps.length; const m = pullMission;
+  for (const i of pick) { const mp = clone(pullMaps[i]); mp.from = { mission: String(m.id), map: i, name: m.name || '' };
+    for (const e of mp.encounters) for (const w of e.waves) for (const it of w.items) if (it.k === 'e') it.uid = uid();
+    st.draft.maps.push(mp); }
+  let unlocked = false; if (st.gameOnly) { st.gameOnly = false; unlocked = true; try { localStorage.setItem('bf-stages-gameonly', '0'); } catch (e) {} }
+  $('pullDlg').close(); st.mapI = at; st.encI = 0; st.waveI = 0; st.sel = null; changed(); renderBoard();
+  toast(`Added ${pick.length} map${pick.length === 1 ? '' : 's'} from ${m.name || 'mission ' + m.id} as map${pick.length === 1 ? '' : 's'} ${at + 1}${pick.length > 1 ? '–' + (at + pick.length) : ''}.` + (unlocked ? ' Game edits only is now off so you can remove waves.' : ''));
+};
+$('pullBtn').onclick = () => { if (st.mode !== 'custom' || !isSlotKey(st.key)) { toast('Copy to a custom stage first, then add maps there.'); return; } openPull(); };
+
 // stages made before slots existed
 function oldRows() { const s = readStore(); return Object.entries(s.drafts).filter(([k, d]) => d && !isSlotKey(k) && !d.custom && !d.inGame && tplOf(d.base)); }
 function renderOld() {
   const rows = oldRows(); $('oldCard').hidden = !rows.length; if (!rows.length) return;
   $('oldList').replaceChildren(...rows.map(([k, d]) => el('div', { class: 'prow' }, el('div', {}, el('b', { text: (d.name || '').trim() || missionName(d.base) }), el('small', { text: `From ${missionName(d.base)} · stage ID ${d.localId || '—'}` })),
-    el('div', { class: 'acts row' }, el('button', { type: 'button', class: 'chip sm', text: 'Move to a slot', onclick: () => { const s = readStore(), n = firstEmptySlot(s); if (!n) { bdMsg('All 20 slots are in use.', true); return; }
-      const nd = clone(d); nd.custom = { slot: n, show: nd.enabled !== false }; s.drafts[slotKey(n)] = nd; delete s.drafts[k]; try { localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { bdMsg('This browser wouldn’t keep the change.', true); return; }
-      rememberId(slotKey(n), nd.localId); if (st.key === k) noStage(); bdMsg(`Moved to slot ${n}. It kept its stage ID.`); renderBoard(); } }),
+    el('div', { class: 'acts row' }, el('button', { type: 'button', class: 'chip sm', text: 'Move to a slot', onclick: () => { if (!firstEmptySlot(readStore())) { bdMsg('All 20 slots are in use.', true); return; }
+      pickSlot('Move to which slot?', 'It keeps its stage ID, so a copy already in the game is updated, not duplicated.', n => { const was = st.key === k; if (moveToSlot(k, n)) { if (was) noStage(); bdMsg(`Moved to slot ${n} (stage ${slotList()[n - 1].stageId}, mission ${slotList()[n - 1].missionId}). It kept its stage ID.`); renderBoard(); } }); } }),
       el('button', { type: 'button', class: 'chip sm', text: 'Keep as an in-game draft', onclick: () => editSlot(k, x => { x.inGame = true; }, 'Kept as an in-game draft (In-game stages).') }))))); }
 // reserved quests: stage projects, outside the 20 slots
 async function renderReserved() {
@@ -1429,7 +1535,7 @@ $('ledgerClear').onclick = () => { try { localStorage.removeItem(LEDGER); } catc
 let xRows = [];
 async function exportRows(sendHidden) {
   const rows = await slotRows();
-  for (const r of rows) { if (!r.d) { r.why = 'Empty slot'; continue; } if (!r.chk.tpl) { r.why = 'Draft only: its mission isn’t a game-ready template'; continue; }
+  for (const r of rows) { if (!r.d) { r.why = 'Empty slot'; continue; } if (!r.chk.tpl) { r.why = statusOf(r)[0]; continue; }
     if (r.chk.errs.length) { r.why = `Can’t export (${r.chk.errs[0][0]}): ${r.chk.errs[0][1]}`; continue; }
     if (!showOf(r.d) && !sendHidden) { r.why = 'Hidden: Show in game is off'; continue; } r.include = true; }
   return rows;
@@ -1438,7 +1544,7 @@ function xRow(r, inc) { const tpl = r.d && tplOf(r.d.base); const dev = r.d ? le
   const dest = `Planned slot ${r.sl.slot} → stage ${r.sl.stageId}, mission ${r.sl.missionId}` + (dev ? ` (ledger: slot ${dev})` : ' (the app confirms the slot when it imports)');
   return el('div', { class: 'xrow' }, el('img', { alt: '', src: (r.d && bgThumb(tpl ? tpl.bg : r.d.maps[0] && r.d.maps[0].bg)) || null }), el('div', {},
     el('b', { text: r.d ? ((r.d.name || '').trim() || 'Untitled stage') + (inc && !showOf(r.d) ? ' — sent hidden' : '') : `Slot ${r.sl.slot}` }),
-    r.d ? el('small', { text: `From ${missionName(r.d.base)} · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'} · stage ID ${r.d.localId}` }) : null,
+    r.d ? el('small', { text: `${r.d.base ? 'From ' + missionName(r.d.base) : 'Blank start'} · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'} · stage ID ${r.d.localId}` }) : null,
     inc ? el('small', { text: dest }) : el('small', { class: r.d ? 'bad' : '', text: r.why }))); }
 async function renderExport() {
   xRows = await exportRows($('xHidden').checked); const inc = xRows.filter(r => r.include), out = xRows.filter(r => !r.include);
@@ -1503,12 +1609,12 @@ async function init() {
   renderPal();
   let q = null; try { q = new URLSearchParams(location.search); } catch (e) {}
   const s = readStore(); const want = q && q.get('mission');
-  let mode = 'game'; try { mode = localStorage.getItem('bf-stages-mode') === 'custom' ? 'custom' : 'game'; } catch (e) {}
+  let mode = 'custom'; try { mode = localStorage.getItem('bf-stages-mode') === 'game' ? 'game' : 'custom'; } catch (e) {} // custom stages unless you last chose in-game
   if (want && idx.missions.some(m => m.id === want)) { const k = s.lastByMode && s.lastByMode.game; await setMode('game', { key: k && s.drafts[k] && String(s.drafts[k].base) === want ? k : null }); if (!st.key || String(st.draft.base) !== want) await openMission(want); }
   else await setMode(mode);
   requestAnimationFrame(tick);
 }
-try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, exportStage, allEnemies, cellsOf, gameCheck, gameStage, packZip, unzip, importGameStage, importFiles, readStore, setMode, renderBoard, exportRows, openSlot, createSlot, get APP() { return APP; } }; } catch (e) {}
+try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, pickSlot, moveToSlot, choosePull, openPull, exportStage, allEnemies, cellsOf, gameCheck, gameStage, packZip, unzip, importGameStage, importFiles, readStore, setMode, renderBoard, exportRows, openSlot, createSlot, get APP() { return APP; } }; } catch (e) {}
 init().catch(err => { $('mName').textContent = err && err.message === 'old browser' ? 'This browser is too old for the stage catalog. Update it and reload.' : 'Couldn’t load the stage catalog. Reload the page to try again.'; console.error(err); });
 })();
 
