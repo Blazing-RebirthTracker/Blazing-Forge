@@ -36,7 +36,8 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;fl
 .now{display:flex;flex-direction:column;gap:2px;min-width:0}
 .now .t{font-family:var(--f-disp);font-weight:700;font-size:19px;letter-spacing:.03em}
 .now .s{color:var(--tx2);font-size:13px}
-.picker{display:flex;gap:6px;align-items:center;flex:1 1 360px;max-width:600px;min-width:0}
+.picker{display:flex;gap:6px;align-items:center;flex:1 1 520px;max-width:760px;min-width:0;flex-wrap:wrap}
+.picker .search{flex:1 1 240px}
 .search{position:relative;flex:1;min-width:0}
 .search input,.field-in{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:9px 12px;min-height:38px}
 .drop-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;background:var(--panel2);border:1px solid var(--line);border-radius:12px;max-height:min(420px,60vh);overflow:auto;padding:4px;box-shadow:0 18px 40px rgba(0,0,0,.45)}
@@ -136,6 +137,26 @@ ol.steps{margin:0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-heigh
 .packlist small{display:block;color:var(--tx2);font-size:12px}
 .packlist .bad{color:var(--bad)}
 .game-hide{display:none!important}
+#libMsg{background:var(--leaf-soft);color:var(--tx);border-radius:9px;padding:8px 11px;margin:6px 0 0}
+.libbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 8px}
+dialog.lib .packlist{max-height:52vh}
+.lrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:start;background:var(--panel2);border-radius:10px;padding:9px 11px}
+.lrow.cur{outline:1px solid rgba(255,122,61,.55)}
+.lrow.new{outline:1px solid rgba(95,211,160,.6)}
+.lrow input{margin-top:3px;accent-color:var(--ember);width:16px;height:16px}
+.lrow b{font-size:13.5px}
+.lrow small{display:block;color:var(--tx2);font-size:12px}
+.lrow .bad{color:var(--bad)}
+.lrow .acts{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.lrow .acts button{border:1px solid var(--line);background:transparent;color:var(--tx2);border-radius:8px;padding:4px 9px;font-weight:700;font-size:12px;min-height:30px}
+.lrow .acts button.del{color:var(--bad)}
+.lrow .acts button.sure{background:var(--bad);color:#1B0D05;border-color:var(--bad)}
+@media (max-width:560px){.lrow{grid-template-columns:auto minmax(0,1fr)}.lrow .acts{grid-column:2;justify-content:flex-start}}
+.tagp{font:800 10px var(--f-body);letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:1px 5px;margin-left:6px;vertical-align:1px;background:var(--leaf-soft);color:var(--leaf)}
+.tagp.no{background:var(--ember-soft);color:var(--ember-tx)}
+.tagp.dr{background:var(--panel);color:var(--tx3)}
+.dropzone{position:fixed;inset:0;z-index:50;background:rgba(5,7,10,.72);display:flex;align-items:center;justify-content:center;padding:24px;pointer-events:none}
+.dropzone div{border:2px dashed var(--ember);border-radius:18px;padding:32px 28px;font:700 18px var(--f-disp);letter-spacing:.04em;color:var(--tx);background:var(--panel);text-align:center}
 </style>
 </head><body>
 <div class="wrap">
@@ -146,12 +167,12 @@ ol.steps{margin:0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-heigh
       <small id="meta"></small>
     </div>
   </header>
-  <div class="note" id="betaNote">Stages can now go in the game. Start from a <b>game-ready</b> Emergency mission, move your team's start spots and the enemy entry points, name it, and press <b>Save for the game</b>. The Forge app adds it as its own Emergency mission, with the template's enemies and rewards. Other edits (enemies, waves, the field shape, backgrounds) stay as drafts here until the app can install them. The background is lined up by eye, so use the adjust controls if it looks off.</div>
+  <div class="note" id="betaNote">Stages work in the game. Start from a <b>game-ready</b> Emergency mission, move your team's start spots and the enemy entry points, and name it. Then open <b>My stages &amp; packs</b> to export a pack of up to 20 stages for the app's Import stages, or to import a pack someone shared. The app adds each stage as its own Emergency mission with the template's enemies and rewards. Other edits (enemies, waves, the field shape, backgrounds) stay as drafts here for now.</div>
   <section class="bar" aria-label="Mission">
     <div class="now"><span class="t" id="mName">Loading missions…</span><span class="s" id="mSub"></span></div>
     <div class="picker">
       <div class="search"><input type="search" id="mSearch" placeholder="Start from a mission: search by name, stage or ID" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="mList" aria-label="Search missions"><div class="drop-list" id="mList" role="listbox" hidden></div></div>
-      <button class="chip" id="readyBtn" aria-pressed="false" type="button">Game-ready only</button><button class="btn ghost" id="blankBtn" type="button">Blank stage</button>
+      <button class="chip" id="readyBtn" aria-pressed="false" type="button">Game-ready only</button><button class="btn ghost" id="blankBtn" type="button">Blank stage</button><button class="btn primary" id="libBtn" type="button">My stages &amp; packs</button>
     </div>
   </section>
   <div class="main">
@@ -179,11 +200,11 @@ ol.steps{margin:0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-heigh
             <label>Shows in the game<select id="gOn"><option value="1">Yes</option><option value="0">Hidden</option></select></label>
           </div>
           <ul class="issues" id="gameIssues"></ul>
-          <div class="row"><button class="btn primary" id="gameSave" type="button">Save for the game</button><button class="btn ghost" id="packBtn" type="button">Game pack&hellip;</button></div>
+          <div class="row"><button class="btn primary" id="gameSave" type="button">Save for the game</button><button class="btn ghost" id="packBtn" type="button">Packs&hellip;</button></div>
           <details class="more"><summary>Rewards from the template</summary><dl class="rw" id="gameRewards"></dl><p class="hint" style="margin-top:8px">Rewards, enemies and drop chances come from the template mission and can't be changed yet. First clear has its own reward group, so it pays out even if you've cleared the original.</p></details>
           <details class="more"><summary>How to put it in the game</summary>
             <ol class="steps">
-              <li>Save for the game (one stage) or make a game pack (up to 20 stages in one zip).</li>
+              <li>Save for the game (one stage), or open My stages &amp; packs and export a pack (up to 20 stages in one zip).</li>
               <li>Get the file onto your phone, for example in Files &rsaquo; On My iPhone &rsaquo; Blazing:Rebirth.</li>
               <li>In the app, open Forge Studio &rsaquo; Stages, choose <b>Import stages</b> and pick the file.</li>
               <li>Build the mod, close the game completely and open it again.</li>
@@ -235,7 +256,7 @@ ol.steps{margin:0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-heigh
           <label>Stamina<input type="number" id="stStamina" min="0" max="99" step="1"></label>
         </div>
         <div class="status" id="stInfo"></div>
-        <div class="row"><button class="btn ghost" id="exportBtn" type="button">Export draft file</button><label class="btn ghost" for="importFile" tabindex="0" id="importLbl">Open a stage file</label><input type="file" id="importFile" accept=".json,.zip,application/json,application/zip" class="hidden-file"></div>
+        <div class="row"><button class="btn ghost" id="exportBtn" type="button">Export draft file</button><label class="btn ghost" for="importFile" tabindex="0" id="importLbl">Open a stage file</label><input type="file" id="importFile" accept=".json,.zip,application/json,application/zip" multiple class="hidden-file"></div>
         <div class="row"><button class="btn danger" id="resetBtn" type="button">Discard my changes</button></div>
         <p class="hint">Your changes are kept in this browser. The draft file keeps every edit, including the ones the game can't install yet, so you can open it again here later. Open a stage file also takes files saved for the game and game packs.</p>
       </div>
@@ -256,12 +277,20 @@ ol.steps{margin:0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-heigh
     </aside>
   </div>
 </div>
-<dialog class="bgs" id="packDlg" aria-labelledby="packTitle">
-  <div class="row" style="justify-content:space-between"><span class="lbl" id="packTitle">Game pack</span><button class="btn ghost" id="packClose" type="button">Close</button></div>
-  <p class="hint" style="margin-top:8px">Your game-ready stages in this browser. Tick up to 20 to save them as one zip for the app's Import stages.</p>
-  <div class="packlist" id="packList"></div>
-  <div class="row" style="justify-content:space-between"><span class="status" id="packCount"></span><button class="btn primary" id="packSave" type="button">Save game pack</button></div>
+<dialog class="bgs lib" id="libDlg" aria-labelledby="libTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="libTitle">My stages &amp; packs</span><button class="btn ghost" id="libClose" type="button">Close</button></div>
+  <div class="libbar">
+    <label class="btn primary" for="libFile" tabindex="0" id="libImportLbl">Import a pack or stage</label><input type="file" id="libFile" accept=".zip,.json,application/zip,application/json" multiple class="hidden-file">
+    <button class="btn ghost" id="libExport" type="button">Export pack</button>
+    <button class="chip" id="libAll" type="button">Select all ready</button>
+    <button class="chip" id="libNone" type="button">Clear</button>
+  </div>
+  <p class="hint">Every stage in this browser. Tick the ready ones (up to 20) and press Export pack to get one zip for the app's Import stages, or to share. Import takes packs and single stage files, or drop them anywhere on this page.</p>
+  <div class="status" id="libMsg" role="status" aria-live="polite" hidden></div>
+  <div class="packlist" id="libList"></div>
+  <div class="row" style="justify-content:space-between"><span class="status" id="libCount"></span></div>
 </dialog>
+<div class="dropzone" id="dropZone" hidden><div>Drop stage packs or stage files to import them</div></div>
 <dialog class="bgs" id="bgDlg" aria-labelledby="bgTitle">
   <div class="row" style="justify-content:space-between"><span class="lbl" id="bgTitle">Pick a background</span><button class="btn ghost" id="bgClose" type="button">Close</button></div>
   <div class="bggrid" id="bgGrid"></div>
@@ -356,10 +385,12 @@ const STORE = 'bf-stages-v1';
 function readStore() { try { return JSON.parse(localStorage.getItem(STORE)) || { drafts: {} }; } catch (e) { return { drafts: {} }; } }
 let saveTimer = 0;
 function save() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => { try { const s = readStore(); s.drafts[st.key] = st.draft; s.last = st.key; localStorage.setItem(STORE, JSON.stringify(s)); }
+  clearTimeout(saveTimer); st.pending = true;
+  saveTimer = setTimeout(() => { st.pending = false; try { const s = readStore(); s.drafts[st.key] = st.draft; s.last = st.key; localStorage.setItem(STORE, JSON.stringify(s)); }
     catch (e) { toast('This browser wouldn’t keep your changes (private browsing or storage full). Export the stage file before closing.'); } }, 300);
 }
+function saveNow() { clearTimeout(saveTimer); if (!st.draft || !st.key || !st.pending) return; st.pending = false; try { const s = readStore(); s.drafts[st.key] = st.draft; s.last = st.key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
+function setLast(key) { try { const s = readStore(); s.last = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
 function dropDraft(key) { try { const s = readStore(); delete s.drafts[key]; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
 function bgFit(key) { try { return (JSON.parse(localStorage.getItem('bf-stages-bgfit')) || {})[key] || { x: 0, y: 0, s: 1 }; } catch (e) { return { x: 0, y: 0, s: 1 }; } }
 function setBgFit(key, v) { try { const a = JSON.parse(localStorage.getItem('bf-stages-bgfit')) || {}; a[key] = v; localStorage.setItem('bf-stages-bgfit', JSON.stringify(a)); } catch (e) {} }
@@ -752,11 +783,11 @@ $('mSearch').addEventListener('focus', () => dropList($('mSearch'), $('mList'), 
 $('mSearch').addEventListener('input', () => dropList($('mSearch'), $('mList'), missionItems($('mSearch').value), openMission));
 $('mSearch').addEventListener('blur', () => setTimeout(() => { $('mList').hidden = true; $('mSearch').setAttribute('aria-expanded', 'false'); }, 150));
 $('mSearch').addEventListener('keydown', e => { if (e.key === 'Escape') { $('mList').hidden = true; $('mSearch').blur(); } if (e.key === 'Enter') { const b = $('mList').querySelector('button'); if (b) b.click(); } });
-async function openMission(id, opts = {}) {
+async function openMission(id, opts = {}) { // opts.key opens one of several stages made from this mission
   $('mSearch').value = ''; $('mSearch').blur();
   let m; try { m = await getData(CAT + 'm/' + id + '.json.gz'); } catch (e) { toast('Couldn’t load that mission. Check your connection and try again.'); return; }
-  const key = 'm' + id; const saved = !opts.fresh && readStore().drafts[key];
-  st.mission = m; st.key = key; st.draft = saved || draftFromMission(m); st.edited = !!saved; ensureId(st.draft, key);
+  const key = opts.key || 'm' + id; const saved = !opts.fresh && readStore().drafts[key];
+  saveNow(); st.mission = m; st.key = key; st.draft = saved || draftFromMission(m); st.edited = !!saved; ensureId(st.draft, key); if (saved) setLast(key);
   st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; st.placing = null; st.view = { z: 1, x: 0, y: 0 };
   try { const q = new URLSearchParams(location.search); q.set('mission', id); history.replaceState(null, '', '?' + q.toString()); } catch (e) {}
   syncBgCtl(); renderRail(); draw();
@@ -767,7 +798,7 @@ function openBlank() {
   st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; save(); syncBgCtl(); renderRail(); draw(); toast('Blank stage: one map with your team on the left. Add enemies from the list.');
 }
 $('blankBtn').onclick = openBlank;
-$('resetBtn').onclick = () => { dropDraft(st.key); if (st.mission) openMission(st.mission.id, { fresh: true }); else openBlank(); toast('Your changes were discarded.'); };
+$('resetBtn').onclick = () => { const keepId = st.draft && st.draft.localId, keepName = st.draft && st.draft.name, k = st.key; dropDraft(st.key); if (st.mission) openMission(st.mission.id, { fresh: true, key: k }).then(() => { if (/~/.test(k) && keepId) { st.draft.localId = keepId; st.draft.name = keepName; save(); renderRail(); } }); else openBlank(); toast('Your changes were discarded.'); };
 
 // ---- backgrounds
 $('bgBtn').onclick = () => {
@@ -813,22 +844,30 @@ async function saveBlob(blob, name) {
   } catch (e) { if (!(e && e.name === 'AbortError')) toast('Couldn’t save the file.'); return false; }
 }
 $('exportBtn').onclick = () => saveBlob(new Blob([JSON.stringify(exportStage(), null, 1)], { type: 'application/json' }), 'stage-draft-' + slug(st.draft.name) + '.json');
-$('importFile').onchange = async e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-  try {
-    const buf = new Uint8Array(await f.arrayBuffer());
-    if (buf[0] === 0x50 && buf[1] === 0x4b) { await importPack(buf, f.name); return; }
-    const j = JSON.parse(new TextDecoder().decode(buf)); if (j.format !== 'ForgeStage') throw new Error('format');
-    if (j.schema === 2) { const r = await importGameStage(j); if (r.err) { toast(r.err); return; } await openMission(r.donor); toast('Opened ' + f.name + (r.skipped ? ` (${r.skipped} move${r.skipped === 1 ? '' : 's'} didn’t fit this template and were left out).` : '.')); return; }
-    let d = j.native && j.native.editor;
-    if (!d) d = { v: 1, base: j.targetMissionId, name: j.name, stamina: j.stamina, objectives: [], maps: j.maps.map(m => ({ donor: m.donorMapId, bg: m.backgroundId, chips: (m.native && m.native.chips) || blankMap().chips, deployWays: (m.native && m.native.deployWays) || [0, 0, 0, 0, 0, 0],
-      encounters: m.encounters.map(en => ({ set: en.sourceEnemySetId || null, rate: en.weight ?? 1000, waves: en.waves.map(w => ({ items: [...w.placements.map(p => ({ k: 'e', uid: uid(), enemy: p.enemyId, level: p.level || 1, ...(p.native || {}), count: (p.native && p.native.count) || 1, enabled: !p.native || p.native.enabled !== false, enterId: (p.native && p.native.enterId) || 1, src: p.sourceEntry ? { set: p.sourceEntry.enemySetId, seq: p.sourceEntry.sequenceIndex } : null })), ...(w.nativeCommands || []).map(r => ({ k: 'c', raw: r }))] })) })) })) };
-    for (const m of d.maps) for (const en of m.encounters) for (const w of en.waves) for (const it of w.items) if (it.k === 'e' && !it.uid) it.uid = uid();
-    st.mission = d.base ? await getData(CAT + 'm/' + d.base + '.json.gz').catch(() => null) : null;
-    st.key = d.base ? 'm' + d.base : 'blank-' + Date.now().toString(36); st.draft = d; ensureId(d, st.key); st.edited = true; st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null;
-    save(); syncBgCtl(); renderRail(); draw(); toast('Opened ' + f.name + '.');
-  } catch (err) { toast('That file isn’t a Forge stage file.'); }
-};
+// one importer for every way a file comes in: the Stage card, My stages & packs, or a drop on the page
+async function importOne(f) { // -> { keys: [...], bad: [...] }
+  const buf = new Uint8Array(await f.arrayBuffer());
+  if (buf[0] === 0x50 && buf[1] === 0x4b) return importPack(buf, f.name);
+  let j; try { j = JSON.parse(new TextDecoder().decode(buf)); } catch (e) { return { keys: [], bad: [f.name + ' isn’t a stage file.'] }; }
+  if (!j || j.format !== 'ForgeStage') return { keys: [], bad: [f.name + ' isn’t a stage file.'] };
+  if (j.schema === 2) { const r = await importGameStage(j); return r.err ? { keys: [], bad: [f.name + ': ' + r.err] } : { keys: [r.key], bad: [], skipped: r.skipped }; }
+  let d = j.native && j.native.editor;
+  if (!d) d = { v: 1, base: j.targetMissionId, name: j.name, stamina: j.stamina, objectives: [], maps: j.maps.map(m => ({ donor: m.donorMapId, bg: m.backgroundId, chips: (m.native && m.native.chips) || blankMap().chips, deployWays: (m.native && m.native.deployWays) || [0, 0, 0, 0, 0, 0],
+    encounters: m.encounters.map(en => ({ set: en.sourceEnemySetId || null, rate: en.weight ?? 1000, waves: en.waves.map(w => ({ items: [...w.placements.map(p => ({ k: 'e', uid: uid(), enemy: p.enemyId, level: p.level || 1, ...(p.native || {}), count: (p.native && p.native.count) || 1, enabled: !p.native || p.native.enabled !== false, enterId: (p.native && p.native.enterId) || 1, src: p.sourceEntry ? { set: p.sourceEntry.enemySetId, seq: p.sourceEntry.sequenceIndex } : null })), ...(w.nativeCommands || []).map(r => ({ k: 'c', raw: r }))] })) })) })) };
+  for (const m of d.maps) for (const en of m.encounters) for (const w of en.waves) for (const it of w.items) if (it.k === 'e' && !it.uid) it.uid = uid();
+  const key = d.base ? keyFor(d.base, d.localId) : 'blank-' + Date.now().toString(36); ensureId(d, key);
+  try { const s = readStore(); s.drafts[key] = d; s.last = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { return { keys: [], bad: ['This browser wouldn’t keep the stage (private browsing or storage full).'] }; }
+  return { keys: [key], bad: [] };
+}
+async function importFiles(list, where) {
+  const files = [...(list || [])]; if (!files.length) return; saveNow();
+  const keys = [], bad = []; let skipped = 0;
+  for (const f of files) { try { const r = await importOne(f); keys.push(...r.keys); bad.push(...r.bad); skipped += r.skipped || 0; } catch (e) { bad.push(f.name + ' couldn’t be read.'); } }
+  const msg = (keys.length ? `Imported ${keys.length} stage${keys.length === 1 ? '' : 's'}.` : 'Nothing was imported.') + (skipped ? ` ${skipped} marker move${skipped === 1 ? '' : 's'} didn’t fit the template and ${skipped === 1 ? 'was' : 'were'} left out.` : '') + (bad.length ? ' ' + bad.join(' ') : '');
+  if (keys.length) await openKey(keys[0]);
+  if (where === 'lib' || keys.length > 1 || $('libDlg').open) await openLib(keys, msg); else toast(msg);
+}
+$('importFile').onchange = e => { const fl = [...e.target.files]; e.target.value = ''; importFiles(fl); };
 $('importLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('importFile').click(); } };
 
 
@@ -925,20 +964,34 @@ async function importGameStage(j) {
   const { d, skipped } = applyMoves(mission, spec);
   d.name = typeof j.name === 'string' ? j.name : d.name; d.enabled = j.enabled !== false;
   d.localId = typeof j.localId === 'string' && ID_RE.test(j.localId) && j.localId.includes(':') ? j.localId : newId();
-  const key = 'm' + donor; rememberId(key, d.localId);
+  const key = keyFor(donor, d.localId); rememberId(key, d.localId);
   try { const s = readStore(); s.drafts[key] = d; s.last = key; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { return { err: 'This browser wouldn’t keep the stage (private browsing or storage full).' }; }
-  return { donor, skipped };
+  return { donor, key, skipped };
+}
+// where an imported stage goes: the stage with the same stage ID if there is one, else this mission's
+// main slot in the browser if it's free, else a new one, so several stages can share a template
+function keyFor(donor, localId) {
+  const s = readStore();
+  if (localId) for (const [k, d] of Object.entries(s.drafts)) if (d && d.localId === localId && String(d.base) === String(donor)) return k;
+  const main = 'm' + donor; const md = s.drafts[main];
+  if (!md && !(st.key === main && st.edited)) return main;
+  return main + '~' + Math.random().toString(36).slice(2, 8);
 }
 async function importPack(buf, fname) {
-  let files; try { files = await unzip(buf); } catch (e) { toast('That zip couldn’t be read.'); return; }
-  const man = files['forge-mod.json']; let list = [];
-  try { const m = JSON.parse(new TextDecoder().decode(man)); if (m.format === 'ForgeStagePack') list = m.stages || []; } catch (e) {}
-  if (!list.length) list = Object.keys(files).filter(n => /^stages\/[^/]+\.json$/.test(n));
-  let ok = 0, first = null; const bad = [];
+  let files; try { files = await unzip(buf); } catch (e) { return { keys: [], bad: [fname + ' couldn’t be read as a zip.'] }; }
+  let list = [];
+  try { const m = JSON.parse(new TextDecoder().decode(files['forge-mod.json'])); if (m.format === 'ForgeStagePack') list = m.stages || []; } catch (e) {}
+  if (!list.length) list = Object.keys(files).filter(n => /(^|\/)stages\/[^/]+\.json$/.test(n));
+  const keys = [], bad = []; let skipped = 0;
   for (const n of list) { try { const j = JSON.parse(new TextDecoder().decode(files[n])); if (j.format !== 'ForgeStage' || j.schema !== 2) throw new Error('x');
-      const r = await importGameStage(j); if (r.err) bad.push(r.err); else { ok++; first = first || r.donor; } } catch (e) { bad.push(n + ' isn’t a stage file.'); } }
-  if (first) await openMission(first);
-  toast(ok ? `Opened ${ok} stage${ok === 1 ? '' : 's'} from ${fname}.` + (bad.length ? ` ${bad.length} couldn’t be opened.` : '') : 'No stages in that zip could be opened.');
+      const r = await importGameStage(j); if (r.err) bad.push(r.err); else { keys.push(r.key); skipped += r.skipped; } } catch (e) { bad.push(n + ' isn’t a stage file.'); } }
+  if (!list.length) bad.push(fname + ' has no stages in it.');
+  return { keys, bad, skipped };
+}
+async function openKey(key) {
+  const d = readStore().drafts[key]; if (!d) return;
+  if (d.base) { await openMission(String(d.base), { key }); return; }
+  saveNow(); st.mission = null; st.key = key; st.draft = d; ensureId(d, key); st.edited = true; setLast(key); st.mapI = 0; st.encI = 0; st.waveI = 0; st.sel = null; st.placing = null; syncBgCtl(); renderRail(); draw();
 }
 
 // zip files (stored, no compression) for game packs, and reading zips back
@@ -1025,38 +1078,78 @@ $('gId').addEventListener('change', e => { const v = e.target.value.trim(); st.d
 $('gOn').onchange = e => { st.draft.enabled = e.target.value === '1'; save(); renderGame(); };
 $('gameSave').onclick = () => { const chk = gameCheck(st.draft, st.mission); if (chk.errs.length) { toast(chk.errs[0][1]); return; }
   saveBlob(new Blob([JSON.stringify(gameStage(st.draft, chk), null, 1)], { type: 'application/json' }), 'stage-' + slug(st.draft.name) + '.json'); };
-async function packRows() {
-  const s = readStore(); if (st.draft && st.key) s.drafts[st.key] = st.draft;
-  const keys = Object.keys(s.drafts).filter(k => /^m\d+$/.test(k) && tplOf(k.slice(1)));
-  const rows = [];
-  for (const k of keys) { const d = s.drafts[k]; ensureId(d, k); let m = null; try { m = await getData(CAT + 'm/' + k.slice(1) + '.json.gz'); } catch (e) {}
-    const chk = gameCheck(d, m); rows.push({ k, d, chk }); }
-  const seen = {}; for (const r of rows) (seen[r.d.localId] = seen[r.d.localId] || []).push(r);
-  for (const list of Object.values(seen)) if (list.length > 1) for (const r of list) r.chk.errs.push(['STAGE_LEDGER', 'Another stage here has the same stage ID. Give one of them a new ID under Stage ID.']);
-  rows.sort((a, b) => (a.k === st.key ? -1 : b.k === st.key ? 1 : 0) || (a.d.name || '').localeCompare(b.d.name || ''));
+// ---- My stages & packs: every stage in this browser; export a pack, import packs and stage files
+async function libRows() {
+  saveNow(); const s = readStore(); const rows = [];
+  for (const [k, d] of Object.entries(s.drafts)) { if (!d || !d.maps) continue; ensureId(d, k);
+    let m = null; if (d.base) try { m = await getData(CAT + 'm/' + d.base + '.json.gz'); } catch (e) {}
+    rows.push({ k, d, m, chk: tplOf(d.base) ? gameCheck(d, m) : null }); }
+  const seen = {}; for (const r of rows) if (r.chk) (seen[r.d.localId] = seen[r.d.localId] || []).push(r);
+  for (const list of Object.values(seen)) if (list.length > 1) for (const r of list) r.chk.errs.push(['STAGE_LEDGER', 'Another stage here has the same stage ID. Open one and give it a new ID under Stage ID.']);
+  rows.sort((a, b) => (a.k === st.key ? -1 : b.k === st.key ? 1 : 0) || (!!b.chk - !!a.chk) || (a.d.name || '').localeCompare(b.d.name || ''));
   return rows;
 }
-let packCache = [];
-function packCount() { const n = [...$('packList').querySelectorAll('input:checked')].length; $('packCount').textContent = `${n} of ${MAX_PACK} stage slots`; $('packSave').disabled = !n || n > MAX_PACK; if (n > MAX_PACK) $('packCount').textContent += ' — too many for one pack'; }
-$('packBtn').onclick = async () => {
-  packCache = await packRows(); const list = $('packList'); list.replaceChildren();
-  for (const [i, r] of packCache.entries()) { const l = document.createElement('label'); const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.i = i; cb.disabled = !!r.chk.errs.length; cb.checked = !r.chk.errs.length && (r.k === st.key || r.chk.moves > 0);
-    cb.onchange = packCount; const t = document.createElement('div'); const b = document.createElement('b'); b.textContent = (r.d.name || '').trim() || 'Untitled stage';
-    const sm = document.createElement('small'); const mi = st.idx.missions.find(m => m.id === r.k.slice(1)); sm.textContent = `From ${mi && mi.name ? mi.name : 'mission ' + r.k.slice(1)} · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'}${r.d.enabled === false ? ' · hidden in the game' : ''}`;
-    t.append(b, sm); for (const [code, e] of r.chk.errs) { const x = document.createElement('small'); x.className = 'bad'; x.textContent = code + ': ' + e; t.append(x); }
-    l.append(cb, t); list.append(l); }
-  if (!packCache.length) { const p = document.createElement('p'); p.className = 'hint'; p.textContent = 'No game-ready stages yet. Open a game-ready mission and move a marker.'; list.append(p); }
-  packCount();
-  const dd = $('packDlg'); try { const fe = window.frameElement; if (fe) { dd.style.margin = '0 auto'; dd.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; dd.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {}
-  dd.showModal();
-};
-$('packClose').onclick = () => $('packDlg').close();
-$('packSave').onclick = async () => {
-  const pick = [...$('packList').querySelectorAll('input:checked')].map(c => packCache[+c.dataset.i]); if (!pick.length || pick.length > MAX_PACK) return;
+let libCache = [], libFresh = [];
+const libChecked = () => [...$('libList').querySelectorAll('input[type=checkbox]:checked')].map(c => libCache[+c.dataset.i]);
+function libCount() { const n = libChecked().length, ready = libCache.filter(r => r.chk && !r.chk.errs.length).length;
+  $('libCount').textContent = `${libCache.length} stage${libCache.length === 1 ? '' : 's'} here · ${ready} ready for the game · ${n} selected` + (n > MAX_PACK ? ` (a pack holds ${MAX_PACK})` : '');
+  $('libExport').disabled = !n || n > MAX_PACK; $('libExport').textContent = n ? `Export pack (${n})` : 'Export pack'; }
+function libMsg(t) { $('libMsg').textContent = t || ''; $('libMsg').hidden = !t; }
+function renderLib(checked) {
+  const list = $('libList'); list.replaceChildren();
+  libCache.forEach((r, i) => {
+    const row = document.createElement('div'); row.className = 'lrow' + (r.k === st.key ? ' cur' : '') + (libFresh.includes(r.k) ? ' new' : '');
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.i = i; const ok = !!(r.chk && !r.chk.errs.length); cb.disabled = !ok;
+    cb.checked = ok && (checked ? checked.has(r.k) : (libFresh.length ? libFresh.includes(r.k) : r.chk.moves > 0 || r.k === st.key));
+    cb.setAttribute('aria-label', 'Put ' + ((r.d.name || '').trim() || 'this stage') + ' in the pack'); cb.onchange = libCount;
+    const t = document.createElement('div'); const b = document.createElement('b'); b.textContent = (r.d.name || '').trim() || 'Untitled stage';
+    const tag = document.createElement('span'); tag.className = 'tagp' + (!r.chk ? ' dr' : r.chk.errs.length ? ' no' : ''); tag.textContent = !r.chk ? 'Draft only' : r.chk.errs.length ? 'Needs a fix' : r.d.enabled === false ? 'Ready · hidden' : 'Ready'; b.append(tag);
+    const mi = r.d.base && st.idx.missions.find(m => m.id === String(r.d.base));
+    const sm = document.createElement('small'); sm.textContent = (r.d.base ? `From ${mi && mi.name ? mi.name : 'mission ' + r.d.base}` : 'Blank stage') + (r.chk ? ` · ${r.chk.moves} move${r.chk.moves === 1 ? '' : 's'}` : '') + (r.k === st.key ? ' · open now' : '');
+    t.append(b, sm);
+    if (r.chk) for (const [code, e] of r.chk.errs) { const x = document.createElement('small'); x.className = 'bad'; x.textContent = code + ': ' + e; t.append(x); }
+    const acts = document.createElement('div'); acts.className = 'acts';
+    const mk = (txt, cls, fn) => { const bb = document.createElement('button'); bb.type = 'button'; bb.textContent = txt; if (cls) bb.className = cls; bb.onclick = fn; acts.append(bb); return bb; };
+    mk('Open', '', async () => { $('libDlg').close(); await openKey(r.k); });
+    mk('Copy', '', () => { const d = clone(r.d); d.localId = newId(); d.name = ((d.name || '').trim() || 'Stage') + ' (copy)';
+      const key = (r.d.base ? 'm' + r.d.base : 'blank') + '~' + Math.random().toString(36).slice(2, 8); rememberId(key, d.localId);
+      try { const s = readStore(); s.drafts[key] = d; localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) { libMsg('This browser wouldn’t keep the copy (storage full?).'); return; }
+      openLib([key], 'Made a copy with its own stage ID, so it takes its own slot in the app.'); });
+    const del = mk('Delete', 'del', async () => {
+      if (!del.classList.contains('sure')) { del.classList.add('sure'); del.textContent = 'Delete for good?'; setTimeout(() => { del.classList.remove('sure'); del.textContent = 'Delete'; }, 4000); return; }
+      dropDraft(r.k); const was = r.k === st.key;
+      if (was) { if (st.mission) await openMission(st.mission.id, { key: 'm' + st.mission.id, fresh: r.k === 'm' + st.mission.id }); else openBlank(); }
+      await openLib([], `Deleted ${(r.d.name || '').trim() || 'the stage'} from this browser. If it's already in the game, it stays there until you hide it in the app or import a hidden copy.`);
+    });
+    row.append(cb, t, acts); list.append(row);
+  });
+  if (!libCache.length) { const p = document.createElement('p'); p.className = 'hint'; p.textContent = 'No stages here yet. Open a game-ready mission and move a marker, or import a pack.'; list.append(p); }
+  libCount();
+}
+async function openLib(fresh = [], msg = '') {
+  const keep = $('libDlg').open && !fresh.length ? new Set(libChecked().map(r => r.k)) : null;
+  libFresh = fresh; libCache = await libRows(); renderLib(keep); libMsg(msg);
+  const dd = $('libDlg'); if (!dd.open) { try { const fe = window.frameElement; if (fe) { dd.style.margin = '0 auto'; dd.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; dd.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {} dd.showModal(); }
+}
+$('libBtn').onclick = () => openLib(); $('packBtn').onclick = () => openLib();
+$('libClose').onclick = () => $('libDlg').close();
+$('libAll').onclick = () => { let n = 0; for (const c of $('libList').querySelectorAll('input[type=checkbox]')) { c.checked = !c.disabled && n < MAX_PACK; if (c.checked) n++; } libCount(); };
+$('libNone').onclick = () => { for (const c of $('libList').querySelectorAll('input[type=checkbox]')) c.checked = false; libCount(); };
+$('libFile').onchange = e => { const fl = [...e.target.files]; e.target.value = ''; importFiles(fl, 'lib'); };
+$('libImportLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('libFile').click(); } };
+$('libExport').onclick = async () => {
+  const pick = libChecked(); if (!pick.length || pick.length > MAX_PACK) return;
   const blob = packZip(pick.map(r => gameStage(r.d, r.chk)));
-  if (blob.size > 2 * 1024 * 1024) { toast('That pack is over 2 MB. Save fewer stages at a time.'); return; }
-  if (await saveBlob(blob, 'Forge-stages.zip')) $('packDlg').close();
+  if (blob.size > 2 * 1024 * 1024) { libMsg('That pack is over 2 MB. Export fewer stages at a time.'); return; }
+  const name = pick.length === 1 ? 'Forge-stage-' + slug(pick[0].d.name) + '.zip' : 'Forge-stages-' + pick.length + '.zip';
+  if (await saveBlob(blob, name)) libMsg(`Saved ${name} with ${pick.length} stage${pick.length === 1 ? '' : 's'}. In the app: Forge Studio › Stages › Import stages, then build and reopen.`);
 };
+// drop packs or stage files anywhere on the page (the field keeps its own drop for enemies)
+let dragDepth = 0; const hasFiles = e => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
+addEventListener('dragenter', e => { if (!hasFiles(e)) return; dragDepth++; $('dropZone').hidden = false; });
+addEventListener('dragleave', e => { if (!hasFiles(e)) return; dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) $('dropZone').hidden = true; });
+addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
+addEventListener('drop', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth = 0; $('dropZone').hidden = true; importFiles(e.dataTransfer.files, $('libDlg').open ? 'lib' : ''); });
 
 // ---- loop and start
 function tick(now) { const dt = st.last ? Math.min(0.1, (now - st.last) / 1000) : 0; st.last = now; if (st.anim && !document.hidden) { st.t += dt; if (st.draft) draw(); } requestAnimationFrame(tick); }
@@ -1069,12 +1162,12 @@ async function init() {
   renderPal();
   let q = null; try { q = new URLSearchParams(location.search); } catch (e) {}
   const s = readStore(); const want = q && q.get('mission');
-  if (want && idx.missions.some(m => m.id === want)) await openMission(want);
-  else if (s.last && s.drafts[s.last] && s.last.startsWith('blank-')) { st.key = s.last; st.draft = s.drafts[s.last]; ensureId(st.draft, st.key); st.edited = true; syncBgCtl(); renderRail(); draw(); }
-  else await openMission(s.last && s.last.startsWith('m') && s.drafts[s.last] ? s.last.slice(1) : APP && APP.donors['300301'] ? '300301' : '100101');
+  if (want && idx.missions.some(m => m.id === want)) await openMission(want, s.last && s.drafts[s.last] && String(s.drafts[s.last].base) === want ? { key: s.last } : {});
+  else if (s.last && s.drafts[s.last]) await openKey(s.last);
+  else await openMission(APP && APP.donors['300301'] ? '300301' : '100101');
   requestAnimationFrame(tick);
 }
-try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, exportStage, allEnemies, cellsOf, gameCheck, gameStage, packZip, unzip, importGameStage, get APP() { return APP; } }; } catch (e) {}
+try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, exportStage, allEnemies, cellsOf, gameCheck, gameStage, packZip, unzip, importGameStage, importFiles, openLib, readStore, get APP() { return APP; } }; } catch (e) {}
 init().catch(err => { $('mName').textContent = err && err.message === 'old browser' ? 'This browser is too old for the stage catalog. Update it and reload.' : 'Couldn’t load the stage catalog. Reload the page to try again.'; console.error(err); });
 })();
 </script>

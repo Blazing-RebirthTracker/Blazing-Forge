@@ -58,7 +58,7 @@ Your work is saved in your browser. **Save mod pack** also works as a backup, an
 
 ### Stage files
 
-The Stages tab saves stages for the app's **Import stages** as one `ForgeStage` JSON file (schema 2, profile `emergency-layout/1`) or a zip with `forge-mod.json` (`{"format":"ForgeStagePack","schema":1,"stages":[...]}`) and up to 20 `stages/*.json`. A stage names its template (`donorMissionId`), keeps every template map in order, and lists marker moves per map: start spots (chips 8–13) and enemy entry points (chips 16–25) to grid `[x, y]`. `localId` is the stage's permanent identity in the app's 20 stage slots. **Export draft file** keeps the editor's full draft (schema 1), including edits the app can't install yet.
+The Stages tab saves stages for the app's **Import stages** as one `ForgeStage` JSON file (schema 2, profile `emergency-layout/1`) or a zip with `forge-mod.json` (`{"format":"ForgeStagePack","schema":1,"stages":[...]}`) and up to 20 `stages/*.json`. A stage names its template (`donorMissionId`), keeps every template map in order, and lists marker moves per map: start spots (chips 8–13) and enemy entry points (chips 16–25) to grid `[x, y]`. `localId` is the stage's permanent identity in the app's 20 stage slots. **Export draft file** keeps the editor's full draft (schema 1), including edits the app can't install yet. **My stages & packs** lists every stage in the browser, exports a pack of the ticked ones and imports packs and stage files (by button or drag and drop); a stage with a `localId` you already have replaces it.
 
 ### Mod pack format
 
