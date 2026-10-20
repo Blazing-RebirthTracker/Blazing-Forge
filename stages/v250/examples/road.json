@@ -1,0 +1,51 @@
+{
+  "format": "ForgeStage",
+  "schema": 2,
+  "profile": "ninja-road-layout/1",
+  "localId": "forge:v250-road-example",
+  "name": "Forge Road Example",
+  "enabled": true,
+  "donorMissionId": "80043",
+  "maps": [
+    {
+      "donorMapId": "8043010",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043012",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043013",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043015",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043016",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043020",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043022",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043024",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043028",
+      "markers": []
+    },
+    {
+      "donorMapId": "8043029",
+      "markers": []
+    }
+  ]
+}

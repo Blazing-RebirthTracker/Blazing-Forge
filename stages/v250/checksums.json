@@ -1,0 +1,74 @@
+{
+  "README.md": {
+    "bytes": 6702,
+    "sha256": "8012cf02337e824c2a46fae7f536bde575d18e0b8f16d5aa5a2839f8711e46e7"
+  },
+  "stage-modes.mjs": {
+    "bytes": 6042,
+    "sha256": "e350f57e0210ed9b5658f11c75fce6e664695dbfb005c68729bdf69d2f3dacfc"
+  },
+  "authoring-catalog.json.gz": {
+    "bytes": 717498,
+    "sha256": "74b60de8b126df561ee9f29b0d770315ebfb3d7122216fce07a513df7e8321aa"
+  },
+  "stage-catalog.json": {
+    "bytes": 4891543,
+    "sha256": "35a3ff9fd920b24af10bcb7a0a3c6c52ab386936682817e5d9432c73b8040495"
+  },
+  "slot-ids.json": {
+    "bytes": 7059,
+    "sha256": "b82ee347f7b6534806651f2b869411123a02c6dbf35ab70dd8703fdffbd93231"
+  },
+  "tests/adapter.test.mjs": {
+    "bytes": 2772,
+    "sha256": "97f74ad9ba3e04414da639991e4e7188fcdd4b91dc187969d99a152176188dd9"
+  },
+  "reference/enemies.json.gz": {
+    "bytes": 540812,
+    "sha256": "f94539fce9b52c3f1ecdcc83e91916940bd2c18f2c6f759da8448d289c98ef28"
+  },
+  "reference/sprite-catalog.json.gz": {
+    "bytes": 117734,
+    "sha256": "078a2bf8551ede9f73a58f7678e8dc2da7bb0f8279e5b0326cfca5b40a1a2227"
+  },
+  "reference/missing-previews.json": {
+    "bytes": 109923,
+    "sha256": "2e2d84dd8633bf2dcff8af029425fbc0ed487908b626166361216da931c90786"
+  },
+  "reference/geometry.json": {
+    "bytes": 3792,
+    "sha256": "58747267c96560703bde24c3b27cd142b4353dc84d79c99206010da99eff19d3"
+  },
+  "reference/tables.json": {
+    "bytes": 40905,
+    "sha256": "296f07def2c566ae007cafccc9e6a5dd8c501778fb7f6a70a3b084e4328fca60"
+  },
+  "reference/routes.json": {
+    "bytes": 1843199,
+    "sha256": "5521326dbd7bce88246a619ea0ee15931e5ba1fd2f97b4ee2b9feda12e184196"
+  },
+  "reference/castle-source.json": {
+    "bytes": 302222,
+    "sha256": "f44290757997ecb3f1aa604fabb7d8389d9bbe34c611aa2a6942fbd6e2edadf3"
+  },
+  "reference/kirito-events.json": {
+    "bytes": 605717,
+    "sha256": "4645d9b40effc8c6af6cac60ec3c12524f7d48c0747e6a816dbc4418eb6a58d1"
+  },
+  "reference/catalog-audit.json": {
+    "bytes": 4149,
+    "sha256": "ffda7d3e5f7a484bf7b365e7b79b0c97f86c16ce45e950efeb9f3b788aef0018"
+  },
+  "examples/emergency.json": {
+    "bytes": 441,
+    "sha256": "d6e8086e9a267b5a4361758b9b30b3a8fa13029bc9f83a12acd1b5cff96f9900"
+  },
+  "examples/road.json": {
+    "bytes": 907,
+    "sha256": "2eae568f503725a99358e1af41406487e4f810f3da3183d9b2459b747ba23a72"
+  },
+  "examples/castle.json": {
+    "bytes": 223,
+    "sha256": "de499049e797c8e4851e32251a23239ce2c1d6597afef27a0ef5e9d9e5d99a53"
+  }
+}

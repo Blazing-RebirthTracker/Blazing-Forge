@@ -1,0 +1,383 @@
+{
+  "capacities": {
+    "emergency-layout/1": 50,
+    "ninja-road-layout/1": 10,
+    "phantom-castle/1": 10
+  },
+  "slots": [
+    {
+      "slot": 1,
+      "stageId": "3800",
+      "missionId": "380001"
+    },
+    {
+      "slot": 2,
+      "stageId": "3801",
+      "missionId": "380101"
+    },
+    {
+      "slot": 3,
+      "stageId": "3802",
+      "missionId": "380201"
+    },
+    {
+      "slot": 4,
+      "stageId": "3803",
+      "missionId": "380301"
+    },
+    {
+      "slot": 5,
+      "stageId": "3804",
+      "missionId": "380401"
+    },
+    {
+      "slot": 6,
+      "stageId": "3805",
+      "missionId": "380501"
+    },
+    {
+      "slot": 7,
+      "stageId": "3806",
+      "missionId": "380601"
+    },
+    {
+      "slot": 8,
+      "stageId": "3807",
+      "missionId": "380701"
+    },
+    {
+      "slot": 9,
+      "stageId": "3808",
+      "missionId": "380801"
+    },
+    {
+      "slot": 10,
+      "stageId": "3809",
+      "missionId": "380901"
+    },
+    {
+      "slot": 11,
+      "stageId": "3810",
+      "missionId": "381001"
+    },
+    {
+      "slot": 12,
+      "stageId": "3811",
+      "missionId": "381101"
+    },
+    {
+      "slot": 13,
+      "stageId": "3812",
+      "missionId": "381201"
+    },
+    {
+      "slot": 14,
+      "stageId": "3813",
+      "missionId": "381301"
+    },
+    {
+      "slot": 15,
+      "stageId": "3814",
+      "missionId": "381401"
+    },
+    {
+      "slot": 16,
+      "stageId": "3815",
+      "missionId": "381501"
+    },
+    {
+      "slot": 17,
+      "stageId": "3816",
+      "missionId": "381601"
+    },
+    {
+      "slot": 18,
+      "stageId": "3817",
+      "missionId": "381701"
+    },
+    {
+      "slot": 19,
+      "stageId": "3818",
+      "missionId": "381801"
+    },
+    {
+      "slot": 20,
+      "stageId": "3819",
+      "missionId": "381901"
+    },
+    {
+      "slot": 21,
+      "stageId": "3823",
+      "missionId": "382301"
+    },
+    {
+      "slot": 22,
+      "stageId": "3824",
+      "missionId": "382401"
+    },
+    {
+      "slot": 23,
+      "stageId": "3825",
+      "missionId": "382501"
+    },
+    {
+      "slot": 24,
+      "stageId": "3826",
+      "missionId": "382601"
+    },
+    {
+      "slot": 25,
+      "stageId": "3827",
+      "missionId": "382701"
+    },
+    {
+      "slot": 26,
+      "stageId": "3828",
+      "missionId": "382801"
+    },
+    {
+      "slot": 27,
+      "stageId": "3829",
+      "missionId": "382901"
+    },
+    {
+      "slot": 28,
+      "stageId": "3830",
+      "missionId": "383001"
+    },
+    {
+      "slot": 29,
+      "stageId": "3831",
+      "missionId": "383101"
+    },
+    {
+      "slot": 30,
+      "stageId": "3832",
+      "missionId": "383201"
+    },
+    {
+      "slot": 31,
+      "stageId": "3833",
+      "missionId": "383301"
+    },
+    {
+      "slot": 32,
+      "stageId": "3834",
+      "missionId": "383401"
+    },
+    {
+      "slot": 33,
+      "stageId": "3835",
+      "missionId": "383501"
+    },
+    {
+      "slot": 34,
+      "stageId": "3836",
+      "missionId": "383601"
+    },
+    {
+      "slot": 35,
+      "stageId": "3837",
+      "missionId": "383701"
+    },
+    {
+      "slot": 36,
+      "stageId": "3838",
+      "missionId": "383801"
+    },
+    {
+      "slot": 37,
+      "stageId": "3839",
+      "missionId": "383901"
+    },
+    {
+      "slot": 38,
+      "stageId": "3840",
+      "missionId": "384001"
+    },
+    {
+      "slot": 39,
+      "stageId": "3841",
+      "missionId": "384101"
+    },
+    {
+      "slot": 40,
+      "stageId": "3842",
+      "missionId": "384201"
+    },
+    {
+      "slot": 41,
+      "stageId": "3843",
+      "missionId": "384301"
+    },
+    {
+      "slot": 42,
+      "stageId": "3844",
+      "missionId": "384401"
+    },
+    {
+      "slot": 43,
+      "stageId": "3845",
+      "missionId": "384501"
+    },
+    {
+      "slot": 44,
+      "stageId": "3846",
+      "missionId": "384601"
+    },
+    {
+      "slot": 45,
+      "stageId": "3847",
+      "missionId": "384701"
+    },
+    {
+      "slot": 46,
+      "stageId": "3848",
+      "missionId": "384801"
+    },
+    {
+      "slot": 47,
+      "stageId": "3849",
+      "missionId": "384901"
+    },
+    {
+      "slot": 48,
+      "stageId": "3850",
+      "missionId": "385001"
+    },
+    {
+      "slot": 49,
+      "stageId": "3851",
+      "missionId": "385101"
+    },
+    {
+      "slot": 50,
+      "stageId": "3852",
+      "missionId": "385201"
+    },
+    {
+      "slot": 51,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8800",
+      "missionId": "88001"
+    },
+    {
+      "slot": 52,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8801",
+      "missionId": "88011"
+    },
+    {
+      "slot": 53,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8802",
+      "missionId": "88021"
+    },
+    {
+      "slot": 54,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8803",
+      "missionId": "88031"
+    },
+    {
+      "slot": 55,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8804",
+      "missionId": "88041"
+    },
+    {
+      "slot": 56,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8805",
+      "missionId": "88051"
+    },
+    {
+      "slot": 57,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8806",
+      "missionId": "88061"
+    },
+    {
+      "slot": 58,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8807",
+      "missionId": "88071"
+    },
+    {
+      "slot": 59,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8808",
+      "missionId": "88081"
+    },
+    {
+      "slot": 60,
+      "profile": "ninja-road-layout/1",
+      "stageId": "8809",
+      "missionId": "88091"
+    },
+    {
+      "slot": 61,
+      "profile": "phantom-castle/1",
+      "pvpId": "9800"
+    },
+    {
+      "slot": 62,
+      "profile": "phantom-castle/1",
+      "pvpId": "9801"
+    },
+    {
+      "slot": 63,
+      "profile": "phantom-castle/1",
+      "pvpId": "9802"
+    },
+    {
+      "slot": 64,
+      "profile": "phantom-castle/1",
+      "pvpId": "9803"
+    },
+    {
+      "slot": 65,
+      "profile": "phantom-castle/1",
+      "pvpId": "9804"
+    },
+    {
+      "slot": 66,
+      "profile": "phantom-castle/1",
+      "pvpId": "9805"
+    },
+    {
+      "slot": 67,
+      "profile": "phantom-castle/1",
+      "pvpId": "9806"
+    },
+    {
+      "slot": 68,
+      "profile": "phantom-castle/1",
+      "pvpId": "9807"
+    },
+    {
+      "slot": 69,
+      "profile": "phantom-castle/1",
+      "pvpId": "9808"
+    },
+    {
+      "slot": 70,
+      "profile": "phantom-castle/1",
+      "pvpId": "9809"
+    }
+  ],
+  "reservedKirito": [
+    {
+      "stageId": "3820",
+      "missionId": "382001"
+    },
+    {
+      "stageId": "3821",
+      "missionId": "382101"
+    },
+    {
+      "stageId": "3822",
+      "missionId": "382201"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "format": "ForgeStage",
+  "schema": 2,
+  "profile": "emergency-layout/1",
+  "localId": "forge:v250-emergency-example",
+  "name": "Forge Emergency Example",
+  "enabled": true,
+  "donorMissionId": "300301",
+  "maps": [
+    {
+      "donorMapId": "3003011",
+      "markers": []
+    },
+    {
+      "donorMapId": "3003012",
+      "markers": []
+    },
+    {
+      "donorMapId": "3003013",
+      "markers": []
+    }
+  ]
+}

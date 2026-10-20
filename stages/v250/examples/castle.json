@@ -1,0 +1,10 @@
+{
+  "format": "ForgeCastle",
+  "schema": 1,
+  "profile": "phantom-castle/1",
+  "localId": "forge:v250-castle-example",
+  "name": "Forge Castle Example",
+  "enabled": true,
+  "donorPvpId": "1",
+  "pointScale": 1
+}
