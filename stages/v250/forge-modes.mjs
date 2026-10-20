@@ -224,3 +224,108 @@ export function normalizeWorkspace(ws) {
   return out;
 }
 export { copy as clone };
+
+/* ---- rewards and challenges as website-draft edits. App v2.5.0 installs Emergency/Road layouts and Castle
+   season/preset/scale only, so none of this goes into a game pack: it stays in the draft (Save editable project,
+   Export draft file) and the page says so wherever it's edited. */
+export const CURRENCIES = [
+  { key: 'jewel', label: 'Ninja Pearls', field: 'jewel', code: 2 }, { key: 'coin', label: 'Ryo', field: 'coin', code: 6 },
+  { key: 'fp', label: 'Friend points', field: 'fp', code: 7 }, { key: 'gemNormal', label: 'Cat Granny coins', field: 'gemNormal', code: 3 },
+  { key: 'skip', label: 'Skip tickets', field: 'battleSkipBill', code: 11 }];
+export const MAX_REWARD_ITEMS = 4; // a game reward record has four unit rows
+export const ELEMENTS = ['Heart', 'Skill', 'Body', 'Bravery', 'Wisdom']; // challenge "limited" index 0-4
+const AFFILIATIONS = { 0: 'Hidden Leaf', 1: 'Mist', 13: 'Uchiha Clan' }; // the ones the game data shows
+// challenge types seen in the game's own missions; `value` says what the number means
+export const CHALLENGE_TYPES = [
+  { state: 3, sign: 3, key: 'turns', label: 'Finish within N turns', value: { min: 1, max: 999, def: 20 }, text: v => `Complete within ${v} turns` },
+  { state: 9, sign: 0, key: 'element', label: 'One element only', element: true, text: (v, l) => `${ELEMENTS[l[0]] || 'One'} elementals only` },
+  { state: 10, sign: 3, key: 'cost', label: 'Character cost N or lower', value: { min: 1, max: 999, def: 28 }, text: v => `Character cost ${v} or lower only` },
+  { state: 1, sign: 0, key: 'nocontinue', label: 'No continues', text: () => 'No continues allowed' },
+  { state: 2, sign: 0, key: 'nojutsu', label: 'No Ninjutsu', text: () => 'No Ninjutsu allowed' },
+  { state: 4, sign: 0, key: 'noheal', label: 'No healing', text: () => 'No healing allowed' },
+  { state: 7, sign: 3, key: 'nostatus', label: 'No status ailments', text: () => "Don't get hit by status ailments" },
+  { state: 15, sign: 3, key: 'all', label: 'Defeat all enemies', text: () => 'Defeat all enemies' },
+  { state: 12, sign: 4, key: 'combo', label: 'Finish the boss with an N-person combination', value: { min: 2, max: 6, def: 3 }, text: v => `Reduce the boss' HP to 0 using a ${v} person Combination` },
+  { state: 14, sign: 4, key: 'bossjutsu', label: 'Finish the boss with Ninjutsu', fixedValue: 1, text: () => "Reduce the boss' HP to 0 using Ninjutsu" },
+  { state: 23, sign: 4, key: 'hits', label: 'N or more hits', value: { min: 1, max: 999, def: 10 }, text: v => `Complete with ${v} or more hits` },
+  { state: 24, sign: 4, key: 'multi', label: 'Defeat N or more enemies at once', value: { min: 1, max: 99, def: 5 }, text: v => `Defeat ${v} or more enemies simultaneously (excludes F Skills)` },
+  { state: 22, sign: 0, key: 'affiliation', label: 'One affiliation only', affiliation: AFFILIATIONS, text: (v, l) => `Use only ${AFFILIATIONS[l[0]] || 'one affiliation’s'} characters` },
+  { state: 13, sign: 0, key: 'multiplayer', label: 'Complete in multiplayer', text: () => 'Complete a mission in multiplayer' }];
+export const challengeType = ch => CHALLENGE_TYPES.find(t => t.state === ch.state && t.sign === ch.sign) || null;
+export function challengeText(ch) { const t = challengeType(ch); return t ? t.text(ch.value, ch.limited || []) : (ch.sourceText || `Game challenge type ${ch.state}`); }
+export function newChallenge(key, from) {
+  const t = CHALLENGE_TYPES.find(x => x.key === key); if (!t) throw Error('Unknown challenge type.');
+  return { state: t.state, sign: t.sign, value: t.value ? t.value.def : t.fixedValue || 0, limited: t.element ? [0] : t.affiliation ? [0] : [], reward: from ? from.reward : [], langId: null, sourceText: null };
+}
+
+export function partsFromRecord(r) {
+  if (!r) return []; const out = [];
+  for (const c of CURRENCIES) if (r[c.field]) out.push({ key: c.key, qty: r[c.field] });
+  for (const u of r.units || []) if (u.unitId) out.push({ key: 'item', unitId: String(u.unitId), qty: u.unitNum || 1, level: u.unitLv || 1 });
+  return out;
+}
+export function partsFromEvents(evs) {
+  return (evs || []).map(ev => { const d = decodeReward(ev); return d.key === 'item' ? { key: 'item', unitId: d.unitId, qty: d.qty, level: d.level || 1 } : d.key === 'unknown' ? { key: 'unknown', code: ev[0], qty: ev[1] ?? 0 } : { key: d.key, qty: d.qty }; });
+}
+export const partLabel = p => p.key === 'item' ? 'Item ' + p.unitId : p.key === 'unknown' ? `Reward type ${p.code}` : (CURRENCIES.find(c => c.key === p.key) || {}).label || p.key;
+/** problems with a reward list, as messages (empty when fine) */
+export function partsProblems(parts) {
+  const out = []; if (!Array.isArray(parts)) return ['Not a reward list.'];
+  if (parts.filter(p => p.key === 'item').length > MAX_REWARD_ITEMS) out.push(`Up to ${MAX_REWARD_ITEMS} items per reward (a game reward has four item rows).`);
+  const seen = new Set();
+  for (const p of parts) {
+    if (p.key === 'item') { if (!/^[1-9]\d{0,9}$/.test(String(p.unitId))) out.push('Pick an item from the list.'); if (!Number.isInteger(p.qty) || p.qty < 1 || p.qty > 999) out.push(`${partLabel(p)}: quantity 1–999.`); if (p.level != null && (!Number.isInteger(p.level) || p.level < 1 || p.level > 999)) out.push(`${partLabel(p)}: level 1–999.`); }
+    else if (p.key === 'unknown') continue;
+    else { if (!CURRENCIES.some(c => c.key === p.key)) out.push('Unknown reward type.'); if (!Number.isInteger(p.qty) || p.qty < 1 || p.qty > 99999999) out.push(`${partLabel(p)}: amount 1–99,999,999.`); if (seen.has(p.key)) out.push(`${partLabel(p)} is listed twice.`); seen.add(p.key); }
+  }
+  return [...new Set(out)];
+}
+
+/** the editable reward/challenge view of an Emergency or Road template */
+export function templateRewards(kind, t) {
+  const mi = t.mission.missionInfo, out = { exp: mi.exp || 0, unitExp: mi.charaExp || 0, coins: [mi.minCoin || 0, mi.maxCoin || 0] };
+  out.challenges = (mi.subMission || []).map(o => ({ state: o.state, sign: o.sign, value: o.value, limited: o.limited.flatMap((b, i) => b ? [i] : []), reward: partsFromRecord(o.subMissionReward), langId: o.langSubMissionNameId || null, sourceText: null }));
+  if (kind === 'emergency') {
+    out.firstClear = t.firstClearGroup ? t.firstClearGroup.reward : null;
+    const L = (t.drops && t.drops.lucky) || []; out.lucky = t.drops && t.drops.luckySupported && L.length === 1 ? { unitId: String(L[0].chara_id), qty: L[0].num } : null;
+    const item = {}; for (const c of (t.serverMission && t.serverMission.dropCandidates) || []) item[String(c.enemyId)] = String(c.dropId);
+    out.drops = {}; for (const m of t.maps) for (const s of m.sets) for (const e of s.raw.enemySet) { if (e.id < 0) continue; const k = String(e.id), o = out.drops[k] || (out.drops[k] = { item: item[k] || null, chance: e.dropRate, varies: false }); if (o.chance !== e.dropRate) { o.varies = true; o.chance = Math.max(o.chance, e.dropRate); } }
+    for (const k of Object.keys(out.drops)) if (!out.drops[k].item && !out.drops[k].chance) delete out.drops[k];
+  } else {
+    const own = new Set(t.maps.map(m => Number(m.id))); out.mapClear = {};
+    for (const r of (t.clearRewards && t.clearRewards.rewardList) || []) if (own.has(r.mapId)) out.mapClear[String(r.mapId)] = r.reward.flatMap(partsFromRecord);
+    const sm = (t.serverStage && t.serverStage.missions && t.serverStage.missions[0]) || {}; out.roadClear = partsFromRecord(sm.missionClearComplete || mi.missionClearComplete);
+  }
+  return out;
+}
+export function rewardProblems(r) {
+  const out = []; const int = (v, lo, hi, what) => { if (!Number.isInteger(v) || v < lo || v > hi) out.push(`${what}: whole number ${lo.toLocaleString('en-US')}–${hi.toLocaleString('en-US')}.`); };
+  int(r.exp, 0, 99999999, 'Player EXP'); int(r.unitExp, 0, 99999999, 'Unit EXP'); int(r.coins[0], 0, 99999999, 'Lowest Ryo'); int(r.coins[1], 0, 99999999, 'Highest Ryo');
+  if (r.coins[0] > r.coins[1]) out.push('Lowest Ryo can’t be above highest Ryo.');
+  if (r.firstClear != null) int(r.firstClear, 0, 9999, 'First-clear pearls');
+  (r.challenges || []).forEach((ch, i) => { const t = challengeType(ch);
+    if (t && t.value) int(ch.value, t.value.min, t.value.max, `Challenge ${i + 1}`);
+    if (t && t.element && !(ch.limited.length === 1 && ch.limited[0] >= 0 && ch.limited[0] <= 4)) out.push(`Challenge ${i + 1}: pick one element.`);
+    for (const m of partsProblems(ch.reward)) out.push(`Challenge ${i + 1} reward: ${m}`); });
+  if (r.lucky) { if (!/^[1-9]\d*$/.test(String(r.lucky.unitId))) out.push('Lucky reward: pick an item.'); int(r.lucky.qty, 1, 999, 'Lucky reward quantity'); }
+  for (const [id, d] of Object.entries(r.drops || {})) { int(d.chance, 0, 1000, `Drop chance of enemy ${id}`); if (d.chance && !d.item) out.push(`Enemy ${id} has a drop chance but no item.`); }
+  for (const [id, p] of Object.entries(r.mapClear || {})) for (const m of partsProblems(p)) out.push(`Map ${id} clear reward: ${m}`);
+  if (r.roadClear) for (const m of partsProblems(r.roadClear)) out.push(`Road clear reward: ${m}`);
+  return out;
+}
+/** what differs between the template's rewards and edited ones, in plain words */
+export function rewardChanges(base, r) {
+  if (!r) return []; const out = [], same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  if (r.exp !== base.exp) out.push(`Player EXP ${base.exp.toLocaleString('en-US')} → ${r.exp.toLocaleString('en-US')}`);
+  if (r.unitExp !== base.unitExp) out.push(`Unit EXP ${base.unitExp.toLocaleString('en-US')} → ${r.unitExp.toLocaleString('en-US')}`);
+  if (!same(r.coins, base.coins)) out.push(`Ryo ${base.coins.join('–')} → ${r.coins.join('–')}`);
+  if (r.firstClear !== base.firstClear) out.push(`First-clear pearls ${base.firstClear} → ${r.firstClear}`);
+  (r.challenges || []).forEach((ch, i) => { const b = (base.challenges || [])[i] || {};
+    if (ch.state !== b.state || ch.sign !== b.sign || ch.value !== b.value || !same(ch.limited, b.limited)) out.push(`Challenge ${i + 1}: ${challengeText(ch)}`);
+    if (!same(ch.reward, b.reward)) out.push(`Challenge ${i + 1} reward`); });
+  if (!same(r.lucky, base.lucky)) out.push('Lucky reward');
+  const dk = new Set([...Object.keys(base.drops || {}), ...Object.keys(r.drops || {})]); let dn = 0; for (const k of dk) if (!same((r.drops || {})[k], (base.drops || {})[k])) dn++; if (dn) out.push(`Drops of ${dn} enem${dn === 1 ? 'y' : 'ies'}`);
+  const mk = new Set([...Object.keys(base.mapClear || {}), ...Object.keys(r.mapClear || {})]); let mn = 0; for (const k of mk) if (!same((r.mapClear || {})[k] || [], (base.mapClear || {})[k] || [])) mn++; if (mn) out.push(`Map clear rewards on ${mn} map${mn === 1 ? '' : 's'}`);
+  if (!same(r.roadClear || null, base.roadClear || null)) out.push('Road clear reward');
+  return out;
+}

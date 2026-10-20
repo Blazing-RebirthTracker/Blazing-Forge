@@ -50,6 +50,27 @@ await step('mouse drag of a start spot, and a drag onto a wall is refused', asyn
   await p.mouse.move(...pt.from); await p.mouse.down(); await p.mouse.move(pt.to[0], pt.to[1], { steps: 8 }); await p.mouse.up(); await p.waitForTimeout(300);
   assert.equal(await p.S(f => __stages.st.draft.maps[0].chips[f[1]][f[0]], pt.free), 9);
 });
+await step('team sprites (No. 3, 5, 9) with slot numbers, stand-in sprites for enemies without their own art', async () => {
+  await p.S(() => localStorage.clear()); await p.load(); await p.S(() => __stages.setKind('emergency', { mode: 'game' })); await p.waitForFunction(() => __stages.teamLoaded(), null, { timeout: 30000 });
+  const own = await p.S(() => __stages.spriteOf('30030111')); assert.equal(own.standIn, true); assert.ok(own.donor && !['10015', '10024', '10045'].includes(own.donor));
+  assert.deepEqual(await p.S(() => __stages.TEAM), ['10015', '10024', '10045']);
+  await p.click('#standBtn'); assert.equal(await p.S(() => __stages.spriteOf('30030111').donor), null); await p.click('#standBtn');
+});
+await step('rewards and challenges: editable, validated, undoable, kept out of the game pack', async () => {
+  await p.fill('#rwExp', '3000'); await p.press('#rwExp', 'Tab'); await p.waitForTimeout(1500);
+  assert.equal(await p.S(() => __stages.st.key), 'slot-1', 'a stock template edit becomes a custom copy');
+  await p.selectOption('#rwT0', 'turns'); await p.waitForTimeout(300); await p.fill('#rwV0', '0'); await p.press('#rwV0', 'Tab'); await p.waitForTimeout(300);
+  assert.equal(await p.S(() => __stages.st.draft.rewards.challenges[0].value), 20, 'an out-of-range number is refused');
+  await p.click('#rwBody .rwrow >> nth=0 >> text=Edit reward…'); await p.fill('#rwQ', 'haku'); await p.waitForTimeout(200); await p.click('#rwItems button >> nth=0'); await p.click('#rwSave'); await p.waitForTimeout(400);
+  assert.equal(await p.S(() => __stages.st.draft.rewards.challenges[0].reward.filter(x => x.key === 'item').length), 1);
+  const plan = await pack(p, 'enabled'); const spec = JSON.parse(plan.files['stages/01.json']); assert.equal(spec.rewards, undefined); assert.deepEqual(Object.keys(spec), ['format', 'schema', 'profile', 'localId', 'name', 'donorMissionId', 'enabled', 'maps']);
+  for (let i = 0; i < 5; i++) await p.S(() => __stages.undoMain()); assert.equal(await p.S(() => __stages.st.draft.rewards), undefined);
+  await p.S(() => __stages.setKind('castle', { mode: 'game' })); await p.waitForTimeout(800);
+  await p.click('#cFloors .fwrap tbody tr >> nth=1 >> button'); await p.selectOption('#rwCur', 'coin'); await p.fill('#rwCurQ', '777'); await p.click('#rwCurAdd'); await p.click('#rwSave'); await p.waitForTimeout(1200);
+  assert.deepEqual(await p.S(() => __stages.cs.rec.draft.rewards.floors['2'].find(x => x.key === 'coin')), { key: 'coin', qty: 777 });
+  const cplan = await pack(p, 'enabled'); const cs = Object.values(cplan.files).map(v => JSON.parse(v)).find(x => x.profile === 'phantom-castle/1'); assert.ok(cs && !('rewards' in cs));
+  await p.S(() => localStorage.clear()); await p.load();
+});
 await step('imports: all three modes, re-import updates, donor and mode restrictions', async () => {
   for (const f of ['emergency', 'road', 'castle']) assert.match(await importJSON(p, f + '.json', ex(f)), /Imported 1/);
   const r = ex('road'); assert.match(await importJSON(p, 'r.json', { ...r, name: 'Renamed' }), /Imported 1 definition into Ninja Road slot 1/);

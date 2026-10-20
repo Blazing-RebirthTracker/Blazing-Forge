@@ -105,6 +105,21 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;fl
 .pal .pi .m{font-family:var(--f-mono);font-size:10.5px;color:var(--tx3);white-space:nowrap;text-align:right}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;background:var(--leaf)}
 .dot.no{background:var(--tx3)}
+.dot.si{background:#F2C14E}
+.rwsec{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.rwsec h4{margin:0;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3)}
+.rwrow{background:var(--panel2);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.rwrow.ed{outline:1px solid rgba(242,193,78,.6)}
+.rwrow .rh{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.rwrow select,.rwrow input[type=number]{background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 8px;min-height:34px;min-width:0;max-width:100%}
+.pill.draft{background:rgba(242,193,78,.16);color:#F2C14E}
+.edmark{font:800 10px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;margin-left:6px}
+.prow2{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--panel2);border-radius:10px;padding:6px 8px}
+.prow2 input{width:96px;background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 8px;min-height:32px}
+.ftable td .chip.sm{margin-top:4px}
+.prow2 .rt{width:40px;height:40px;border-radius:7px;background:#0b0d12}
+#rwItems .pcard .rt{width:56px;height:56px;border-radius:8px;background:#0b0d12}
+@media (max-width:560px){.prow2{grid-template-columns:auto minmax(0,1fr)}.prow2>.row{grid-column:1/-1}}
 dialog.bgs{border:0;border-radius:16px;background:var(--panel);color:var(--tx);padding:16px;width:min(920px,calc(100vw - 24px));max-height:calc(100vh - 40px)}
 dialog.bgs::backdrop{background:rgba(5,7,10,.6)}
 .bggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:65vh;overflow:auto;margin-top:10px}
@@ -335,6 +350,8 @@ textarea.notes{width:100%;min-height:80px;background:var(--panel2);border:1px so
 body.kind-castle .main,body.kind-castle section.bar[aria-label="Mission"]{display:none!important}
 body.kind-castle.mode-custom.no-castle #castle{display:none!important}
 body:not(.kind-castle) #castle{display:none!important}
+body.kirito-landing #board,body.kirito-landing .main,body.kirito-landing #castle,body.kirito-landing section.bar[aria-label="Mission"],body.kirito-landing #betaNote{display:none!important}
+body.sbx-on #castle,body.sbx-on #kiritoLanding{display:none!important}
 body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
 @media (max-width:560px){.seg.kind button,.seg.mode button{padding:7px 9px;font-size:12.5px}.hdr-right{width:100%}.hdr-right .seg{flex:1 1 auto}.ftable{min-width:0}.ftable th,.ftable td{padding:5px 4px}.ritem{grid-template-columns:28px minmax(0,1fr)}.ritem .rt{width:28px;height:28px}.brand small{display:none}}
 </style>
@@ -347,7 +364,7 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
       <small id="meta"></small>
     </div>
     <div class="hdr-right">
-      <div class="seg kind" id="kindSeg" role="group" aria-label="Stage mode"><button type="button" data-kind="emergency" aria-pressed="true">Emergency</button><button type="button" data-kind="road" aria-pressed="false">Ninja Road</button><button type="button" data-kind="castle" aria-pressed="false">Phantom Castle</button></div>
+      <div class="seg kind" id="kindSeg" role="group" aria-label="Stage mode"><button type="button" data-kind="emergency" aria-pressed="true">Emergency</button><button type="button" data-kind="road" aria-pressed="false">Ninja Road</button><button type="button" data-kind="castle" aria-pressed="false">Phantom Castle</button><button type="button" data-kind="kirito" aria-pressed="false" id="kindKirito" hidden>Kirito events</button></div>
       <div class="seg mode" id="modeSeg" role="group" aria-label="What you're looking at"><button type="button" data-mode="game" aria-pressed="false">In-game templates</button><button type="button" data-mode="custom" aria-pressed="false">My custom slots</button></div>
     </div>
   </header>
@@ -444,6 +461,10 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
           </details>
         </div>
       </div>
+      <div class="card" id="rwCard" aria-label="Rewards and challenges">
+        <div class="row" style="justify-content:space-between"><span class="lbl">Rewards and challenges</span><span class="pill" id="rwPill"></span></div>
+        <div id="rwBody"></div>
+      </div>
       <div class="card" id="mapCard">
         <span class="lbl">Map</span>
         <div class="row"><span class="status" id="mapInfo"></span></div>
@@ -476,7 +497,7 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
         <span class="lbl">Add enemies</span>
         <input type="search" class="field-in" id="palSearch" placeholder="Search 7,661 enemies by name or title" autocomplete="off" aria-label="Search enemies">
         <div class="pal" id="pal"></div>
-        <p class="hint"><span class="dot"></span>shows its animation. <span class="dot no"></span>shows a marker (its art isn't in the sprite catalog yet).</p>
+        <p class="hint"><span class="dot"></span>its own idle animation. <span class="dot si"></span>a stand-in sprite (its own art isn't in the sprite catalog yet). <span class="dot no"></span>a named marker.</p>
       </div>
       <div class="card">
         <span class="lbl">Stage</span>
@@ -491,7 +512,8 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
       </div>
       <div class="card">
         <span class="lbl">View</span>
-        <div class="row"><button class="chip" id="allWavesBtn" aria-pressed="false" type="button">Show other waves faintly</button><button class="chip" id="animBtn" aria-pressed="true" type="button">Animate</button><button class="chip" id="gridBtn" aria-pressed="true" type="button">Grid</button></div>
+        <div class="row"><button class="chip" id="allWavesBtn" aria-pressed="false" type="button">Show other waves faintly</button><button class="chip" id="animBtn" aria-pressed="true" type="button">Animate</button><button class="chip" id="gridBtn" aria-pressed="true" type="button">Grid</button><button class="chip" id="standBtn" aria-pressed="true" type="button">Stand-in sprites</button><button class="chip" id="teamBtn" aria-pressed="true" type="button">Team sprites</button></div>
+        <p class="hint">Enemies without their own art in the sprite catalog use a stand-in sprite (dashed ring, ≈ before the name): a unit with the same name, else one on the same body rig, else a 3★ unit of the same element. Turn it off to see named markers instead. Your team is shown as characters No. 3, 5 and 9 with the slot number above them.</p>
         <details class="more"><summary>Adjust the background</summary>
           <div class="form">
             <label>Left / right<input type="range" id="bgX" min="-300" max="300" step="1" value="0"></label>
@@ -505,6 +527,13 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
       </div>
     </aside>
   </div>
+  <section class="card" id="kiritoLanding" aria-label="Kirito events" hidden>
+    <div class="row" style="justify-content:space-between"><span class="lbl">Kirito events</span><span class="pill">Website authoring · not a phone mod</span></div>
+    <p class="status">The three supplied event quests keep their own reserved stage and mission IDs. They never use the custom slots, and the game packs on the other tabs never include them. Edit markers, enemies, stats, difficulty and rewards here, then use <b>Export Kirito project for developer</b>: the developer compiles and validates your edits into a build.</p>
+    <div class="row"><label class="btn primary" for="kiritoFile" tabindex="0" id="kiritoLbl">Import the event package (.zip) or project (.json)&hellip;</label><input type="file" id="kiritoFile" accept=".zip,.json,application/zip,application/json" class="hidden-file"></div>
+    <p class="hint">Import the full package ZIP to get its art, enemy previews and reward catalog; a project JSON on its own opens with the files already stored for it. Everything stays in this browser until you export it.</p>
+    <div id="kiritoList" class="packlist"></div>
+  </section>
   <section class="castle" id="castle" aria-label="Phantom Castle">
     <div class="bar">
       <div class="now"><span class="t" id="cName">Phantom Castle</span><span class="s" id="cSub"></span></div>
@@ -542,7 +571,8 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
       <div class="row" style="justify-content:space-between">
         <span class="status" id="sxWhere"></span>
         <div class="row"><button class="chip" id="sxPrev" type="button" aria-keyshortcuts="[">&larr; Previous map</button><button class="chip" id="sxNext" type="button" aria-keyshortcuts="]">Next map &rarr;</button>
-          <label class="go">Go to map <input type="number" id="sxGo" min="1" step="1" inputmode="numeric"></label><button class="chip" id="sxGoBtn" type="button">Go</button></div>
+          <label class="go">Go to map <input type="number" id="sxGo" min="1" step="1" inputmode="numeric"></label><button class="chip" id="sxGoBtn" type="button">Go</button>
+          <select id="sxJump" class="field-in" aria-label="Jump to a map" style="width:auto;min-height:34px;padding:5px 9px"></select></div>
       </div>
       <div class="mstrip" id="sxStrip" tabindex="-1"><div class="mstrip-in" id="sxStripIn"></div></div>
     </div>
@@ -565,7 +595,7 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
         <p class="hint">Positions use the game's 11&times;11 map grid; marker (x, y) sits at (x&times;75, y&times;105) in the game's logical field. This is a layout preview, not the phone's camera or a battle simulation. Enemies stand on their feet at each spawn candidate; when an enemy has several, the game picks one.</p>
       </section>
       <aside class="card sxins" aria-label="Inspector">
-        <div class="tabs" id="sxInsTabs" role="tablist"><button type="button" role="tab" data-tab="sel">Selected</button><button type="button" role="tab" data-tab="rewards">Rewards</button></div>
+        <div class="tabs" id="sxInsTabs" role="tablist"><button type="button" role="tab" data-tab="sel">Selected</button><button type="button" role="tab" data-tab="rewards">Rewards</button><button type="button" role="tab" data-tab="difficulty">Difficulty</button></div>
         <div id="sxIns" class="ins"></div>
       </aside>
     </div>
@@ -604,6 +634,18 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
     <div class="mlist" id="pullList"></div>
     <div class="row" style="justify-content:space-between"><span class="status" id="pullCount"></span><button class="btn primary" id="pullAdd" type="button">Add maps</button></div>
   </div>
+</dialog>
+<dialog class="bgs lib" id="rwDlg" aria-labelledby="rwTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="rwTitle">Edit reward</span><button class="btn ghost" id="rwClose" type="button">Cancel</button></div>
+  <p class="hint" id="rwHint"></p>
+  <div id="rwPartsBox"><div class="lbl" style="margin-top:8px">In this reward</div><div class="packlist" id="rwParts"></div></div>
+  <div id="rwCurBox"><div class="lbl" style="margin-top:8px">Add currency</div>
+  <div class="row"><select id="rwCur" aria-label="Currency" class="field-in" style="max-width:220px"></select><input type="number" id="rwCurQ" class="field-in" min="1" max="99999999" step="1" value="1" aria-label="Amount" style="max-width:140px"><button class="btn ghost sm" id="rwCurAdd" type="button">Add</button></div></div>
+  <div class="lbl" style="margin-top:8px">Add an item</div>
+  <input type="search" class="field-in" id="rwQ" placeholder="Search items by name, rarity, element or ID" autocomplete="off" aria-label="Search items">
+  <div class="plist2" id="rwItems" style="max-height:34vh;margin-top:6px"></div>
+  <div class="status msg bad" id="rwMsg" role="status" aria-live="polite" hidden></div>
+  <div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn primary" id="rwSave" type="button">Use this reward</button></div>
 </dialog>
 <div class="dropzone" id="dropZone" hidden><div>Drop stage packs or stage files to import them</div></div>
 <dialog class="bgs" id="bgDlg" aria-labelledby="bgTitle">
@@ -695,7 +737,7 @@ const imgs = new Map();
 function img(src) { if (!imgs.has(src)) { const p = loadImg(src); imgs.set(src, p); p.catch(() => imgs.delete(src)); } return imgs.get(src); }
 
 const st = { idx: null, enemies: {}, mission: null, draft: null, key: null, mapI: 0, encI: 0, waveI: 0, sel: null, mk: null, kind: 'emergency', roadIds: new Set(),
-  view: { z: 1, x: 0, y: 0 }, floor: false, mode: 'game', gameOnly: true, readyOnly: false, ghosts: false, anim: true, grid: true, placing: null, t: 0, last: 0 };
+  view: { z: 1, x: 0, y: 0 }, standins: true, teamSprites: true, floor: false, mode: 'game', gameOnly: true, readyOnly: false, ghosts: false, anim: true, grid: true, placing: null, t: 0, last: 0 };
 // v2.5.0 catalogs and the import contract (loaded in init): AC is the complete authoring catalog, FM the mode logic
 // around the supplied stage-modes.mjs adapter, SLOTS the supplied destination table split by mode.
 let APP = null, AC = null, FM = null, SLOTS = null, GEO = null, NAMES = {};
@@ -894,7 +936,7 @@ function releaseScenes(keep) {
   for (const d of [...c.keys()]) { if (keep.has(d) || c.size <= 12) continue; const f = sceneFiles.get(d); c.delete(d); ready.delete(d); sceneFiles.delete(d);
     if (f) { for (const p of f.paths) getData.c && getData.c.delete(p); for (const s of f.srcs) if (!shared.has(s) && s !== COMMON.file) imgs.delete(s); } }
 }
-function visibleDonors() { const out = new Set(); if (!st.draft) return out; for (const it of allEnemies(map())) { const d = enemyInfo(it.enemy).d; if (d) out.add(d); } return out; }
+function visibleDonors() { const out = new Set(TEAM); if (!st.draft) return out; for (const it of allEnemies(map())) { const d = spriteOf(it.enemy).donor; if (d) out.add(d); } return out; }
 function tri(ctx, im, s, d) {
   const [s0, s1, s2] = s, [d0, d1, d2] = d, ux = s1[0] - s0[0], uy = s1[1] - s0[1], vx = s2[0] - s0[0], vy = s2[1] - s0[1], det = ux * vy - uy * vx; if (Math.abs(det) < 1e-8) return;
   const dx1 = d1[0] - d0[0], dy1 = d1[1] - d0[1], dx2 = d2[0] - d0[0], dy2 = d2[1] - d0[1];
@@ -903,12 +945,12 @@ function tri(ctx, im, s, d) {
   ctx.save(); ctx.beginPath(); ctx.moveTo(...g(d0)); ctx.lineTo(...g(d1)); ctx.lineTo(...g(d2)); ctx.closePath(); ctx.clip();
   ctx.transform(a, b, c, e, d0[0] - a * s0[0] - c * s0[1], d0[1] - b * s0[0] - e * s0[1]); ctx.drawImage(im, 0, 0); ctx.restore();
 }
-function drawSprite(ctx, sc, t, sx, sy, k, alpha) {
+function drawSprite(ctx, sc, t, sx, sy, k, alpha, ky = k) { // a negative k mirrors left-right
   const parts = FAP.pose(sc.model, sc.clip, t % sc.dur).parts;
   for (const p of parts) {
     const im = sc.images[p.map]; if (!im) continue;
     const [x, y, w, h] = p.rect; if (x < 0 || y < 0 || x + w > W(im) || y + h > H(im)) continue;
-    const Q = p.quad.map(([qx, qy]) => [sx + qx * k, sy + qy * k]);
+    const Q = p.quad.map(([qx, qy]) => [sx + qx * k, sy + qy * ky]);
     ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha * alpha)); ctx.globalCompositeOperation = p.blend === 1 ? 'lighter' : p.blend === 3 ? 'multiply' : 'source-over';
     const l = p.flipX ? x + w : x, r = p.flipX ? x : x + w, tp = p.flipY ? y + h : y, b = p.flipY ? y : y + h;
     const para = Math.abs(Q[0][0] + Q[2][0] - Q[1][0] - Q[3][0]) + Math.abs(Q[0][1] + Q[2][1] - Q[1][1] - Q[3][1]) < 0.5;
@@ -919,6 +961,15 @@ function drawSprite(ctx, sc, t, sx, sy, k, alpha) {
   }
   ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
 }
+// your team in the layout preview: characters No. 3, 5 and 9 (slots 1-3, repeating for 4-6)
+const TEAM = ['10015', '10024', '10045'];
+window.__forgeTeam = { TEAM, scene: d => sceneNow(d), draw: (...a) => drawSprite(...a), on: () => st.teamSprites };
+// which sprite an enemy shows: its own exact idle assets, else (when stand-ins are on) a labeled stand-in, else none
+let STANDINS = {};
+const STANDIN_BASIS = { name: 'a playable unit with the same name', rig: 'a unit on the same body rig', element: 'a 3★ unit of the same element' };
+function spriteOf(id) { const e = enemyInfo(id); if (e.d) return { donor: e.d, standIn: false };
+  const s = st.standins && STANDINS[String(id)]; return s ? { donor: s[0], standIn: true, basis: s[1] } : { donor: null, standIn: false }; }
+function standInName(donor) { const d = sprIndex && sprIndex.donors && sprIndex.donors[donor]; return d ? d.name + (d.title ? ' (' + d.title + ')' : '') : 'unit ' + donor; }
 const ATTR = { 1: '#E0605A', 2: '#5FD3A0', 3: '#6FA8FF', 4: '#B98CFF', 5: '#F2C14E' };
 const ATTR_NAME = { 1: 'Heart', 2: 'Skill', 3: 'Body', 4: 'Bravery', 5: 'Wisdom' };
 
@@ -943,10 +994,16 @@ function draw() {
   }
   // markers: your team's start spots and enemy entry points
   const R = Math.max(9, 22 * c.s);
+  const usK = c.s * ((+$('uS').value || 100) / 100), teamDraw = [];
   for (let slot = 0; slot < 6; slot++) { const pc = playerCell(m, slot); if (!pc) continue; const [sx, sy] = toScreen(c, pc[0] * CW, pc[1] * CH);
-    ctx.fillStyle = 'rgba(122,184,255,.9)'; ctx.beginPath(); ctx.arc(sx, sy, R, 0, Math.PI * 2); ctx.fill(); if (st.mk === 8 + slot) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke(); }
-    ctx.fillStyle = '#0B1A2E'; ctx.font = `800 ${Math.round(R * 1.05)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(slot + 1), sx, sy + 1);
-    hits.push({ kind: 'player', slot, x: sx, y: sy, r: R * 1.3 }); }
+    const sc = st.teamSprites ? sceneNow(TEAM[slot % TEAM.length]) : null, on = st.mk === 8 + slot;
+    if (sc) { // your team: characters No. 3, 5 and 9, standing on their start cell, facing the field
+      ctx.strokeStyle = on ? '#fff' : 'rgba(122,184,255,.95)'; ctx.lineWidth = on ? 3 : 2; ctx.beginPath(); ctx.ellipse(sx, sy, 30 * usK, 11 * usK, 0, 0, Math.PI * 2); ctx.stroke();
+      teamDraw.push({ sc, slot, sx, sy, on });
+      hits.push({ kind: 'player', slot, x: sx, y: sy - 50 * usK, rx: Math.max(R, 34 * usK), ry: Math.max(R, 64 * usK) }); }
+    else { ctx.fillStyle = 'rgba(122,184,255,.9)'; ctx.beginPath(); ctx.arc(sx, sy, R, 0, Math.PI * 2); ctx.fill(); if (on) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke(); }
+      ctx.fillStyle = '#0B1A2E'; ctx.font = `800 ${Math.round(R * 1.05)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(slot + 1), sx, sy + 1);
+      hits.push({ kind: 'player', slot, x: sx, y: sy, r: R * 1.3 }); } }
   for (const id of entryIds(m)) { const cells = cellsOf(m, id), rnd = cells.length > 1;
     for (const [x, y] of cells) { const [sx, sy] = toScreen(c, x * CW, y * CH);
       ctx.beginPath(); ctx.moveTo(sx, sy - R); ctx.lineTo(sx + R, sy); ctx.lineTo(sx, sy + R); ctx.lineTo(sx - R, sy); ctx.closePath();
@@ -969,9 +1026,12 @@ function draw() {
     const [sx, sy] = toScreen(c, e.cell[0] * CW + e.off, e.cell[1] * CH); const k = c.s * us;
     const alpha = (cur ? 1 : 0.28) * (e.it.enabled ? 1 : 0.4) * (e.rnd ? 0.5 : 1);
     if (st.sel === e.it.uid && cur) { ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2.5; ctx.setLineDash(e.rnd ? [5, 4] : []); ctx.beginPath(); ctx.ellipse(sx, sy, 34 * k, 12 * k, 0, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
-    const sc = sceneNow(info.d);
-    if (sc) drawSprite(ctx, sc, st.t + (e.off + e.cell[0]) * 0.13, sx, sy, k, alpha);
-    else { // named placeholder: no exact preview binding, so no other character's art stands in
+    const look = spriteOf(e.it.enemy), sc = sceneNow(look.donor);
+    if (sc) { if (look.standIn) { ctx.globalAlpha = alpha; ctx.setLineDash([4, 3]); ctx.strokeStyle = 'rgba(236,238,243,.75)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(sx, sy, 28 * k, 10 * k, 0, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      drawSprite(ctx, sc, st.t + (e.off + e.cell[0]) * 0.13, sx, sy, k, alpha);
+      if (look.standIn && cur && k > 0.42) { const nm = '≈ ' + (info.n.length > 16 ? info.n.slice(0, 15) + '…' : info.n); ctx.font = `700 ${Math.max(9, Math.round(11 * k))}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const tw = ctx.measureText(nm).width + 8;
+        ctx.globalAlpha = alpha; ctx.fillStyle = 'rgba(14,16,22,.8)'; ctx.fillRect(sx - tw / 2, sy + 2 * k, tw, 15 * Math.max(1, k)); ctx.fillStyle = '#ECEEF3'; ctx.fillText(nm, sx, sy + 2 * k + 7.5 * Math.max(1, k)); ctx.globalAlpha = 1; } }
+    else { // named placeholder: no sprite to show (or stand-ins are switched off)
       ctx.globalAlpha = alpha; ctx.fillStyle = ATTR[info.a] || '#9AA3B5'; ctx.beginPath(); ctx.arc(sx, sy - 34 * k, 26 * k, 0, Math.PI * 2); ctx.fill();
       ctx.setLineDash([4, 3]); ctx.strokeStyle = '#ECEEF3'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = '#10131A'; ctx.font = `800 ${Math.round(18 * k)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -986,6 +1046,13 @@ function draw() {
       if (e.first) hits.push({ kind: 'enemy', uid: e.it.uid, x: sx, y: sy - 55 * k, rx: 36 * k, ry: 70 * k });
     }
   }
+  // your team, then the slot number above each head
+  teamDraw.sort((a, b) => a.sy - b.sy);
+  for (const t of teamDraw) drawSprite(ctx, t.sc, st.t + t.slot * 0.31, t.sx, t.sy, -usK, 1, usK);
+  for (const t of teamDraw) { if (t.sc.top == null) { let top = 0; for (const q of FAP.pose(t.sc.model, t.sc.clip, 0).parts) for (const [, qy] of q.quad) top = Math.min(top, qy); t.sc.top = top || -110; }
+    const br = Math.max(9, 13 * usK), by = t.sy + t.sc.top * usK - br - 3;
+    ctx.fillStyle = t.on ? '#FFFFFF' : 'rgba(122,184,255,.95)'; ctx.beginPath(); ctx.arc(t.sx, by, br, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#0B1A2E'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#0B1A2E'; ctx.font = `800 ${Math.round(br * 1.3)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(t.slot + 1), t.sx, by + 1); }
   // drag preview
   if (drag && drag.moved && drag.to) { const [sx, sy] = toScreen(c, drag.to[0] * CW, drag.to[1] * CH); ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
     ctx.strokeRect(sx - CW / 2 * c.s, sy - CH / 2 * c.s, CW * c.s, CH * c.s); ctx.setLineDash([]); }
@@ -1005,7 +1072,7 @@ cv.addEventListener('pointerdown', e => {
   if (st.floor) { const [x, y] = nearest(toWorld(e)); toggleFloor(x, y); drag = { kind: 'paint', last: x + ',' + y, start: [e.clientX, e.clientY] }; return; }
   let hit = null;
   for (let i = hits.length - 1; i >= 0; i--) { const h = hits[i];
-    if (h.kind === 'enemy' ? Math.abs(px - h.x) <= h.rx && Math.abs(py - h.y) <= h.ry : Math.hypot(px - h.x, py - h.y) <= h.r) { hit = h; break; } }
+    if (h.rx ? Math.abs(px - h.x) <= h.rx && Math.abs(py - h.y) <= h.ry : Math.hypot(px - h.x, py - h.y) <= h.r) { hit = h; break; } }
   drag = { kind: hit ? hit.kind : 'pan', hit, start: [e.clientX, e.clientY], moved: false, to: null };
 });
 cv.addEventListener('pointermove', e => {
@@ -1115,7 +1182,7 @@ function renderRail() {
   if (document.activeElement !== $('stName')) $('stName').value = d.name || '';
   if (document.activeElement !== $('stStamina')) $('stStamina').value = d.stamina ?? 0;
   $('stInfo').textContent = (d.objectives && d.objectives.length ? 'Objectives kept from the game: ' + d.objectives.map(tagless).join(' · ') + '. ' : '') + (tplOf(d.base) ? 'In the game this becomes a new Emergency mission built from mission ' + d.base + '; the original stays as it is.' : st.mission ? 'Draft based on mission ' + st.mission.id + '.' : 'Draft for a new stage.');
-  renderSel(); renderGame(); syncUndo(); releaseScenes(visibleDonors());
+  renderSel(); renderGame(); renderRewardsCard(); syncUndo(); releaseScenes(visibleDonors());
 }
 function mapSummary(mp) { let n = 0, boss = false; for (const e of mp.encounters) for (const w of e.waves) for (const it of w.items) if (it.k === 'e') { n++; if (it.type === 2) boss = true; } return { n, boss }; }
 function goMap(i) { const n = st.draft.maps.length; const j = Math.max(0, Math.min(n - 1, i)); if (j === st.mapI) return; st.mapI = j; st.encI = 0; st.waveI = 0; st.sel = null; st.mk = null; renderRail(); draw();
@@ -1143,7 +1210,7 @@ function renderSel() {
   sel.value = String(it.enterId);
   const s = levelStats(info, it.level);
   const top = Math.max(0, ...(info.p || []).map(p => p[1] || 0)); const capped = top && it.level > top; const nc = cellsOf(m, it.enterId).length;
-  $('selStats').textContent = `${info.r ? info.r + '★ · ' : ''}${ATTR_NAME[info.a] || 'No element'} · ${info.d ? 'idle preview from its own exact assets' : 'no exact preview: shown as a named placeholder'}. ` + (nc > 1 ? `Random entry: the game picks one of ${nc} cells for entry point ${it.enterId}. ` : '') +
+  $('selStats').textContent = `${info.r ? info.r + '★ · ' : ''}${ATTR_NAME[info.a] || 'No element'} · ${(() => { const lk = spriteOf(it.enemy); return info.d ? 'idle preview from its own exact assets' : lk.standIn ? `stand-in sprite: ${standInName(lk.donor)}, ${STANDIN_BASIS[lk.basis]} (not this enemy’s own art)` : 'no sprite: shown as a named marker'; })()}. ` + (nc > 1 ? `Random entry: the game picks one of ${nc} cells for entry point ${it.enterId}. ` : '') +
     (!s ? 'No stats in the enemy table.' : `About HP ${s.hp.toLocaleString()} · ATK ${s.atk.toLocaleString()} · DEF ${s.def.toLocaleString()} at level ${capped ? top : it.level}. ` +
     (capped ? `The enemy table only goes up to level ${top}, so these are its level ${top} numbers. ` : '') + 'From the enemy table; the game can scale it in battle.');
 }
@@ -1166,6 +1233,8 @@ $('allWavesBtn').onclick = () => { st.ghosts = !st.ghosts; $('allWavesBtn').setA
 $('animBtn').onclick = () => { st.anim = !st.anim; $('animBtn').setAttribute('aria-pressed', String(st.anim)); };
 const toggleGrid = () => { st.grid = !st.grid; for (const id of ['gridBtn', 'gridBtn2']) $(id).setAttribute('aria-pressed', String(st.grid)); draw(); };
 $('gridBtn').onclick = toggleGrid; $('gridBtn2').onclick = toggleGrid;
+const viewFlag = (id, key, store) => { $(id).onclick = () => { st[key] = !st[key]; $(id).setAttribute('aria-pressed', String(st[key])); try { localStorage.setItem(store, st[key] ? '1' : '0'); } catch (e) {} renderPal(); if (st.draft) { renderSel(); draw(); } }; };
+viewFlag('standBtn', 'standins', 'bf-stages-standins'); viewFlag('teamBtn', 'teamSprites', 'bf-stages-team');
 $('undoBtn').onclick = undoMain; $('redoBtn').onclick = redoMain;
 // put this map's markers (and field) back to the template; other maps and the rest of the draft stay
 $('resetMapBtn').onclick = () => { const d = st.draft; if (!d) return; const t = tplOf(d.base, kindOf(d));
@@ -1199,7 +1268,7 @@ function searchEnemies(q, max) {
 function renderPal() {
   const q = $('palSearch').value.trim(); const { list, total } = searchEnemies(q, 80); const pal = $('pal');
   pal.replaceChildren(...list.map(id => { const e = st.enemies[id]; const b = document.createElement('button'); b.type = 'button'; b.className = 'pi'; b.draggable = true;
-    const n = document.createElement('span'); n.className = 'n'; const dot = document.createElement('span'); dot.className = 'dot' + (e.d ? '' : ' no'); dot.title = e.d ? 'Idle preview from its exact assets' : 'No exact preview: named placeholder'; n.append(dot, e.n);
+    const n = document.createElement('span'); n.className = 'n'; const look = spriteOf(id), dot = document.createElement('span'); dot.className = 'dot' + (e.d ? '' : look.standIn ? ' si' : ' no'); dot.title = e.d ? 'Idle preview from its exact assets' : look.standIn ? 'Stand-in sprite: ' + STANDIN_BASIS[look.basis] : 'No sprite: named marker'; n.append(dot, e.n);
     if (e.r) n.append(el('span', { class: 'badge rar', text: e.r + '★' })); if (e.a) n.append(el('span', { class: 'badge el', style: `background:${ATTR[e.a]}`, text: ATTR_NAME[e.a] }));
     const sm = document.createElement('small'); sm.textContent = (e.t || '') + (e.t ? ' · ' : '') + 'id ' + id; n.append(sm);
     const m = document.createElement('span'); m.className = 'm'; m.textContent = 'Add'; b.append(n, m);
@@ -1341,6 +1410,7 @@ async function importFiles(list, where) {
   const files = [...(list || [])]; if (!files.length) return; saveNow();
   const keys = [], bad = [], projects = [], notes = []; let skipped = 0, ws = null;
   for (const f of files) { try { const r = await importOne(f); keys.push(...r.keys); bad.push(...r.bad); skipped += r.skipped || 0; notes.push(...(r.notes || [])); if (r.project) projects.push(r.project); if (r.workspace) ws = r.workspace; } catch (e) { bad.push(f.name + ' couldn’t be read.'); } }
+  syncKiritoTab();
   if (projects.length && !keys.length && !ws) { if (bad.length) toast(bad.join(' ')); return; }
   const slotKeys = [...new Set(keys.filter(k => isSlotKey(k) || isCastleKey(k)))];
   const dest = ['emergency', 'road', 'castle'].map(k => { const n = slotKeys.filter(x => kindOfKey(x) === k).map(slotNum).sort((a, b) => a - b); return n.length ? `${KIND(k).label} slot${n.length === 1 ? '' : 's'} ${n.join(', ')}` : null; }).filter(Boolean).join(' · ');
@@ -1609,6 +1679,7 @@ function renderGame() {
   chk.maps.forEach((mv, i) => { if (mv.length) box.append(li('move', `Map ${i + 1}: moves ${mv.map(v => markName(v.chip)).join(', ')}.`)); });
   if (!chk.errs.length && !chk.moves) box.append(li('', 'No moves yet: the stage plays like the template. Drag start spots or entry points to change where everyone begins.'));
   if (!chk.errs.length) box.append(li('', `Checked against the app’s import rules (${K.profile}): ready to export.`));
+  if (d.rewards) box.append(li('lost', 'Reward and challenge edits are a website draft: the game pack keeps the template’s rewards and challenges (app v2.5.0 installs layouts only).'));
   $('gExtra').hidden = !d.extra;
   $('keepGameBtn').hidden = !chk.lost.length && !chk.errs.some(e => e[0] === 'STAGE_MAPS' || e[0] === 'STAGE_OCCUPIED');
   pill.className = 'pill ' + (chk.errs.length ? 'no' : showOf(d) ? 'ok' : ''); pill.textContent = chk.errs.length ? 'Can’t export' : showOf(d) ? (K.exclusive ? 'Active' : 'Ready') : 'Switched off';
@@ -1632,6 +1703,113 @@ $('gId').addEventListener('change', e => { const v = e.target.value.trim(), was 
   st.draft.localId = v; rememberId(st.key, v); save(); renderGame(); if (exportedAt(was)) toast(`${was} was exported before: on a phone it keeps its slot, and the new localId becomes a separate definition.`); });
 $('gOn').onchange = e => { const on = e.target.checked, k = kindOf(st.draft); saveNow(); const r = setEnabledFor(k, st.draft.localId, on); renderGame(); setTimeout(renderBoard, 350);
   toast(on ? (r.off.length ? `Now the active ${KIND(k).label}. Switched off (not deleted): ${r.off.join(', ')}.` : KIND(k).exclusive ? `Now the active ${KIND(k).label}.` : 'Switched on: it goes in Export enabled stages.') : 'Switched off: it stays here and keeps its slot, and isn’t in Export enabled stages.'); };
+
+// ---- rewards and challenges: editable as website-draft edits. App v2.5.0 installs layouts only, so a game pack
+// keeps the template's rewards and challenges; the edits stay in the draft (Save editable project, Export draft file).
+const RWB = new Map();
+function rwBase(d) { const k = kindOf(d), t = tplOf(d && d.base, k); if (!t) return null; const ck = k + ':' + t.id; if (!RWB.has(ck)) RWB.set(ck, FM.templateRewards(k, t.raw)); return RWB.get(ck); }
+const rwOf = d => (d && d.rewards) || rwBase(d);
+const sameJ = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+function rwEdit(fn, what) {
+  const d = st.draft, base = rwBase(d); if (!base) return false; const r = clone(d.rewards || base); fn(r);
+  const probs = FM.rewardProblems(r); if (probs.length) { toast(probs[0]); renderRewardsCard(); return false; }
+  if (sameJ(r, base)) delete d.rewards; else d.rewards = r; changed(); if (what) toast(what + ' (website draft; the game pack keeps the template’s rewards).'); return true;
+}
+const itemName = id => { const n = NAMES[String(id)] || {}; return n.n || (APP && APP.units[String(id)]) || n.s || 'Item ' + id; };
+function partView(p) { if (p.key === 'item') { const n = NAMES[p.unitId] || {}; return { key: 'item', label: 'Item', qty: p.qty, unitId: p.unitId, level: p.level || 1, plus: { s: 0, a: 0 }, raw: p }; }
+  return { key: p.key, label: FM.partLabel(p), qty: p.qty, raw: p }; }
+const partsChips = parts => parts && parts.length ? el('div', { class: 'ritems' }, parts.map(p => rewardChip(partView(p)))) : el('span', { class: 'hint', text: 'Nothing' });
+function chText(ch, i) { return FM.challengeType(ch) ? FM.challengeText(ch) : ch.sourceText || tagless(((st.mission && st.mission.objectives) || [])[i] || '') || `Game challenge type ${ch.state}`; }
+const numIn = (id, v, lo, hi, label, onSet) => { const i = el('input', { type: 'number', id, value: String(v), min: String(lo), max: String(hi), step: '1', inputmode: 'numeric', 'aria-label': label });
+  i.onchange = () => { const n = Number(i.value); if (!Number.isInteger(n) || n < lo || n > hi) { toast(`${label}: whole number ${lo.toLocaleString()}–${hi.toLocaleString()}.`); i.value = String(v); return; } onSet(n); }; return i; };
+function renderRewardsCard() {
+  const d = st.draft, card = $('rwCard'); if (!d) return; const base = rwBase(d), kind = kindOf(d), box = $('rwBody');
+  const keep = document.activeElement && box.contains(document.activeElement) ? document.activeElement.id : null;
+  if (!base) { $('rwPill').className = 'pill'; $('rwPill').textContent = 'Not available'; box.replaceChildren(el('p', { class: 'hint', text: 'Reward and challenge data comes with game-ready templates. This stage isn’t built from one, so there’s nothing to edit here.' })); return; }
+  const r = rwOf(d), changes = FM.rewardChanges(base, d.rewards), ed = !!d.rewards, kids = [];
+  $('rwPill').className = 'pill ' + (ed ? 'draft' : ''); $('rwPill').textContent = ed ? 'Website draft' : 'From the template';
+  kids.push(el('p', { class: 'hint', text: 'Edit them here as part of your website draft. App v2.5.0 installs layouts only, so a game pack keeps the template’s rewards and challenges; your edits are kept in Save editable project and Export draft file for a later app version or a developer handoff.' }));
+  if (ed) kids.push(el('ul', { class: 'issues' }, changes.map(t => li('lost', t))), el('div', { class: 'row' }, el('button', { type: 'button', class: 'chip sm', text: 'Reset rewards to the template', onclick: () => { delete st.draft.rewards; changed(); toast('Rewards and challenges are back to the template. Undo brings your edits back.'); } })));
+  const mark = (a, b) => sameJ(a, b) ? null : el('span', { class: 'edmark', text: 'edited' });
+  // clear rewards
+  const form = el('div', { class: 'form' },
+    el('label', {}, el('span', {}, 'Player EXP', mark(r.exp, base.exp)), numIn('rwExp', r.exp, 0, 99999999, 'Player EXP', n => rwEdit(x => { x.exp = n; }))),
+    el('label', {}, el('span', {}, 'Unit EXP', mark(r.unitExp, base.unitExp)), numIn('rwUexp', r.unitExp, 0, 99999999, 'Unit EXP', n => rwEdit(x => { x.unitExp = n; }))),
+    el('label', {}, el('span', {}, 'Ryo (lowest)', mark(r.coins[0], base.coins[0])), numIn('rwC0', r.coins[0], 0, 99999999, 'Lowest Ryo', n => rwEdit(x => { x.coins[0] = n; if (x.coins[1] < n) x.coins[1] = n; }))),
+    el('label', {}, el('span', {}, 'Ryo (highest)', mark(r.coins[1], base.coins[1])), numIn('rwC1', r.coins[1], 0, 99999999, 'Highest Ryo', n => rwEdit(x => { x.coins[1] = n; if (x.coins[0] > n) x.coins[0] = n; }))),
+    r.firstClear != null ? el('label', { class: 'wide' }, el('span', {}, 'First-clear Ninja Pearls', mark(r.firstClear, base.firstClear)), numIn('rwFc', r.firstClear, 0, 9999, 'First-clear pearls', n => rwEdit(x => { x.firstClear = n; }))) : null);
+  kids.push(el('section', { class: 'rwsec' }, el('h4', { text: 'Clear rewards' }), form));
+  // challenges
+  const chs = r.challenges.map((ch, i) => { const t = FM.challengeType(ch), b = base.challenges[i] || {};
+    const sel = el('select', { id: 'rwT' + i, 'aria-label': `Challenge ${i + 1} type` }, [...(t ? [] : [new Option('As in the game: ' + chText(b, i), '__src')]), ...FM.CHALLENGE_TYPES.map(x => new Option(x.label, x.key))]);
+    sel.value = t ? t.key : '__src';
+    sel.onchange = () => { if (sel.value === '__src') { rwEdit(x => { x.challenges[i] = { ...clone(b), reward: x.challenges[i].reward }; }); return; } rwEdit(x => { x.challenges[i] = FM.newChallenge(sel.value, x.challenges[i]); }); };
+    const ctl = [];
+    if (t && t.value) ctl.push(el('label', { class: 'go' }, 'N =', numIn('rwV' + i, ch.value, t.value.min, t.value.max, `Challenge ${i + 1} number`, n => rwEdit(x => { x.challenges[i].value = n; }))));
+    if (t && t.element) { const e = el('select', { id: 'rwE' + i, 'aria-label': `Challenge ${i + 1} element` }, FM.ELEMENTS.map((n, j) => new Option(n, String(j)))); e.value = String(ch.limited[0] ?? 0); e.onchange = () => rwEdit(x => { x.challenges[i].limited = [+e.value]; }); ctl.push(e); }
+    if (t && t.affiliation) { const a = el('select', { id: 'rwA' + i, 'aria-label': `Challenge ${i + 1} affiliation` }, Object.entries(t.affiliation).map(([k, n]) => new Option(n, k))); a.value = String(ch.limited[0] ?? 0); a.onchange = () => rwEdit(x => { x.challenges[i].limited = [+a.value]; }); ctl.push(a); }
+    const changedCh = !sameJ({ ...ch, reward: 0 }, { ...b, reward: 0 }), changedR = !sameJ(ch.reward, b.reward);
+    return el('div', { class: 'rwrow' + (changedCh || changedR ? ' ed' : '') }, el('div', { class: 'rh' }, el('b', {}, `Challenge ${i + 1}`, changedCh || changedR ? el('span', { class: 'edmark', text: 'edited' }) : null), el('small', { class: 'hint', text: chText(ch, i) })),
+      el('div', { class: 'row' }, sel, ...ctl), partsChips(ch.reward),
+      el('div', { class: 'row' }, el('button', { type: 'button', class: 'chip sm', text: 'Edit reward…', onclick: () => openRewardDialog({ title: `Challenge ${i + 1} reward`, hint: chText(ch, i), parts: ch.reward, onSave: parts => rwEdit(x => { x.challenges[i].reward = parts; }, `Challenge ${i + 1} reward changed`) }) })),
+      changedCh && !(b.langId && sameJ({ ...ch, reward: 0, langId: 0, sourceText: 0 }, { ...b, reward: 0, langId: 0, sourceText: 0 })) ? el('p', { class: 'hint', text: 'The game shows challenge text from its own string table; a new kind or number would need a matching string on the game side.' }) : null); });
+  kids.push(el('section', { class: 'rwsec' }, el('h4', { text: 'Challenges' }), ...(chs.length ? chs : [el('p', { class: 'hint', text: 'This template has no challenges.' })])));
+  if (kind === 'emergency') {
+    // lucky reward
+    if (base.lucky) kids.push(el('section', { class: 'rwsec' }, el('h4', {}, 'Lucky reward', mark(r.lucky, base.lucky)), el('p', { class: 'hint', text: 'A separate luck-based reward, not guaranteed.' }),
+      el('div', { class: 'rwrow' }, partsChips([{ key: 'item', unitId: r.lucky.unitId, qty: r.lucky.qty }]), el('div', { class: 'row' }, el('label', { class: 'go' }, 'Quantity', numIn('rwLq', r.lucky.qty, 1, 999, 'Lucky reward quantity', n => rwEdit(x => { x.lucky.qty = n; }))),
+        el('button', { type: 'button', class: 'chip sm', text: 'Change item…', onclick: () => openRewardDialog({ title: 'Lucky reward item', single: true, onPick: id => rwEdit(x => { x.lucky.unitId = id; }, 'Lucky reward changed') }) })))));
+    // enemy drops on this map
+    const tm = tplOf(d.base, kind).raw.maps[st.mapI], ids = tm ? [...new Set(tm.sets.flatMap(s => s.raw.enemySet.filter(e => e.id > 0).map(e => String(e.id))))] : [];
+    const rows = ids.map(id => { const dr = (r.drops || {})[id] || { item: null, chance: 0 }, bd = (base.drops || {})[id] || { item: null, chance: 0 }, info = enemyInfo(id), on = !sameJ(dr, bd);
+      return el('div', { class: 'rwrow' + (on ? ' ed' : '') }, el('div', { class: 'rh' }, el('b', {}, info.n, on ? el('span', { class: 'edmark', text: 'edited' }) : null), el('small', { class: 'hint', text: 'id ' + id + (bd.varies ? ' · chance differs between its placements in the template; editing sets them all' : '') })),
+        dr.item ? partsChips([{ key: 'item', unitId: dr.item, qty: 1 }]) : el('span', { class: 'hint', text: 'No drop item' }),
+        el('div', { class: 'row' }, el('label', { class: 'go' }, 'Chance per 1000', numIn('rwD' + id, dr.chance, 0, 1000, `Drop chance of ${info.n}`, n => rwEdit(x => { x.drops = x.drops || {}; x.drops[id] = { ...(x.drops[id] || { item: null, varies: false }), chance: n }; if (!n && !x.drops[id].item) delete x.drops[id]; }))), el('span', { class: 'pct', text: '= ' + (dr.chance / 10).toLocaleString() + '%' }),
+          el('button', { type: 'button', class: 'chip sm', text: dr.item ? 'Change item…' : 'Add a drop…', onclick: () => openRewardDialog({ title: `${info.n} drop`, single: true, onPick: it => rwEdit(x => { x.drops = x.drops || {}; x.drops[id] = { ...(x.drops[id] || { chance: 100, varies: false }), item: it }; if (!x.drops[id].chance) x.drops[id].chance = 100; }, `${info.n} drop changed`) }) }),
+          dr.item ? el('button', { type: 'button', class: 'chip sm', text: 'No drop', onclick: () => rwEdit(x => { delete x.drops[id]; }, `${info.n} drop removed`) }) : null)); });
+    kids.push(el('section', { class: 'rwsec' }, el('h4', { text: `Enemy drops · map ${st.mapI + 1}` }), el('p', { class: 'hint', text: 'Each enemy on the map rolls its own drop. Pick another map in the strip to edit its enemies.' }), ...(rows.length ? rows : [el('p', { class: 'hint', text: 'No enemies on this map.' })])));
+  } else {
+    const t = tplOf(d.base, kind);
+    const rows = t.maps.map((m, i) => { const p = (r.mapClear || {})[m.id] || [], bp = (base.mapClear || {})[m.id] || [], on = !sameJ(p, bp);
+      return el('div', { class: 'rwrow' + (on ? ' ed' : '') }, el('div', { class: 'rh' }, el('b', {}, `Map ${i + 1}`, on ? el('span', { class: 'edmark', text: 'edited' }) : null), el('small', { class: 'hint', text: 'map ' + m.id })), partsChips(p),
+        el('div', { class: 'row' }, el('button', { type: 'button', class: 'chip sm', text: p.length ? 'Edit reward…' : 'Add a reward…', onclick: () => openRewardDialog({ title: `Map ${i + 1} clear reward`, hint: 'Paid when this map is cleared (server map-clear rows).', parts: p, onSave: parts => rwEdit(x => { x.mapClear = x.mapClear || {}; if (parts.length) x.mapClear[m.id] = parts; else delete x.mapClear[m.id]; }, `Map ${i + 1} clear reward changed`) }) }))); });
+    kids.push(el('section', { class: 'rwsec' }, el('h4', { text: 'Map clear rewards' }), el('p', { class: 'hint', text: 'From the server’s map-clear rows for this Road’s own maps. The client display rows (in Rewards from the template) can differ.' }), ...rows));
+    const on = !sameJ(r.roadClear, base.roadClear);
+    kids.push(el('section', { class: 'rwsec' }, el('h4', {}, 'Road clear reward', on ? el('span', { class: 'edmark', text: 'edited' }) : null), partsChips(r.roadClear),
+      el('div', { class: 'row' }, el('button', { type: 'button', class: 'chip sm', text: 'Edit reward…', onclick: () => openRewardDialog({ title: 'Road clear reward', hint: 'Paid for clearing the whole Road.', parts: r.roadClear || [], onSave: parts => rwEdit(x => { x.roadClear = parts; }, 'Road clear reward changed') }) }))));
+  }
+  box.replaceChildren(...kids); if (keep && $(keep)) try { $(keep).focus(); } catch (e) {}
+}
+// one dialog for every reward: currencies plus up to four items, or a single item pick
+let rwState = null;
+function openRewardDialog(o) {
+  rwState = { ...o, parts: clone(o.parts || []) }; $('rwTitle').textContent = o.title; $('rwHint').textContent = (o.hint ? o.hint.replace(/\.?$/, '. ') : '') + (o.single ? 'Pick one item.' : `Currencies and up to ${FM.MAX_REWARD_ITEMS} items.`) + ' Website draft only.';
+  $('rwCur').replaceChildren(...FM.CURRENCIES.map(c => new Option(c.label, c.key))); for (const id of ['rwPartsBox', 'rwCurBox', 'rwSave']) $(id).hidden = !!o.single;
+  $('rwQ').value = ''; $('rwMsg').hidden = true; renderRwParts(); renderRwItems(); dlgOpen($('rwDlg')); $('rwQ').focus();
+}
+function rwMsg(t) { $('rwMsg').textContent = t || ''; $('rwMsg').hidden = !t; }
+function renderRwParts() {
+  const P = rwState.parts; $('rwParts').replaceChildren(...(P.length ? P.map((p, i) => { const v = partView(p), q = el('input', { type: 'number', value: String(p.qty), min: '1', max: p.key === 'item' ? '999' : '99999999', step: '1', 'aria-label': 'Quantity of ' + (p.key === 'item' ? itemName(p.unitId) : v.label) });
+    q.onchange = () => { const n = Number(q.value); p.qty = n; const pr = FM.partsProblems(P); rwMsg(pr[0]); };
+    return el('div', { class: 'prow2' }, rewardThumb(v), el('div', {}, el('b', { text: p.key === 'item' ? itemName(p.unitId) : v.label }), el('small', { class: 'hint', text: p.key === 'item' ? 'Item ' + p.unitId : 'Currency' })), el('div', { class: 'row' }, q, el('button', { type: 'button', class: 'chip sm', text: 'Remove', 'aria-label': 'Remove', onclick: () => { P.splice(i, 1); renderRwParts(); } }))); }) : [el('p', { class: 'hint', text: 'Nothing yet. Add a currency or an item.' })]));
+}
+function renderRwItems() {
+  const toks = ($('rwQ').value || '').toLowerCase().split(/\s+/).filter(Boolean), out = []; let total = 0;
+  const ids = Object.keys(NAMES).sort((a, b) => (NAMES[b].u || 0) - (NAMES[a].u || 0) || +a - +b);
+  for (const id of ids) { const n = NAMES[id], h = `${n.n || ''} ${n.s || ''} ${id} ${n.r ? n.r + '★' : ''} ${n.a ? ATTR_NAME[n.a] : ''}`.toLowerCase(); if (!toks.every(t => h.includes(t))) continue; total++; if (out.length >= 60) continue;
+    out.push(el('button', { type: 'button', class: 'pcard', style: 'text-align:left;border:0;color:inherit', onclick: () => {
+      if (rwState.single) { const f = rwState.onPick; $('rwDlg').close(); f(id); return; }
+      const P = rwState.parts; const ex = P.find(p => p.key === 'item' && p.unitId === id); if (ex) ex.qty = Math.min(999, ex.qty + 1); else P.push({ key: 'item', unitId: id, qty: 1, level: 1 });
+      rwMsg(FM.partsProblems(P)[0]); renderRwParts(); } },
+      rewardThumb({ key: 'item', unitId: id }), el('span', { class: 'pb' }, el('b', {}, n.n || n.s || 'Item ' + id, n.r ? el('span', { class: 'badge rar', text: n.r + '★' }) : null, n.a ? el('span', { class: 'badge el', style: `background:${ATTR[n.a]}`, text: ATTR_NAME[n.a] }) : null),
+        el('small', { text: `ID ${id}` + (!n.n && n.s ? ' · source name (no English name in this catalog)' : '') + (n.u ? ' · given by game templates' : '') })))); }
+  if (total > out.length) out.push(el('p', { class: 'hint', text: `Showing ${out.length} of ${total.toLocaleString()}. Type more to narrow it down.` }));
+  if (!total) out.push(el('p', { class: 'hint', text: 'No item matches.' }));
+  $('rwItems').replaceChildren(...out);
+}
+$('rwQ').addEventListener('input', renderRwItems); $('rwClose').onclick = () => $('rwDlg').close();
+$('rwCurAdd').onclick = () => { const k = $('rwCur').value, n = Number($('rwCurQ').value), P = rwState.parts; const ex = P.find(p => p.key === k); if (ex) ex.qty = n; else P.push({ key: k, qty: n }); rwMsg(FM.partsProblems(P)[0]); renderRwParts(); };
+$('rwSave').onclick = () => { const P = rwState.parts.filter(p => p.qty !== 0), pr = FM.partsProblems(P); if (pr.length) { rwMsg(pr[0]); return; } const f = rwState.onSave; $('rwDlg').close(); f(P); };
 
 // ---- My custom slots: 50 Emergency, 10 Ninja Road and 10 Phantom Castle positions in this project.
 // Slot cards are positions here, not phone slots: the app gives each new localId the first unused slot of its mode
@@ -1683,11 +1861,11 @@ async function setKind(kind, opts = {}) {
   await setMode(opts.mode || st.mode, opts);
 }
 async function setMode(mode, opts = {}) {
-  saveNow(); st.mode = mode; try { localStorage.setItem('bf-stages-mode', mode); } catch (e) {}
+  saveNow(); leaveKirito(); st.mode = mode; try { localStorage.setItem('bf-stages-mode', mode); } catch (e) {}
   if (mode === 'custom' || st.kind === 'castle') try { const q = new URLSearchParams(location.search); if (q.has('mission')) { q.delete('mission'); const qs = q.toString(); history.replaceState(null, '', qs ? '?' + qs : location.pathname); } } catch (e) {}
   if (window.ForgeSandboxUI && window.ForgeSandboxUI.isOpen()) window.ForgeSandboxUI.close();
   document.body.classList.toggle('mode-custom', mode === 'custom'); document.body.classList.toggle('mode-game', mode === 'game');
-  for (const b of $('modeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+  for (const b of $('modeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode)); syncKindSeg();
   $('betaNote').textContent = NOTES[st.kind + '/' + mode]; $('board').hidden = mode !== 'custom'; $('backBtn').hidden = mode !== 'custom';
   $('bdTitle').textContent = 'My custom slots · ' + KIND(st.kind).label;
   if (st.kind === 'castle') { document.body.classList.remove('no-stage'); await castleMode(mode, opts); return; }
@@ -1698,7 +1876,30 @@ async function setMode(mode, opts = {}) {
 }
 function noStage() { saveNow(); document.body.classList.add('no-stage'); setLastKeyOf(st.kind, 'custom', null); }
 $('modeSeg').onclick = e => { const b = e.target.closest('button'); if (!b) return; if (b.dataset.mode !== st.mode) setMode(b.dataset.mode); else if (st.mode === 'custom') setMode('custom', { board: true }); };
-$('kindSeg').onclick = e => { const b = e.target.closest('button'); if (!b) return; if (b.dataset.kind !== st.kind) setKind(b.dataset.kind); else if (st.mode === 'custom') setMode('custom', { board: true }); };
+$('kindSeg').onclick = e => { const b = e.target.closest('button'); if (!b) return; if (b.dataset.kind === 'kirito') { openKirito(); return; }
+  if (b.dataset.kind !== st.kind || kiritoActive()) setKind(b.dataset.kind); else if (st.mode === 'custom') setMode('custom', { board: true }); };
+// ---- Kirito events: the supplied event project, edited in the stage-project workspace through the supplied adapter.
+// The tab shows once an event project is in this browser (or the page is opened with ?kirito); its data never leaves the browser until exported.
+const kiritoActive = () => document.body.classList.contains('kirito-landing') || (document.body.classList.contains('sbx-on') && st.sbxEvent);
+async function eventProjects() { return window.ForgeSandboxUI ? (await window.ForgeSandboxUI.listProjects()).filter(p => p.event).sort((a, b) => b.savedAt - a.savedAt) : []; }
+async function syncKiritoTab() { let show = false; try { show = new URLSearchParams(location.search).has('kirito'); } catch (e) {} if (!show) show = (await eventProjects()).length > 0; $('kindKirito').hidden = !show && !kiritoActive(); syncKindSeg(); }
+function syncKindSeg() { const k = kiritoActive(); for (const b of $('kindSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(k ? b.dataset.kind === 'kirito' : b.dataset.kind === st.kind)); $('modeSeg').hidden = k; }
+function leaveKirito() { document.body.classList.remove('kirito-landing'); $('kiritoLanding').hidden = true; }
+async function showKiritoLanding() {
+  saveNow(); document.body.classList.add('kirito-landing'); $('kiritoLanding').hidden = false; $('kindKirito').hidden = false; syncKindSeg();
+  const list = await eventProjects();
+  $('kiritoList').replaceChildren(...list.map(p => { const del = el('button', { type: 'button', class: 'chip sm', text: 'Delete' }); del.style.color = 'var(--bad)';
+    del.onclick = async () => { if (del.dataset.sure !== '1') { del.dataset.sure = '1'; del.textContent = 'Delete for good?'; setTimeout(() => { del.dataset.sure = ''; del.textContent = 'Delete'; }, 4000); return; } await window.ForgeSandboxUI.deleteProject(p.id); showKiritoLanding(); };
+    return el('div', { class: 'prow' }, el('div', {}, el('b', { text: p.name }), el('small', { text: `${p.quests} quests · ${p.maps} maps · saved ${new Date(p.savedAt).toLocaleString()}` }),
+      el('small', { text: (p.questList || []).map(q => `${q.missionName || q.name}: stage ${q.stageId}, mission ${q.missionId}`).join(' · ') })),
+      el('div', { class: 'acts row' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Open', onclick: () => window.ForgeSandboxUI.openProject(p.id) }), del)); }));
+  if (!list.length) $('kiritoList').append(el('p', { class: 'hint', text: 'No event project in this browser yet.' }));
+}
+async function openKirito() { if (!window.ForgeSandboxUI) { toast('Event projects need IndexedDB, which this browser blocks.'); return; } if (window.ForgeSandboxUI.isOpen() && st.sbxEvent) return; const list = await eventProjects(); if (list.length) { leaveKirito(); await window.ForgeSandboxUI.openProject(list[0].id); } else showKiritoLanding(); }
+$('kiritoFile').onchange = e => { const fl = [...e.target.files]; e.target.value = ''; importFiles(fl); };
+$('kiritoLbl').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('kiritoFile').click(); } };
+addEventListener('forge-sandbox', e => { const d = e.detail || {}; st.sbxEvent = !!(d.open && d.event); if (d.open) leaveKirito();
+  if (!d.open && d.reason === 'button' && d.wasEvent) { showKiritoLanding(); return; } syncKiritoTab(); });
 $('backBtn').onclick = () => { noStage(); renderBoard(); $('board').scrollIntoView({ block: 'start' }); };
 
 // the slot board for Emergency and Ninja Road
@@ -1916,11 +2117,11 @@ async function exportCandidates() {
     const name = (r.d.name || '').trim() || 'Untitled stage', base = { kind, slot: r.sl.slot, name, thumb: bgThumb((r.chk.tpl && r.chk.tpl.bg) || (r.d.maps[0] && r.d.maps[0].bg)), localId: r.d.localId };
     if (!r.chk.tpl) { out.push({ ...base, spec: null, why: statusOf(r)[0] }); continue; }
     if (r.chk.errs.length || !r.chk.spec) { out.push({ ...base, spec: null, why: `Can’t export (${(r.chk.errs[0] || ['STAGE'])[0]}): ${(r.chk.errs[0] || [, 'not ready'])[1]}` }); continue; }
-    out.push({ ...base, spec: r.chk.spec, exported: !!exportedAt(r.d.localId) }); }
+    out.push({ ...base, spec: r.chk.spec, exported: !!exportedAt(r.d.localId), draftOnly: r.d.rewards ? 'rewards and challenges' : null }); }
   const s = readStore();
   for (const sl of slotList('castle')) { const rec = (s.castles || {})[sl.slot]; if (!rec) { out.push({ kind: 'castle', slot: sl.slot, empty: true }); continue; }
     const p = castleProblems(rec), base = { kind: 'castle', slot: sl.slot, name: (rec.spec.name || '').trim() || 'Untitled castle', localId: rec.spec.localId };
-    out.push(p.length ? { ...base, spec: null, why: 'Can’t export: ' + p[0] } : { ...base, spec: clone(rec.spec), exported: !!exportedAt(rec.spec.localId) }); }
+    out.push(p.length ? { ...base, spec: null, why: 'Can’t export: ' + p[0] } : { ...base, spec: clone(rec.spec), exported: !!exportedAt(rec.spec.localId), draftOnly: rec.draft && rec.draft.rewards ? 'floor and ranking rewards' : null }); }
   return out;
 }
 const MODE_TAG = k => el('span', { class: 'mtag ' + k, text: KIND(k).label });
@@ -1928,6 +2129,7 @@ function xRow(c, inc) {
   const kids = [el('b', {}, MODE_TAG(c.kind), c.name + (c.spec && c.spec.enabled === false ? (inc ? ' — sent switched off' : ' — switched off') : ''))];
   kids.push(el('small', { text: `Slot ${c.slot} · localId ${c.localId || '—'}` + (c.kind === 'castle' && c.spec ? ` · base season ${c.spec.donorPvpId}${c.spec.rewardPvpId ? ', rewards from ' + c.spec.rewardPvpId : ''} · points ×${c.spec.pointScale ?? 1}` : c.spec ? ` · template ${c.spec.donorMissionId} · ${c.spec.maps.reduce((a, m) => a + m.markers.length, 0)} move(s)` : '') }));
   if (inc) kids.push(el('small', { text: `${c.path} · the app allocates the game IDs when it imports this localId` + (c.exported ? ' · exported before, so this updates it' : '') }));
+  if (inc && c.draftOnly) kids.push(el('small', { class: 'warn', text: `Your ${c.draftOnly} edits stay in the website draft; this pack carries the template’s.` }));
   else { kids.push(el('small', { class: c.optional ? '' : 'bad', text: c.why }));
     if (c.optional) { const cb = el('input', { type: 'checkbox' }); cb.checked = false; cb.onchange = () => { xPicks[c.spec.localId] = cb.checked; renderExport(); };
       kids.push(el('label', { class: 'pick' }, cb, 'Send it anyway (it’s on a phone I imported from elsewhere)')); } }
@@ -2138,8 +2340,8 @@ function renderCastle(quiet) {
   const probs = tplView ? [] : castleProblems(rec);
   // settings
   const ctl = $('cCtl'), keepFocus = document.activeElement && ctl.contains(document.activeElement) ? document.activeElement.id : null;
-  if (renderCastle.busy) { renderFloors(v, sp); return; } // a blur/change fired while the panel is being replaced
-  if (quiet && (keepFocus === 'cScaleN' || keepFocus === 'cNameIn' || keepFocus === 'cNotes' || keepFocus === 'cScale')) { syncCastleBits(rec, v, probs, tplView); renderFloors(v, sp); return; }
+  if (renderCastle.busy) { renderFloors(v, sp, rec); return; } // a blur/change fired while the panel is being replaced
+  if (quiet && (keepFocus === 'cScaleN' || keepFocus === 'cNameIn' || keepFocus === 'cNotes' || keepFocus === 'cScale')) { syncCastleBits(rec, v, probs, tplView); renderFloors(v, sp, rec); return; }
   const base = el('select', { id: 'cBase', 'aria-label': 'Base season', disabled: locked ? true : null }, Object.keys(AC.castleDonors).map(id => { const o = new Option(`${AC.castleDonors[id].name} — ${AC.castleDonors[id].season.floorMax} floors, ${seasonDates(id).slice(0, 10)}`, id); o.selected = id === sp.donorPvpId; return o; }));
   base.onchange = () => { const id = base.value; if (tplView) { cs.tpl = id; try { localStorage.setItem('bf-stages-castle-tpl', id); } catch (e) {} renderCastlePick(); renderCastle(); return; }
     castleEdit(r => { const keepScale = r.spec.pointScale; const ok = FM.compatiblePresets(AC, id); r.spec = FM.castleSpec({ ...r.spec, donorPvpId: id, rewardPvpId: r.spec.rewardPvpId && ok.includes(r.spec.rewardPvpId) ? r.spec.rewardPvpId : undefined, pointScale: keepScale }); }); };
@@ -2164,6 +2366,9 @@ function renderCastle(quiet) {
   kids.push(el('div', {}, el('span', { class: 'lbl', text: 'Point scale' }), el('div', { class: 'scale' }, rng, num), el('p', { class: 'hint', text: `0.1 to 10. Each floor’s cumulative points threshold is multiplied by this and rounded to the nearest whole point; higher means more points per floor. The last floor’s zero stays zero, and the per-floor base values stay as they are.` })));
   kids.push(el('dl', { class: 'rw' }, el('dt', { text: 'Season' }), el('dd', { text: `${v.base.name} · ${v.base.arena.arenaData.name}` }), el('dt', { text: 'Floors' }), el('dd', { text: String(v.floorMax) }), el('dt', { text: 'Ran' }), el('dd', { text: seasonDates(sp.donorPvpId) + ' (original dates)' }),
     el('dt', { text: 'Opponents' }), el('dd', { text: 'Inherited from the base season, with its battle behavior. Not editable in this version.' })));
+  const ovc = castleOv(rec), nf = Object.keys(ovc.floors).length, nr = Object.keys(ovc.ranking).length;
+  if (nf || nr) kids.push(el('ul', { class: 'issues' }, li('lost', `Reward edits on ${nf} floor${nf === 1 ? '' : 's'} and ${nr} ranking band${nr === 1 ? '' : 's'} are a website draft: the game pack sends the base season, reward preset and point scale only (app v2.5.0 doesn’t install item rewards).`)),
+    el('div', { class: 'row' }, el('button', { type: 'button', class: 'chip sm', text: 'Reset reward edits', onclick: () => { castleEdit(r => { if (r.draft) delete r.draft.rewards; }); toast('Floor and ranking rewards are back to the season’s. Undo brings your edits back.'); } })));
   if (probs.length) kids.push(el('ul', { class: 'issues' }, probs.map(t => li('err', t, 'CASTLE'))));
   else if (!tplView) kids.push(el('ul', { class: 'issues' }, li('', `Checked against the app’s import rules (phantom-castle/1): ready to export.`)));
   if (!tplView) { const ta = el('textarea', { class: 'notes', id: 'cNotes', placeholder: 'Ideas for opponents, item rewards or AI you want later. Kept here and in Save editable project; never exported to the game.' }); ta.value = (rec.draft && rec.draft.notes) || '';
@@ -2178,7 +2383,15 @@ function renderCastle(quiet) {
     tplView ? null : el('pre', { class: 'hint', style: 'white-space:pre-wrap;overflow:auto;max-height:200px;margin-top:8px', text: JSON.stringify(sp, null, 2) })));
   renderCastle.busy = true; try { ctl.replaceChildren(...kids); } finally { renderCastle.busy = false; }
   if (keepFocus && $(keepFocus)) { try { $(keepFocus).focus(); } catch (e) {} }
-  renderFloors(v, sp);
+  renderFloors(v, sp, rec);
+}
+// floor and ranking reward edits: website draft only (the game pack sends season, preset and scale)
+const castleOv = rec => (rec && rec.draft && rec.draft.rewards) || { floors: {}, ranking: {} };
+function castleRewardEdit(which, key, parts, original, label) {
+  castleEdit(r => { const d = r.draft = { ...(r.draft || {}) }; const ov = d.rewards = clone(d.rewards || { floors: {}, ranking: {} });
+    if (sameJ(parts, original)) delete ov[which][key]; else ov[which][key] = parts;
+    if (!Object.keys(ov.floors).length && !Object.keys(ov.ranking).length) delete d.rewards; });
+  toast(label + ' changed (website draft; the game pack keeps the season’s rewards).');
 }
 // light refresh while someone is typing or dragging the slider: the status pill, problems and the slider/number pair
 function syncCastleBits(rec, v, probs, tplView) {
@@ -2187,18 +2400,24 @@ function syncCastleBits(rec, v, probs, tplView) {
   const sc = rec.spec.pointScale ?? 1; if ($('cScale') && document.activeElement !== $('cScale')) $('cScale').value = String(sc); if ($('cScaleN') && document.activeElement !== $('cScaleN')) $('cScaleN').value = String(sc);
   if (!tplView) { $('cName').textContent = rec.spec.name || 'Untitled castle'; }
 }
-function renderFloors(v, sp) {
-  const box = $('cFloors'), toks = (cs.q || '').toLowerCase().split(/\s+/).filter(Boolean), scale = sp.pointScale ?? 1;
+function renderFloors(v0, sp, rec) { let v = v0;
+  const box = $('cFloors'), toks = (cs.q || '').toLowerCase().split(/\s+/).filter(Boolean), scale = sp.pointScale ?? 1, ov = castleOv(rec);
+  const rwSrc = v0.rewardSeason, origF = f => FM.partsFromEvents(rwSrc.floorRewards[String(f)] || []), origR = i => FM.partsFromEvents((rwSrc.rankingRewards[i] || {}).events || []);
+  v = { ...v, floors: v.floors.map(f => ov.floors[f.floor] ? { ...f, rewards: ov.floors[f.floor].map(partView), edited: true } : f), ranking: v.ranking.map((r, i) => ov.ranking[i] ? { ...r, rewards: ov.ranking[i].map(partView), edited: true } : r) };
+  const editBtn = (which, key, label, cur, orig) => el('button', { type: 'button', class: 'chip sm', text: 'Edit', 'aria-label': 'Edit ' + label, onclick: () => openRewardDialog({ title: label, hint: (which === 'floors' ? 'Paid on reaching this floor.' : 'Paid by final ranking.'), parts: cur, onSave: parts => castleRewardEdit(which, key, parts, orig, label) }) });
   const hay = rs => rs.map(r => r.key === 'item' ? ((NAMES[r.unitId] || {}).n || '') + ' ' + ((NAMES[r.unitId] || {}).s || '') + ' ' + r.unitId : r.label).join(' ').toLowerCase();
   const rows = v.floors.filter(f => !toks.length || toks.every(t => (hay(f.rewards) + ' floor ' + f.floor).includes(t)));
   const q = el('input', { type: 'search', class: 'field-in', id: 'cFloorQ', value: cs.q, placeholder: 'Search floor rewards by item, currency or floor', autocomplete: 'off', 'aria-label': 'Search floor rewards' });
-  q.oninput = () => { cs.q = q.value; renderFloors(v, sp); const n = $('cFloorQ'); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } };
+  q.oninput = () => { cs.q = q.value; renderFloors(v0, sp, rec); const n = $('cFloorQ'); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } };
   const table = el('table', { class: 'ftable' }, el('thead', {}, el('tr', {}, el('th', { text: 'Floor' }), el('th', { text: 'Points to reach' }), el('th', { text: 'Base' }), el('th', { text: 'Floor reward' }))),
     el('tbody', {}, rows.map(f => el('tr', { class: f.scaled > f.original ? 'up' : f.scaled < f.original ? 'down' : '' }, el('td', { class: 'num', text: String(f.floor) }),
       el('td', { class: 'num' }, el('b', { text: f.scaled.toLocaleString() }), scale !== 1 && f.original ? el('small', { text: 'was ' + f.original.toLocaleString() }) : f.original === 0 ? el('small', { text: 'last floor: stays 0' }) : null),
-      el('td', { class: 'num', text: f.base.toLocaleString() }), el('td', {}, f.rewards.length ? el('div', { class: 'ritems' }, f.rewards.map(rewardChip)) : el('span', { class: 'hint', text: '—' }))))));
+      el('td', { class: 'num', text: f.base.toLocaleString() }), el('td', {}, f.rewards.length ? el('div', { class: 'ritems' }, f.rewards.map(rewardChip)) : el('span', { class: 'hint', text: '—' }), f.edited ? el('span', { class: 'edmark', text: 'edited' }) : null,
+        el('div', {}, editBtn('floors', String(f.floor), `Floor ${f.floor} reward`, ov.floors[f.floor] || origF(f.floor), origF(f.floor))))))));
   const rank = el('table', { class: 'ftable' }, el('thead', {}, el('tr', {}, el('th', { text: 'Rank' }), el('th', { text: 'Ranking reward' }))),
-    el('tbody', {}, v.ranking.map(r => el('tr', {}, el('td', { class: 'num', text: r.end >= 99999999 ? `${r.start.toLocaleString()}+` : `${r.start.toLocaleString()}–${r.end.toLocaleString()}` }), el('td', {}, el('div', { class: 'ritems' }, r.rewards.map(rewardChip)))))));
+    el('tbody', {}, v.ranking.map((r, i) => { const band = r.end >= 99999999 ? `${r.start.toLocaleString()}+` : `${r.start.toLocaleString()}–${r.end.toLocaleString()}`;
+      return el('tr', {}, el('td', { class: 'num', text: band }), el('td', {}, el('div', { class: 'ritems' }, r.rewards.map(rewardChip)), r.edited ? el('span', { class: 'edmark', text: 'edited' }) : null,
+        el('div', {}, editBtn('ranking', String(i), `Ranking ${band} reward`, ov.ranking[i] || origR(i), origR(i))))); })));
   box.replaceChildren(el('div', { class: 'row', style: 'justify-content:space-between' }, el('span', { class: 'lbl', text: `Floor progression · ${v.floorMax} floors` }), el('span', { class: 'status', text: scale === 1 ? 'Original thresholds' : `Thresholds ×${scale} (preview; the app computes the final values)` })),
     el('p', { class: 'hint', text: `Points to reach is the cumulative total the game asks for at each floor (${v.assets.points}). Floor rewards come from ${v.assets.floorRewards}${sp.rewardPvpId ? ' (the reward preset)' : ''}. Names without an English entry show the game’s source name.` }), q,
     el('div', { class: 'fwrap tscroll' }, table), ...(rows.length ? [] : [el('p', { class: 'hint', text: 'No floor matches.' })]),
@@ -2223,9 +2442,10 @@ function renderGeo() { // what the layout preview does and doesn't know, from th
 }
 async function init() {
   if (!('DecompressionStream' in window)) throw new Error('old browser');
-  const [idx, enemies, app, fm, ac, geo, names] = await Promise.all([getData(CAT + 'index.json.gz'), getData(CAT + 'enemies.json.gz'), getData(CAT + 'app.json.gz').catch(() => null),
-    import('./v250/forge-modes.mjs'), getData('v250/authoring-catalog.json.gz'), getData('v250/reference/geometry.json').catch(() => null), getData(CAT + 'reward-names.json').catch(() => null)]);
-  st.idx = idx; st.enemies = enemies; APP = app; FM = fm; AC = ac; SLOTS = FM.slotTable(AC); GEO = geo; NAMES = (names && names.items) || {};
+  const [idx, enemies, app, fm, ac, geo, names, standins] = await Promise.all([getData(CAT + 'index.json.gz'), getData(CAT + 'enemies.json.gz'), getData(CAT + 'app.json.gz').catch(() => null),
+    import('./v250/forge-modes.mjs'), getData('v250/authoring-catalog.json.gz'), getData('v250/reference/geometry.json').catch(() => null), getData(CAT + 'reward-names.json').catch(() => null), getData(CAT + 'standins.json').catch(() => null)]);
+  st.idx = idx; st.enemies = enemies; APP = app; FM = fm; AC = ac; SLOTS = FM.slotTable(AC); GEO = geo; NAMES = (names && names.items) || {}; STANDINS = (standins && standins.standins) || {};
+  try { for (const [id, key, store] of [['standBtn', 'standins', 'bf-stages-standins'], ['teamBtn', 'teamSprites', 'bf-stages-team']]) { const v = localStorage.getItem(store); if (v !== null) st[key] = v === '1'; $(id).setAttribute('aria-pressed', String(st[key])); } } catch (e) {}
   st.roadIds = new Set(idx.missions.filter(m => m.cat === 3 && /^800\d\d$/.test(m.id)).map(m => m.id));
   try { const g = localStorage.getItem('bf-stages-gameonly'); if (g !== null) st.gameOnly = g === '1'; } catch (e) {}
   const T = k => Object.keys(FM.templateList(AC, k)).length;
@@ -2237,9 +2457,10 @@ async function init() {
   const qk = q && q.get('mode'); if (['emergency', 'road', 'castle'].includes(qk)) kind = qk;
   if (want && idx.missions.some(m => m.id === want)) { const wk = isRoadMission(want) ? 'road' : 'emergency', k = lastKeyOf(wk, 'game'); await setKind(wk, { mode: 'game', key: k && s.drafts[k] && String(s.drafts[k].base) === want ? k : null }); if (!st.key || !st.draft || String(st.draft.base) !== want) await openMission(want); }
   else await setKind(kind, { mode });
+  syncKiritoTab(); try { if (new URLSearchParams(location.search).has('kirito') && !(window.ForgeSandboxUI && window.ForgeSandboxUI.isOpen())) openKirito(); } catch (e) {}
   requestAnimationFrame(tick);
 }
-try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, HIS, cs, pickSlot, moveToSlot, choosePull, openPull, exportStage, allEnemies, cellsOf, gameCheck, gameStage, unzip, importGameStage, importDefinition, importCastle, importFiles, readStore, setMode, setKind, renderBoard, exportCandidates, openExport, openSlot, createSlot, castleCreate, openCastle, castleEdit, setEnabledFor, saveWorkspace, restoreWorkspace, undoMain, redoMain, nudgeMarker, tplOf, slotList, slotKey,
+try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, HIS, cs, pickSlot, moveToSlot, choosePull, openPull, exportStage, allEnemies, cellsOf, gameCheck, gameStage, unzip, importGameStage, importDefinition, importCastle, importFiles, readStore, setMode, setKind, renderBoard, exportCandidates, openExport, openSlot, createSlot, castleCreate, openCastle, castleEdit, setEnabledFor, saveWorkspace, restoreWorkspace, undoMain, redoMain, nudgeMarker, tplOf, slotList, slotKey, spriteOf, TEAM, teamLoaded: () => TEAM.every(d => !!ready.get(d)), rwBase, openRewardDialog,
   get FM() { return FM; }, get AC() { return AC; }, get APP() { return APP; }, get plan() { return xPlan; }, get xMode() { return xMode; } }; } catch (e) {}
 init().catch(err => { $('mName').textContent = err && err.message === 'old browser' ? 'This browser is too old for the stage catalog. Update it and reload.' : 'Couldn’t load the stage catalog. Reload the page to try again.'; console.error(err); });
 })();
@@ -2448,10 +2669,39 @@ function changes(a, b, path = '', out = [], max = 5000) {
 function gameExportStatus(p) {
   return { allowed: false, reason: (p && p.compatibility && p.compatibility.reason) || 'Website project only. The app’s stage import takes layout edits; edited rewards, stats or backgrounds need a game-side installer update.' };
 }
-const api = { parseText, validateProject, importProject, exportProject, questSummaries, scene, rebuildNormalDrops, usesOf,
+const legacy = { parseText, validateProject, importProject, exportProject, questSummaries, scene, rebuildNormalDrops, usesOf,
   setNormalDrop, setNormalDropDetails, setLuckyReward, setLuckyDetails, setObjectiveReward, setCurrency, moveMarker, resetMap, changes, gameExportStatus,
   POLICY_MAX, CURRENCY_MAX };
-if (typeof module === 'object' && module.exports) module.exports = api; else root.ForgeStageSandbox = api;
+/* Projects with the supplied event catalog (profile kirito-events/1) go through the supplied adapter,
+   sandbox/stage-sandbox.mjs (unchanged), for every operation it implements, and through sandbox/sandbox-edits.mjs for the
+   added controls. Older stage projects keep the functions above. */
+let SA = null, KE = null;
+const ready = Promise.all([import('./sandbox/stage-sandbox.mjs'), import('./sandbox/sandbox-edits.mjs')]).then(([a, b]) => { SA = a; KE = b; });
+const isEvent = p => !!(p && p.catalog && p.catalog.profile === 'kirito-events/1');
+const ev = p => { need(SA && KE, 'The event adapter is still loading. Try again in a moment.'); return p; };
+const onlyEvent = name => (p, ...a) => { need(isEvent(p), 'This control is available for event projects.'); ev(p); return KE[name](p, ...a); };
+const api = { ready, isEvent, POLICY_MAX, CURRENCY_MAX, parseText,
+  get policy() { return KE ? KE.POLICY : null; }, get roles() { return KE ? KE.ROLES : { 0: 'Normal', 2: 'Boss', 3: 'Mini boss' }; },
+  levelRange: e => KE ? KE.levelRange(e) : [1, e.maxLevel || 1], eolOf: t => KE ? KE.eolOf(t) : '\n', withEol: (j, e) => KE ? KE.withEol(j, e) : j,
+  importProject(text, library) { const j = parseText(text); if (isEvent(j)) { ev(j); return KE.importText(text, library); } return importProject(text, library); },
+  validateProject: (p, library) => isEvent(p) ? KE.validate(ev(p), library) : validateProject(p, library),
+  exportProject: (p, library) => isEvent(p) ? (KE.validate(ev(p), library), SA.exportProject(p)) : exportProject(p, library),
+  questSummaries: p => isEvent(p) ? SA.questSummaries(ev(p)) : questSummaries(p),
+  scene: (p, ...a) => isEvent(p) ? KE.scene(ev(p), ...a) : scene(p, ...a),
+  usesOf: (p, e) => isEvent(p) ? KE.usesOf(ev(p), e) : usesOf(p, e),
+  moveMarker: (p, ...a) => isEvent(p) ? SA.moveMarker(ev(p), ...a) : moveMarker(p, ...a),
+  setNormalDrop: (p, ...a) => isEvent(p) ? KE.checkLibrary(SA.setNormalDrop(ev(p), ...a), a[a.length - 1]) : setNormalDrop(p, ...a),
+  setLuckyReward: (p, ...a) => isEvent(p) ? KE.checkLibrary(SA.setLuckyReward(ev(p), ...a), a[a.length - 1]) : setLuckyReward(p, ...a),
+  setObjectiveReward: (p, ...a) => isEvent(p) ? KE.checkLibrary(SA.setObjectiveReward(ev(p), ...a), a[a.length - 1]) : setObjectiveReward(p, ...a),
+  gameExportStatus: p => isEvent(p) && SA ? SA.gameExportStatus() : gameExportStatus(p),
+  setNormalDropDetails: (p, ...a) => isEvent(p) ? KE.setNormalDropDetails(ev(p), ...a) : setNormalDropDetails(p, ...a),
+  setLuckyDetails: (p, ...a) => isEvent(p) ? KE.setLuckyDetails(ev(p), ...a) : setLuckyDetails(p, ...a),
+  setCurrency: (p, ...a) => isEvent(p) ? KE.setCurrency(ev(p), ...a) : setCurrency(p, ...a),
+  resetMap: (p, ...a) => isEvent(p) ? KE.resetMap(ev(p), ...a) : resetMap(p, ...a),
+  changes: (a, b) => changes(a, b),
+  setChallengeCurrency: onlyEvent('setChallengeCurrency'), setPlacement: onlyEvent('setPlacement'), setEnemyStats: onlyEvent('setEnemyStats'),
+  setDifficulty: onlyEvent('setDifficulty'), scaleStats: onlyEvent('scaleStats') };
+if (typeof module === 'object' && module.exports) module.exports = legacy; else root.ForgeStageSandbox = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
 // ---- Stage projects: a visual sandbox for ForgeStageSandbox projects (website authoring data, not game installs)
@@ -2513,20 +2763,20 @@ function findProject(files) {
 }
 async function importZip(files, fname, opts = {}) {
   const pf = findProject(files); if (!pf) return null; // not a stage project package
-  const root = pf.includes('/') ? pf.slice(0, pf.lastIndexOf('/') + 1) : '';
-  let p; try { p = A.importProject(new TextDecoder().decode(files[pf])); } catch (e) { return { err: `${fname}: ${e.message}` }; }
+  await A.ready; const root = pf.includes('/') ? pf.slice(0, pf.lastIndexOf('/') + 1) : '', ptext = new TextDecoder().decode(files[pf]);
+  let p; try { p = A.importProject(ptext); } catch (e) { return { err: `${fname}: ${e.message}` }; }
   const stored = []; for (const [n, data] of Object.entries(files)) if (n.startsWith(root) && !n.endsWith('/')) stored.push([n.slice(root.length), new Blob([data], { type: mimeOf(n) })]);
   const old = await getRec(p.projectId).catch(() => null);
-  const rec = { id: p.projectId, name: p.name || p.projectId, fileName: pf.slice(root.length), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: old && old.baseline ? old.baseline : p, files: stored.map(x => x[0]) };
+  const rec = { id: p.projectId, name: p.name || p.projectId, fileName: pf.slice(root.length), eol: A.eolOf(ptext), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: old && old.baseline ? old.baseline : p, files: stored.map(x => x[0]) };
   try { await putFiles(rec.id, stored); await putRec(rec); } catch (e) { return { err: 'This browser wouldn’t store the project (storage full or private browsing). ' + (e && e.message || '') }; }
   if (opts.open === false) return { ok: true, name: rec.name };
   await openProject(rec.id, `Imported ${rec.name}: ${p.catalog.stages.length} quests, ${p.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0)} maps, ${stored.length} files.`);
   return { ok: true, name: rec.name };
 }
 async function importJSON(text, fname) {
-  let p; try { p = A.importProject(text); } catch (e) { return { err: `${fname}: ${e.message}` }; }
+  await A.ready; let p; try { p = A.importProject(text); } catch (e) { return { err: `${fname}: ${e.message}` }; }
   const old = await getRec(p.projectId).catch(() => null);
-  const rec = old ? { ...old, project: p, savedAt: Date.now() } : { id: p.projectId, name: p.name || p.projectId, fileName: fname, savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: p, files: [] };
+  const rec = old ? { ...old, project: p, eol: A.eolOf(text), savedAt: Date.now() } : { id: p.projectId, name: p.name || p.projectId, fileName: fname, eol: A.eolOf(text), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: p, files: [] };
   const prev = sb.open && sb.rec && sb.rec.id === rec.id ? sb.p : null;
   try { await putRec(rec); } catch (e) { return { err: 'This browser wouldn’t store the project. ' + (e && e.message || '') }; }
   await openProject(rec.id, old ? `Opened ${fname} with the art and catalogs already stored for this project.` : `Opened ${fname}. Its art and catalogs aren’t stored here yet: import the package ZIP to see them and to edit rewards.`);
@@ -2536,17 +2786,19 @@ async function importJSON(text, fname) {
 
 // ---- open / close
 async function openProject(pid, msg = '') {
-  const rec = await getRec(pid); if (!rec) throw new Error('missing project');
+  await A.ready; const rec = await getRec(pid); if (!rec) throw new Error('missing project');
   for (const u of sb.urls.values()) u.then(x => x && URL.revokeObjectURL(x));
   Object.assign(sb, { rec, p: rec.project, base: rec.baseline, undo: [], redo: [], qi: 0, mi: 0, sel: null, pick: null, view: { z: 1, x: 0, y: 0 }, urls: new Map(), missing: new Set(), scenes: new Map(), thumbs: new Map(), msg });
   const L = rec.project.libraries || {};
   const [lib, labels, chars, bg] = await Promise.all([fileJSON(L.rewards), fileJSON(L.enemies), fileJSON(L.characters), fileJSON(L.backgrounds)]);
   sb.lib = lib && lib.items ? lib : null; sb.labels = labels && labels.enemies ? labels : { enemies: {} }; sb.chars = chars; sb.bgIndex = Array.isArray(bg) ? bg : [];
   try { localStorage.setItem(OPEN_KEY, pid); } catch (e) {}
-  sb.open = true; document.body.classList.add('sbx-on'); $('sbx').hidden = false;
+  sb.open = true; document.body.classList.add('sbx-on'); $('sbx').hidden = false; signal();
   renderAll(); requestAnimationFrame(() => { draw(); $('sbx').scrollIntoView({ block: 'start' }); });
 }
-function closeProject() { flushSave(); sb.open = false; document.body.classList.remove('sbx-on'); $('sbx').hidden = true; try { localStorage.removeItem(OPEN_KEY); } catch (e) {} }
+function closeProject(reason) { const wasEvent = !!(sb.open && A.isEvent(sb.p)); flushSave(); sb.open = false; document.body.classList.remove('sbx-on'); $('sbx').hidden = true; try { localStorage.removeItem(OPEN_KEY); } catch (e) {} signal(typeof reason === 'string' ? reason : 'page', wasEvent); }
+// tell the rest of the page (the Kirito events tab) when an event project opens or closes
+function signal(reason, wasEvent) { try { window.dispatchEvent(new CustomEvent('forge-sandbox', { detail: { open: sb.open, event: !!(sb.open && A.isEvent(sb.p)), id: sb.rec && sb.rec.id, reason, wasEvent } })); } catch (e) {} }
 let saveT = 0;
 function queueSave() { clearTimeout(saveT); saveT = setTimeout(flushSave, 400); }
 function flushSave() { clearTimeout(saveT); if (!sb.rec || !sb.p) return; sb.rec.project = sb.p; sb.rec.savedAt = Date.now(); putRec(sb.rec).catch(() => note('This browser wouldn’t save your latest change. Use Save editable project to keep a copy.', true)); }
@@ -2640,7 +2892,11 @@ function draw() {
   // spawn candidates of the selected enemy
   if (selE) for (const cnd of selE.spawnCandidates) { const [sx, sy] = toScreen(m, cnd.grid[0] * CW, cnd.grid[1] * CH); ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.ellipse(sx, sy, 40 * m.s, 15 * m.s, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
   // your team's start spots that are on the map (missing slots fall back in the game and aren't drawn)
+  const T = window.__forgeTeam, team = [];
   for (const pl of scn.players) { if (pl.fallback) continue; const [sx, sy] = toScreen(m, pl.field[0], pl.field[1]); const on = sb.sel && sb.sel.kind === 'marker' && sb.sel.chip === pl.chip;
+    const tsc = T && T.on() ? T.scene(T.TEAM[pl.slot % T.TEAM.length]) : null;
+    if (tsc) { ctx.strokeStyle = on ? '#fff' : 'rgba(122,184,255,.95)'; ctx.lineWidth = on ? 3 : 2; ctx.beginPath(); ctx.ellipse(sx, sy, 30 * m.s, 11 * m.s, 0, 0, 7); ctx.stroke(); team.push({ tsc, pl, sx, sy, on });
+      hits.push({ kind: 'marker', chip: pl.chip, x: sx, y: sy - 50 * m.s, rx: Math.max(R, 34 * m.s), ry: Math.max(R, 64 * m.s) }); continue; }
     ctx.fillStyle = 'rgba(122,184,255,.92)'; ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.fill(); if (on) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke(); }
     ctx.fillStyle = '#0B1A2E'; ctx.font = `800 ${Math.round(R * 1.05)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(pl.slot + 1), sx, sy + 1);
     hits.push({ kind: 'marker', chip: pl.chip, x: sx, y: sy, r: R * 1.3 }); }
@@ -2664,6 +2920,12 @@ function draw() {
     if (e.type === 2 || e.type === 3) { const t = e.type === 2 ? 'BOSS' : 'MINI BOSS'; ctx.font = `800 ${Math.max(9, Math.round(12 * k))}px Manrope,system-ui`; const tw = ctx.measureText(t).width + 10, ty = sy - 120 * k;
       ctx.fillStyle = '#FF7A3D'; ctx.fillRect(sx - tw / 2, ty - 8 * Math.max(1, k), tw, 16 * Math.max(1, k)); ctx.fillStyle = '#1B0D05'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, sx, ty); }
     hits.push({ kind: 'enemy', key: e.key, x: sx, y: sy - 55 * k, rx: 36 * k, ry: 70 * k }); }
+  // your team (characters No. 3, 5 and 9) with the slot number above each head
+  team.sort((a, b) => a.sy - b.sy);
+  for (const t of team) T.draw(ctx, t.tsc, sb.t + t.pl.slot * .31, t.sx, t.sy, -m.s, 1, m.s);
+  for (const t of team) { if (t.tsc.top == null) { let top = 0; for (const q of FAP.pose(t.tsc.model, t.tsc.clip, 0).parts) for (const [, qy] of q.quad) top = Math.min(top, qy); t.tsc.top = top || -110; }
+    const br = Math.max(9, 13 * m.s), by = t.sy + t.tsc.top * m.s - br - 3; ctx.fillStyle = t.on ? '#FFFFFF' : 'rgba(122,184,255,.95)'; ctx.beginPath(); ctx.arc(t.sx, by, br, 0, 7); ctx.fill(); ctx.strokeStyle = '#0B1A2E'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#0B1A2E'; ctx.font = `800 ${Math.round(br * 1.3)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(t.pl.slot + 1), t.sx, by + 1); }
   if (drag && drag.moved && drag.to) { const [sx, sy] = toScreen(m, drag.to[0] * CW, drag.to[1] * CH); ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.strokeRect(sx - CW / 2 * m.s, sy - CH / 2 * m.s, CW * m.s, CH * m.s); ctx.setLineDash([]); }
   $('sxBgNote').textContent = pic ? `Background ${scn.backgroundId}: ${bg.label || ''} — base texture only, not the composed game view` : `Background ${scn.backgroundId}: no picture in this package`;
 }
@@ -2681,7 +2943,7 @@ function wireCanvas() {
   const c = cv(), pts = new Map();
   c.addEventListener('pointerdown', e => { if (e.button > 0 || !sb.open) return; c.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]); if (pts.size > 1) { drag = null; return; }
     const r = c.getBoundingClientRect(), k = c.width / r.width, px = (e.clientX - r.left) * k, py = (e.clientY - r.top) * k; let hit = null;
-    for (let i = hits.length - 1; i >= 0; i--) { const h = hits[i]; if (h.kind === 'enemy' ? Math.abs(px - h.x) <= h.rx && Math.abs(py - h.y) <= h.ry : Math.hypot(px - h.x, py - h.y) <= h.r) { hit = h; break; } }
+    for (let i = hits.length - 1; i >= 0; i--) { const h = hits[i]; if (h.rx ? Math.abs(px - h.x) <= h.rx && Math.abs(py - h.y) <= h.ry : Math.hypot(px - h.x, py - h.y) <= h.r) { hit = h; break; } }
     drag = { hit, start: [e.clientX, e.clientY], moved: false, to: null }; c.focus({ preventScroll: true }); });
   c.addEventListener('pointermove', e => { const prev = pts.get(e.pointerId); if (!prev) return; const r = c.getBoundingClientRect();
     if (pts.size === 2) { const [a, b] = [...pts.values()]; const o = a === prev ? b : a; const d0 = Math.hypot(prev[0] - o[0], prev[1] - o[1]), d1 = Math.hypot(e.clientX - o[0], e.clientY - o[1]); const k = c.width / r.width; if (d0 > 2) zoomAt(((e.clientX + o[0]) / 2 - r.left) * k, ((e.clientY + o[1]) / 2 - r.top) * k, d1 / d0); pts.set(e.pointerId, [e.clientX, e.clientY]); return; }
@@ -2708,9 +2970,9 @@ function select(s) { sb.sel = s; sb.ins = 'sel'; renderInspector(); draw(); }
 function goMap(i) { const n = quest().donor.maps.length; sb.mi = Math.max(0, Math.min(n - 1, i)); sb.sel = null; renderStrip(true); renderInspector(); renderPalette(); draw(); }
 const CHIP_W = 124;
 let mapStats = new WeakMap();
-function statsOf(m) { if (mapStats.has(m)) return mapStats.get(m); let boss = false, n = 0, hp = 0, lv = 0;
-  for (const s of m.sets) for (const e of s.raw.enemySet) { n += e.count || 1; if (e.type === 2) boss = true; const r = enemyRow(e.id); if (r && r.hp) hp = Math.max(hp, r.hp.s); lv = Math.max(lv, e.level || 0); }
-  const o = { boss, n, hp, lv }; mapStats.set(m, o); return o; }
+function statsOf(m) { if (mapStats.has(m)) return mapStats.get(m); let boss = false, n = 0, hp = 0, atk = 0, lv = 0;
+  for (const s of m.sets) for (const e of s.raw.enemySet) { n += e.count || 1; if (e.type === 2) boss = true; const r = enemyRow(e.id); if (r && r.hp) hp = Math.max(hp, r.hp.s); if (r && r.atk) atk = Math.max(atk, r.atk.s); lv = Math.max(lv, e.level || 0); }
+  const o = { boss, n, hp, atk, lv }; mapStats.set(m, o); return o; }
 function renderStrip(scrollTo) {
   const q = quest(), maps = q.donor.maps, vp = $('sxStrip'), inner = $('sxStripIn');
   inner.style.width = (maps.length * CHIP_W) + 'px';
@@ -2726,6 +2988,8 @@ function renderStrip(scrollTo) {
   const bosses = A.questSummaries(sb.p)[sb.qi].bosses;
   $('sxWhere').textContent = `Editing ${q.spec.name}${q.spec.missionName ? ' — ' + q.spec.missionName : ''} · Map ${sb.mi + 1} of ${maps.length}` + (bosses.length ? ` · bosses on map ${bosses.length > 6 ? bosses.slice(0, 5).join(', ') + ' … ' + bosses[bosses.length - 1] : bosses.join(', ')}` : '');
   $('sxPrev').disabled = sb.mi === 0; $('sxNext').disabled = sb.mi === maps.length - 1; $('sxGo').max = maps.length;
+  const j = $('sxJump'); if (j.dataset.q !== String(sb.qi) + ':' + maps.length) { j.dataset.q = String(sb.qi) + ':' + maps.length; j.replaceChildren(...maps.map((m, i) => { const st = statsOf(m); return new Option(`Map ${i + 1}${st.boss ? ' · boss' : ''} · HP ${fmt(st.hp)}`, String(i)); })); }
+  j.value = String(sb.mi);
 }
 
 // ---- left palette: Enemies, Backgrounds, Rewards, Event art
@@ -2749,7 +3013,7 @@ function renderPalette() {
       const th = thumbOf(e.id); const name = l.name || ('Enemy ' + e.id);
       rows.push(el('div', { class: 'pcard' }, th ? thumbImg(th, name) : thumbImg(placeholderThumb(name, e.attr), ''),
         el('div', { class: 'pb' }, el('b', { text: name }), el('small', { text: [stars(e.rare), ATTR[e.attr], boss ? 'Boss' : 'Enemy'].filter(Boolean).join(' · ') }),
-          el('small', { class: th ? '' : 'warn', text: th ? 'Idle preview from its exact assets' : (l.previewAvailable ? 'Preview loading…' : 'Placeholder marker: preview not resolved yet') }),
+          el('small', { class: th ? '' : 'warn', text: th ? 'Idle preview from its exact assets' : (l.previewAvailable ? 'Preview loading…' : `No preview: this package has no assembled sprite for rig ${l.boneId ?? e.boneId} / image ${l.imageId ?? e.imageId}. Shown as a named marker; no other character stands in.`) }),
           el('small', { text: where.length ? 'Used on ' + where.slice(0, 4).map(w => (sb.p.catalog.stages[w.qi].spec.name || 'quest') + ' map ' + (w.mi + 1)).join(', ') + (where.length > 4 ? ` +${where.length - 4}` : '') : 'Not placed' }),
           advanced([['Enemy ID', e.id], ['Shown with', l.catalogDonorId ? 'unit ' + l.catalogDonorId : 'no exact preview unit'], ['Rig / image', `${l.boneId ?? e.boneId} / ${l.imageId ?? e.imageId}`], ['Match basis', l.matchBasis], ['Title in catalog', l.title]]),
           where.length ? el('button', { type: 'button', class: 'chip sm', text: 'Show on map', onclick: () => { const w = where[0]; sb.qi = w.qi; renderQuests(); goMap(w.mi); const en = scn && scn.enemies.find(x => x.enemyId === String(e.id)); if (en) select({ kind: 'enemy', key: en.key }); } }) : null))); }
@@ -2789,7 +3053,7 @@ function itemLine(itemId) { const it = sb.lib && sb.lib.items[String(itemId)]; r
 function pickItem(label, use) { if (!sb.lib) { note('Import the package ZIP to change reward items.', true); return; } sb.pick = { label, use }; sb.tab = 'rewards'; renderPalette(); $('sxPalQ').focus(); if (innerWidth < 1180) $('sxPal').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function renderInspector() {
   if (!sb.open) return; for (const b of document.querySelectorAll('#sxInsTabs button')) b.setAttribute('aria-selected', String(b.dataset.tab === sb.ins));
-  const box = $('sxIns'); const kids = sb.ins === 'rewards' ? rewardsPanel() : selPanel(); box.replaceChildren(...kids);
+  const box = $('sxIns'); const kids = sb.ins === 'rewards' ? rewardsPanel() : sb.ins === 'difficulty' ? difficultyPanel() : selPanel(); box.replaceChildren(...kids);
 }
 function selPanel() {
   const q = quest(), m = qmap(), s = scn = A.scene(sb.p, q.spec.localId, m.id, sb.labels); const out = [];
@@ -2797,9 +3061,11 @@ function selPanel() {
   if (en) { const row = enemyRow(en.enemyId) || {}, l = en.preview || {}; const th = thumbOf(en.enemyId);
     out.push(el('div', { class: 'ihead' }, th ? thumbImg(th, en.name) : thumbImg(placeholderThumb(en.name, row.attr), ''), el('div', {}, el('b', { text: en.name }), el('small', { text: [l.title, stars(row.rare), ATTR[row.attr]].filter(Boolean).join(' · ') }),
       el('small', { class: th ? '' : 'warn', text: th ? 'Preview from its exact idle assets' : `${en.name} — preview not resolved yet; shown as a placeholder marker` }))));
+    if (A.isEvent(sb.p)) { out.push(placementForm(en, row)); out.push(statsForm(en, row)); }
+    else {
     out.push(section('In this map', kv([['Map', `Map ${sb.mi + 1} (one starting group: wave 1)`], ['Role', en.type === 2 ? 'Boss' : en.type === 3 ? 'Mini boss' : 'Normal enemy'], ['Level', en.level], ['Count', en.count],
       ['Facing', en.facing === 5 ? 'Automatic (5)' : `Raw value ${en.facing}`], ['Enabled', en.entry.enabled === false ? 'No' : 'Yes']])));
-    out.push(section('Stats (configured in the enemy row)', kv([['HP', fmt(en.hp)], ['ATK', fmt(en.attack)], ['DEF', fmt(en.defense)]]), el('p', { class: 'hint', text: 'Battle can scale these; the preview doesn’t simulate it.' })));
+    out.push(section('Stats (configured in the enemy row)', kv([['HP', fmt(en.hp)], ['ATK', fmt(en.attack)], ['DEF', fmt(en.defense)]]), el('p', { class: 'hint', text: 'Battle can scale these; the preview doesn’t simulate it.' }))); }
     out.push(section('Spawn', kv([['Entry point', `${en.enterId} (map chip ${15 + en.enterId})`], ['Spawn candidates', en.spawnCandidates.map(c => `[${c.grid.join(',')}]`).join(' ') || 'None on this map'], ['Entry motion', `type ${en.entry.enterType}, AI ${en.entry.aiType}, param ${en.entry.param}`]]),
       el('p', { class: 'hint', text: en.spawnCandidates.length > 1 ? 'The game picks one of these cells. All of them are shown.' : 'Moving this entry point moves every enemy that shares it. Count, random selection and entry motion are kept as they are.' })));
     out.push(section('Drop', kv([['Item', itemLine(en.dropItemId)], ['Chance', `${en.chancePerThousand}/1000 (${pctOf(en.chancePerThousand)})`]]), el('button', { type: 'button', class: 'chip', text: 'Edit drops', onclick: () => { sb.ins = 'rewards'; renderInspector(); } })));
@@ -2813,6 +3079,43 @@ function selPanel() {
   out.push(section(`Map ${sb.mi + 1} of ${q.donor.maps.length}`, kv([['Quest', `${q.spec.name}${q.spec.missionName ? ' — ' + q.spec.missionName : ''}`], ['Enemy groups', 'One starting group (wave 1); no later waves'], ['Background', s.backgroundId], ['Title', s.title]])));
   out.push(section('Your team', el('ul', { class: 'plist' }, s.players.map(pl => el('li', {}, el('button', { type: 'button', class: 'linkish', disabled: pl.fallback, onclick: () => select({ kind: 'marker', chip: pl.chip }), text: `Slot ${pl.slot + 1}: ` + (pl.fallback ? `no marker; the game falls back to [5,8] (not drawn)` : `[${pl.grid.join(',')}]`) }))))));
   out.push(section('Enemies on this map', el('ul', { class: 'plist' }, s.enemies.map(e => el('li', {}, el('button', { type: 'button', class: 'linkish', onclick: () => select({ kind: 'enemy', key: e.key }), text: `${e.name}${e.type === 2 ? ' (boss)' : ''} · Lv ${e.level} · entry ${e.enterId}` }))))));
+  return out;
+}
+function selectIn(id, value, options, label) { const x = el('select', { id, 'aria-label': label }, options.map(([v, t]) => { const o = new Option(t, String(v)); o.selected = String(v) === String(value); return o; })); return x; }
+// one placement of an enemy set: level (within its stat table), count, role, facing, on/off; entry points move on the field
+function placementForm(en, row) {
+  const pre = 'pl' + en.key.replace(/\W/g, '_') + '_', [lo, hi] = A.levelRange(row), P = A.policy || { count: 20 };
+  const lv = num(pre + 'lv', en.level, { min: lo, max: hi, disabled: lo === hi ? true : null }), ct = num(pre + 'ct', en.count, { min: 1, max: P.count });
+  const role = selectIn(pre + 'ro', en.type, Object.entries(A.roles), 'Role'), way = selectIn(pre + 'wy', en.facing, [[5, 'Automatic (5)'], [0, 'Raw 0'], [1, 'Raw 1'], [2, 'Raw 2'], [3, 'Raw 3'], [4, 'Raw 4']], 'Facing'), on = selectIn(pre + 'on', en.entry.enabled === false ? 0 : 1, [[1, 'Yes'], [0, 'Turned off']], 'In the map');
+  return section(`In map ${sb.mi + 1}`, el('div', { class: 'form' }, el('label', {}, 'Level', lv), el('label', {}, 'How many', ct), el('label', {}, 'Role', role), el('label', {}, 'Facing', way), el('label', { class: 'wide' }, 'In the map', on)),
+    el('p', { class: 'hint', text: (lo === hi ? `Level stays ${lo}: this enemy’s stat table only covers level ${lo}, so change its stats below instead. ` : `Levels ${lo}–${hi} are covered by its stat table. `) + 'Facing values other than 5 are kept as raw game values. To move where it spawns, drag its entry marker.' }),
+    el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Apply', onclick: guarded(() => { const v = { level: lo === hi ? lo : readInt(pre + 'lv', 'Level'), count: readInt(pre + 'ct', 'How many'), type: +$(pre + 'ro').value, way: +$(pre + 'wy').value, enabled: $(pre + 'on').value === '1' };
+      apply(p => A.setPlacement(p, quest().spec.localId, qmap().id, en.setId, en.index, v, sb.lib), `edit ${en.name} on map ${sb.mi + 1}`) && note(`Updated ${en.name} on map ${sb.mi + 1}.`); }) })));
+}
+function statsForm(en, row) {
+  const pre = 'st' + en.enemyId + '_', P = A.policy || { hp: 99999999, stat: 9999999 }, uses = A.usesOf(sb.p, en.enemyId), shared = uses.some(u => u.mapId !== qmap().id);
+  return section('Stats (enemy row and its stat table)', el('div', { class: 'form' }, el('label', {}, 'HP', num(pre + 'hp', en.hp, { min: 1, max: P.hp })), el('label', {}, 'ATK', num(pre + 'at', en.attack, { min: 0, max: P.stat })), el('label', {}, 'DEF', num(pre + 'df', en.defense, { min: 0, max: P.stat }))),
+    el('p', { class: 'hint', text: shared ? 'This enemy definition is also used on another map, so its stats can’t be changed here without changing that map too.' : `Changes this enemy definition everywhere it appears on map ${sb.mi + 1}; the row and its paramDatas copy change together. Battle can scale these; the preview doesn’t simulate it.` }),
+    el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn primary sm', disabled: shared, text: 'Apply stats', onclick: guarded(() => { const v = { hp: readInt(pre + 'hp', 'HP'), atk: readInt(pre + 'at', 'ATK'), def: readInt(pre + 'df', 'DEF') };
+      apply(p => A.setEnemyStats(p, quest().spec.localId, qmap().id, en.enemyId, v, sb.lib), `edit ${en.name} stats`) && note(`Stats of ${en.name} updated.`); }) })));
+}
+// difficulty: the mission's raw difficulty value, and a stat multiplier over a range of maps
+function difficultyPanel() {
+  const q = quest(), d = q.donor, lid = q.spec.localId, n = d.maps.length, out = [], P = A.policy || { difficulty: [0, 5], scale: [0.1, 10] };
+  if (!A.isEvent(sb.p)) return [el('p', { class: 'hint', text: 'Difficulty tools are available for event projects.' })];
+  out.push(section('Difficulty value', kv([['Client', d.mission.missionInfo.difficulty], ['Server', d.serverMission.difficulty]]), el('div', { class: 'form' }, el('label', {}, `Raw value (${P.difficulty[0]}–${P.difficulty[1]})`, num('df_v', d.mission.missionInfo.difficulty, { min: P.difficulty[0], max: P.difficulty[1] }))),
+    el('p', { class: 'hint', text: 'The mission’s own difficulty field, kept the same on the client and server. Its exact on-screen meaning isn’t confirmed; 0–5 is the range the game’s missions use. It doesn’t change enemy stats.' }),
+    el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Apply', onclick: guarded(() => { const v = readInt('df_v', 'Difficulty'); apply(p => A.setDifficulty(p, lid, v, sb.lib), 'edit difficulty value') && note('Difficulty value updated.'); }) }))));
+  const lo = num('dsc_a', Math.min(sb.mi + 1, n), { min: 1, max: n }), hi = num('dsc_b', n, { min: 1, max: n }), f = el('input', { type: 'number', id: 'dsc_f', value: '1.1', min: String(P.scale[0]), max: String(P.scale[1]), step: '0.05', inputmode: 'decimal' });
+  const cb = (id, t) => { const c = el('input', { type: 'checkbox', id }); c.checked = id !== 'dsc_def'; return el('label', { class: 'toggle' }, c, t); };
+  out.push(section('Scale enemy stats', el('div', { class: 'form' }, el('label', {}, 'From map', lo), el('label', {}, 'To map', hi), el('label', { class: 'wide' }, `Multiplier (${P.scale[0]}–${P.scale[1]})`, f)),
+    el('div', { class: 'row' }, cb('dsc_hp', 'HP'), cb('dsc_atk', 'ATK'), cb('dsc_def', 'DEF')),
+    el('p', { class: 'hint', text: 'Multiplies the chosen stats of every enemy on those maps (rounded to whole numbers). Good for making the floor climb steeper or gentler. Enemies shared with maps outside the range are refused.' }),
+    el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Scale', onclick: guarded(() => { const a = readInt('dsc_a', 'From map'), b = readInt('dsc_b', 'To map'), x = Number($('dsc_f').value);
+      const opts = { hp: $('dsc_hp').checked, atk: $('dsc_atk').checked, def: $('dsc_def').checked };
+      apply(p => A.scaleStats(p, lid, a, b, x, opts, sb.lib), `scale stats ×${x} on maps ${a}–${b}`) && note(`Scaled maps ${a}–${b} by ×${x}. Undo puts them back.`); }) }))));
+  const rows = d.maps.map((m, i) => { const st = statsOf(m); return el('tr', { class: i === sb.mi ? 'up' : '' }, el('td', { class: 'num', text: String(i + 1) }), el('td', { text: st.boss ? 'Boss' : '' }), el('td', { class: 'num', text: fmt(st.hp) }), el('td', { class: 'num', text: fmt(st.atk) })); });
+  out.push(section('Configured stats by map', el('div', { class: 'fwrap tscroll', style: 'max-height:40vh' }, el('table', { class: 'ftable', style: 'min-width:0' }, el('thead', {}, el('tr', {}, el('th', { text: 'Map' }), el('th', { text: '' }), el('th', { text: 'Top HP' }), el('th', { text: 'Top ATK' }))), el('tbody', {}, rows)))));
   return out;
 }
 function bonusInputs(prefix, plus) { return el('div', { class: 'form four' }, ['s', 'a', 'd', 'sp'].map(k => el('label', {}, '+' + { s: 'HP', a: 'ATK', d: 'DEF', sp: 'Speed' }[k], num(prefix + k, plus[k], { min: 0, max: A.POLICY_MAX })))); }
@@ -2855,8 +3158,10 @@ function rewardsPanel() {
   if (objs.length) out.push(section('Challenge rewards', el('p', { class: 'hint', text: 'Conditions and rewards are separate. Conditions are kept exactly (operators, state and limits); only the reward changes.' }),
     ...objs.map(o => { const pre = 'ob' + o.id + '_', u = o.subMissionReward.units.find(x => x.unitId) || o.subMissionReward.units[0] || {}; const lim = (o.limited || []).filter(Boolean).length; const rwd = o.subMissionReward;
       return el('div', { class: 'rcard' }, el('div', { class: 'rhead' }, el('b', { text: strings()[o.langSubMissionNameId] || o.name }), el('small', { text: `Condition (kept exactly): state ${o.state}, operator ${o.sign}, value ${o.value}, ${lim} limit flag${lim === 1 ? '' : 's'} set` })),
-        kv([['Reward item', u.unitId ? itemLine(u.unitId) : 'No item'], ['Other rewards (unchanged)', `${rwd.jewel || 0} pearls · ${rwd.coin || 0} coins`]]),
+        kv([['Reward item', u.unitId ? itemLine(u.unitId) : 'No item'], [A.isEvent(sb.p) ? 'Pearls and Ryo' : 'Other rewards (unchanged)', `${rwd.jewel || 0} pearls · ${(rwd.coin || 0).toLocaleString()} Ryo`]]),
         el('div', { class: 'form' }, el('label', {}, 'Quantity', num(pre + 'q', u.unitNum || 1, { min: 1, max: A.POLICY_MAX }))),
+        A.isEvent(sb.p) ? el('div', { class: 'form' }, el('label', {}, 'Ninja Pearls', num(pre + 'j', rwd.jewel || 0, { min: 0, max: 9999 })), el('label', {}, 'Ryo', num(pre + 'c', rwd.coin || 0, { min: 0, max: 99999999 })),
+          el('div', { class: 'wide row' }, el('button', { type: 'button', class: 'btn ghost sm', text: 'Apply pearls and Ryo', onclick: guarded(() => { const v = { jewel: readInt(pre + 'j', 'Ninja Pearls'), coin: readInt(pre + 'c', 'Ryo') }; apply(p => A.setChallengeCurrency(p, lid, o.id, v, sb.lib), 'edit challenge pearls and Ryo') && note('Challenge pearls and Ryo updated; the condition is unchanged.'); }) }))) : null,
         el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn ghost sm', disabled: !sb.lib, text: 'Change item…', onclick: () => pickItem('challenge reward', it => { let qn = 1; try { qn = readInt(pre + 'q', 'Quantity'); } catch (e) {} apply(p => A.setObjectiveReward(p, lid, o.id, it.id, qn, sb.lib), `change challenge reward to ${it.name}`); }) }),
           el('button', { type: 'button', class: 'btn primary sm', disabled: !sb.lib || !u.unitId, text: 'Apply quantity', onclick: guarded(() => { const qn = readInt(pre + 'q', 'Quantity'); apply(p => A.setObjectiveReward(p, lid, o.id, String(u.unitId), qn, sb.lib), 'edit challenge reward quantity'); }) }))); })));
   else out.push(section('Challenge rewards', el('p', { class: 'hint', text: 'This quest has no challenges.' })));
@@ -2879,13 +3184,15 @@ function renderAll() {
   if (!sb.open) return; mapStats = new WeakMap(); const p = sb.p;
   $('sxName').textContent = p.name || p.projectId; const maps = p.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0);
   $('sxSub').textContent = `Stage project · ${p.catalog.stages.length} quests · ${maps} maps · saved in this browser` + (sb.missing.size ? ` · ${sb.missing.size} file${sb.missing.size === 1 ? '' : 's'} missing` : '');
-  const g = A.gameExportStatus(p); $('sxGameWhy').textContent = g.reason;
+  const g = A.gameExportStatus(p); $('sxGameWhy').textContent = g.reason + (A.isEvent(p) ? ' Use Export Kirito project for developer: the developer compiles and validates your edits into a build. These quests keep their reserved IDs and never take one of the custom slots.' : '');
+  $('sxHandoff').textContent = A.isEvent(p) ? 'Export Kirito project for developer' : 'Export developer handoff';
   if (sb.msg) { note(sb.msg); sb.msg = ''; }
   renderQuests(); renderStrip(true); syncUndo(); scn = A.scene(p, quest().spec.localId, qmap().id, sb.labels); renderInspector(); renderPalette(); draw();
 }
 function slugName(s) { return (s || 'project').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'project'; }
+const projectText = (p, rec) => A.withEol(A.exportProject(p, sb.lib), rec && rec.eol);
 async function saveProject() {
-  let text; try { text = A.exportProject(sb.p, sb.lib); } catch (e) { note('Can’t save: ' + e.message, true); return; }
+  let text; try { text = projectText(sb.p, sb.rec); } catch (e) { note('Can’t save: ' + e.message, true); return; }
   flushSave(); const name = sb.rec.fileName && /\.json$/i.test(sb.rec.fileName) ? sb.rec.fileName.split('/').pop() : slugName(sb.p.name) + '.forge-stage-project.json';
   if (await KIT.saveBlob(new Blob([text], { type: 'application/json' }), name)) note(`Saved ${name}. Open it here again with Open a stage file or My stages & packs.`);
 }
@@ -2894,6 +3201,15 @@ const HANDOFF_README = (p, n, srcName) => `# Stage project developer handoff
 Project: ${p.name || p.projectId} (${p.projectId})
 Exported from the Forge Studio Stages tab on ${new Date().toISOString()}.
 Source baseline: ${srcName}. CHANGES.json lists ${n} change${n === 1 ? '' : 's'} as JSON paths into the source catalog (before and after).
+
+## Quests and IDs (kept exactly)
+
+${p.catalog.stages.map(s => `- ${s.spec.name}${s.spec.missionName ? ' — ' + s.spec.missionName : ''}: stage ${s.slot.stageId}, mission ${s.slot.missionId}, localId \`${s.spec.localId}\`, ${s.donor.maps.length} map${s.donor.maps.length === 1 ? '' : 's'}`).join('\n')}
+
+The project file is the complete ForgeStageSandbox schema 1 document (projectId \`${p.projectId}\`, catalog profile \`${p.catalog.profile}\`), not a layout-only export.
+No new IDs were allocated, none of these quests was given one of the custom Emergency slots, native fingerprints and source
+hashes were left alone, and this package is not a phone mod. The website edits it through the supplied adapter
+(\`integration/stage-sandbox.mjs\`) plus its own guided controls; every edit keeps the client and server copies together.
 
 This is website authoring data, **not** a game install file. The app's current stage import takes layout-only
 \`ForgeStage\` schema 2 files. These quests come from a separate, SHA-pinned catalog, so edited rewards, enemies or
@@ -2923,7 +3239,7 @@ the game's own validation.
 Browser checks only cover the website editor. They don't confirm rewards, a full run or camera matching in the game.
 `;
 async function exportHandoff() {
-  let text; try { text = A.exportProject(sb.p, sb.lib); } catch (e) { note('Can’t export: ' + e.message, true); return; }
+  let text; try { text = projectText(sb.p, sb.rec); } catch (e) { note('Can’t export: ' + e.message, true); return; }
   note('Building the handoff…'); flushSave();
   const enc = new TextEncoder(), files = [], srcFile = sb.p.source && sb.p.source.file;
   let src = srcFile ? await fileJSON(srcFile) : null; const srcName = src ? srcFile : 'the project as first imported';
@@ -2941,11 +3257,12 @@ async function exportHandoff() {
 // ---- wiring
 function wire() {
   wireCanvas();
-  $('sxUndo').onclick = undo; $('sxRedo').onclick = redo; $('sxSave').onclick = saveProject; $('sxHandoff').onclick = exportHandoff; $('sxClose').onclick = closeProject;
+  $('sxUndo').onclick = undo; $('sxRedo').onclick = redo; $('sxSave').onclick = saveProject; $('sxHandoff').onclick = exportHandoff; $('sxClose').onclick = () => closeProject('button');
   $('sxGame').onclick = () => { note('Game export needs an updated app: ' + A.gameExportStatus(sb.p).reason, true); };
   $('sxPrev').onclick = () => goMap(sb.mi - 1); $('sxNext').onclick = () => goMap(sb.mi + 1);
   $('sxGoBtn').onclick = () => { const v = +$('sxGo').value; if (Number.isInteger(v) && v >= 1) goMap(v - 1); };
   $('sxGo').addEventListener('keydown', e => { if (e.key === 'Enter') $('sxGoBtn').click(); });
+  $('sxJump').onchange = () => goMap(+$('sxJump').value);
   $('sxStrip').addEventListener('scroll', () => renderStrip(false), { passive: true });
   $('sxFit').onclick = () => { sb.view = { z: 1, x: 0, y: 0 }; $('sxZ').textContent = '100%'; draw(); };
   $('sxZin').onclick = () => zoomAt(cv().width / 2, cv().height / 2, 1.4); $('sxZout').onclick = () => zoomAt(cv().width / 2, cv().height / 2, 1 / 1.4);
@@ -2966,14 +3283,15 @@ function wire() {
   const tick = now => { const dt = sb.last ? Math.min(.1, (now - sb.last) / 1000) : 0; sb.last = now; if (sb.open && sb.anim && !document.hidden) { sb.t += dt; draw(); } requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
 }
-async function listProjects() { try { return (await allRecs()).map(r => ({ id: r.id, name: r.name, savedAt: r.savedAt, quests: r.project.catalog.stages.length, maps: r.project.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0), files: (r.files || []).length,
+async function listProjects() { try { return (await allRecs()).map(r => ({ id: r.id, name: r.name, profile: r.project.catalog && r.project.catalog.profile, event: A.isEvent(r.project), savedAt: r.savedAt, quests: r.project.catalog.stages.length, maps: r.project.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0), files: (r.files || []).length,
   questList: r.project.catalog.stages.map(s => ({ name: s.spec.name, missionName: s.spec.missionName, stageId: s.slot.stageId, missionId: s.slot.missionId })) })); } catch (e) { return []; } }
 // every stored file of a project, with the edited project in place of the imported one (for a full project save)
 async function projectFiles(pid) { const rec = await getRec(pid); if (!rec) return []; const out = [], enc = new TextEncoder(), proj = rec.fileName && /\.json$/i.test(rec.fileName) ? rec.fileName : 'project.forge-stage-project.json';
   for (const p of rec.files || []) { if (p === proj) continue; const b = await getFile(pid, p).catch(() => null); if (b) out.push({ name: p, data: new Uint8Array(await b.arrayBuffer()) }); }
-  out.push({ name: proj, data: enc.encode(JSON.stringify(sb.open && sb.rec && sb.rec.id === pid ? sb.p : rec.project, null, 2) + '\n') }); return out; }
-window.ForgeSandboxUI = { importZip, importJSON, projectFiles, openProject: id => openProject(id), deleteProject: async id => { if (sb.open && sb.rec && sb.rec.id === id) closeProject(); await delProject(id); }, listProjects, isOpen: () => sb.open,
-  _debug: () => sb, close: closeProject };
+  const cur = sb.open && sb.rec && sb.rec.id === pid ? sb.p : rec.project; let text; try { text = A.withEol(A.exportProject(cur, sb.open && sb.rec && sb.rec.id === pid ? sb.lib : null), rec.eol); } catch (e) { text = JSON.stringify(cur, null, 2) + '\n'; }
+  out.push({ name: proj, data: enc.encode(text) }); return out; }
+window.ForgeSandboxUI = { importZip, importJSON, projectFiles, openProject: id => openProject(id), deleteProject: async id => { if (sb.open && sb.rec && sb.rec.id === id) closeProject('delete'); await delProject(id); }, listProjects, isOpen: () => sb.open,
+  _debug: () => sb, close: () => closeProject('page'), get A() { return A; } };
 wire();
 let want = null; try { want = localStorage.getItem(OPEN_KEY); } catch (e) {}
 if (want) openProject(want).catch(() => { try { localStorage.removeItem(OPEN_KEY); } catch (e) {} });

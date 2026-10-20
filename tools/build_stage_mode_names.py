@@ -1,10 +1,11 @@
-"""Build stages/cat/reward-names.json: readable names for the items Ninja Road and Phantom Castle templates give out.
+"""Build stages/cat/reward-names.json: the item list for the Stages reward editors and readable names for template rewards.
 
 usage: python3 tools/build_stage_mode_names.py stages/v250/authoring-catalog.json.gz stages/cat/reward-names.json
 
 English names come from the Studio's unit list (docs/catalog.json), the Stages app list (stages/cat/app.json.gz)
 and the sprite catalog (sprites/cat/index.json.gz). Items with no English name keep the name the season's own
 reward row gives (field "s", in the game's source language) so the page can show something true instead of a guess.
+Every unit in the Studio's list is included so the reward editors can offer it; "u": 1 marks items a template gives out.
 """
 import gzip, json, os, sys
 
@@ -31,6 +32,15 @@ for d in cat['castleDonors'].values():
     for r in d['rankingRewards']:
         for e in r['events']:
             if e[0] == 1: note(e[2], None)
+for d in cat['donors'].values():
+    mi = d['mission']['missionInfo']
+    for u in (mi.get('missionDropComplete') or {}).get('dropUnits') or []:
+        if u: note(u, None)
+    for r in (d.get('drops') or {}).get('lucky') or []:
+        if r.get('chara_id'): note(r['chara_id'], None)
+    for o in mi.get('subMission') or []:
+        for u in o['subMissionReward'].get('units') or []:
+            if u.get('unitId'): note(u['unitId'], None)
 for d in cat['roadDonors'].values():
     rows = [x for r in d['clearRewards']['rewardList'] for x in r['reward']]
     sm = (d.get('serverStage') or {}).get('missions') or [{}]
@@ -39,6 +49,8 @@ for d in cat['roadDonors'].values():
         us = [u for u in r.get('units') or [] if u.get('unitId')]
         for u in us: note(u['unitId'], r.get('name') if len(us) == 1 else None)
 
+used = set(ids)
+ids |= set(english)
 res = {}
 for i in sorted(ids, key=int):
     o = {}
@@ -47,8 +59,9 @@ for i in sorted(ids, key=int):
         if r: o['r'] = r
         if a: o['a'] = a
     if i in source: o['s'] = source[i]
+    if i in used: o['u'] = 1
     res[i] = o
 os.makedirs(os.path.dirname(out) or '.', exist_ok=True)
 with open(out, 'w', encoding='utf-8') as f:
     json.dump({'schema': 1, 'items': res}, f, ensure_ascii=False, separators=(',', ':'))
-print('items', len(res), 'english', sum(1 for v in res.values() if 'n' in v), 'source-only', sum(1 for v in res.values() if 'n' not in v and 's' in v), 'unnamed', sum(1 for v in res.values() if not v))
+print('items', len(res), 'used by templates', len(used), 'english', sum(1 for v in res.values() if 'n' in v), 'source-only', sum(1 for v in res.values() if 'n' not in v and 's' in v), 'unnamed', sum(1 for v in res.values() if not v))

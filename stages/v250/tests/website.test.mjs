@@ -192,4 +192,25 @@ test('projects: 20-slot projects open into the 50-slot layout; newer projects ke
   assert.equal(F.normalizeWorkspace({ format: 'ForgeStagePack' }), null);
 });
 
+
+test('rewards and challenges: template view, checks, change list', () => {
+  const r = F.templateRewards('emergency', tplE); assert.equal(r.exp, 1500); assert.deepEqual(r.coins, [1750, 1750]); assert.equal(r.firstClear, 1);
+  assert.equal(r.challenges.length, 3); assert.equal(F.challengeText(r.challenges[0]), 'Heart elementals only'); assert.deepEqual(r.challenges[1].limited, [1]);
+  assert.deepEqual(r.challenges[0].reward, [{ key: 'jewel', qty: 1 }]); assert.deepEqual(r.lucky, { unitId: '11074', qty: 1 }); assert.equal(r.drops['30030111'].item, '11812');
+  assert.deepEqual(F.rewardProblems(r), []); assert.deepEqual(F.rewardChanges(r, null), []);
+  const e = structuredClone(r); e.exp = 3000; e.challenges[0] = F.newChallenge('turns', e.challenges[0]); e.challenges[0].value = 15; e.challenges[0].reward.push({ key: 'item', unitId: '10044', qty: 2, level: 1 });
+  assert.deepEqual(F.rewardProblems(e), []); assert.deepEqual(F.rewardChanges(r, e), ['Player EXP 1,500 → 3,000', 'Challenge 1: Complete within 15 turns', 'Challenge 1 reward']);
+  for (const bad of [x => { x.exp = -1; }, x => { x.coins = [5, 1]; }, x => { x.challenges[0].value = 0; }, x => { x.challenges[0].reward = Array.from({ length: 5 }, (_, i) => ({ key: 'item', unitId: String(10013 + i), qty: 1 })); }, x => { x.drops['30030111'].chance = 1001; }, x => { x.lucky.qty = 0; }])
+    { const y = structuredClone(e); bad(y); assert.ok(F.rewardProblems(y).length, 'rejects ' + bad); }
+  assert.deepEqual(F.partsProblems([{ key: 'coin', qty: 1 }, { key: 'coin', qty: 2 }]).length, 1);
+  const rr = F.templateRewards('road', tplR); assert.ok(Object.keys(rr.mapClear).length > 0); assert.ok(Object.keys(rr.mapClear).every(id => tplR.maps.some(m => m.id === id)));
+  assert.equal(rr.firstClear, undefined); assert.deepEqual(F.rewardProblems(rr), []);
+  // every challenge in the game's templates either maps to a known type or keeps its source row
+  for (const k of ['emergency', 'road']) for (const t of Object.values(F.templateList(c, k))) for (const ch of F.templateRewards(k, t).challenges) { const ty = F.challengeType(ch); if (ty && ty.value) assert.ok(ch.value >= ty.value.min && ch.value <= ty.value.max, JSON.stringify(ch)); }
+  // castle reward events round-trip into editable parts
+  assert.deepEqual(F.partsFromEvents([[2, 30], [1, 5, 10655, 1, 0, 16, 0, 0, 0, 0, 1]]), [{ key: 'jewel', qty: 30 }, { key: 'item', unitId: '10655', qty: 5, level: 1 }]);
+  // the layout spec never carries reward edits
+  assert.equal(F.contractProblem(c, { ...specE, rewards: e }), 'This export contains unsupported edits. Save it as a website draft instead.');
+});
+
 console.log(JSON.stringify({ passed: true, tests: results.length, names: results }, null, 1));
