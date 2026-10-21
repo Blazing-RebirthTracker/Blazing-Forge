@@ -13,12 +13,13 @@ const t = (name, fn) => { fn(); done.push(name); };
 const [intro, equip, floor] = p.catalog.stages.map(s => s.spec.localId);
 const fm = p.catalog.stages[2].donor.maps;
 
-t('no-op round trip is byte-identical (with the file’s own line endings)', () => { assert.equal(K.withEol(K.SA.exportProject(p), K.eolOf(text)), text); assert.deepEqual(K.importText(K.SA.exportProject(p), lib), p); });
+t('no-op round trip is byte-identical (in the file’s own format)', () => { assert.equal(K.serialize(p, K.formatOf(text)), text);
+  const pretty = K.serialize(p, { eol: '\r\n', indent: 2, final: true }); assert.equal(K.serialize(p, K.formatOf(pretty)), pretty); assert.equal(K.serialize(p), K.SA.exportProject(p)); assert.deepEqual(K.importText(K.SA.exportProject(p), lib), p); });
 t('reserved IDs, map order and projectId kept', () => {
   assert.equal(p.projectId, 'kirito:events-v240'); assert.deepEqual(p.catalog.stages.map(s => [s.slot.stageId, s.slot.missionId]), [['3820', '382001'], ['3821', '382101'], ['3822', '382201']]);
   assert.deepEqual(p.catalog.stages.map(s => s.donor.maps.length), [1, 3, 99]);
 });
-t('big integers that a number can’t hold are refused', () => assert.throws(() => K.importText(text.replace('"schema": 1', '"schema": 1, "x": 12345678901234567890'), lib), /too large/));
+t('big integers that a number can’t hold are refused', () => assert.throws(() => K.importText(text.replace(/"schema":\s*1/, '"schema":1,"x":12345678901234567890'), lib), /too large/));
 t('coins and EXP keep client and server together', () => {
   const n = K.setCurrency(p, intro, { minCoin: 100, maxCoin: 200, exp: 3000, charaExp: 4000 }, lib), d = n.catalog.stages[0].donor;
   assert.deepEqual([d.mission.missionInfo.minCoin, d.mission.missionInfo.maxCoin, d.mission.missionInfo.exp, d.mission.missionInfo.charaExp], [100, 200, 3000, 4000]);
@@ -68,5 +69,41 @@ t('scene keeps the supplied derivation and adds the raw placement fields', () =>
   const v = K.scene(p, floor, fm[8].id, labels), s0 = K.SA.scene(p, floor, fm[8].id, labels);
   assert.equal(v.enemies.length, s0.enemies.length); assert.ok(v.enemies.every((e, i) => e.spawnCandidates.length === s0.enemies[i].spawnCandidates.length && e.entry && e.type === e.entry.type));
 });
+
+// ---- maps (needs catalogs/map-library.json from the v2.5.4 package)
+let maps = null; try { maps = JSON.parse(read('catalogs/map-library.json')); } catch (e) {}
+if (maps) {
+  const q = p.catalog.stages[2], lid = q.spec.localId, m9 = q.donor.maps[8];
+  t('the supplied map rules pass on import and round-trip', () => { K.validateAll(p, lib, maps); for (const s of p.catalog.stages) assert.deepEqual(K.MA.reorderMaps(p, s.spec.localId, s.donor.maps.map(m => m.id), maps), p); });
+  t('background info: names, base texture, animated parts, developer-only gimmicks', () => {
+    const b = K.backgroundInfo(maps, '40101'); assert.equal(b.name, 'Plains (heigen)'); assert.ok(b.texture.endsWith('.png')); assert.equal(b.animated, 3); assert.deepEqual(b.needs, []);
+    const all = Object.keys(maps.definitions).map(k => K.backgroundInfo(maps, k)); assert.equal(all.length, 458); assert.ok(all.every(x => x.texture)); assert.equal(all.filter(x => x.needs.length).length, 140);
+  });
+  t('layout check finds markers in walls; suggestions are visible proposals that make the layout apply', () => {
+    const ids = Object.keys(maps.templates); let tid = null, chk = null;
+    for (const k of ids) { const c = K.layoutCheck(p, lid, m9.id, maps, k); if (c.conflicts) { tid = k; chk = c; break; } }
+    assert.ok(tid, 'some layout puts a marker in a wall'); assert.throws(() => K.MA.replaceMapLayout(p, lid, m9.id, tid, maps), /free floor tile/);
+    const place = K.suggestPlacements(chk), after = K.layoutCheck(p, lid, m9.id, maps, tid, place); assert.equal(after.conflicts, 0);
+    const n = K.MA.replaceMapLayout(p, lid, m9.id, tid, maps, place), nm = n.catalog.stages[2].donor.maps[8];
+    for (const [chip, [x, y]] of Object.entries(place)) assert.equal(nm.raw.map.lines[y].chips[x], +chip);
+    assert.deepEqual(nm.sets, m9.sets); assert.deepEqual(n.catalog.enemies, p.catalog.enemies); assert.deepEqual(n.catalog.stages[2].donor.serverMission.dropCandidates, q.donor.serverMission.dropCandidates);
+    assert.deepEqual(n.catalog.stages[2].donor.mission.missionInfo.subMission, q.donor.mission.missionInfo.subMission); assert.equal(nm.id, m9.id); assert.equal(nm.raw.title, m9.raw.title);
+    const clean = ids.find(k => !K.layoutCheck(p, lid, m9.id, maps, k).conflicts); assert.ok(clean); K.MA.replaceMapLayout(p, lid, m9.id, clean, maps);
+  });
+  t('background change, reorder and reset keep client and server rows in step', () => {
+    let n = K.MA.setMapBackground(p, lid, m9.id, '10101', maps); assert.equal(n.catalog.stages[2].donor.serverMission.maps[8].mapBackgroundId, 10101);
+    const order = q.donor.maps.map(m => m.id); [order[0], order[8]] = [order[8], order[0]]; n = K.MA.reorderMaps(n, lid, order, maps);
+    const d = n.catalog.stages[2].donor; assert.equal(d.maps[0].id, m9.id); assert.deepEqual(d.mission.missionInfo.mapList.map(String), order); assert.deepEqual(d.serverMission.mapIds.map(String), order);
+    assert.deepEqual(d.serverMission.dropCandidates, q.donor.serverMission.dropCandidates, 'drop rows stay with their map IDs');
+    const r = K.resetMap(n, p, lid, m9.id, lib, maps); K.validateAll(r, lib, maps); const rm = r.catalog.stages[2].donor.maps.find(m => m.id === m9.id);
+    assert.equal(rm.raw.mapBgId, m9.raw.mapBgId); assert.equal(r.catalog.stages[2].donor.serverMission.maps.find(x => String(x.mapId) === m9.id).mapBackgroundId, m9.raw.mapBgId);
+    assert.equal(r.catalog.stages[2].donor.maps[0].id, m9.id, 'reset keeps the floor order');
+  });
+  t('background files for a developer export follow the project', () => {
+    const f = K.backgroundFiles(p, maps, JSON.parse(read('backgrounds/assets.json'))); assert.ok(f.includes('backgrounds/definitions/40101.json')); assert.ok(f.some(x => x.startsWith('backgrounds/serialized/'))); assert.ok(f.some(x => x.startsWith('animation/models/')));
+    const n = K.MA.setMapBackground(p, lid, m9.id, '10101', maps); assert.ok(K.backgroundFiles(n, maps, []).includes('backgrounds/definitions/10101.json'));
+  });
+}
+
 t('the supplied game-export gate stays closed', () => assert.equal(K.SA.gameExportStatus().allowed, false));
 console.log(JSON.stringify({ passed: true, checks: done.length, names: done }, null, 1));

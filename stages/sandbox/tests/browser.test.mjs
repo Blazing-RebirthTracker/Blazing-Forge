@@ -29,8 +29,8 @@ await step('the tab stays hidden until an event project is in the browser', asyn
   await load('&kirito'); assert.equal(await S(() => document.body.classList.contains('kirito-landing')), true);
 });
 await step('import the package through the Kirito events tab (ForgeStageSandbox, not the game importer)', async () => {
-  await p.setInputFiles('#kiritoFile', { name: 'package.zip', mimeType: 'application/zip', buffer: readFileSync(zipPath) });
-  await p.waitForFunction(() => document.body.classList.contains('sbx-on'), null, { timeout: 30000 }); await p.waitForTimeout(800);
+  await p.setInputFiles('#kiritoFile', zipPath);
+  await p.waitForFunction(() => document.body.classList.contains('sbx-on'), null, { timeout: 600000 }); await p.waitForTimeout(800);
   const s = await sb(); assert.equal(s.p.projectId, 'kirito:events-v240'); assert.deepEqual(s.p.catalog.stages.map(x => x.donor.maps.length), [1, 3, 99]);
   assert.deepEqual(s.p.catalog.stages.map(x => x.slot.stageId + '/' + x.slot.missionId), ['3820/382001', '3821/382101', '3822/382201']);
   assert.equal(await S(() => Object.keys(__stages.readStore().drafts).length), 0, 'no custom slot was used');

@@ -4,7 +4,8 @@
    raw client/server mirrors together and runs the supplied validateProject on the result, so a bad value never lands.
    Website authoring data only: nothing here makes a project installable or allocates game IDs. */
 import * as SA from './stage-sandbox.mjs';
-export { SA };
+import * as MA from './stage-map-authoring.mjs';
+export { SA, MA };
 
 const clone = x => JSON.parse(JSON.stringify(x));
 const need = (ok, message) => { if (!ok) throw new Error(message); };
@@ -39,6 +40,17 @@ export function importText(text, library) {
 /** the line ending a project file uses, so a save writes it back the same way (JSON text has no raw newlines inside strings) */
 export const eolOf = text => /\r\n/.test(text) ? '\r\n' : '\n';
 export const withEol = (json, eol) => eol === '\r\n' ? json.replace(/\r?\n/g, '\r\n') : json;
+/** how a project file was written (line ending, indentation, final newline), so a save writes it back the same way */
+export function formatOf(text) {
+  const m = /^\{(\r?\n)([ \t]+)"/.exec(text);
+  return { eol: eolOf(text), indent: m ? m[2] : 0, final: /\n$/.test(text) };
+}
+/** project -> text in a given format; the default is the supplied adapter's own (2 spaces, LF, final newline) */
+export function serialize(p, fmt) {
+  const f = fmt || { eol: '\n', indent: 2, final: true };
+  const body = f.indent ? JSON.stringify(p, null, f.indent) : JSON.stringify(p);
+  return withEol(body + (f.final === false ? '' : '\n'), f.eol);
+}
 function edit(p, library, fn) { const next = clone(p); fn(next); return validate(next, library); }
 const stage = (p, localId) => { const s = p.catalog.stages.find(s => s.spec.localId === localId); need(s, 'Unknown quest'); return s; };
 const mapOf = (s, mapId) => { const m = s.donor.maps.find(m => m.id === id(mapId)); need(m, 'Unknown map'); return m; };
@@ -125,14 +137,77 @@ export function scaleStats(p, localId, fromMap, toMap, factor, opts, library) {
     for (const eid of ids) { for (const u of usesOf(n, eid)) need(inRange.has(u.mapId) && u.localId === localId, `Enemy ${eid} is also used outside maps ${fromMap}–${toMap}; scaling it would change those maps too.`);
       const e = enemyOf(n, eid); for (const [k, label, lo, hi] of keys) { const v = Math.round(e[k].s * factor); integer(Math.max(lo, v), lo, hi, `${label} of enemy ${eid} after scaling`); setStat(e, k, Math.max(lo, v)); } } });
 }
-// ---- put one map back the way the baseline had it: layout, placements and the rows of enemies used only there
-export function resetMap(p, baseline, localId, mapId, library) {
+// ---- put one map back the way the baseline had it: layout, background, placements and the rows of enemies used only there
+export function resetMap(p, baseline, localId, mapId, library, mapLibrary) {
   const src = mapOf(stage(baseline, localId), mapId);
-  return edit(p, library, n => { const s = stage(n, localId), i = s.donor.maps.findIndex(m => m.id === id(mapId)); need(i >= 0, 'Unknown map');
+  const out = edit(p, library, n => { const s = stage(n, localId), i = s.donor.maps.findIndex(m => m.id === id(mapId)); need(i >= 0, 'Unknown map');
     s.donor.maps[i] = clone(src);
+    const bs = stage(baseline, localId).spec.maps.find(m => m.donorMapId === id(mapId)), ns = s.spec.maps.find(m => m.donorMapId === id(mapId)); if (bs && ns) ns.markers = clone(bs.markers);
     for (const set of src.sets) for (const t of set.raw.enemySet) { if (t.id < 0) continue; const uses = usesOf(n, t.id); if (uses.length !== 1) continue;
       const b = baseline.catalog.enemies.findIndex(e => id(e.id) === id(t.id)), j = n.catalog.enemies.findIndex(e => id(e.id) === id(t.id)); if (b >= 0 && j >= 0) n.catalog.enemies[j] = clone(baseline.catalog.enemies[b]); }
     rebuildNormalDrops(n, s, library); });
+  // the map's server row follows its restored background (and the asset lists gain its parts) through the supplied map adapter
+  return mapLibrary ? MA.setMapBackground(out, localId, mapId, String(src.raw.mapBgId), mapLibrary) : out;
+}
+
+// ---- maps: backgrounds and floor layouts from the supplied map library (catalogs/map-library.json)
+export const isMarkerChip = c => (c >= 8 && c <= 13) || (c >= 16 && c <= 25);
+const floorChip = c => c > 7 || ((0x6e >> c) & 1) !== 0;
+const PLAIN = c => c === 0 || c === 1 || c === 2 || isMarkerChip(c);
+// readable names for the background file stems (the game's own romanized Japanese); the stem is always shown too
+export const BG_NAMES = { heigen: 'Plains', mori: 'Forest', shinomori: 'Forest of Death', kaoiwa: 'Hokage Rock', konohasato: 'Leaf Village', konoha_houkai: 'Leaf Village (destroyed)',
+  kaido: 'Highway', kaigan: 'Coast', kawara: 'Riverbank', sabaku: 'Desert', suna: 'Sand Village', doukutu: 'Cave', hyouzan: 'Ice mountain', yougan: 'Lava', iwaba: 'Rocky ground',
+  kouya: 'Wasteland', senjyou: 'Battlefield', oohashi: 'Great bridge', utiha: 'Uchiha', utiha2: 'Uchiha 2', akatuki: 'Akatsuki', samurai: 'Samurai', tetu: 'Land of Iron',
+  hinotera: 'Fire Temple', syumatu: 'Valley of the End', syuumatunotani: 'Valley of the End', tanzaku: 'Tanzaku Town', tenti: 'Heaven-Earth Bridge', isidan: 'Stone steps',
+  ame_soto: 'Rain Village outskirts', kinoko: 'Mushrooms', takenoko: 'Bamboo', kyodaijyu: 'Giant tree', jigokudani: 'Hell Valley', kankin: 'Prison', kitaajito: 'North hideout',
+  jitukensisetu: 'Laboratory', mugenjyou: 'Infinite castle', nenohonbu: 'Root headquarters', shinratensei: 'Shinra Tensei crater', hondou: 'Main hall', yosen: 'Preliminaries', honsen: 'Finals arena' };
+export function baseLayer(def) {
+  const flat = def.layers.filter(l => !l.raw.isSpriteStudio && l.textures && l.textures.length).sort((a, b) => (a.raw.layer - b.raw.layer) || (a.sourceIndex - b.sourceIndex));
+  return flat[0] || def.layers.find(l => l.textures && l.textures.length) || null;
+}
+/** a background definition, summarised for pickers: name, base texture, animated parts, and why it needs developer work */
+export function backgroundInfo(mapLibrary, bgId) {
+  const def = mapLibrary && mapLibrary.definitions[id(bgId)]; if (!def) return null;
+  const base = baseLayer(def), tex = base && base.textures[0], stem = tex ? (/^bg_\d+_(.+)$/.exec(tex.name) || [, tex.name])[1] : null;
+  const r = def.raw || {}, needs = [];
+  if (r.isChangeMapChip) needs.push('changes the floor grid during battle');
+  if ((r.mapGimmickList || []).length) needs.push(`${r.mapGimmickList.length} map gimmick${r.mapGimmickList.length === 1 ? '' : 's'} (traps or effects)`);
+  if ((r.envEffList || []).length) needs.push(`${r.envEffList.length} environment effect${r.envEffList.length === 1 ? '' : 's'}`);
+  if (def.layers.some(l => l.raw.mapGimmickId)) needs.push('layer gimmicks');
+  const parts = def.layers.filter(l => l.animations && l.animations.length);
+  return { id: def.backgroundId, name: stem ? (BG_NAMES[stem] ? `${BG_NAMES[stem]} (${stem})` : stem) : 'Background ' + def.backgroundId, stem, texture: tex ? tex.file : null,
+    textureSize: tex ? [tex.width, tex.height] : null, layers: def.layers.length, animated: parts.length, parts, needs, usedBy: (def.usedBy && def.usedBy.maps || []).length, def };
+}
+/** the template's floor grid with its own markers cleared (what replaceMapLayout starts from) */
+export function plainLines(template) { return template.lines.map(l => ({ chips: l.chips.map(c => isMarkerChip(c) || c === 2 ? 1 : c) })); }
+export function templateSupported(template) { return !!(template && template.supportedPlainLayout !== false && template.lines.every(l => l.chips.every(PLAIN))); }
+/** where the selected map's markers would land on a template, and which ones need a free floor tile first */
+export function layoutCheck(p, localId, mapId, mapLibrary, templateId, placements = {}) {
+  const t = mapLibrary.templates[id(templateId)]; need(t, 'Choose a supplied layout'); const m = mapOf(stage(p, localId), mapId), lines = plainLines(t), markers = [], taken = new Map();
+  m.raw.map.lines.forEach((l, y) => l.chips.forEach((chip, x) => { if (isMarkerChip(chip)) markers.push({ chip, from: [x, y] }); }));
+  for (const mk of markers) { mk.at = placements[mk.chip] || mk.from; mk.moved = !!placements[mk.chip]; const k = mk.at.join(','); taken.set(k, (taken.get(k) || 0) + 1); }
+  for (const mk of markers) { const [x, y] = mk.at; const inside = x >= 0 && y >= 0 && x < 11 && y < 11;
+    mk.ok = inside && floorChip(lines[y].chips[x]) && taken.get(mk.at.join(',')) === 1; mk.reason = !inside ? 'outside the grid' : !floorChip(lines[y].chips[x]) ? 'in a wall' : mk.ok ? '' : 'on the same tile as another marker'; }
+  return { template: t, supported: templateSupported(t), lines, markers, conflicts: markers.filter(x => !x.ok).length };
+}
+/** nearest free floor tile for each conflicting marker (a proposal the user sees and can change, never applied silently) */
+export function suggestPlacements(check) {
+  const used = new Set(check.markers.filter(m => m.ok).map(m => m.at.join(','))), out = {};
+  for (const mk of check.markers) { if (mk.ok) continue; let best = null, bd = 1e9;
+    for (let y = 0; y < 11; y++) for (let x = 0; x < 11; x++) { if (!floorChip(check.lines[y].chips[x]) || used.has(x + ',' + y)) continue; const d = Math.abs(x - mk.from[0]) + Math.abs(y - mk.from[1]); if (d < bd) { bd = d; best = [x, y]; } }
+    if (best) { out[mk.chip] = best; used.add(best.join(',')); } }
+  return out;
+}
+/** validate a project with both supplied adapters: the sandbox rules and, when the map library is loaded, the map rules */
+export function validateAll(p, library, mapLibrary) { validate(p, library); if (mapLibrary) MA.validateMaps(p, mapLibrary); return p; }
+/** files a developer needs for the backgrounds a project uses: definition, textures, serialized records and animations */
+export function backgroundFiles(p, mapLibrary, assetIndex) {
+  const out = new Set(), byRoute = new Map((assetIndex || []).map(a => [a.route, a]));
+  for (const s of p.catalog.stages) for (const m of s.donor.maps) { const def = mapLibrary.definitions[id(m.raw.mapBgId)]; if (!def) continue;
+    out.add(`backgrounds/definitions/${def.backgroundId}.json`);
+    for (const l of def.layers) { for (const t of l.textures || []) out.add(t.file); for (const a of l.animations || []) { out.add('animation/' + a.model); out.add('animation/' + a.clip); }
+      const a = byRoute.get(l.route); if (a && a.serialized) out.add(a.serialized); } }
+  return [...out];
 }
 /** source-relative change list: JSON path, before, after */
 export function changes(a, b, path = '', out = [], max = 5000) {

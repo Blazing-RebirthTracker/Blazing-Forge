@@ -57,6 +57,8 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;fl
 .zoomctl button{border:0;background:transparent;color:var(--tx);min-width:34px;height:32px;border-radius:7px;font-weight:700;font-size:15px;padding:0 8px}
 .zoomctl button.txt{font-size:12px}
 .zoomctl span{font-family:var(--f-mono);font-size:11px;color:var(--tx2);min-width:42px;text-align:center}
+.tag.geo small{display:block;font-size:9.5px;letter-spacing:.04em;font-weight:700;text-transform:none;margin-top:1px}
+.tag.geo{max-width:calc(100% - 190px)}
 .tag{position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);background:rgba(14,16,22,.72);padding:4px 8px;border-radius:6px;pointer-events:none;z-index:2}
 .toast{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:rgba(14,16,22,.9);border:1px solid var(--line);color:var(--tx);padding:8px 12px;border-radius:10px;font-size:13px;z-index:3;max-width:calc(100% - 24px);text-align:center}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--tx2)}
@@ -106,6 +108,31 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;fl
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;background:var(--leaf)}
 .dot.no{background:var(--tx3)}
 .dot.si{background:#F2C14E}
+.mstrip.big{height:96px}
+.mchip.big{width:146px;height:84px;flex-direction:row;gap:7px;padding:6px;align-items:stretch}
+.mchip.big .th{width:46px;height:70px;border-radius:6px;background:#0b0d12;object-fit:cover;flex:none}
+.mchip.big .tx{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+.mchip.big .ms{font-size:10.5px}
+.mchip .hdl{position:absolute;right:3px;bottom:3px;width:26px;height:24px;border:0;border-radius:6px;background:rgba(255,255,255,.06);color:var(--tx2);font-size:13px;line-height:1;cursor:grab;touch-action:none;padding:0}
+.mchip .hdl:hover,.mchip .hdl:focus-visible{background:var(--ember-soft);color:var(--ember-tx)}
+.mchip.dragging{opacity:.45}
+.mins{position:absolute;top:4px;width:4px;height:88px;border-radius:3px;background:var(--ember);pointer-events:none}
+.lbar{flex-wrap:wrap}
+.mbwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;margin-top:10px}
+@media (max-width:760px){.mbwrap{grid-template-columns:minmax(0,1fr)}}
+.mblist{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));max-height:58vh}
+.mllist{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));max-height:60vh;margin-top:10px}
+.ctpl .mth{width:100%;aspect-ratio:750/1050;max-height:150px;object-fit:cover;border-radius:7px;background:#0b0d12;display:block}
+.ctpl canvas.mth{object-fit:fill}
+.ctpl button:disabled{opacity:.55;cursor:not-allowed}
+.ctpl .warn{color:var(--ember-tx)}
+.ctpl .okfit{color:var(--leaf)}
+.mbdetail{display:flex;flex-direction:column;gap:8px;min-width:0}
+.mbdetail canvas{width:100%;aspect-ratio:1/1;background:#0b0d12;border-radius:10px;display:block}
+.mbdetail .big{width:100%;aspect-ratio:750/1050;object-fit:cover;border-radius:10px;background:#0b0d12}
+.mapgrid{width:132px;aspect-ratio:750/1050;border-radius:8px;background:#0b0d12;display:block}
+.bossrow{display:flex;flex-wrap:wrap;gap:4px}
+.busy{position:fixed;left:12px;bottom:12px;z-index:60;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--ember);color:var(--tx);padding:8px 12px;border-radius:10px;font-size:12.5px;max-width:min(520px,calc(100vw - 24px));box-shadow:0 10px 30px rgba(0,0,0,.4)}
 .rwsec{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px}
 .rwsec h4{margin:0;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3)}
 .rwrow{background:var(--panel2);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -529,9 +556,9 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
   </div>
   <section class="card" id="kiritoLanding" aria-label="Kirito events" hidden>
     <div class="row" style="justify-content:space-between"><span class="lbl">Kirito events</span><span class="pill">Website authoring · not a phone mod</span></div>
-    <p class="status">The three supplied event quests keep their own reserved stage and mission IDs. They never use the custom slots, and the game packs on the other tabs never include them. Edit markers, enemies, stats, difficulty and rewards here, then use <b>Export Kirito project for developer</b>: the developer compiles and validates your edits into a build.</p>
-    <div class="row"><label class="btn primary" for="kiritoFile" tabindex="0" id="kiritoLbl">Import the event package (.zip) or project (.json)&hellip;</label><input type="file" id="kiritoFile" accept=".zip,.json,application/zip,application/json" class="hidden-file"></div>
-    <p class="hint">Import the full package ZIP to get its art, enemy previews and reward catalog; a project JSON on its own opens with the files already stored for it. Everything stays in this browser until you export it.</p>
+    <p class="status">The three supplied event quests keep their own reserved stage and mission IDs. They never use the custom slots, and the game packs on the other tabs never include them. Change each floor’s background and floor layout, reorder floors, and edit markers, enemies, stats, difficulty and rewards here, then use <b>Export Kirito project for developer</b>: the developer compiles and validates your edits into a build.</p>
+    <div class="row"><label class="btn primary" for="kiritoFile" tabindex="0" id="kiritoLbl">Import the event package (.zip) or project (.json)&hellip;</label><input type="file" id="kiritoFile" accept=".zip,.json,application/zip,application/json" class="hidden-file" multiple></div>
+    <p class="hint">Pick the core ZIP and all of its asset part ZIPs together (or one combined package ZIP) to get the map library, background art and animations, enemy previews and reward catalog. Parts can also be added later. A project JSON on its own opens with the files already stored for it. Everything stays in this browser until you export it.</p>
     <div id="kiritoList" class="packlist"></div>
   </section>
   <section class="castle" id="castle" aria-label="Phantom Castle">
@@ -586,8 +613,9 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
       <section class="stagebox" aria-label="Layout preview">
         <div class="row" style="justify-content:space-between"><span class="lbl">Layout preview</span>
           <div class="row"><button class="chip" id="sxGrid" type="button" aria-pressed="true">Grid</button><button class="chip" id="sxAnim" type="button" aria-pressed="true">Animate</button><button class="chip" id="sxReset" type="button">Reset this map</button></div></div>
+        <div class="pickbar lbar" id="sxLayoutBar" role="region" aria-label="Floor layout preview" hidden><span id="sxLayoutText"></span><span class="row"><button class="chip sm" id="sxLayoutSuggest" type="button">Suggest free tiles</button><button class="btn primary sm" id="sxLayoutApply" type="button">Apply layout</button><button class="chip sm" id="sxLayoutCancel" type="button">Cancel</button></span></div>
         <div class="field"><canvas id="sxCv" tabindex="0" aria-label="Layout preview of the selected map. Drag markers or enemies to move them; arrow keys move the selected marker."></canvas>
-          <span class="tag">Layout preview</span>
+          <span class="tag geo">Layout preview<small>Logical field 750×1050 · camera uncalibrated</small></span>
           <div class="zoomctl" role="group" aria-label="Zoom"><button id="sxZout" type="button" aria-label="Zoom out">&minus;</button><span id="sxZ">100%</span><button id="sxZin" type="button" aria-label="Zoom in">+</button><button class="txt" id="sxFit" type="button">Fit</button></div>
         </div>
         <div class="legend"><span><i style="background:var(--sky)"></i>Your team's start spots</span><span><i style="background:var(--ember)"></i>Enemy entry points</span><span><i style="background:#A6ADBC"></i>Shared entry cells (&#9733;)</span><span><i style="background:rgba(10,12,16,.7)"></i>Off the field</span></div>
@@ -595,7 +623,7 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
         <p class="hint">Positions use the game's 11&times;11 map grid; marker (x, y) sits at (x&times;75, y&times;105) in the game's logical field. This is a layout preview, not the phone's camera or a battle simulation. Enemies stand on their feet at each spawn candidate; when an enemy has several, the game picks one.</p>
       </section>
       <aside class="card sxins" aria-label="Inspector">
-        <div class="tabs" id="sxInsTabs" role="tablist"><button type="button" role="tab" data-tab="sel">Selected</button><button type="button" role="tab" data-tab="rewards">Rewards</button><button type="button" role="tab" data-tab="difficulty">Difficulty</button></div>
+        <div class="tabs" id="sxInsTabs" role="tablist"><button type="button" role="tab" data-tab="sel">Selected</button><button type="button" role="tab" data-tab="rewards">Rewards</button><button type="button" role="tab" data-tab="difficulty">Difficulty</button><button type="button" role="tab" data-tab="map">Map</button></div>
         <div id="sxIns" class="ins"></div>
       </aside>
     </div>
@@ -646,6 +674,21 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
   <div class="plist2" id="rwItems" style="max-height:34vh;margin-top:6px"></div>
   <div class="status msg bad" id="rwMsg" role="status" aria-live="polite" hidden></div>
   <div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn primary" id="rwSave" type="button">Use this reward</button></div>
+</dialog>
+<div class="busy" id="busy" role="status" aria-live="polite" hidden></div>
+<dialog class="bgs lib" id="mbDlg" aria-labelledby="mbTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="mbTitle">Background</span><button class="btn ghost" id="mbClose" type="button">Close</button></div>
+  <p class="hint">Every background in the supplied map library. Pictures are each background's base texture, not a composed in-game screenshot; animated parts play on their own below. Backgrounds with gimmicks need developer integration and can't be picked here.</p>
+  <div class="row" style="margin-top:8px"><input type="search" class="field-in" id="mbQ" placeholder="Search by name, ID or a stock map that uses it" autocomplete="off" aria-label="Search backgrounds" style="flex:1 1 220px">
+    <div class="seg" id="mbFilter" role="group" aria-label="Which backgrounds"><button type="button" data-f="ok" aria-pressed="true">Usable</button><button type="button" data-f="all" aria-pressed="false">All</button><button type="button" data-f="dev" aria-pressed="false">Need developer work</button></div></div>
+  <div class="mbwrap"><div class="ctpl mblist" id="mbList" role="listbox" aria-label="Backgrounds"></div><div class="mbdetail" id="mbDetail"></div></div>
+</dialog>
+<dialog class="bgs lib" id="mlDlg" aria-labelledby="mlTitle">
+  <div class="row" style="justify-content:space-between"><span class="lbl" id="mlTitle">Floor layout</span><button class="btn ghost" id="mlClose" type="button">Close</button></div>
+  <p class="hint" id="mlHint"></p>
+  <div class="row" style="margin-top:8px"><input type="search" class="field-in" id="mlQ" placeholder="Search by map ID, stock map name or background" autocomplete="off" aria-label="Search floor layouts" style="flex:1 1 220px"><button class="chip" id="mlFits" type="button" aria-pressed="false">Only layouts that fit the markers</button></div>
+  <div class="ctpl mllist" id="mlList" role="listbox" aria-label="Floor layouts"></div>
+  <details class="more" id="mlSpecial" style="margin-top:10px"><summary>Special-tile layouts (developer integration)</summary><div id="mlSpecialBody"></div></details>
 </dialog>
 <div class="dropzone" id="dropZone" hidden><div>Drop stage packs or stage files to import them</div></div>
 <dialog class="bgs" id="bgDlg" aria-labelledby="bgTitle">
@@ -705,6 +748,73 @@ function player(canvas,scene,controls){
  return {dispose(){disposed=true;stop();document.removeEventListener('visibilitychange',hide);controls.replaceChildren();},play(){if(!playing)play.click();},seek(t){stop();elapsed=Math.max(0,Math.min(duration,t));draw();},scene};
 }
 root.ForgeAnimationPreview={sample,pose,scenePose,prepare,player};
+})(typeof window==='undefined'?globalThis:window);
+</script>
+<script>
+/* Static SSPart pose renderer. Shared verbatim with the website handoff. */
+(function(root){
+'use strict';
+function triangle(ctx,image,src,dst){
+ const [s0,s1,s2]=src,[d0,d1,d2]=dst,ux=s1[0]-s0[0],uy=s1[1]-s0[1],vx=s2[0]-s0[0],vy=s2[1]-s0[1],det=ux*vy-uy*vx;
+ if(Math.abs(det)<1e-8)return;
+ const dx1=d1[0]-d0[0],dy1=d1[1]-d0[1],dx2=d2[0]-d0[0],dy2=d2[1]-d0[1];
+ const a=(dx1*vy-dx2*uy)/det,b=(dy1*vy-dy2*uy)/det,c=(dx2*ux-dx1*vx)/det,d=(dy2*ux-dy1*vx)/det;
+ ctx.save();ctx.beginPath();ctx.moveTo(...d0);ctx.lineTo(...d1);ctx.lineTo(...d2);ctx.closePath();ctx.clip();ctx.transform(a,b,c,d,d0[0]-a*s0[0]-c*s0[1],d0[1]-b*s0[0]-d*s0[1]);ctx.drawImage(image,0,0);ctx.restore();
+}
+function draw(canvas,pose,images){
+ let ctx=canvas.getContext('2d');const [x0,y0,x1,y1]=pose.bounds,pad=18,scale=Math.min((canvas.width-pad*2)/Math.max(1,x1-x0),(canvas.height-pad*2)/Math.max(1,y1-y0));
+ ctx.clearRect(0,0,canvas.width,canvas.height);ctx.save();ctx.translate((canvas.width-(x1-x0)*scale)/2-x0*scale,(canvas.height-(y1-y0)*scale)/2-y0*scale);ctx.scale(scale,scale);
+ for(const p of pose.parts){
+  let im=images[p.map];if(!im)throw Error('Missing atlas '+p.map);
+  if(![0,1,2,3,4].includes(p.blend))throw Error('Unsupported preview blend mode '+p.blend);
+  const original=ctx;
+  if(p.blend===2){const sub=draw.subtract||(draw.subtract=document.createElement('canvas'));sub.width=canvas.width;sub.height=canvas.height;ctx=sub.getContext('2d');ctx.setTransform(original.getTransform());}
+  ctx.globalAlpha=Math.max(0,Math.min(1,p.alpha));ctx.globalCompositeOperation=p.blend===1?'lighter':p.blend===3?'multiply':'source-over';
+  let [x,y,w,h]=p.rect;
+  if(p.color?.[3]>0||x<0||y<0||x+w>im.width||y+h>im.height){
+   const tile=draw.tile||(draw.tile=document.createElement('canvas'));tile.width=Math.ceil(w);tile.height=Math.ceil(h);const tc=tile.getContext('2d');
+   const segments=(offset,size,limit)=>{const a=Math.max(0,Math.min(size,-offset)),b=Math.max(0,Math.min(size,limit-offset));return [[0,a,0,1],[a,b-a,Math.max(0,offset+a),b-a],[b,size-b,limit-1,1]];};
+   for(const [dy,dh,sy,sh]of segments(y,h,im.height))for(const [dx,dw,sx,sw]of segments(x,w,im.width))if(dw>0&&dh>0){tc.imageSmoothingEnabled=sw===dw&&sh===dh;tc.drawImage(im,sx,sy,sw,sh,dx,dy,dw,dh);}
+   if(p.color?.[3]>0){tc.globalCompositeOperation='source-atop';tc.globalAlpha=Math.min(1,p.color[3]);tc.fillStyle='rgb('+p.color.slice(0,3).map(v=>Math.round(Math.max(0,Math.min(1,v))*255)).join(',')+')';tc.fillRect(0,0,w,h);}
+   im=tile;x=0;y=0;
+  }
+  const l=p.flipX?x+w:x,r=p.flipX?x:x+w,t=p.flipY?y+h:y,b=p.flipY?y:y+h;
+  const src=[[l,t],[r,t],[r,b],[l,b]],q=p.quad,mid=q.reduce((a,v)=>[a[0]+v[0]/4,a[1]+v[1]/4],[0,0]),sm=[x+w/2,y+h/2];
+  for(let i=0;i<4;i++)triangle(ctx,im,[sm,src[i],src[(i+1)%4]],[mid,q[i],q[(i+1)%4]]);
+  if(p.blend===2){const source=ctx.getImageData(0,0,canvas.width,canvas.height).data,dest=original.getImageData(0,0,canvas.width,canvas.height);for(let i=0;i<source.length;i+=4){const a=source[i+3]/255;for(let c=0;c<3;c++)dest.data[i+c]=Math.max(0,dest.data[i+c]-source[i+c]*a);}original.putImageData(dest,0,0);ctx=original;}
+ }
+ ctx.restore();
+}
+function loadImage(src){return new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(Error('Preview image could not load'));im.src=src})}
+let timer=0,running=false,request=0,last=null;
+function mount(parent){
+ const box=document.createElement('div');box.id='assembledSpritePreview';box.className='assembled-sprite-preview';
+ const canvas=document.createElement('canvas');canvas.width=480;canvas.height=480;canvas.setAttribute('role','img');canvas.setAttribute('aria-label','Assembled character idle pose');canvas.hidden=true;
+ const status=document.createElement('p');status.setAttribute('role','status');status.textContent='Idle preview';box.append(canvas,status);parent.append(box);
+}
+function current(){
+ const box=document.getElementById('assembledSpritePreview');if(!box||!box.isConnected||!box.offsetHeight||root.ForgeRedesign?.section!=='sprite')return null;
+ const s=forms[index],donor=s.visuals?.rig||s.donor,args={family:selected.sameId,form:index,donor,sprite:s.art?.sprite||'',spriteDonor:s.visuals?.spriteDonor||0};return {box,args,key:JSON.stringify(args)};
+}
+function paintPreview(target,data){
+ const canvas=target.box.querySelector('canvas'),status=target.box.querySelector('p');
+ draw(canvas,data.pose,data.images);canvas.hidden=false;status.textContent=data.warning||('Idle preview - '+(data.custom?'Custom sprite':'Donor sprite'));target.box.dataset.ready='true';
+}
+async function update(){
+ const target=current();if(!target)return;
+ if(last?.key===target.key){paintPreview(target,last);return;}
+ if(running)return;
+ const ticket=request;running=true;target.box.querySelector('p').textContent='Loading idle preview...';
+ try{
+  const result=await call('spritePreview',target.args),images={};
+  for(const [id,src]of Object.entries(result.images)){images[id]=await loadImage(src);const meta=result.pose.textures[id];if(!meta||images[id].naturalWidth!==meta.width||images[id].naturalHeight!==meta.height)throw Error('Sprite canvas does not match the donor. Import a matching sheet.');}
+  const now=current();if(ticket!==request||!now||now.key!==target.key)return;
+  last={key:target.key,pose:result.pose,images,custom:result.custom,warning:result.warning};paintPreview(now,last);
+ }catch(error){const now=current();if(ticket===request&&now?.key===target.key){now.box.querySelector('canvas').hidden=true;now.box.querySelector('p').textContent=error.message||'Preview unavailable';now.box.dataset.ready='unavailable';}}
+ finally{running=false;const now=current();if(now&&(now.key!==target.key||ticket!==request))refresh();}
+}
+function refresh(){clearTimeout(timer);request++;const target=current();if(!target){last=null;return;}timer=setTimeout(update,180);}
+root.ForgeSpritePreview={draw,loadImage,mount,refresh};
 })(typeof window==='undefined'?globalThis:window);
 </script>
 <script>
@@ -1380,14 +1490,17 @@ async function saveBlob(blob, name) {
 $('exportBtn').onclick = () => saveBlob(new Blob([JSON.stringify(exportStage(), null, 1)], { type: 'application/json' }), 'stage-draft-' + slug(st.draft.name) + '.json');
 // one importer for every way a file comes in: the Stage card, My stages & packs, or a drop on the page
 async function importOne(f) { // -> { keys: [...], bad: [...] }
-  const buf = new Uint8Array(await f.arrayBuffer());
-  if (buf[0] === 0x50 && buf[1] === 0x4b) {
-    let files; try { files = await unzip(buf); } catch (e) { return { keys: [], bad: [f.name + ' couldn’t be read as a zip.'] }; }
+  const head = new Uint8Array(await f.slice(0, 4).arrayBuffer());
+  if (head[0] === 0x50 && head[1] === 0x4b) {
+    let entries; try { entries = f.__zipIndex || await zipIndex(f); } catch (e) { return { keys: [], bad: [f.name + ': ' + (e && e.message && e.message !== 'zip' ? e.message : 'couldn’t be read as a zip.')] }; }
+    // stage-project packages and their asset parts go to the stage-project workspace member by member
+    if (window.ForgeSandboxUI) { const r = await window.ForgeSandboxUI.importZipFile(f, entries); if (r) return r.err ? { keys: [], bad: [r.err] } : { keys: [], bad: [], project: r.name }; }
+    let files; try { files = await zipReadAll(f, entries); } catch (e) { return { keys: [], bad: [f.name + ' couldn’t be read as a zip.'] }; }
     if (files['forge-stages-workspace.json']) { let ws = null; try { ws = JSON.parse(new TextDecoder().decode(files['forge-stages-workspace.json'])); } catch (e) {} return restoreWorkspace(ws, files); }
     if (window.ForgeSandboxUI) { const r = await window.ForgeSandboxUI.importZip(files, f.name); if (r) return r.err ? { keys: [], bad: [r.err] } : { keys: [], bad: [], project: r.name }; }
     return importPack(files, f.name);
   }
-  const text = new TextDecoder().decode(buf);
+  const text = await f.text();
   let j; try { j = JSON.parse(text); } catch (e) { return { keys: [], bad: [f.name + ' isn’t a stage file (it isn’t valid JSON).'] }; }
   if (j && j.format === 'ForgeStageWorkspace') return restoreWorkspace(j, null);
   if (j && j.format === 'ForgeStageSandbox') { if (!window.ForgeSandboxUI) return { keys: [], bad: ['Stage projects need IndexedDB, which this browser blocks.'] }; const r = await window.ForgeSandboxUI.importJSON(text, f.name); return r.err ? { keys: [], bad: [r.err] } : { keys: [], bad: [], project: r.name }; }
@@ -1407,10 +1520,13 @@ async function importOne(f) { // -> { keys: [...], bad: [...] }
   return { keys: [key], bad: [] };
 }
 async function importFiles(list, where) {
-  const files = [...(list || [])]; if (!files.length) return; saveNow();
+  let files = [...(list || [])]; if (!files.length) return; saveNow();
+  // a package can arrive as a core zip plus asset parts in one pick: read the project first, so the parts have somewhere to go
+  const rank = async f => { try { const h = new Uint8Array(await f.slice(0, 4).arrayBuffer()); if (!(h[0] === 0x50 && h[1] === 0x4b)) return 1; f.__zipIndex = await zipIndex(f); return f.__zipIndex.some(e => isStageProjectName(e.name)) ? 0 : 2; } catch (e) { return 1; } };
+  const ranks = await Promise.all(files.map(rank)); files = files.map((f, i) => [ranks[i], i, f]).sort((a, b) => a[0] - b[0] || a[1] - b[1]).map(x => x[2]);
   const keys = [], bad = [], projects = [], notes = []; let skipped = 0, ws = null;
-  for (const f of files) { try { const r = await importOne(f); keys.push(...r.keys); bad.push(...r.bad); skipped += r.skipped || 0; notes.push(...(r.notes || [])); if (r.project) projects.push(r.project); if (r.workspace) ws = r.workspace; } catch (e) { bad.push(f.name + ' couldn’t be read.'); } }
-  syncKiritoTab();
+  for (const [i, f] of files.entries()) { if (files.length > 1) busy(`Importing file ${i + 1} of ${files.length}: ${f.name}…`); try { const r = await importOne(f); keys.push(...r.keys); bad.push(...r.bad); skipped += r.skipped || 0; notes.push(...(r.notes || [])); if (r.project) projects.push(r.project); if (r.workspace) ws = r.workspace; } catch (e) { bad.push(f.name + ' couldn’t be read.'); } }
+  if (files.length > 1) busy(''); syncKiritoTab();
   if (projects.length && !keys.length && !ws) { if (bad.length) toast(bad.join(' ')); return; }
   const slotKeys = [...new Set(keys.filter(k => isSlotKey(k) || isCastleKey(k)))];
   const dest = ['emergency', 'road', 'castle'].map(k => { const n = slotKeys.filter(x => kindOfKey(x) === k).map(slotNum).sort((a, b) => a - b); return n.length ? `${KIND(k).label} slot${n.length === 1 ? '' : 's'} ${n.join(', ')}` : null; }).filter(Boolean).join(' · ');
@@ -1591,6 +1707,28 @@ function zipBlob(files) {
   e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, size, true); e.setUint32(16, off, true);
   return new Blob([...parts, ...cen, new Uint8Array(e.buffer)], { type: 'application/zip' });
 }
+// a zip on disk read one member at a time (big stage packages stay out of memory): the central directory first, then each member on demand
+async function zipIndex(blob) {
+  const size = blob.size, tailLen = Math.min(size, 65557); if (size < 22) throw new Error('zip');
+  const tail = new Uint8Array(await blob.slice(size - tailLen).arrayBuffer()), tv = new DataView(tail.buffer); let e = -1;
+  for (let i = tail.length - 22; i >= 0; i--) if (tv.getUint32(i, true) === 0x06054b50) { e = i; break; }
+  if (e < 0) throw new Error('zip'); const n = tv.getUint16(e + 10, true), cdSize = tv.getUint32(e + 12, true), cdOff = tv.getUint32(e + 16, true);
+  if (n === 0xffff || cdOff === 0xffffffff) throw new Error('This zip uses the ZIP64 format, which this page can’t read. Use the separate part ZIPs instead.');
+  const cd = new Uint8Array(await blob.slice(cdOff, cdOff + cdSize).arrayBuffer()), v = new DataView(cd.buffer), out = []; let p = 0;
+  for (let k = 0; k < n; k++) { if (v.getUint32(p, true) !== 0x02014b50) throw new Error('zip');
+    const method = v.getUint16(p + 10, true), csz = v.getUint32(p + 20, true), usz = v.getUint32(p + 24, true), nl = v.getUint16(p + 28, true), xl = v.getUint16(p + 30, true), cl = v.getUint16(p + 32, true), lo = v.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(cd.subarray(p + 46, p + 46 + nl)); p += 46 + nl + xl + cl;
+    if (name.endsWith('/') || name.startsWith('__MACOSX/')) continue; out.push({ name, method, csz, usz, lo }); }
+  return out;
+}
+async function zipRead(blob, e) { // -> Blob of the member's bytes
+  const h = new DataView(await blob.slice(e.lo, e.lo + 30).arrayBuffer()); if (h.getUint32(0, true) !== 0x04034b50) throw new Error('zip');
+  const ds = e.lo + 30 + h.getUint16(26, true) + h.getUint16(28, true), raw = blob.slice(ds, ds + e.csz);
+  if (e.method === 0) return raw; if (e.method === 8) return new Response(raw.stream().pipeThrough(new DecompressionStream('deflate-raw'))).blob();
+  throw new Error('Unsupported zip compression in ' + e.name);
+}
+async function zipReadAll(blob, entries) { const out = {}; for (const e of entries) out[e.name] = new Uint8Array(await (await zipRead(blob, e)).arrayBuffer()); return out; }
+const isStageProjectName = n => /\.forge-stage-project\.json$/i.test(n);
 async function unzip(buf) {
   const v = new DataView(buf.buffer, buf.byteOffset, buf.byteLength); let e = -1;
   for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65557); i--) if (v.getUint32(i, true) === 0x06054b50) { e = i; break; }
@@ -1891,6 +2029,7 @@ async function showKiritoLanding() {
   $('kiritoList').replaceChildren(...list.map(p => { const del = el('button', { type: 'button', class: 'chip sm', text: 'Delete' }); del.style.color = 'var(--bad)';
     del.onclick = async () => { if (del.dataset.sure !== '1') { del.dataset.sure = '1'; del.textContent = 'Delete for good?'; setTimeout(() => { del.dataset.sure = ''; del.textContent = 'Delete'; }, 4000); return; } await window.ForgeSandboxUI.deleteProject(p.id); showKiritoLanding(); };
     return el('div', { class: 'prow' }, el('div', {}, el('b', { text: p.name }), el('small', { text: `${p.quests} quests · ${p.maps} maps · saved ${new Date(p.savedAt).toLocaleString()}` }),
+      p.expected ? el('small', { class: p.missing ? 'warn' : '', text: p.missing ? `${(p.expected - p.missing).toLocaleString()} of ${p.expected.toLocaleString()} package files stored: import the remaining asset part ZIPs for every background picture and animation.` : `All ${p.expected.toLocaleString()} package files stored and checked.` }) : null,
       el('small', { text: (p.questList || []).map(q => `${q.missionName || q.name}: stage ${q.stageId}, mission ${q.missionId}`).join(' · ') })),
       el('div', { class: 'acts row' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Open', onclick: () => window.ForgeSandboxUI.openProject(p.id) }), del)); }));
   if (!list.length) $('kiritoList').append(el('p', { class: 'hint', text: 'No event project in this browser yet.' }));
@@ -2431,7 +2570,10 @@ addEventListener('dragleave', e => { if (!hasFiles(e)) return; dragDepth = Math.
 addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
 addEventListener('drop', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth = 0; $('dropZone').hidden = true; importFiles(e.dataTransfer.files); });
 
-window.__forgeKit = { unzip, zipBlob, saveBlob };
+window.__forgeKit = { unzip, zipBlob, saveBlob, zipIndex, zipRead, zipReadAll };
+// a long import or export says what it's doing (bottom of the page)
+function busy(text) { const b = $('busy'); if (!b) return; b.textContent = text || ''; b.hidden = !text; }
+window.__forgeBusy = busy;
 
 // ---- loop and start
 function tick(now) { const dt = st.last ? Math.min(0.1, (now - st.last) / 1000) : 0; st.last = now; if (st.anim && !document.hidden && !document.body.classList.contains('sbx-on') && st.kind !== 'castle') { st.t += dt; if (st.draft) draw(); } requestAnimationFrame(tick); }
@@ -2675,32 +2817,46 @@ const legacy = { parseText, validateProject, importProject, exportProject, quest
 /* Projects with the supplied event catalog (profile kirito-events/1) go through the supplied adapter,
    sandbox/stage-sandbox.mjs (unchanged), for every operation it implements, and through sandbox/sandbox-edits.mjs for the
    added controls. Older stage projects keep the functions above. */
-let SA = null, KE = null;
+let SA = null, KE = null, MAPS = null; // MAPS: the open project's map library (catalogs/map-library.json), when it has one
 const ready = Promise.all([import('./sandbox/stage-sandbox.mjs'), import('./sandbox/sandbox-edits.mjs')]).then(([a, b]) => { SA = a; KE = b; });
 const isEvent = p => !!(p && p.catalog && p.catalog.profile === 'kirito-events/1');
 const ev = p => { need(SA && KE, 'The event adapter is still loading. Try again in a moment.'); return p; };
-const onlyEvent = name => (p, ...a) => { need(isEvent(p), 'This control is available for event projects.'); ev(p); return KE[name](p, ...a); };
+// every event edit is checked by both supplied adapters: the sandbox rules, and the map rules when the map library is loaded
+const vm = r => (MAPS && isEvent(r) ? KE.MA.validateMaps(r, MAPS) : r);
+const onlyEvent = name => (p, ...a) => { need(isEvent(p), 'This control is available for event projects.'); ev(p); return vm(KE[name](p, ...a)); };
+const mapOp = name => (p, ...a) => { need(isEvent(p), 'Map editing is available for event projects.'); ev(p); need(MAPS, 'The map library isn’t loaded for this project. Import the full package (core and asset ZIPs) to change backgrounds and layouts.'); return KE.MA[name](p, ...a, MAPS); };
 const api = { ready, isEvent, POLICY_MAX, CURRENCY_MAX, parseText,
   get policy() { return KE ? KE.POLICY : null; }, get roles() { return KE ? KE.ROLES : { 0: 'Normal', 2: 'Boss', 3: 'Mini boss' }; },
   levelRange: e => KE ? KE.levelRange(e) : [1, e.maxLevel || 1], eolOf: t => KE ? KE.eolOf(t) : '\n', withEol: (j, e) => KE ? KE.withEol(j, e) : j,
-  importProject(text, library) { const j = parseText(text); if (isEvent(j)) { ev(j); return KE.importText(text, library); } return importProject(text, library); },
-  validateProject: (p, library) => isEvent(p) ? KE.validate(ev(p), library) : validateProject(p, library),
-  exportProject: (p, library) => isEvent(p) ? (KE.validate(ev(p), library), SA.exportProject(p)) : exportProject(p, library),
+  formatOf: t => KE ? KE.formatOf(t) : { eol: '\n', indent: 2, final: true },
+  setMapLibrary(lib) { MAPS = lib && lib.definitions && lib.templates ? lib : null; return MAPS; }, get mapLibrary() { return MAPS; },
+  importProject(text, library) { const j = parseText(text); if (isEvent(j)) { ev(j); return vm(KE.importText(text, library)); } return importProject(text, library); },
+  validateProject: (p, library) => isEvent(p) ? KE.validateAll(ev(p), library, MAPS) : validateProject(p, library),
+  validateMaps: (p, lib) => KE.MA.validateMaps(ev(p), lib || MAPS),
+  exportProject: (p, library) => isEvent(p) ? (KE.validateAll(ev(p), library, MAPS), SA.exportProject(p)) : exportProject(p, library),
+  /** project file text in the format it arrived in (line endings, indentation), checked by every adapter first */
+  serializeProject: (p, library, fmt) => isEvent(p) ? (KE.validateAll(ev(p), library, MAPS), KE.serialize(p, fmt)) : (fmt ? KE.serialize(validateProject(p, library), fmt) : exportProject(p, library)),
   questSummaries: p => isEvent(p) ? SA.questSummaries(ev(p)) : questSummaries(p),
   scene: (p, ...a) => isEvent(p) ? KE.scene(ev(p), ...a) : scene(p, ...a),
   usesOf: (p, e) => isEvent(p) ? KE.usesOf(ev(p), e) : usesOf(p, e),
-  moveMarker: (p, ...a) => isEvent(p) ? SA.moveMarker(ev(p), ...a) : moveMarker(p, ...a),
-  setNormalDrop: (p, ...a) => isEvent(p) ? KE.checkLibrary(SA.setNormalDrop(ev(p), ...a), a[a.length - 1]) : setNormalDrop(p, ...a),
-  setLuckyReward: (p, ...a) => isEvent(p) ? KE.checkLibrary(SA.setLuckyReward(ev(p), ...a), a[a.length - 1]) : setLuckyReward(p, ...a),
-  setObjectiveReward: (p, ...a) => isEvent(p) ? KE.checkLibrary(SA.setObjectiveReward(ev(p), ...a), a[a.length - 1]) : setObjectiveReward(p, ...a),
+  moveMarker: (p, ...a) => isEvent(p) ? vm(SA.moveMarker(ev(p), ...a)) : moveMarker(p, ...a),
+  setNormalDrop: (p, ...a) => isEvent(p) ? vm(KE.checkLibrary(SA.setNormalDrop(ev(p), ...a), a[a.length - 1])) : setNormalDrop(p, ...a),
+  setLuckyReward: (p, ...a) => isEvent(p) ? vm(KE.checkLibrary(SA.setLuckyReward(ev(p), ...a), a[a.length - 1])) : setLuckyReward(p, ...a),
+  setObjectiveReward: (p, ...a) => isEvent(p) ? vm(KE.checkLibrary(SA.setObjectiveReward(ev(p), ...a), a[a.length - 1])) : setObjectiveReward(p, ...a),
   gameExportStatus: p => isEvent(p) && SA ? SA.gameExportStatus() : gameExportStatus(p),
-  setNormalDropDetails: (p, ...a) => isEvent(p) ? KE.setNormalDropDetails(ev(p), ...a) : setNormalDropDetails(p, ...a),
-  setLuckyDetails: (p, ...a) => isEvent(p) ? KE.setLuckyDetails(ev(p), ...a) : setLuckyDetails(p, ...a),
-  setCurrency: (p, ...a) => isEvent(p) ? KE.setCurrency(ev(p), ...a) : setCurrency(p, ...a),
-  resetMap: (p, ...a) => isEvent(p) ? KE.resetMap(ev(p), ...a) : resetMap(p, ...a),
+  setNormalDropDetails: (p, ...a) => isEvent(p) ? vm(KE.setNormalDropDetails(ev(p), ...a)) : setNormalDropDetails(p, ...a),
+  setLuckyDetails: (p, ...a) => isEvent(p) ? vm(KE.setLuckyDetails(ev(p), ...a)) : setLuckyDetails(p, ...a),
+  setCurrency: (p, ...a) => isEvent(p) ? vm(KE.setCurrency(ev(p), ...a)) : setCurrency(p, ...a),
+  resetMap: (p, ...a) => isEvent(p) ? vm(KE.resetMap(ev(p), ...a, MAPS)) : resetMap(p, ...a),
   changes: (a, b) => changes(a, b),
   setChallengeCurrency: onlyEvent('setChallengeCurrency'), setPlacement: onlyEvent('setPlacement'), setEnemyStats: onlyEvent('setEnemyStats'),
-  setDifficulty: onlyEvent('setDifficulty'), scaleStats: onlyEvent('scaleStats') };
+  setDifficulty: onlyEvent('setDifficulty'), scaleStats: onlyEvent('scaleStats'),
+  // maps, through the supplied stage-map-authoring.mjs (unchanged): each returns an edited copy for undo/redo
+  setMapBackground: mapOp('setMapBackground'), reorderMaps: mapOp('reorderMaps'),
+  replaceMapLayout: (p, localId, mapId, templateId, placements) => { need(isEvent(p), 'Map editing is available for event projects.'); ev(p); need(MAPS, 'The map library isn’t loaded for this project.'); return KE.MA.replaceMapLayout(p, localId, mapId, templateId, MAPS, placements || {}); },
+  layoutCheck: (p, localId, mapId, templateId, placements) => KE.layoutCheck(p, localId, mapId, MAPS, templateId, placements),
+  suggestPlacements: chk => KE.suggestPlacements(chk), backgroundInfo: id => MAPS && KE ? KE.backgroundInfo(MAPS, id) : null,
+  templateSupported: t => KE.templateSupported(t), plainLines: t => KE.plainLines(t), backgroundFiles: (p, assets) => MAPS ? KE.backgroundFiles(p, MAPS, assets) : [] };
 if (typeof module === 'object' && module.exports) module.exports = legacy; else root.ForgeStageSandbox = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -2767,16 +2923,88 @@ async function importZip(files, fname, opts = {}) {
   let p; try { p = A.importProject(ptext); } catch (e) { return { err: `${fname}: ${e.message}` }; }
   const stored = []; for (const [n, data] of Object.entries(files)) if (n.startsWith(root) && !n.endsWith('/')) stored.push([n.slice(root.length), new Blob([data], { type: mimeOf(n) })]);
   const old = await getRec(p.projectId).catch(() => null);
-  const rec = { id: p.projectId, name: p.name || p.projectId, fileName: pf.slice(root.length), eol: A.eolOf(ptext), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: old && old.baseline ? old.baseline : p, files: stored.map(x => x[0]) };
+  const rec = { ...(old || {}), id: p.projectId, name: p.name || p.projectId, fileName: pf.slice(root.length), eol: A.eolOf(ptext), fmt: A.formatOf(ptext), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: old && old.baseline ? old.baseline : p, files: [...new Set([...((old && old.files) || []), ...stored.map(x => x[0])])] };
   try { await putFiles(rec.id, stored); await putRec(rec); } catch (e) { return { err: 'This browser wouldn’t store the project (storage full or private browsing). ' + (e && e.message || '') }; }
   if (opts.open === false) return { ok: true, name: rec.name };
   await openProject(rec.id, `Imported ${rec.name}: ${p.catalog.stages.length} quests, ${p.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0)} maps, ${stored.length} files.`);
   return { ok: true, name: rec.name };
 }
+// ---- big packages, read straight from the zip file one member at a time (core zip, asset part zips, or one combined zip)
+const PKG_DIRS = /^(animation|backgrounds|characters|catalogs|assets|reference|renderer|integration|tests|exporter)\//;
+async function sha256Hex(buf) { const d = await crypto.subtle.digest('SHA-256', buf); return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, '0')).join(''); }
+const busy = t => (window.__forgeBusy || (() => {}))(t);
+function checksumMap(j) { const out = {}; for (const [k, v] of Object.entries(j || {})) { const h = typeof v === 'string' ? v : v && v.sha256; if (typeof h === 'string' && /^[0-9a-f]{64}$/.test(h)) out[k] = h; } return out; }
+// store zip members as project files; a member listed in the package checksums must match them byte for byte
+async function storeMembers(file, rec, members, label) {
+  const bad = [], stored = []; let batch = [], done = 0;
+  const flush = async () => { if (!batch.length) return; await putFiles(rec.id, batch); for (const [n] of batch) stored.push(n); batch = []; };
+  for (const { e, rel } of members) {
+    const buf = await (await KIT.zipRead(file, e)).arrayBuffer(), want = rec.expected && rec.expected[rel];
+    if (want && await sha256Hex(buf) !== want) { bad.push(rel); continue; }
+    batch.push([rel, new Blob([buf], { type: mimeOf(rel) })]); done++;
+    if (batch.length >= 24) { await flush(); busy(`${label}: ${done.toLocaleString()} of ${members.length.toLocaleString()} files stored…`); }
+  }
+  await flush(); return { stored, bad };
+}
+async function findProjectEntry(file, entries) {
+  const named = entries.filter(e => isProjectFile(e.name)); if (named.length) return named.sort((a, b) => a.name.length - b.name.length)[0];
+  const cands = entries.filter(e => /\.json$/i.test(e.name) && !/(^|\/)(reference|catalogs|characters|animation|backgrounds|tests|exporter|renderer|handoff)\//.test(e.name) && e.usz < 64 * 1024 * 1024).sort((a, b) => a.name.length - b.name.length).slice(0, 6);
+  for (const e of cands) { const head = await (await KIT.zipRead(file, e)).slice(0, 400).text(); if (/"format"\s*:\s*"ForgeStageSandbox"/.test(head)) return e; }
+  return null;
+}
+const isProjectFile = n => /\.forge-stage-project\.json$/i.test(n);
+async function importZipFile(file, entries, opts = {}) {
+  const pe = await findProjectEntry(file, entries);
+  if (pe) return importPackageZip(file, entries, pe, opts);
+  return importAssetPart(file, entries);
+}
+async function importPackageZip(file, entries, pe, opts) {
+  const root = pe.name.includes('/') ? pe.name.slice(0, pe.name.lastIndexOf('/') + 1) : '', byRel = new Map(entries.filter(e => e.name.startsWith(root)).map(e => [e.name.slice(root.length), e]));
+  const readText = async rel => { const e = byRel.get(rel); return e ? (await KIT.zipRead(file, e)).text() : null; };
+  busy(`Reading ${file.name}…`); await A.ready;
+  const ptext = await readText(pe.name.slice(root.length)); let p; try { p = A.importProject(ptext); } catch (e) { busy(''); return { err: `${file.name}: ${e.message}` }; }
+  const L = p.libraries || {};
+  // the map library comes with the package; the supplied map rules check the project before anything is stored
+  if (A.isEvent(p) && L.maps && byRel.has(L.maps)) { try { A.validateMaps(p, A.parseText(await readText(L.maps))); } catch (e) { busy(''); return { err: `${file.name}: ${e.message}` }; } }
+  let expected = {}; try { const t = await readText('checksums.json'); if (t) expected = checksumMap(JSON.parse(t)); } catch (e) {}
+  const old = await getRec(p.projectId).catch(() => null); if (sb.open && sb.rec && sb.rec.id === p.projectId) clearTimeout(saveT);
+  // the baseline is the supplied source catalog (reference/released-catalog.json) when the package has it, so an edited export reimports with the original to reset to
+  let baseline = old && old.baseline ? old.baseline : p;
+  if (A.isEvent(p) && p.source && p.source.file && byRel.has(p.source.file)) { try { const cat = JSON.parse(await readText(p.source.file)); const b = JSON.parse(JSON.stringify(p)); b.catalog = cat; A.validateProject(b); baseline = b; } catch (e) {} }
+  const fileName = pe.name.slice(root.length); delete expected[fileName]; // the project file is the editable document: an edited export legitimately differs from the package checksum
+  const rec = { ...(old || {}), id: p.projectId, name: p.name || p.projectId, fileName, fmt: A.formatOf(ptext), eol: A.eolOf(ptext), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline,
+    files: old && old.files ? old.files.slice() : [], expected: { ...((old && old.expected) || {}), ...expected } }; delete rec.expected[fileName];
+  try { await putRec(rec); } catch (e) { busy(''); return { err: 'This browser wouldn’t store the project (storage full or private browsing). ' + (e && e.message || '') }; }
+  const members = [...byRel.entries()].map(([rel, e]) => ({ e, rel }));
+  let res; try { res = await storeMembers(file, rec, members, `Importing ${file.name}`); } catch (e) { busy(''); return { err: 'This browser wouldn’t store the package files (storage full?). ' + (e && e.message || '') }; }
+  rec.files = [...new Set([...rec.files, ...res.stored])]; await putRec(rec); busy('');
+  const missing = Object.keys(rec.expected).filter(k => !rec.files.includes(k)).length;
+  const msg = `Imported ${rec.name}: ${p.catalog.stages.length} quests, ${p.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0)} maps, ${res.stored.length.toLocaleString()} files` + (Object.keys(expected).length ? ' checked against the package checksums' : '') + '.'
+    + (res.bad.length ? ` ${res.bad.length} file${res.bad.length === 1 ? '' : 's'} didn’t match the checksums and ${res.bad.length === 1 ? 'was' : 'were'} left out: ${res.bad.slice(0, 3).join(', ')}${res.bad.length > 3 ? '…' : ''}.` : '')
+    + (missing ? ` ${missing.toLocaleString()} package file${missing === 1 ? ' isn’t' : 's aren’t'} here yet: import the asset part ZIPs too (you can pick them all at once).` : '');
+  if (opts.open === false) return { ok: true, name: rec.name };
+  await openProject(rec.id, msg); return { ok: true, name: rec.name };
+}
+// an asset part zip: files at the package root, listed in a stored project's checksums
+async function importAssetPart(file, entries) {
+  const recs = (await allRecs().catch(() => [])).filter(r => r.expected && Object.keys(r.expected).length);
+  const strip = n => n.includes('/') ? n.slice(n.indexOf('/') + 1) : n; let best = null;
+  for (const r of recs) for (const fn of [n => n, strip]) { const hits = entries.filter(e => r.expected[fn(e.name)]).length; if (hits && (!best || hits > best.hits)) best = { r, fn, hits }; }
+  if (!best) { if (entries.some(e => PKG_DIRS.test(e.name) || PKG_DIRS.test(strip(e.name)))) return { err: `${file.name}: these are asset files from a stage-project package. Import the core ZIP (the one with the project file) first, or pick the core and all the part ZIPs together.` }; return null; }
+  const rec = best.r, members = entries.map(e => ({ e, rel: best.fn(e.name) })).filter(x => rec.expected[x.rel]);
+  let res; try { res = await storeMembers(file, rec, members, `Adding ${file.name} to ${rec.name}`); } catch (e) { busy(''); return { err: 'This browser wouldn’t store the asset files (storage full?). ' + (e && e.message || '') }; }
+  const fresh = await getRec(rec.id); fresh.files = [...new Set([...(fresh.files || []), ...res.stored])]; await putRec(fresh); busy('');
+  if (sb.open && sb.rec && sb.rec.id === rec.id) { sb.rec.files = fresh.files; refreshAssets(); }
+  const missing = Object.keys(fresh.expected).filter(k => !fresh.files.includes(k)).length;
+  const msg = `Added ${res.stored.length.toLocaleString()} files from ${file.name} to ${rec.name}.` + (res.bad.length ? ` ${res.bad.length} didn’t match the checksums and ${res.bad.length === 1 ? 'was' : 'were'} left out.` : '') + (missing ? ` ${missing.toLocaleString()} package file${missing === 1 ? ' is' : 's are'} still missing.` : ' The package is complete.');
+  if (sb.open && sb.rec && sb.rec.id === rec.id) note(msg); return { ok: true, name: rec.name, note: msg };
+}
+// newly stored files: forget what was missing so previews load
+function refreshAssets() { for (const [k, v] of [...sb.urls.entries()]) v.then(u => { if (!u) sb.urls.delete(k); }); sb.missing.clear(); bgPics.clear(); bgThumbs.clear(); renderAll(); }
 async function importJSON(text, fname) {
   await A.ready; let p; try { p = A.importProject(text); } catch (e) { return { err: `${fname}: ${e.message}` }; }
   const old = await getRec(p.projectId).catch(() => null);
-  const rec = old ? { ...old, project: p, eol: A.eolOf(text), savedAt: Date.now() } : { id: p.projectId, name: p.name || p.projectId, fileName: fname, eol: A.eolOf(text), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: p, files: [] };
+  const rec = old ? { ...old, project: p, eol: A.eolOf(text), fmt: A.formatOf(text), savedAt: Date.now() } : { id: p.projectId, name: p.name || p.projectId, fileName: fname, eol: A.eolOf(text), fmt: A.formatOf(text), savedAt: Date.now(), importedAt: Date.now(), project: p, baseline: p, files: [] };
   const prev = sb.open && sb.rec && sb.rec.id === rec.id ? sb.p : null;
   try { await putRec(rec); } catch (e) { return { err: 'This browser wouldn’t store the project. ' + (e && e.message || '') }; }
   await openProject(rec.id, old ? `Opened ${fname} with the art and catalogs already stored for this project.` : `Opened ${fname}. Its art and catalogs aren’t stored here yet: import the package ZIP to see them and to edit rewards.`);
@@ -2790,8 +3018,9 @@ async function openProject(pid, msg = '') {
   for (const u of sb.urls.values()) u.then(x => x && URL.revokeObjectURL(x));
   Object.assign(sb, { rec, p: rec.project, base: rec.baseline, undo: [], redo: [], qi: 0, mi: 0, sel: null, pick: null, view: { z: 1, x: 0, y: 0 }, urls: new Map(), missing: new Set(), scenes: new Map(), thumbs: new Map(), msg });
   const L = rec.project.libraries || {};
-  const [lib, labels, chars, bg] = await Promise.all([fileJSON(L.rewards), fileJSON(L.enemies), fileJSON(L.characters), fileJSON(L.backgrounds)]);
+  const [lib, labels, chars, bg, maps, assets] = await Promise.all([fileJSON(L.rewards), fileJSON(L.enemies), fileJSON(L.characters), fileJSON(L.backgrounds), L.maps ? fileJSON(L.maps) : null, L.maps ? fileJSON('backgrounds/assets.json') : null]);
   sb.lib = lib && lib.items ? lib : null; sb.labels = labels && labels.enemies ? labels : { enemies: {} }; sb.chars = chars; sb.bgIndex = Array.isArray(bg) ? bg : [];
+  sb.maps = A.isEvent(rec.project) ? A.setMapLibrary(maps) : A.setMapLibrary(null); sb.assets = Array.isArray(assets) ? assets : []; sb.layoutDraft = null; sb.bgInfo = new Map();
   try { localStorage.setItem(OPEN_KEY, pid); } catch (e) {}
   sb.open = true; document.body.classList.add('sbx-on'); $('sbx').hidden = false; signal();
   renderAll(); requestAnimationFrame(() => { draw(); $('sbx').scrollIntoView({ block: 'start' }); });
@@ -2874,7 +3103,17 @@ const toScreen = (c, x, y) => [c.ox + x * c.s, c.oy + y * c.s];
 function toWorld(e) { const c = cv(), r = c.getBoundingClientRect(), k = c.width / r.width, m = cam(); return [((e.clientX - r.left) * k - m.ox) / m.s, ((e.clientY - r.top) * k - m.oy) / m.s]; }
 const nearest = ([wx, wy]) => [Math.max(0, Math.min(COLS - 1, Math.round(wx / CW))), Math.max(0, Math.min(ROWS - 1, Math.round(wy / CH)))];
 let hits = [], drag = null, scn = null;
-function bgFor(bgId) { const b = sb.bgIndex.find(x => String(x.backgroundId) === String(bgId)); return b ? { path: b.thumbnail, label: b.label } : null; }
+// backgrounds: the map library's exact definitions when the project has one (older packages: their background index)
+function bgInfoOf(id) { if (!sb.maps) return null; const k = String(id); if (!sb.bgInfo.has(k)) sb.bgInfo.set(k, A.backgroundInfo(k)); return sb.bgInfo.get(k); }
+function bgFor(bgId) { const i = bgInfoOf(bgId); if (i) return { path: i.texture, label: i.name, info: i };
+  const b = sb.bgIndex.find(x => String(x.backgroundId) === String(bgId)); return b ? { path: b.thumbnail, label: b.label } : null; }
+const bgThumbs = new Map(); // background -> small picture of the part the field shows (cover-fit to the 750×1050 field)
+function bgThumb(bgId) { const k = String(bgId); if (bgThumbs.has(k)) return bgThumbs.get(k);
+  const pr = (async () => { const b = bgFor(k); if (!b || !b.path) return null; const im = await image(await fileURL(b.path)); if (!im) return null;
+    const W = 120, H = 168, c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'), sc = Math.max(W / im.naturalWidth, H / im.naturalHeight);
+    g.drawImage(im, (W - im.naturalWidth * sc) / 2, (H - im.naturalHeight * sc) / 2, im.naturalWidth * sc, im.naturalHeight * sc); return c.toDataURL('image/webp', .8); })().catch(() => null);
+  bgThumbs.set(k, pr); return pr; }
+function thumbInto(img, bgId) { bgThumb(bgId).then(u => { if (u) img.src = u; else { img.alt = 'No picture'; img.classList.add('nopic'); } }); return img; }
 const bgPics = new Map();
 function bgPic(path) { if (!bgPics.has(path)) { bgPics.set(path, null); fileURL(path).then(image).then(i => { bgPics.set(path, i); draw(); }); } return bgPics.get(path); }
 function sizeCanvas() { const c = cv(), r = c.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr)); if (c.width !== w || c.height !== h) { c.width = w; c.height = h; } }
@@ -2884,6 +3123,8 @@ function draw() {
   const bg = bgFor(scn.backgroundId); const pic = bg && bgPic(bg.path);
   if (pic) { const k = Math.max(FW / pic.naturalWidth, FH / pic.naturalHeight); const dw = pic.naturalWidth * k, dh = pic.naturalHeight * k; const [x0, y0] = toScreen(m, (FW - dw) / 2, (FH - dh) / 2); ctx.drawImage(pic, x0, y0, dw * m.s, dh * m.s); }
   else { ctx.fillStyle = '#1a1f2a'; const [x0, y0] = toScreen(m, -CW / 2, -CH / 2); ctx.fillRect(x0, y0, (FW + CW) * m.s, (FH + CH) * m.s); }
+  $('sxBgNote').textContent = pic ? `Background ${scn.backgroundId}: ${bg.label || ''} — its base texture, fitted to the field; not the composed game view (layer placement and camera aren’t calibrated).` : `Background ${scn.backgroundId}${bg && bg.label ? ': ' + bg.label : ''} — no picture stored in this browser yet` + (bg && bg.path ? ' (import the asset part ZIPs).' : '.');
+  if (draftHere()) { drawDraft(ctx, m); return; }
   for (const cell of scn.cells) { const [gx, gy] = cell.grid; const [sx, sy] = toScreen(m, gx * CW - CW / 2, gy * CH - CH / 2); const ch = cell.chip;
     const floor = ch > 7 || ((0x6e >> ch) & 1) === 1;
     if (!floor || ch === 0) { ctx.fillStyle = 'rgba(10,12,16,.6)'; ctx.fillRect(sx, sy, CW * m.s + .5, CH * m.s + .5); }
@@ -2927,7 +3168,6 @@ function draw() {
     const br = Math.max(9, 13 * m.s), by = t.sy + t.tsc.top * m.s - br - 3; ctx.fillStyle = t.on ? '#FFFFFF' : 'rgba(122,184,255,.95)'; ctx.beginPath(); ctx.arc(t.sx, by, br, 0, 7); ctx.fill(); ctx.strokeStyle = '#0B1A2E'; ctx.lineWidth = 2; ctx.stroke();
     ctx.fillStyle = '#0B1A2E'; ctx.font = `800 ${Math.round(br * 1.3)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(t.pl.slot + 1), t.sx, by + 1); }
   if (drag && drag.moved && drag.to) { const [sx, sy] = toScreen(m, drag.to[0] * CW, drag.to[1] * CH); ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.strokeRect(sx - CW / 2 * m.s, sy - CH / 2 * m.s, CW * m.s, CH * m.s); ctx.setLineDash([]); }
-  $('sxBgNote').textContent = pic ? `Background ${scn.backgroundId}: ${bg.label || ''} — base texture only, not the composed game view` : `Background ${scn.backgroundId}: no picture in this package`;
 }
 function zoomAt(px, py, f) { const v = sb.view, c = cv(), w = c.width, h = c.height; const z2 = Math.max(.5, Math.min(6, v.z * f)); if (z2 === v.z) return;
   const sx = (px - w / 2 - v.x * w) / v.z + w / 2, sy = (py - h / 2 - v.y * w) / v.z + h / 2; v.x = (px - w / 2 - (sx - w / 2) * z2) / w; v.y = (py - h / 2 - (sy - h / 2) * z2) / w; v.z = z2; $('sxZ').textContent = Math.round(z2 * 100) + '%'; draw(); }
@@ -2952,6 +3192,7 @@ function wireCanvas() {
     if (!drag.hit || (drag.hit.kind === 'marker' && drag.hit.chip === 2)) { sb.view.x += (e.clientX - prev[0]) / r.width; sb.view.y += (e.clientY - prev[1]) / r.width; draw(); return; }
     drag.to = nearest(toWorld(e)); draw(); });
   const end = e => { if (!pts.has(e.pointerId)) return; pts.delete(e.pointerId); const d = drag; drag = null; if (!d || pts.size) { draw(); return; }
+    if (d.hit && d.hit.kind === 'draft') { if (!d.moved) { sb.sel = { kind: 'draft', chip: d.hit.chip }; draw(); return; } if (d.to) draftMove(d.hit.chip, d.to[0], d.to[1]); else draw(); return; }
     if (!d.moved) { if (d.hit) select(d.hit.kind === 'enemy' ? { kind: 'enemy', key: d.hit.key } : { kind: 'marker', chip: d.hit.chip }); else if (sb.sel) select(null); return; }
     if (!d.hit || !d.to) { draw(); return; } const [x, y] = d.to;
     if (d.hit.kind === 'marker') { if (d.hit.chip === 2) { note('Shared entry cells (★) are part of the field and can’t be moved here.', true); draw(); return; } moveChip(d.hit.chip, x, y); }
@@ -2961,36 +3202,217 @@ function wireCanvas() {
   c.addEventListener('pointerup', end); c.addEventListener('pointercancel', end);
   c.addEventListener('wheel', e => { e.preventDefault(); const r = c.getBoundingClientRect(), k = c.width / r.width; zoomAt((e.clientX - r.left) * k, (e.clientY - r.top) * k, Math.exp(-e.deltaY * (e.deltaMode === 1 ? 16 : 1) * (e.ctrlKey ? .01 : .0015))); }, { passive: false });
   c.addEventListener('keydown', e => { const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!d) return;
+    if (draftHere() && sb.sel && sb.sel.kind === 'draft') { e.preventDefault(); const mk = draftCheck().markers.find(x => x.chip === sb.sel.chip); if (mk) draftMove(mk.chip, mk.at[0] + d[0], mk.at[1] + d[1]); return; }
     const chip = sb.sel && (sb.sel.kind === 'marker' ? sb.sel.chip : (() => { const en = scn && scn.enemies.find(q => q.key === sb.sel.key); return en && en.spawnCandidates.length === 1 ? en.spawnCandidates[0].chip : null; })());
     if (!chip || chip === 2) return; e.preventDefault(); const cell = scn.cells.find(q => q.chip === chip); if (!cell) return; const x = cell.grid[0] + d[0], y = cell.grid[1] + d[1]; if (x < 0 || y < 0 || x > 10 || y > 10) return; moveChip(chip, x, y); });
 }
 
 // ---- selection and the map strip
 function select(s) { sb.sel = s; sb.ins = 'sel'; renderInspector(); draw(); }
-function goMap(i) { const n = quest().donor.maps.length; sb.mi = Math.max(0, Math.min(n - 1, i)); sb.sel = null; renderStrip(true); renderInspector(); renderPalette(); draw(); }
+function goMap(i) { const n = quest().donor.maps.length, j = Math.max(0, Math.min(n - 1, i)); if (sb.layoutDraft && j !== sb.mi) cancelLayout(); sb.mi = j; sb.sel = null; renderStrip(true); renderInspector(); renderPalette(); draw(); }
 const CHIP_W = 124;
 let mapStats = new WeakMap();
 function statsOf(m) { if (mapStats.has(m)) return mapStats.get(m); let boss = false, n = 0, hp = 0, atk = 0, lv = 0;
   for (const s of m.sets) for (const e of s.raw.enemySet) { n += e.count || 1; if (e.type === 2) boss = true; const r = enemyRow(e.id); if (r && r.hp) hp = Math.max(hp, r.hp.s); if (r && r.atk) atk = Math.max(atk, r.atk.s); lv = Math.max(lv, e.level || 0); }
   const o = { boss, n, hp, atk, lv }; mapStats.set(m, o); return o; }
+// ---- the map strip: every map of the quest in its current order; drag the ⠿ handle (or Alt+←/→) to reorder floors
+const CHIP_BIG = 154;
+const isMapEdit = () => !!(sb.maps && A.isEvent(sb.p));
+let rd = null; // reorder drag: { from, to }
+function stripKey(maps) { return maps.map(m => m.id + ':' + m.raw.mapBgId).join(','); }
 function renderStrip(scrollTo) {
-  const q = quest(), maps = q.donor.maps, vp = $('sxStrip'), inner = $('sxStripIn');
-  inner.style.width = (maps.length * CHIP_W) + 'px';
-  if (scrollTo) { const want = sb.mi * CHIP_W - vp.clientWidth / 2 + CHIP_W / 2; vp.scrollLeft = Math.max(0, want); }
-  const first = Math.max(0, Math.floor(vp.scrollLeft / CHIP_W) - 3), last = Math.min(maps.length - 1, Math.ceil((vp.scrollLeft + vp.clientWidth) / CHIP_W) + 3);
-  const kids = [];
-  for (let i = first; i <= last; i++) { const m = maps[i], st = statsOf(m);
-    const b = el('button', { type: 'button', class: 'mchip' + (i === sb.mi ? ' on' : ''), 'aria-current': i === sb.mi ? 'true' : null, style: `left:${i * CHIP_W}px`, onclick: () => goMap(i), 'aria-label': `Map ${i + 1}${st.boss ? ', boss' : ''}, ${st.n} enemies` },
-      el('span', { class: 'mn' }, 'Map ' + (i + 1), st.boss ? el('span', { class: 'badge boss', text: 'Boss' }) : null),
-      el('span', { class: 'ms', text: `${st.n} enem${st.n === 1 ? 'y' : 'ies'} · Lv ${st.lv}` }), el('span', { class: 'ms', text: `HP ${fmt(st.hp)}` }));
+  const q = quest(), maps = q.donor.maps, vp = $('sxStrip'), inner = $('sxStripIn'), big = isMapEdit(), W = big ? CHIP_BIG : CHIP_W;
+  vp.classList.toggle('big', big); inner.style.width = (maps.length * W) + 'px';
+  if (scrollTo) { const want = sb.mi * W - vp.clientWidth / 2 + W / 2; vp.scrollLeft = Math.max(0, want); }
+  const first = Math.max(0, Math.floor(vp.scrollLeft / W) - 3), last = Math.min(maps.length - 1, Math.ceil((vp.scrollLeft + vp.clientWidth) / W) + 3);
+  const kids = [], word = big ? 'Floor' : 'Map';
+  for (let i = first; i <= last; i++) { const m = maps[i], st = statsOf(m), bi = big ? bgInfoOf(m.raw.mapBgId) : null;
+    const b = el('button', { type: 'button', class: 'mchip' + (big ? ' big' : '') + (i === sb.mi ? ' on' : '') + (rd && rd.from === i ? ' dragging' : ''), 'aria-current': i === sb.mi ? 'true' : null, style: `left:${i * W}px`, 'data-i': i,
+      onclick: () => goMap(i), 'aria-label': `${word} ${i + 1}${st.boss ? ', boss' : ''}, ${st.n} enemies${bi ? ', background ' + bi.name : ''}`, 'aria-keyshortcuts': big ? 'Alt+ArrowLeft Alt+ArrowRight' : null },
+      big ? thumbInto(el('img', { class: 'th', alt: '' }), m.raw.mapBgId) : null,
+      el('span', { class: big ? 'tx' : null, style: big ? null : 'display:contents' }, el('span', { class: 'mn' }, `${word} ${i + 1}`, st.boss ? el('span', { class: 'badge boss', text: 'Boss' }) : null),
+        big ? el('span', { class: 'ms', text: bi ? bi.name : 'Background ' + m.raw.mapBgId }) : el('span', { class: 'ms', text: `${st.n} enem${st.n === 1 ? 'y' : 'ies'} · Lv ${st.lv}` }),
+        el('span', { class: 'ms', text: big ? `${st.n} enem${st.n === 1 ? 'y' : 'ies'} · HP ${fmt(st.hp)}` : `HP ${fmt(st.hp)}` })),
+      big && maps.length > 1 ? el('span', { class: 'hdl', role: 'button', tabindex: '-1', title: 'Drag to reorder', 'aria-label': `Drag floor ${i + 1} to reorder`, text: '⠿', onpointerdown: e => startReorder(e, i), onclick: e => e.stopPropagation() }) : null);
+    if (big) b.addEventListener('keydown', e => { if (e.altKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); moveFloor(i, i + (e.key === 'ArrowLeft' ? -1 : 1), true); } });
     kids.push(b); }
+  if (rd && rd.to != null) kids.push(el('span', { class: 'mins', style: `left:${rd.to * W - 2}px` }));
   inner.replaceChildren(...kids);
   const bosses = A.questSummaries(sb.p)[sb.qi].bosses;
-  $('sxWhere').textContent = `Editing ${q.spec.name}${q.spec.missionName ? ' — ' + q.spec.missionName : ''} · Map ${sb.mi + 1} of ${maps.length}` + (bosses.length ? ` · bosses on map ${bosses.length > 6 ? bosses.slice(0, 5).join(', ') + ' … ' + bosses[bosses.length - 1] : bosses.join(', ')}` : '');
+  $('sxWhere').textContent = `Editing ${q.spec.name}${q.spec.missionName ? ' — ' + q.spec.missionName : ''} · ${word} ${sb.mi + 1} of ${maps.length}` + (bosses.length ? ` · boss ${word.toLowerCase()}s ${bosses.length > 6 ? bosses.slice(0, 5).join(', ') + ' … ' + bosses[bosses.length - 1] : bosses.join(', ')}` : '');
   $('sxPrev').disabled = sb.mi === 0; $('sxNext').disabled = sb.mi === maps.length - 1; $('sxGo').max = maps.length;
-  const j = $('sxJump'); if (j.dataset.q !== String(sb.qi) + ':' + maps.length) { j.dataset.q = String(sb.qi) + ':' + maps.length; j.replaceChildren(...maps.map((m, i) => { const st = statsOf(m); return new Option(`Map ${i + 1}${st.boss ? ' · boss' : ''} · HP ${fmt(st.hp)}`, String(i)); })); }
+  const j = $('sxJump'), key = sb.qi + ':' + stripKey(maps); if (j.dataset.q !== key) { j.dataset.q = key; j.replaceChildren(...maps.map((m, i) => { const st = statsOf(m), bi = big ? bgInfoOf(m.raw.mapBgId) : null; return new Option(`${word} ${i + 1}${st.boss ? ' · boss' : ''}${bi ? ' · ' + bi.name : ''} · HP ${fmt(st.hp)}`, String(i)); })); }
   j.value = String(sb.mi);
 }
+// drag the handle along the strip; the strip scrolls at its edges; dropping reorders through reorderMaps (one undo step)
+function startReorder(e, from) {
+  e.preventDefault(); e.stopPropagation(); if (sb.layoutDraft) { note('Apply or cancel the floor layout preview first.', true); return; }
+  const vp = $('sxStrip'), pid = e.pointerId; rd = { from, to: from }; /* the strip re-renders while dragging, so listen on the window, not the handle */ renderStrip(false); let raf = 0, lastX = e.clientX;
+  const at = x => { const r = vp.getBoundingClientRect(); return Math.max(0, Math.min(quest().donor.maps.length, Math.round((x - r.left + vp.scrollLeft) / CHIP_BIG))); };
+  const edge = () => { const r = vp.getBoundingClientRect(); const d = lastX < r.left + 48 ? -14 : lastX > r.right - 48 ? 14 : 0; if (d && rd) { vp.scrollLeft += d; rd.to = at(lastX); renderStrip(false); raf = requestAnimationFrame(edge); } else raf = 0; };
+  const move = ev => { if (ev.pointerId !== pid) return; lastX = ev.clientX; if (!rd) return; const t = at(ev.clientX); if (t !== rd.to) { rd.to = t; renderStrip(false); } if (!raf) raf = requestAnimationFrame(edge); };
+  const up = ev => { if (ev.pointerId !== pid) return; removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', up); cancelAnimationFrame(raf);
+    const r = rd; rd = null; let to = r ? r.to : from; if (r && to > r.from) to--; renderStrip(false); if (r && to !== r.from) moveFloor(r.from, to, false); };
+  addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+}
+function moveFloor(from, to, focus) {
+  const q = quest(), maps = q.donor.maps; if (to < 0 || to >= maps.length || to === from) return;
+  if (sb.layoutDraft) { note('Apply or cancel the floor layout preview first.', true); return; }
+  const ids = maps.map(m => m.id), [id] = ids.splice(from, 1); ids.splice(to, 0, id); const boss = statsOf(maps[from]).boss;
+  if (apply(p => A.reorderMaps(p, q.spec.localId, ids), `move floor ${from + 1} to floor ${to + 1}`)) {
+    sb.mi = to; renderStrip(true); renderInspector(); draw();
+    const bosses = A.questSummaries(sb.p)[sb.qi].bosses;
+    note(`Moved map ${id} from floor ${from + 1} to floor ${to + 1}; its enemies, drops and rewards went with it.` + (boss ? ' It’s a boss map, so the boss moved too.' : '') + (bosses.length ? ` Boss floors are now ${bosses.join(', ')}.` : ''));
+    if (focus) requestAnimationFrame(() => { const b = $('sxStripIn').querySelector(`[data-i="${to}"]`); if (b) b.focus(); }); }
+}
+
+// ---- floor layout preview on the field: the chosen layout's grid with this map's markers on top; markers in walls need a free floor tile
+const draftHere = () => !!(sb.layoutDraft && sb.layoutDraft.qi === sb.qi && sb.layoutDraft.mapId === qmap().id);
+function draftCheck() { const d = sb.layoutDraft; return A.layoutCheck(sb.p, quest().spec.localId, d.mapId, d.tid, d.place); }
+function drawDraft(ctx, m) {
+  const chk = draftCheck(), R = Math.max(9, 22 * m.s);
+  chk.lines.forEach((l, gy) => l.chips.forEach((ch, gx) => { const [sx, sy] = toScreen(m, gx * CW - CW / 2, gy * CH - CH / 2), floor = ch > 7 || ((0x6e >> ch) & 1) === 1;
+    if (!floor || ch === 0) { ctx.fillStyle = 'rgba(10,12,16,.66)'; ctx.fillRect(sx, sy, CW * m.s + .5, CH * m.s + .5); }
+    else { ctx.fillStyle = 'rgba(95,211,160,.12)'; ctx.fillRect(sx, sy, CW * m.s, CH * m.s); ctx.strokeStyle = 'rgba(255,255,255,.2)'; ctx.lineWidth = 1; ctx.strokeRect(sx + .5, sy + .5, CW * m.s - 1, CH * m.s - 1); } }));
+  for (const mk of chk.markers) { const [sx, sy] = toScreen(m, mk.at[0] * CW, mk.at[1] * CH), pl = mk.chip <= 13, on = sb.sel && sb.sel.kind === 'draft' && sb.sel.chip === mk.chip;
+    if (mk.moved) { const [fx, fy] = toScreen(m, mk.from[0] * CW, mk.from[1] * CH); ctx.strokeStyle = 'rgba(236,238,243,.55)'; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(sx, sy); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.beginPath(); if (pl) ctx.arc(sx, sy, R, 0, 7); else { ctx.moveTo(sx, sy - R); ctx.lineTo(sx + R, sy); ctx.lineTo(sx, sy + R); ctx.lineTo(sx - R, sy); ctx.closePath(); }
+    ctx.fillStyle = mk.ok ? (pl ? 'rgba(122,184,255,.92)' : 'rgba(255,122,61,.92)') : 'rgba(255,90,80,.95)'; ctx.fill();
+    ctx.lineWidth = on ? 3 : 2; ctx.strokeStyle = on ? '#fff' : mk.ok ? 'rgba(0,0,0,.35)' : '#fff'; ctx.stroke();
+    ctx.fillStyle = mk.ok ? '#0B1A2E' : '#fff'; ctx.font = `800 ${Math.round(R * .9)}px Manrope,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(mk.ok ? (pl ? String(mk.chip - 7) : String(mk.chip - 15)) : '!', sx, sy + 1);
+    if (!mk.ok) { ctx.font = `700 ${Math.max(10, Math.round(11 * m.s + 2))}px Manrope,system-ui`; const t = `${pl ? 'Start ' + (mk.chip - 7) : 'Entry ' + (mk.chip - 15)}: ${mk.reason}`; const tw = ctx.measureText(t).width + 10;
+      ctx.fillStyle = 'rgba(14,16,22,.9)'; ctx.fillRect(sx - tw / 2, sy + R + 4, tw, 18); ctx.fillStyle = '#FFB3AA'; ctx.fillText(t, sx, sy + R + 13); }
+    hits.push({ kind: 'draft', chip: mk.chip, x: sx, y: sy, r: R * 1.3 }); }
+  if (drag && drag.moved && drag.to && drag.hit && drag.hit.kind === 'draft') { const [sx, sy] = toScreen(m, drag.to[0] * CW, drag.to[1] * CH); ctx.strokeStyle = '#FFA273'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.strokeRect(sx - CW / 2 * m.s, sy - CH / 2 * m.s, CW * m.s, CH * m.s); ctx.setLineDash([]); }
+  renderLayoutBar(chk);
+}
+function renderLayoutBar(chk) {
+  const d = sb.layoutDraft, bar = $('sxLayoutBar'); if (!d) { bar.hidden = true; return; } bar.hidden = false; chk = chk || draftCheck();
+  $('sxLayoutText').textContent = `Previewing layout ${d.tid}${chk.template.name ? ' (' + chk.template.name + ')' : ''} on floor ${quest().donor.maps.findIndex(m => m.id === d.mapId) + 1}. ` +
+    (chk.conflicts ? `${chk.conflicts} marker${chk.conflicts === 1 ? '' : 's'} need${chk.conflicts === 1 ? 's' : ''} a free floor tile: drag ${chk.conflicts === 1 ? 'it' : 'them'} (red), or use Suggest free tiles.` : 'Every marker is on a free floor tile. Enemies, stats, drops and rewards stay with this map.');
+  $('sxLayoutApply').disabled = !!chk.conflicts; $('sxLayoutSuggest').disabled = !chk.conflicts;
+}
+function startLayout(tid) {
+  const q = quest(), m = qmap(); sb.layoutDraft = { qi: sb.qi, mapId: m.id, tid: String(tid), place: {} }; sb.sel = null;
+  const chk = draftCheck(); renderLayoutBar(chk); draw(); $('sxCv').scrollIntoView({ block: 'center', behavior: 'smooth' });
+  note(chk.conflicts ? `This layout puts ${chk.conflicts} of floor ${sb.mi + 1}’s markers in a wall. Place each one on a free floor tile, then Apply layout.` : `Previewing the layout on floor ${sb.mi + 1}. Apply layout keeps it; Cancel leaves the map as it was.`);
+}
+function cancelLayout(quiet) { if (!sb.layoutDraft) return; sb.layoutDraft = null; $('sxLayoutBar').hidden = true; if (sb.sel && sb.sel.kind === 'draft') sb.sel = null; draw(); if (!quiet) note('Layout preview cancelled; the map is unchanged.'); }
+function applyLayout() {
+  const d = sb.layoutDraft; if (!d) return; const chk = draftCheck(); if (chk.conflicts) { note('Place every red marker on a free floor tile first.', true); return; }
+  const place = {}; for (const mk of chk.markers) if (mk.moved && (mk.at[0] !== mk.from[0] || mk.at[1] !== mk.from[1])) place[mk.chip] = mk.at.slice();
+  const lid = quest().spec.localId, n = Object.keys(place).length;
+  if (apply(p => A.replaceMapLayout(p, lid, d.mapId, d.tid, place), `use layout ${d.tid} on floor ${sb.mi + 1}`)) { sb.layoutDraft = null; $('sxLayoutBar').hidden = true; sb.sel = null; draw();
+    note(`Floor ${sb.mi + 1} now uses layout ${d.tid}.` + (n ? ` ${n} marker${n === 1 ? ' was' : 's were'} placed where you put ${n === 1 ? 'it' : 'them'}.` : '') + ' Its enemies, stats, drops, rewards, title and map ID are unchanged.'); }
+}
+function draftMove(chip, x, y) { const d = sb.layoutDraft; if (!d || x < 0 || y < 0 || x > 10 || y > 10) return; d.place[chip] = [x, y]; sb.sel = { kind: 'draft', chip }; draw(); }
+
+// ---- the Map tab: this floor's background, its floor layout and its position in the quest
+function mapGrid(lines, w = 132) { const c = el('canvas', { class: 'mapgrid', width: String(w * 2), height: String(Math.round(w * 2 * 1050 / 750)) }), g = c.getContext('2d'), cw = c.width / 11, chh = c.height / 11;
+  lines.forEach((l, y) => l.chips.forEach((ch, x) => { const floor = ch > 7 || ((0x6e >> ch) & 1) === 1; g.fillStyle = !floor || ch === 0 ? '#0e1016' : '#2b5a45'; g.fillRect(x * cw + 1, y * chh + 1, cw - 2, chh - 2);
+    if (ch >= 8 && ch <= 13) { g.fillStyle = '#7AB8FF'; g.beginPath(); g.arc(x * cw + cw / 2, y * chh + chh / 2, cw * .32, 0, 7); g.fill(); }
+    else if (ch >= 16 && ch <= 25 || ch === 2) { g.fillStyle = ch === 2 ? '#A6ADBC' : '#FF7A3D'; g.fillRect(x * cw + cw * .22, y * chh + chh * .3, cw * .56, chh * .4); } })); return c; }
+function mapPanel() {
+  const q = quest(), m = qmap(), n = q.donor.maps.length, out = [], st = statsOf(m), lid = q.spec.localId;
+  if (!A.isEvent(sb.p)) return [el('p', { class: 'hint', text: 'Map editing is available for event projects.' })];
+  if (!sb.maps) return [el('p', { class: 'hint warn', text: 'The map library isn’t stored for this project. Import the full package (the core ZIP and its asset part ZIPs) to change backgrounds, floor layouts and floor order.' })];
+  const bi = bgInfoOf(m.raw.mapBgId);
+  out.push(section(`Floor ${sb.mi + 1} of ${n}`, kv([['Map ID', m.id + ' (stays with its enemies and rewards)'], ['Title', m.raw.title || '—'], ['Enemies', `${st.n}${st.boss ? ' · boss map' : ''}`], ['Background', bi ? `${bi.name} · ${bi.id}` : String(m.raw.mapBgId)]])));
+  const bgImg = thumbInto(el('img', { class: 'mapgrid', alt: bi ? bi.name : '' }), m.raw.mapBgId);
+  out.push(section('Background', el('div', { class: 'row', style: 'align-items:flex-start' }, bgImg, el('div', { style: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:6px' },
+      el('b', { text: bi ? bi.name : 'Background ' + m.raw.mapBgId }), el('small', { class: 'hint', text: bi ? `${bi.layers} layer${bi.layers === 1 ? '' : 's'} · ${bi.animated} animated part${bi.animated === 1 ? '' : 's'} · used by ${bi.usedBy} stock map${bi.usedBy === 1 ? '' : 's'}` : '' }),
+      bi && bi.needs.length ? el('small', { class: 'hint warn', text: 'Needs developer integration: ' + bi.needs.join(', ') }) : null,
+      el('button', { type: 'button', class: 'btn primary sm', text: 'Change background…', onclick: () => openBgPicker() }))),
+    el('p', { class: 'hint', text: 'Picture: the base texture fitted to the field, not a composed in-game screenshot. Changing it also updates the server map row and the mission’s asset lists.' })));
+  out.push(section('Floor layout', el('div', { class: 'row', style: 'align-items:flex-start' }, mapGrid(m.raw.map.lines), el('div', { style: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:6px' },
+      el('small', { class: 'hint', text: 'Blue: your team’s start spots. Orange: enemy entry points. A new layout replaces only the floor grid; the markers stay on top and you place any that land in a wall.' }),
+      el('button', { type: 'button', class: 'btn primary sm', text: 'Change floor layout…', disabled: sb.layoutDraft ? true : null, onclick: () => openLayoutPicker() })))));
+  const to = num('mo_to', sb.mi + 1, { min: 1, max: n }), bosses = A.questSummaries(sb.p)[sb.qi].bosses;
+  out.push(section('Floor order', n > 1 ? el('div', { class: 'row' }, el('button', { type: 'button', class: 'chip sm', text: '← Earlier', disabled: sb.mi === 0 ? true : null, onclick: () => moveFloor(sb.mi, sb.mi - 1) }),
+      el('button', { type: 'button', class: 'chip sm', text: 'Later →', disabled: sb.mi === n - 1 ? true : null, onclick: () => moveFloor(sb.mi, sb.mi + 1) }),
+      el('label', { class: 'go' }, 'Move to floor', to), el('button', { type: 'button', class: 'chip sm', text: 'Move', onclick: guarded(() => moveFloor(sb.mi, readInt('mo_to', 'Floor') - 1)) })) : el('p', { class: 'hint', text: 'This quest has one map.' }),
+    n > 1 ? el('p', { class: 'hint', text: 'You can also drag a floor’s ⠿ handle in the strip, or press Alt+← / Alt+→ on it. The map ID moves with its enemies and rewards; the floor number is its position.' }) : null,
+    bosses.length ? el('div', {}, el('small', { class: 'hint', text: 'Boss floors (bosses move with their map; reordering doesn’t rebalance anything):' }), el('div', { class: 'bossrow' }, bosses.map(b => el('button', { type: 'button', class: 'chip sm' + (b === sb.mi + 1 ? ' on' : ''), 'aria-pressed': String(b === sb.mi + 1), text: String(b), onclick: () => goMap(b - 1) })))) : null,
+    el('p', { class: 'hint', text: `Adding or deleting floors isn’t part of this version: ${q.spec.missionName || q.spec.name} keeps all ${n} map${n === 1 ? '' : 's'}.` })));
+  return out;
+}
+
+function dlgOpen(d) { try { const fe = window.frameElement; if (fe) { d.style.margin = '0 auto'; d.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; d.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {} d.showModal(); }
+// ---- background picker (the supplied map library's 458 backgrounds)
+let mbFilter = 'ok', mbSel = null, mbPlayer = null;
+const bgObserver = 'IntersectionObserver' in window ? new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { const i = e.target; bgObserver.unobserve(i); thumbInto(i, i.dataset.bg); } }, { rootMargin: '200px' }) : null;
+function lazyBg(bgId) { const i = el('img', { class: 'mth', alt: '', 'data-bg': String(bgId) }); if (bgObserver) bgObserver.observe(i); else thumbInto(i, bgId); return i; }
+function openBgPicker() { if (!sb.maps) return; mbSel = String(qmap().raw.mapBgId); $('mbTitle').textContent = `Background for floor ${sb.mi + 1}`; $('mbQ').value = ''; renderBgPicker(); renderBgDetail(); dlgOpen($('mbDlg')); $('mbQ').focus(); }
+function renderBgPicker() {
+  for (const b of $('mbFilter').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.f === mbFilter));
+  const toks = $('mbQ').value.toLowerCase().split(/\s+/).filter(Boolean), cur = String(qmap().raw.mapBgId), out = []; let total = 0;
+  const q0 = toks.length === 1 ? toks[0] : null, ids = Object.keys(sb.maps.definitions).sort((a, b) => (b === q0) - (a === q0)); // an exact background ID first
+  for (const id of ids) { const i = bgInfoOf(id); if (mbFilter === 'ok' && i.needs.length) continue; if (mbFilter === 'dev' && !i.needs.length) continue;
+    const h = `${i.name} ${i.id} ${(i.def.usedBy && i.def.usedBy.maps || []).join(' ')} ${(i.def.usedBy && i.def.usedBy.missions || []).join(' ')}`.toLowerCase(); if (!toks.every(t => h.includes(t))) continue; total++; if (out.length >= 120) continue;
+    out.push(el('button', { type: 'button', role: 'option', 'aria-selected': String(id === mbSel), 'aria-pressed': String(id === mbSel), onclick: () => { mbSel = id; renderBgPicker(); renderBgDetail(); } },
+      lazyBg(id), el('b', { text: i.name }), el('small', { text: `${i.id}${id === cur ? ' · current' : ''} · ${i.animated} animated part${i.animated === 1 ? '' : 's'}` }),
+      i.needs.length ? el('small', { class: 'warn', text: 'Developer integration: ' + i.needs.join(', ') }) : null)); }
+  if (total > out.length) out.push(el('p', { class: 'hint', text: `Showing ${out.length} of ${total}. Type to narrow it down.` }));
+  if (!total) out.push(el('p', { class: 'hint', text: 'No background matches.' }));
+  $('mbList').replaceChildren(...out);
+}
+function stopBgPlayer() { if (mbPlayer) { mbPlayer.dispose(); mbPlayer = null; } }
+function renderBgDetail() {
+  stopBgPlayer(); const box = $('mbDetail'), i = mbSel && bgInfoOf(mbSel); if (!i) { box.replaceChildren(); return; }
+  const cur = String(qmap().raw.mapBgId) === i.id, big = el('img', { class: 'big', alt: i.name }); thumbInto(big, i.id);
+  const canvas = el('canvas', { width: '480', height: '480', 'aria-label': 'Animated part preview' }), controls = el('div', { class: 'row' }), partSel = el('select', { 'aria-label': 'Animated part' }, i.parts.map((l, k) => new Option(`Part ${k + 1}: ${(l.textures[0] && l.textures[0].name) || l.mapObjId}`, String(k))));
+  const play = async () => { stopBgPlayer(); const l = i.parts[+partSel.value]; if (!l) return; const a = l.animations[0];
+    const [model, clip] = await Promise.all([fileJSON('animation/' + a.model), fileJSON('animation/' + a.clip)]);
+    if (!model || !clip) { controls.replaceChildren(el('small', { class: 'hint warn', text: 'This part’s animation files aren’t stored in this browser yet (import the asset part ZIPs).' })); return; }
+    const images = {}; for (const [mid, t] of Object.entries(model.textures)) { const im = await image(await fileURL('animation/' + t.file)); if (im) images['0:' + mid] = im; }
+    if (!$('mbDlg').open || mbSel !== i.id) return;
+    // check every sampled frame first: the shared renderer throws on a missing atlas or an unsupported blend mode
+    const sc = { layers: [{ role: 'character', model, clip }], images }, bad = [];
+    try { FAP.prepare(sc); for (let k = 0; k <= 32; k++) for (const pt of FAP.scenePose(sc, sc.duration * k / 32).parts) { if (!images[pt.map]) bad.push('atlas ' + pt.map); else if (![0, 1, 2, 3, 4].includes(pt.blend)) bad.push('blend mode ' + pt.blend); } } catch (e) { bad.push(e.message); }
+    if (bad.length) { controls.replaceChildren(el('small', { class: 'hint warn', text: 'This part can’t be played here (' + [...new Set(bad)].slice(0, 2).join(', ') + ').' })); return; }
+    try { mbPlayer = FAP.player(canvas, sc, controls); mbPlayer.play(); } catch (e) { controls.replaceChildren(el('small', { class: 'hint warn', text: 'This part couldn’t be played: ' + e.message })); } };
+  partSel.onchange = play;
+  box.replaceChildren(el('b', { text: i.name }), el('small', { class: 'hint', text: `Background ${i.id} · ${i.layers} layer${i.layers === 1 ? '' : 's'} · used by ${i.usedBy} stock map${i.usedBy === 1 ? '' : 's'}` }), big,
+    el('small', { class: 'hint', text: 'Base texture fitted to the field (exact pixels), not a composed in-game screenshot.' }),
+    i.parts.length ? el('div', { style: 'display:flex;flex-direction:column;gap:6px' }, el('span', { class: 'lbl', text: 'Animated parts (each on its own)' }), partSel, canvas, controls,
+      el('small', { class: 'hint', text: 'Played with the same animation renderer as the Sprites tab. Where each part sits in the scene, and its scroll or parallax, aren’t calibrated, so parts aren’t composited onto the field.' })) : el('small', { class: 'hint', text: 'No animated parts.' }),
+    i.needs.length ? el('p', { class: 'hint warn', text: 'Needs developer integration: ' + i.needs.join(', ') + '. These behaviours aren’t modeled here, so this background can’t be picked.' }) : null,
+    el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn primary', text: cur ? 'Already on this floor' : `Use on floor ${sb.mi + 1}`, disabled: cur || i.needs.length ? true : null, onclick: () => {
+      const lid = quest().spec.localId, mid = qmap().id; if (apply(p => A.setMapBackground(p, lid, mid, i.id), `background ${i.id} on floor ${sb.mi + 1}`)) { stopBgPlayer(); $('mbDlg').close(); note(`Floor ${sb.mi + 1} now uses ${i.name}. The server map row and the mission’s asset lists were updated; enemies and rewards are unchanged.`); } } })));
+  if (i.parts.length) play();
+}
+$('mbQ').addEventListener('input', renderBgPicker); $('mbClose').onclick = () => { stopBgPlayer(); $('mbDlg').close(); }; $('mbDlg').addEventListener('close', stopBgPlayer);
+$('mbFilter').onclick = e => { const b = e.target.closest('button'); if (b) { mbFilter = b.dataset.f; renderBgPicker(); } };
+
+// ---- floor layout picker (the supplied library's plain 11×11 layouts)
+let mlFits = false;
+const gridObserver = 'IntersectionObserver' in window ? new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { const c = e.target; gridObserver.unobserve(c); paintGrid(c); } }, { rootMargin: '200px' }) : null;
+function paintGrid(c) { const t = sb.maps.templates[c.dataset.tid]; if (!t) return; const g = mapGrid(t.lines); c.replaceWith(Object.assign(g, { className: 'mth' })); }
+function openLayoutPicker() { if (!sb.maps) return; if (sb.layoutDraft) cancelLayout(true); $('mlTitle').textContent = `Floor layout for floor ${sb.mi + 1}`; $('mlQ').value = '';
+  const all = Object.values(sb.maps.templates), ok = all.filter(t => A.templateSupported(t)).length;
+  $('mlHint').textContent = `${ok.toLocaleString()} plain layouts from the stock game. Picking one previews it on floor ${sb.mi + 1} with that map’s markers on top; only the floor grid changes, never the map’s enemies, stats, rewards, rules, title or ID.`;
+  const bad = all.filter(t => !A.templateSupported(t)), devBg = all.filter(t => { const b = bgInfoOf(t.backgroundId); return b && b.needs.length; }).length;
+  $('mlSpecialBody').replaceChildren(el('p', { class: 'hint', text: bad.length ? `${bad.length} layout${bad.length === 1 ? ' has' : 's have'} special tiles (traps, scripted spawns or gimmicks). They need developer integration, so they can’t be picked:` : 'The supplied library only contains plain layouts, so no special-tile layout can be picked here. Traps, scripted spawns and gimmick tiles need developer integration.' }),
+    bad.length ? el('ul', { class: 'plist' }, bad.slice(0, 200).map(t => el('li', { class: 'hint', text: `${t.id} · ${t.name}` }))) : null,
+    el('p', { class: 'hint', text: `${devBg} layout${devBg === 1 ? '' : 's'} come from stock maps whose background has gimmicks. Their floor grid is plain and can be used; the gimmicks belong to that background and aren’t copied.` }));
+  renderLayoutPicker(); dlgOpen($('mlDlg')); $('mlQ').focus(); }
+function renderLayoutPicker() {
+  $('mlFits').setAttribute('aria-pressed', String(mlFits)); const toks = $('mlQ').value.toLowerCase().split(/\s+/).filter(Boolean), lid = quest().spec.localId, mid = qmap().id, out = []; let total = 0;
+  for (const t of Object.values(sb.maps.templates)) { if (!A.templateSupported(t)) continue; const b = bgInfoOf(t.backgroundId);
+    const h = `${t.id} ${t.name} ${b ? b.name : ''} ${t.backgroundId}`.toLowerCase(); if (!toks.every(x => h.includes(x))) continue;
+    let chk = null; if (mlFits || out.length < 120) chk = A.layoutCheck(sb.p, lid, mid, t.id); if (mlFits && chk.conflicts) continue; total++; if (out.length >= 120) continue;
+    const c = el('canvas', { class: 'mth', 'data-tid': t.id, width: '10', height: '14' }); if (gridObserver) gridObserver.observe(c); else paintGrid(c);
+    out.push(el('button', { type: 'button', role: 'option', onclick: () => { $('mlDlg').close(); startLayout(t.id); } }, c, el('b', { text: `Layout ${t.id}` }), el('small', { text: t.name }),
+      el('small', { text: b ? 'Originally on ' + b.name : '' }), el('small', { class: chk && chk.conflicts ? 'warn' : 'okfit', text: chk ? (chk.conflicts ? `${chk.conflicts} marker${chk.conflicts === 1 ? '' : 's'} to place` : 'All markers fit') : '' }))); }
+  if (total > out.length) out.push(el('p', { class: 'hint', text: `Showing ${out.length} of ${total.toLocaleString()}. Type to narrow it down (map ID, stock map name or background).` }));
+  if (!total) out.push(el('p', { class: 'hint', text: 'No layout matches.' }));
+  $('mlList').replaceChildren(...out);
+}
+$('mlQ').addEventListener('input', renderLayoutPicker); $('mlClose').onclick = () => $('mlDlg').close();
+$('mlFits').onclick = () => { mlFits = !mlFits; renderLayoutPicker(); };
+$('sxLayoutApply').onclick = applyLayout; $('sxLayoutCancel').onclick = () => cancelLayout();
+$('sxLayoutSuggest').onclick = () => { const d = sb.layoutDraft; if (!d) return; const sug = A.suggestPlacements(draftCheck()); Object.assign(d.place, sug); draw();
+  const n = Object.keys(sug).length; note(n ? `Suggested a free floor tile for ${n} marker${n === 1 ? '' : 's'} (shown with a dashed line from where ${n === 1 ? 'it was' : 'they were'}). Drag any of them elsewhere, then Apply layout.` : 'No free floor tile was found for the red markers.', !n); };
 
 // ---- left palette: Enemies, Backgrounds, Rewards, Event art
 const ENEMY_MAPS = new WeakMap();
@@ -3017,6 +3439,14 @@ function renderPalette() {
           el('small', { text: where.length ? 'Used on ' + where.slice(0, 4).map(w => (sb.p.catalog.stages[w.qi].spec.name || 'quest') + ' map ' + (w.mi + 1)).join(', ') + (where.length > 4 ? ` +${where.length - 4}` : '') : 'Not placed' }),
           advanced([['Enemy ID', e.id], ['Shown with', l.catalogDonorId ? 'unit ' + l.catalogDonorId : 'no exact preview unit'], ['Rig / image', `${l.boneId ?? e.boneId} / ${l.imageId ?? e.imageId}`], ['Match basis', l.matchBasis], ['Title in catalog', l.title]]),
           where.length ? el('button', { type: 'button', class: 'chip sm', text: 'Show on map', onclick: () => { const w = where[0]; sb.qi = w.qi; renderQuests(); goMap(w.mi); const en = scn && scn.enemies.find(x => x.enemyId === String(e.id)); if (en) select({ kind: 'enemy', key: en.key }); } }) : null))); }
+  } else if (sb.tab === 'backgrounds' && isMapEdit()) {
+    const cur = String(qmap().raw.mapBgId);
+    for (const id of Object.keys(sb.maps.definitions)) { const i = bgInfoOf(id), h = `${i.name} ${i.id} ${i.needs.length ? 'developer gimmick' : ''}`.toLowerCase(); if (!hit(h)) continue; total++; if (rows.length >= 80) continue;
+      rows.push(el('div', { class: 'pcard wide' }, lazyBg(id), el('div', { class: 'pb' }, el('b', { text: i.name }), el('small', { text: `Background ${i.id}${id === cur ? ' · on this floor' : ''} · ${i.animated} animated part${i.animated === 1 ? '' : 's'}` }),
+        i.needs.length ? el('small', { class: 'warn', text: 'Needs developer integration: ' + i.needs.join(', ') }) : null,
+        el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn primary sm', text: `Use on floor ${sb.mi + 1}`, disabled: id === cur || i.needs.length ? true : null, onclick: () => { const lid = quest().spec.localId, mid = qmap().id; if (apply(p => A.setMapBackground(p, lid, mid, id), `background ${id} on floor ${sb.mi + 1}`)) note(`Floor ${sb.mi + 1} now uses ${i.name}.`); } }),
+          el('button', { type: 'button', class: 'chip sm', text: 'Details', onclick: () => { openBgPicker(); mbSel = id; renderBgPicker(); renderBgDetail(); } })),
+        advanced([['Definition', i.def.sourceRecord ? i.def.sourceRecord.table + ' · ' + i.def.sourceRecord.name : '—'], ['Base texture', i.texture || '—'], ['Texture size', i.textureSize ? i.textureSize.join(' × ') : '—']])))); }
   } else if (sb.tab === 'backgrounds') {
     for (const b of sb.bgIndex) { const h = `${b.label} ${b.backgroundId}`.toLowerCase(); if (!hit(h)) continue; total++;
       rows.push(el('div', { class: 'pcard wide' }, asyncImg(b.thumbnail, b.label), el('div', { class: 'pb' }, el('b', { text: b.label || 'Background ' + b.backgroundId }), el('small', { text: 'Background ' + b.backgroundId + ' · ' + (b.thumbnailKind || 'base texture') }),
@@ -3039,7 +3469,7 @@ function renderPalette() {
     for (const mt of sb.p.catalog.materials || []) if (mt.status === 'assigned' && mt.icon) { const h = `${mt.name} ${mt.title} material`.toLowerCase(); if (!hit(h)) continue; total++;
       rows.push(el('div', { class: 'pcard art' }, asyncImg(mt.icon, mt.name), el('div', { class: 'pb' }, el('b', { text: mt.name }), el('small', { text: (mt.title || '') + ' · material art' }), advanced([['File', mt.icon], ['Item ID', mt.id], ['Slot', mt.slot]])))); }
   }
-  if (total > rows.length && sb.tab !== 'backgrounds') rows.push(el('p', { class: 'hint', text: `Showing ${rows.length} of ${total.toLocaleString()}. Type more to narrow it down.` }));
+  if (total > rows.length && (sb.tab !== 'backgrounds' || isMapEdit())) rows.push(el('p', { class: 'hint', text: `Showing ${rows.length} of ${total.toLocaleString()}. Type more to narrow it down.` }));
   if (!total && !rows.length) rows.push(el('p', { class: 'hint', text: 'Nothing matches.' }));
   box.replaceChildren(...rows);
 }
@@ -3052,8 +3482,9 @@ function kv(rows) { return el('dl', { class: 'rw' }, rows.flatMap(([k, v]) => [e
 function itemLine(itemId) { const it = sb.lib && sb.lib.items[String(itemId)]; return el('span', { class: 'iline' }, itemThumb(it || { name: 'Item ' + itemId }), el('span', {}, el('b', { text: it ? it.name : 'Item ' + itemId }), el('small', { text: it ? [stars(it.rarity), it.attribute, typeLabel(it.type3), 'ID ' + it.id].filter(Boolean).join(' · ') : (sb.lib ? 'Not in the reward catalog' : 'Reward catalog not loaded') }))); }
 function pickItem(label, use) { if (!sb.lib) { note('Import the package ZIP to change reward items.', true); return; } sb.pick = { label, use }; sb.tab = 'rewards'; renderPalette(); $('sxPalQ').focus(); if (innerWidth < 1180) $('sxPal').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function renderInspector() {
-  if (!sb.open) return; for (const b of document.querySelectorAll('#sxInsTabs button')) b.setAttribute('aria-selected', String(b.dataset.tab === sb.ins));
-  const box = $('sxIns'); const kids = sb.ins === 'rewards' ? rewardsPanel() : sb.ins === 'difficulty' ? difficultyPanel() : selPanel(); box.replaceChildren(...kids);
+  if (!sb.open) return; const mt = document.querySelector('#sxInsTabs [data-tab="map"]'); if (mt) { mt.hidden = !A.isEvent(sb.p); if (mt.hidden && sb.ins === 'map') sb.ins = 'rewards'; }
+  for (const b of document.querySelectorAll('#sxInsTabs button')) b.setAttribute('aria-selected', String(b.dataset.tab === sb.ins));
+  const box = $('sxIns'); const kids = sb.ins === 'rewards' ? rewardsPanel() : sb.ins === 'difficulty' ? difficultyPanel() : sb.ins === 'map' ? mapPanel() : selPanel(); box.replaceChildren(...kids);
 }
 function selPanel() {
   const q = quest(), m = qmap(), s = scn = A.scene(sb.p, q.spec.localId, m.id, sb.labels); const out = [];
@@ -3177,7 +3608,7 @@ function rewardsPanel() {
 // ---- top: quests, save, handoff, game export gate
 function renderQuests() {
   const qs = A.questSummaries(sb.p);
-  $('sxQuests').replaceChildren(...qs.map((q, i) => el('button', { type: 'button', role: 'tab', class: 'qcard', 'aria-selected': String(i === sb.qi), onclick: () => { sb.qi = i; sb.mi = 0; sb.sel = null; renderAll(); } },
+  $('sxQuests').replaceChildren(...qs.map((q, i) => el('button', { type: 'button', role: 'tab', class: 'qcard', 'aria-selected': String(i === sb.qi), onclick: () => { if (sb.layoutDraft) cancelLayout(); sb.qi = i; sb.mi = 0; sb.sel = null; renderAll(); } },
     q.banner ? asyncImg(q.banner, q.name + ' banner') : null, el('span', { class: 'qt' }, el('b', { text: q.missionName || q.name }), el('small', { text: `${q.name} · ${q.mapCount} map${q.mapCount === 1 ? '' : 's'}${q.bosses.length ? ' · ' + q.bosses.length + ' boss map' + (q.bosses.length === 1 ? '' : 's') : ''}` })))));
 }
 function renderAll() {
@@ -3190,7 +3621,8 @@ function renderAll() {
   renderQuests(); renderStrip(true); syncUndo(); scn = A.scene(p, quest().spec.localId, qmap().id, sb.labels); renderInspector(); renderPalette(); draw();
 }
 function slugName(s) { return (s || 'project').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'project'; }
-const projectText = (p, rec) => A.withEol(A.exportProject(p, sb.lib), rec && rec.eol);
+const fmtOf = rec => (rec && rec.fmt) || { eol: (rec && rec.eol) || '\n', indent: 2, final: true };
+const projectText = (p, rec) => A.serializeProject(p, sb.lib, fmtOf(rec));
 async function saveProject() {
   let text; try { text = projectText(sb.p, sb.rec); } catch (e) { note('Can’t save: ' + e.message, true); return; }
   flushSave(); const name = sb.rec.fileName && /\.json$/i.test(sb.rec.fileName) ? sb.rec.fileName.split('/').pop() : slugName(sb.p.name) + '.forge-stage-project.json';
@@ -3238,6 +3670,43 @@ the game's own validation.
 
 Browser checks only cover the website editor. They don't confirm rewards, a full run or camera matching in the game.
 `;
+// the developer export for a map-edited event project: every small package file, plus exactly the background assets its maps now use
+async function devAssets() {
+  const big = path => /^(animation|backgrounds)\//.test(path) && !/^backgrounds\/[^/]+\.json$/.test(path);
+  const keep = new Set(sb.rec.files.filter(f => !big(f))), assetFiles = new Set(A.backgroundFiles(sb.p, sb.assets));
+  for (const f of [...assetFiles]) if (/^animation\/models\//.test(f)) { const m = await fileJSON(f); if (m && m.textures) for (const t of Object.values(m.textures)) if (t && t.file) assetFiles.add('animation/' + t.file); }
+  for (const f of assetFiles) keep.add(f);
+  const before = new Set(), after = new Set(), quests = [];
+  sb.base.catalog.stages.forEach(s => s.donor.maps.forEach(m => before.add(String(m.raw.mapBgId))));
+  sb.p.catalog.stages.forEach((s, qi) => { const b = sb.base.catalog.stages.find(x => x.spec.localId === s.spec.localId), bm = new Map(b ? b.donor.maps.map((m, i) => [m.id, { m, i }]) : []), maps = [];
+    s.donor.maps.forEach((m, i) => { after.add(String(m.raw.mapBgId)); const o = bm.get(m.id); const row = { floor: i + 1, mapId: m.id, background: String(m.raw.mapBgId) };
+      if (o) { if (o.i !== i) row.movedFrom = o.i + 1; if (String(o.m.raw.mapBgId) !== row.background) row.backgroundWas = String(o.m.raw.mapBgId); if (JSON.stringify(o.m.raw.map) !== JSON.stringify(m.raw.map)) row.floorGridChanged = true; }
+      if (Object.keys(row).length > 3) maps.push(row); });
+    quests.push({ localId: s.spec.localId, name: s.spec.name, missionName: s.spec.missionName || null, stageId: s.slot.stageId, missionId: s.slot.missionId, floors: s.donor.maps.length,
+      order: s.donor.maps.map(m => m.id), bossFloors: A.questSummaries(sb.p)[qi].bosses, changedFloors: maps }); });
+  const newBgs = [...after].filter(b => !before.has(b));
+  return { keep: [...keep], assetFiles: [...assetFiles], quests, newBgs, usedBgs: after.size };
+}
+const MAP_README = (mi, missing) => `
+## Map changes
+
+Floors were edited with the supplied \`integration/stage-map-authoring.mjs\` (\`setMapBackground\`, \`replaceMapLayout\`,
+\`reorderMaps\`) and every result passed \`validateProject\` and \`validateMaps\`. A map ID stays with its enemies, stats,
+drops and rewards; the floor number is its position. No floors were added or removed, and boss flags were never moved.
+Layout replacement copies only a plain 11×11 floor grid; markers that would have landed in a wall were placed by hand
+on a free floor tile (the \`placements\` argument). Special tiles, traps, scripted spawns and background gimmicks were not
+copied: they need game-side integration.
+
+${mi.quests.map(q => `- ${q.name}${q.missionName ? ' — ' + q.missionName : ''}: ${q.changedFloors.length ? q.changedFloors.length + ' floor' + (q.changedFloors.length === 1 ? '' : 's') + ' changed' : 'no map changes'}; boss floors ${q.bossFloors.join(', ') || 'none'}`).join('\n')}
+
+\`handoff/MAPS.json\` lists each changed floor (map ID, new position, background before and after, whether the floor grid
+changed) and the current floor order. Backgrounds new to this project: ${mi.newBgs.length ? mi.newBgs.join(', ') : 'none'}.
+The \`backgrounds/\` and \`animation/\` folders here hold exactly the ${mi.assetFiles.length} files the project's backgrounds use
+(definitions, base textures, animation models, clips and atlases, serialized bundles), byte for byte from the package.
+${missing.length ? `\n${missing.length} of them weren't stored in the browser that made this export; MAPS.json lists them as missingAssetFiles.\n` : ''}
+The website preview uses the logical field geometry (750 × 1050, cells 75 × 105). Layer placement and the battle camera
+aren't calibrated, so check backgrounds on a phone.
+`;
 async function exportHandoff() {
   let text; try { text = projectText(sb.p, sb.rec); } catch (e) { note('Can’t export: ' + e.message, true); return; }
   note('Building the handoff…'); flushSave();
@@ -3245,13 +3714,16 @@ async function exportHandoff() {
   let src = srcFile ? await fileJSON(srcFile) : null; const srcName = src ? srcFile : 'the project as first imported';
   if (!src) src = sb.base.catalog;
   const ch = A.changes(src, sb.p.catalog), projName = sb.rec.fileName && /\.json$/i.test(sb.rec.fileName) ? sb.rec.fileName : slugName(sb.p.name) + '.forge-stage-project.json';
-  for (const path of sb.rec.files) { if (path === projName) continue; const b = await getFile(sb.rec.id, path).catch(() => null); if (b) files.push({ name: path, data: new Uint8Array(await b.arrayBuffer()) }); }
-  files.push({ name: projName, data: enc.encode(text) });
+  const mapInfo = isMapEdit() ? await devAssets() : null, want = mapInfo ? mapInfo.keep : sb.rec.files, missing = [];
+  for (const path of want) { if (path === projName) continue; busy(`Adding ${path}…`); const b = await getFile(sb.rec.id, path).catch(() => null); if (b) files.push({ name: path, data: new Uint8Array(await b.arrayBuffer()) }); else if (mapInfo) missing.push(path); }
+  busy(''); files.push({ name: projName, data: enc.encode(text) });
+  if (mapInfo) files.push({ name: 'handoff/MAPS.json', data: enc.encode(JSON.stringify({ format: 'ForgeStageMapChanges', schema: 1, projectId: sb.p.projectId, geometry: { field: [750, 1050], cell: [75, 105], grid: [11, 11], camera: 'uncalibrated' },
+    quests: mapInfo.quests, newBackgrounds: mapInfo.newBgs, assetFiles: mapInfo.assetFiles.length, missingAssetFiles: missing }, null, 1) + '\n') });
   files.push({ name: 'handoff/original-project.json', data: enc.encode(JSON.stringify(sb.base, null, 2) + '\n') });
   files.push({ name: 'handoff/CHANGES.json', data: enc.encode(JSON.stringify({ format: 'ForgeStageSandboxChanges', schema: 1, projectId: sb.p.projectId, source: { file: srcName, sha256: sb.p.source && sb.p.source.sha256 }, generated: new Date().toISOString(), count: ch.length, truncated: ch.length >= 5000, changes: ch }, null, 1) + '\n') });
-  files.push({ name: 'handoff/README.md', data: enc.encode(HANDOFF_README(sb.p, ch.length, srcName).replace('${project}', projName)) });
+  files.push({ name: 'handoff/README.md', data: enc.encode(HANDOFF_README(sb.p, ch.length, srcName).replace('${project}', projName) + (mapInfo ? MAP_README(mapInfo, missing) : '')) });
   const blob = KIT.zipBlob(files); const name = slugName(sb.p.name) + '-developer-handoff.zip';
-  if (await KIT.saveBlob(blob, name)) note(`Saved ${name}: the project, ${sb.rec.files.length} package files and a report of ${ch.length} change${ch.length === 1 ? '' : 's'}. It isn’t a game install file.`);
+  if (await KIT.saveBlob(blob, name)) note(`Saved ${name}: the project, ${files.length - 4} package files${mapInfo ? ` (including the ${mapInfo.assetFiles.length} asset files its ${mapInfo.usedBgs} background${mapInfo.usedBgs === 1 ? '' : 's'} need)` : ''} and a report of ${ch.length} change${ch.length === 1 ? '' : 's'}. It isn’t a game install file.` + (missing.length ? ` ${missing.length} asset file${missing.length === 1 ? ' was' : 's were'} not stored in this browser; handoff/MAPS.json lists ${missing.length === 1 ? 'it' : 'them'}.` : ''), !!missing.length);
 }
 
 // ---- wiring
@@ -3283,15 +3755,15 @@ function wire() {
   const tick = now => { const dt = sb.last ? Math.min(.1, (now - sb.last) / 1000) : 0; sb.last = now; if (sb.open && sb.anim && !document.hidden) { sb.t += dt; draw(); } requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
 }
-async function listProjects() { try { return (await allRecs()).map(r => ({ id: r.id, name: r.name, profile: r.project.catalog && r.project.catalog.profile, event: A.isEvent(r.project), savedAt: r.savedAt, quests: r.project.catalog.stages.length, maps: r.project.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0), files: (r.files || []).length,
+async function listProjects() { try { return (await allRecs()).map(r => ({ id: r.id, name: r.name, profile: r.project.catalog && r.project.catalog.profile, event: A.isEvent(r.project), savedAt: r.savedAt, quests: r.project.catalog.stages.length, maps: r.project.catalog.stages.reduce((a, s) => a + s.donor.maps.length, 0), files: (r.files || []).length, expected: r.expected ? Object.keys(r.expected).length : 0, missing: r.expected ? Object.keys(r.expected).filter(k => !(r.files || []).includes(k)).length : 0,
   questList: r.project.catalog.stages.map(s => ({ name: s.spec.name, missionName: s.spec.missionName, stageId: s.slot.stageId, missionId: s.slot.missionId })) })); } catch (e) { return []; } }
 // every stored file of a project, with the edited project in place of the imported one (for a full project save)
 async function projectFiles(pid) { const rec = await getRec(pid); if (!rec) return []; const out = [], enc = new TextEncoder(), proj = rec.fileName && /\.json$/i.test(rec.fileName) ? rec.fileName : 'project.forge-stage-project.json';
   for (const p of rec.files || []) { if (p === proj) continue; const b = await getFile(pid, p).catch(() => null); if (b) out.push({ name: p, data: new Uint8Array(await b.arrayBuffer()) }); }
-  const cur = sb.open && sb.rec && sb.rec.id === pid ? sb.p : rec.project; let text; try { text = A.withEol(A.exportProject(cur, sb.open && sb.rec && sb.rec.id === pid ? sb.lib : null), rec.eol); } catch (e) { text = JSON.stringify(cur, null, 2) + '\n'; }
+  const cur = sb.open && sb.rec && sb.rec.id === pid ? sb.p : rec.project; let text; try { text = A.serializeProject(cur, sb.open && sb.rec && sb.rec.id === pid ? sb.lib : null, fmtOf(rec)); } catch (e) { text = JSON.stringify(cur, null, 2) + '\n'; }
   out.push({ name: proj, data: enc.encode(text) }); return out; }
-window.ForgeSandboxUI = { importZip, importJSON, projectFiles, openProject: id => openProject(id), deleteProject: async id => { if (sb.open && sb.rec && sb.rec.id === id) closeProject('delete'); await delProject(id); }, listProjects, isOpen: () => sb.open,
-  _debug: () => sb, close: () => closeProject('page'), get A() { return A; } };
+window.ForgeSandboxUI = { importZip, importZipFile, importJSON, projectFiles, openProject: id => openProject(id), deleteProject: async id => { if (sb.open && sb.rec && sb.rec.id === id) closeProject('delete'); await delProject(id); }, listProjects, isOpen: () => sb.open,
+  _debug: () => sb, _hits: () => hits.map(h => ({ ...h })), _cell: (x, y) => toScreen(cam(), x * CW, y * CH), close: () => closeProject('page'), get A() { return A; } };
 wire();
 let want = null; try { want = localStorage.getItem(OPEN_KEY); } catch (e) {}
 if (want) openProject(want).catch(() => { try { localStorage.removeItem(OPEN_KEY); } catch (e) {} });
