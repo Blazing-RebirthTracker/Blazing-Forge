@@ -1,0 +1,10 @@
+{
+  "schema": 3,
+  "expect": {
+    "file": "blazing-data.json",
+    "sha256": "test"
+  },
+  "install": {
+    "zips": "{home}/Documents"
+  }
+}

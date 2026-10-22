@@ -276,7 +276,7 @@ static BOOL BuildPack(NSString *dataRoot, int summon, NSString **msg) {
     for (NSString *f in [[fm contentsOfDirectoryAtPath:[PackDir() stringByAppendingPathComponent:@"units"] error:nil] sortedArrayUsingSelector:@selector(compare:)]) {
         if (![f hasSuffix:@".json"]) continue;
         NSDictionary *u = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:[[PackDir() stringByAppendingPathComponent:@"units"] stringByAppendingPathComponent:f]] ?: [NSData data] options:0 error:nil];
-        if ([u isKindOfClass:[NSDictionary class]] && [u[@"gift"] boolValue]) [units addObject:@{@"id": u[@"slot"] ?: @0, @"name": u[@"name"] ?: @"", @"subtitle": u[@"subtitle"] ?: @""}];
+        if ([u isKindOfClass:[NSDictionary class]] && [u[@"gift"] boolValue]) [units addObject:@{@"id": u[@"slot"] ?: u[@"id"] ?: @0, @"name": u[@"name"] ?: @"", @"subtitle": u[@"subtitle"] ?: @""}];
     }
     NSDictionary *mf = @{@"format": @1, @"patchId": [NSString stringWithFormat:@"forge-device-%.0f", [NSDate date].timeIntervalSince1970],
                          @"part": @"1 of 1", @"gameVersion": @"2.28.0", @"baseDataSha256": bd ? Sha256(bd) : @"", @"units": units, @"files": shas};

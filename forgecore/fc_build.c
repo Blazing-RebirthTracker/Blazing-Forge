@@ -1,4 +1,4 @@
-/* The Forge build (slot mode), ported from forge.py cmd_build / apply_banners. */
+/* Forge builder: legacy replacement slots and gated experimental new-unit IDs. */
 #include "fc.h"
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +25,7 @@ int fc_summon_reskin(const char *mod, const Buf *bundle_in, Buf *out, int lz4_le
 #define LIST_FIRST "content-ios/iOS/assetbundlelistbin/assetbundlelist_first_en.bytes"
 #define PARAM "content-ios/iOS/assetbundlelist_param.json"
 #define CHARS "content/config/core/characters/cache-valid-characters-2.28.0.json"
+#define UEXP "content/config/core/characters/unit-experience-2.28.0.json"
 #define PRESENTS "content/config/catalogs/presents.json"
 #define SUMMON_DIR "content/config/summons"
 #define ART_CFG "content/config/banners/artwork-2.28.0.json"
@@ -397,7 +398,9 @@ int fc_build(const FcBuild *cfg) {
     Table U = {0}, S = {0}, L = {0}, T = {0}, A = {0}, FT = {0}, BT = {0};
     Rows units = {0}, skills = {0}, trims = {0}, abil = {0}, frows = {0}, brows = {0};
     int abil_loaded = 0, f_loaded = 0, b_loaded = 0, f_changed = 0, b_changed = 0;
-    J *chars = NULL, *presents = NULL, *specs = jnew(J_ARR), *made_abil = jnew(J_OBJ);
+    J *chars = NULL, *presents = NULL, *uexp = NULL, *playable = NULL, *progression = NULL;
+    J *specs = jnew(J_ARR), *made_abil = jnew(J_OBJ);
+    int allow_new_ids = 0, any_new_ids = 0;
     Buf cardlist = {0}, iconlist = {0}, thumbs_txt = {0}, tmp = {0}, icons_raw = {0}, thumbs_raw = {0};
     Bundle icons = {0}, thumbs = {0}; int icons_open = 0, thumbs_open = 0, icons_changed = 0;
     char **files = NULL; int nfiles = 0;
@@ -422,11 +425,19 @@ int fc_build(const FcBuild *cfg) {
     chars = base_json(c, CHARS); if (!chars) goto done;
     presents = base_json(c, PRESENTS); if (!presents) goto done;
 
+    /* Explicit new-ID opt-in preserves normal slot-only behavior. */
+    {
+        char *p = fc_sprintf("%s/forge-mod.json", cfg->mod);
+        J *m = load_json_file(p); free(p);
+        allow_new_ids = m && jtruthy(jget(m, "allowNewIds")); jfree(m);
+    }
     J *used_slots = jnew(J_ARR);
     for (int si = 0; si < specs->n; si++) {
         J *s = specs->a[si];
-        if (!jget(s, "slot")) FAIL("%s: set \"slot\" in the unit file (this build only supports slots)", files[si]);
-        long long uid = jgeti(s, "slot", 0), donor_id = jgeti(s, "donor", 0);
+        int slot_mode = jget(s, "slot") != NULL;
+        if (!slot_mode && !allow_new_ids) FAIL("%s: new ID requires allowNewIds: true in forge-mod.json", files[si]);
+        if (!slot_mode) any_new_ids = 1;
+        long long uid = jgeti(s, slot_mode ? "slot" : "id", 0), donor_id = jgeti(s, "donor", 0);
         jset(s, "id", jnum_i(uid));
         J *d = rows_get(&units, donor_id); if (!d) FAIL("%lld: donor %lld not found", uid, donor_id);
         J *vis = jget(s, "visuals");
@@ -434,20 +445,29 @@ int fc_build(const FcBuild *cfg) {
             warn("donor %lld has no battle rig in this build (white boxes); set visuals.rig to a unit from 'donors'", donor_id);
         if (uid <= 0 || uid > 499999) FAIL("%lld: id must be 1..499999", uid);
         J *slot = rows_get(&units, uid);
-        if (!slot || !cat_find(chars, uid)) FAIL("%lld: slot must be a unit the offline server already knows", uid);
-        if (uid == donor_id) FAIL("%lld: slot and donor must be different units", uid);
-        for (int k = 0; k < used_slots->n; k++) if (jint(used_slots->a[k]) == uid) FAIL("%lld: two unit files use the same slot", uid);
+        if (slot_mode) {
+            if (!slot || !cat_find(chars, uid)) FAIL("%lld: slot must be a unit the offline server already knows", uid);
+            if (uid == donor_id) FAIL("%lld: slot and donor must be different units", uid);
+        } else if (slot || cat_find(chars, uid)) FAIL("%lld: new ID collides with existing game unit", uid);
+        for (int k = 0; k < used_slots->n; k++)
+            if (jint(used_slots->a[k]) == uid) FAIL("%lld: duplicate unit ID in mod", uid);
         jpush(used_slots, jnum_i(uid));
         J *u = jclone(d);
         jset(u, "id", jnum_i(uid));
-        static const char *keep[] = {"sameId", "rare", "cost", "maxLevel", "exp", "price", "mixExp", "albumId", "charaNameId", "exLimitMax"};
-        for (size_t k = 0; k < sizeof keep / sizeof *keep; k++) { J *v = jget(slot, keep[k]); if (v) jset(u, keep[k], jclone(v)); }
-        static const char *stat_keys[] = {"hp", "atk", "def", "defPvP", "l_hp", "l_atk", "l_def", "l_spe"};
-        J *dpd = jget(d, "paramDatas"); J *dp = dpd && dpd->n ? dpd->a[0] : NULL;
-        J *pds = jset(u, "paramDatas", JC(jget(slot, "paramDatas")));
-        for (int b = 0; pds && b < pds->n; b++)
-            for (size_t k = 0; k < sizeof stat_keys / sizeof *stat_keys; k++) { J *v = jget(dp, stat_keys[k]); if (v) jset(pds->a[b], stat_keys[k], jclone(v)); }
-        if (jget(s, "displayRarity")) jset(u, "rare", jnum_i(jgeti(s, "displayRarity", 0)));
+        if (slot_mode) {
+            static const char *keep[] = {"sameId", "rare", "cost", "maxLevel", "exp", "price", "mixExp", "albumId", "charaNameId", "exLimitMax"};
+            for (size_t k = 0; k < sizeof keep / sizeof *keep; k++) { J *v = jget(slot, keep[k]); if (v) jset(u, keep[k], jclone(v)); }
+            static const char *stat_keys[] = {"hp", "atk", "def", "defPvP", "l_hp", "l_atk", "l_def", "l_spe"};
+            J *dpd = jget(d, "paramDatas"); J *dp = dpd && dpd->n ? dpd->a[0] : NULL;
+            J *pds = jset(u, "paramDatas", JC(jget(slot, "paramDatas")));
+            for (int b = 0; pds && b < pds->n; b++)
+                for (size_t k = 0; k < sizeof stat_keys / sizeof *stat_keys; k++) { J *v = jget(dp, stat_keys[k]); if (v) jset(pds->a[b], stat_keys[k], jclone(v)); }
+            if (jget(s, "displayRarity")) jset(u, "rare", jnum_i(jgeti(s, "displayRarity", 0)));
+        } else {
+            jset(u, "sameId", jnum_i(jgeti(s, "sameId", uid / 10)));
+            jset(u, "rare", jnum_i(jgeti(s, "rarity", jgeti(d, "rare", 0))));
+            jset(u, "cost", jnum_i(jgeti(s, "cost", jgeti(d, "cost", 0))));
+        }
         jset(u, "attr", jnum_i(jget(s, "attribute") ? jgeti(s, "attribute", 0) : jgeti(d, "attr", 0)));
         if (jget(s, "jutsuChakra")) jset(u, "start_chakura", jnum_i(jgeti(s, "jutsuChakra", 0)));
         if (jget(s, "ultimateChakra")) jset(u, "chakuraMax", jnum_i(jgeti(s, "ultimateChakra", 0)));
@@ -511,7 +531,7 @@ int fc_build(const FcBuild *cfg) {
         { char *k = lang_add(lss, "ch_code_", 9000, jgets(s, "subtitle", "")); jset(u, "langId2", jstr(k)); free(k); }
         for (int k = 0; k < u->n; k++) {
             const char *key = u->a[k]->k;
-            if (!strcmp(key, "evoId") || !strcmp(key, "evo2Id") || sozai_key(key)) { J *v = jget(slot, key); jset(u, key, v ? jclone(v) : jnum_i(0)); }
+            if (!strcmp(key, "evoId") || !strcmp(key, "evo2Id") || sozai_key(key)) { J *v = slot_mode ? jget(slot, key) : NULL; jset(u, key, v ? jclone(v) : jnum_i(0)); }
         }
         /* jutsu / ultimate */
         for (int kind = 0; kind < 2; kind++) {
@@ -676,6 +696,60 @@ int fc_build(const FcBuild *cfg) {
         static const char *views[] = {"home", "gasha", "panel"};
         for (int q = 0; q < 3; q++) { J *ov = jget(tr, views[q]); J *tv = jget(t, views[q]); if (ov && tv) for (int z = 0; z < ov->n; z++) jset(tv, ov->a[z]->k, jclone(ov->a[z])); }
         rows_put(&trims, uid, t);
+        if (!slot_mode) {
+            if (!uexp) {
+                uexp = base_json(c, UEXP); if (!uexp) goto done;
+                playable = base_json(c, "pack/playableunits.json"); if (!playable) goto done;
+                progression = base_json(c, "pack/progressionunits.json"); if (!progression) goto done;
+            }
+            J *donor_cat = cat_find(chars, donor_id);
+            if (!donor_cat) FAIL("%lld: donor %lld is missing from character catalog", uid, donor_id);
+            J *cat = jclone(donor_cat);
+            jset(cat, "unitId", jnum_i(uid));
+            jset(cat, "rare", JC(jget(u, "rare"))); jset(cat, "sameId", JC(jget(u, "sameId")));
+            jset(cat, "cardImageId", JC(jget(u, "cardImageId")));
+            jset(cat, "iconImageId", JC(jget(u, "iconImageId")));
+            jset(cat, "primarySkillId", JC(jget(u, "skillId")));
+            jset(cat, "ultimateSkillId", JC(jget(u, "sSkillId")));
+            J *cs = jget(cat, "skills");
+            if (cs) {
+                J *v = jget(cs, "primary"); if (v) jset(v, "id", JC(jget(u, "skillId")));
+                v = jget(cs, "ultimate"); if (v) jset(v, "id", JC(jget(u, "sSkillId")));
+            }
+            J *identity = jget(cat, "identity");
+            if (identity) {
+                jset(identity, "name", jstr(jgets(s, "name", "")));
+                jset(identity, "subtitle", jstr(jgets(s, "subtitle", "")));
+                jset(identity, "langId", JC(jget(u, "langId")));
+                jset(identity, "subtitleLangId", JC(jget(u, "langId2")));
+                jset(identity, "rarity", JC(jget(u, "rare")));
+                jset(identity, "attribute", JC(jget(u, "attr")));
+                jset(identity, "cost", JC(jget(u, "cost")));
+            }
+            J *pr = jget(cat, "progression");
+            if (pr) {
+                const char *keys[] = {"blazingEvolution", "evolution", "reversion"};
+                for (int i = 0; i < 3; i++) {
+                    J *v = jobj(); jset(v, "materials", jnew(J_ARR));
+                    jset(v, "targetUnitId", jnum_i(0)); jset(pr, keys[i], v);
+                }
+            }
+            J *management = jget(cat, "managementAssets");
+            J *trim_ref = jget(management, "cardTrimming");
+            if (trim_ref) jset(trim_ref, "id", jnum_i(uid));
+            jset(cat, "defaultTeamEligible", jnew(J_FALSE));
+            jpush(jget(chars, "units"), cat);
+            char key[64], donor_key[64];
+            snprintf(key, sizeof key, "%lld", uid);
+            snprintf(donor_key, sizeof donor_key, "%lld", donor_id);
+            J *experience_units = jget(uexp, "units");
+            if (experience_units) jset(experience_units, key, JC(jget(experience_units, donor_key)));
+            if (playable && playable->t == J_ARR) jpush(playable, jnum_i(uid));
+            if (progression && progression->t == J_OBJ) {
+                J *old = jget(progression, donor_key);
+                jset(progression, key, old ? jclone(old) : jnum_i(0));
+            }
+        }
         if (!jget(s, "gift") || jtruthy(jget(s, "gift"))) {
             char key[64]; snprintf(key, sizeof key, "forge-unit-%lld-v1", uid);
             J *gr = jget(presents, "grants");
@@ -688,7 +762,7 @@ int fc_build(const FcBuild *cfg) {
             for (int q = 0; q < 17; q++) jset(g, nk[q], jnum_i(nv[q]));
             jset(g, "expiresAt", jstr("2099-12-31T23:59:59Z")); jpush(gr, g);
         }
-        report(c, "slot %lld  %s - %s  (donor %lld, card %lld, jutsu %lld, ultimate %lld%s)", uid, jgets(s, "name", ""), jgets(s, "subtitle", ""), donor_id,
+        report(c, "%s %lld  %s - %s  (donor %lld, card %lld, jutsu %lld, ultimate %lld%s)", slot_mode ? "slot" : "new-ID", uid, jgets(s, "name", ""), jgets(s, "subtitle", ""), donor_id,
                jgeti(u, "cardImageId", 0), jgeti(u, "skillId", 0), jgeti(u, "sSkillId", 0),
                jgeti(u, "sSkillId_2", 0) ? (snprintf(fc_err, sizeof fc_err, ", latent %lld", jgeti(u, "sSkillId_2", 0)), fc_err) : "");
         fc_err[0] = 0;
@@ -724,6 +798,13 @@ int fc_build(const FcBuild *cfg) {
     /* tables back into their bundles */
     fc_log("writing tables");
     rows_finish(&units); rows_finish(&skills); rows_finish(&trims);
+    if (any_new_ids) {
+        J *count = jget(chars, "counts");
+        if (count) {
+            if (jget(count, "unitRecords")) jset(count, "unitRecords", jnum_i(jget(U.j, "datas")->n));
+            if (jget(count, "playerForms")) jset(count, "playerForms", jnum_i(jget(chars, "units")->n));
+        }
+    }
     { Buf o = {0}; CHECK(table_bundle(c, &U, &o)); newb_set(c, "language/en/unitdata/unitlist.bytes", &o); }
     { Buf o = {0}; CHECK(table_bundle(c, &S, &o)); newb_set(c, "unitdatabin/skilllist.bytes", &o); }
     if (f_changed) { rows_finish(&frows); Buf o = {0}; CHECK(table_bundle(c, &FT, &o)); newb_set(c, "unitdatabin/fieldskilllist.bytes", &o); }
@@ -738,6 +819,51 @@ int fc_build(const FcBuild *cfg) {
         Buf src = {0}, o = {0}; CHECK(route_bytes(c, ROUTE_THUMBS_TXT, &src) || replace_text(c, &src, thumbs_txt.p, thumbs_txt.n, &o)); buf_free(&src);
         newb_set(c, "idlist/thumbnailimagelist.txt", &o);
         Buf t2 = {0}; bundle_save(&thumbs, &t2, cfg->lz4_level); newb_set(c, "thumbnaillist/thumbnaillist", &t2);
+    }
+
+    /*
+     * Mirror new iOS unit and skill data into the Android recovery pack used
+     * by the offline backend. This does not disable compiled engine allowlists.
+     */
+    if (any_new_ids) {
+        J *pack = base_json(c, "pack/manifest.json"); if (!pack) goto done;
+        const char *android_routes[] = {
+            "/assets/Android/language/en/unitdata/unitlist.bytes",
+            "/assets/Android/unitdatabin/skilllist.bytes"
+        };
+        Table *ios_tables[] = {&U, &S};
+        for (int k = 0; k < 2; k++) {
+            J *pentry = NULL, *pfiles = jget(pack, "files");
+            for (int q = 0; pfiles && q < pfiles->n; q++)
+                if (!strcmp(jgets(pfiles->a[q], "route", ""), android_routes[k])) {
+                    pentry = pfiles->a[q]; break;
+                }
+            if (!pentry) FAIL("missing Android recovery route: %s", android_routes[k]);
+            const char *asset = jgets(pentry, "asset", NULL);
+            if (!asset) FAIL("Android recovery route has no asset");
+            char rel[1024]; snprintf(rel, sizeof rel, "pack/%s", asset);
+            Table at = {0}; CHECK(base_read(c, rel, &at.bundle));
+            Buf encoded = {0};
+            if (read_text(&at.bundle, &encoded) || encoded.n < 4) {
+                buf_free(&encoded); table_free(&at); goto done;
+            }
+            at.seed = rd32le(encoded.p); buf_free(&encoded);
+            at.j = jclone(ios_tables[k]->j);
+            Buf rewritten = {0}; int rr = table_bundle(c, &at, &rewritten);
+            table_free(&at); if (rr) goto done;
+            CHECK(out_write(c, rel, rewritten.p, rewritten.n));
+            char sh[65]; sha256_hex(rewritten.p, rewritten.n, sh);
+            jset(pentry, "bytes", jnum_i((long long)rewritten.n));
+            jset(pentry, "sha256", jstr(sh));
+            buf_free(&rewritten);
+        }
+        CHECK(out_json(c, "pack/manifest.json", pack, 2));
+        CHECK(out_json(c, "pack/playableunits.json", playable, 1));
+        CHECK(out_json(c, "pack/progressionunits.json", progression, 1));
+        CHECK(out_json(c, CHARS, chars, 1));
+        CHECK(out_json(c, UEXP, uexp, 1));
+        jfree(pack);
+        fc_log("experimental new-ID tables generated; executable-side validation NOT verified");
     }
 
     /* summon animation re-skin: mod/summon/summon.json paints new part art into the atlas cells */
@@ -974,11 +1100,16 @@ int fc_build(const FcBuild *cfg) {
         J *ios = jget(bdj, "iosContent"); jset(ios, "manifestSha256", jstr(sh));
         J *routes_now = NULL; { Buf rb = {0}; char *rp = outp(c, "content-ios/ios-routes.json"); file_read(rp, &rb); free(rp); routes_now = jparse((char *)rb.p, rb.n); buf_free(&rb); }
         jset(ios, "routes", jnum_i(routes_now ? routes_now->n : 0)); jfree(routes_now);
-        Buf pm = {0}; CHECK(base_read(c, "pack/manifest.json", &pm)); sha256_hex(pm.p, pm.n, sh); buf_free(&pm);
+        Buf pm = {0};
+        if (any_new_ids) {
+            char *path = outp(c, "pack/manifest.json");
+            int rr = file_read(path, &pm); free(path); CHECK(rr);
+        } else CHECK(base_read(c, "pack/manifest.json", &pm));
+        sha256_hex(pm.p, pm.n, sh); buf_free(&pm);
         jset(jget(bdj, "pack"), "manifestSha256", jstr(sh));
         char *what = fc_sprintf("%s + Blazing Forge mod", jgets(bdj, "what", "")); jset(bdj, "what", jstr(what)); free(what);
         J *fo = jobj(); J *ul = jnew(J_ARR); for (int i = 0; i < specs->n; i++) jpush(ul, jnum_i(jgeti(specs->a[i], "id", 0)));
-        jset(fo, "units", ul); jset(fo, "builtUtc", jnum_i(now)); jset(fo, "mode", jstr("slots")); jset(bdj, "forge", fo);
+        jset(fo, "units", ul); jset(fo, "builtUtc", jnum_i(now)); jset(fo, "mode", jstr(any_new_ids ? "new-ids-experimental" : "slots")); jset(bdj, "forge", fo);
         CHECK(out_json(c, "blazing-data.json", bdj, 1)); jfree(bdj);
         J *eng = load_json_file(cfg->engine_json); if (!eng) goto done;
         Buf bdb = {0}; char *bdp = outp(c, "blazing-data.json"); file_read(bdp, &bdb); free(bdp); sha256_hex(bdb.p, bdb.n, sh); buf_free(&bdb);
@@ -998,7 +1129,8 @@ done:
     if (abil_loaded) table_free(&A); if (f_loaded) table_free(&FT); if (b_loaded) table_free(&BT);
     if (icons_open) bundle_close(&icons); if (thumbs_open) bundle_close(&thumbs);
     buf_free(&cardlist); buf_free(&iconlist); buf_free(&thumbs_txt); buf_free(&tmp); buf_free(&icons_raw); buf_free(&thumbs_raw);
-    jfree(chars); jfree(presents); jfree(specs); jfree(made_abil); jfree(c->routes); jfree(c->report);
+    jfree(chars); jfree(presents); jfree(uexp); jfree(playable); jfree(progression);
+    jfree(specs); jfree(made_abil); jfree(c->routes); jfree(c->report);
     for (int i = 0; i < c->nnb; i++) { free(c->nb[i].path); buf_free(&c->nb[i].data); } free(c->nb);
     for (int i = 0; i < nfiles; i++) free(files[i]); free(files);
     return rc;
