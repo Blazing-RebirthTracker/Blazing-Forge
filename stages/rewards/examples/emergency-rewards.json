@@ -1,0 +1,136 @@
+{
+  "format": "ForgeStage",
+  "schema": 3,
+  "profile": "emergency/2",
+  "localId": "example:emergency-rewards",
+  "name": "Rewards Example",
+  "enabled": true,
+  "donorMissionId": "300301",
+  "maps": [
+    {
+      "donorMapId": "3003011",
+      "markers": [
+        {
+          "chip": 8,
+          "grid": [
+            2,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "donorMapId": "3003012",
+      "markers": []
+    },
+    {
+      "donorMapId": "3003013",
+      "markers": []
+    }
+  ],
+  "rewards": {
+    "playerExp": 3000,
+    "unitExp": 2500,
+    "ryo": {
+      "min": 2000,
+      "max": 3000
+    },
+    "firstClearPearls": 5,
+    "challenges": [
+      {
+        "state": 3,
+        "sign": 3,
+        "value": 15,
+        "limited": [],
+        "text": "Complete within 15 turns",
+        "reward": {
+          "pearls": 5,
+          "items": [
+            {
+              "id": "13683",
+              "quantity": 3,
+              "level": 1,
+              "plus": {
+                "hp": 0,
+                "atk": 0,
+                "def": 0,
+                "speed": 2
+              }
+            }
+          ]
+        }
+      },
+      {
+        "state": 9,
+        "sign": 0,
+        "value": 0,
+        "limited": [
+          1
+        ],
+        "text": "Skill elementals only",
+        "reward": {
+          "pearls": 3
+        }
+      },
+      {
+        "state": 10,
+        "sign": 3,
+        "value": 20,
+        "limited": [],
+        "text": "Character cost 20 or lower only",
+        "reward": {
+          "ryo": 10000
+        }
+      }
+    ],
+    "lucky": {
+      "id": "13683",
+      "quantity": 2,
+      "level": 1,
+      "plus": {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "speed": 2
+      }
+    },
+    "drops": {
+      "30030110": {
+        "item": null,
+        "chancePerThousand": 0
+      },
+      "30030111": {
+        "item": {
+          "id": "13683",
+          "level": 1,
+          "plus": {
+            "hp": 0,
+            "atk": 0,
+            "def": 0,
+            "speed": 2
+          }
+        },
+        "chancePerThousand": 250
+      },
+      "30030112": {
+        "item": {
+          "id": "11822",
+          "level": 1,
+          "plus": {
+            "hp": 0,
+            "atk": 2,
+            "def": 0,
+            "speed": 0
+          }
+        },
+        "chancePerThousand": 500
+      }
+    }
+  },
+  "banner": {
+    "file": "banners/example-emergency.png",
+    "sha256": "aff6c704659038bc75d2852e2d7145b96d47ae4cf4a9e8ec9578c2d2db061c14",
+    "width": 680,
+    "height": 320
+  }
+}

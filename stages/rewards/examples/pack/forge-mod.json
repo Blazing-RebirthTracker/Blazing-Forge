@@ -1,0 +1,12 @@
+{
+  "format": "ForgeStagePack",
+  "schema": 2,
+  "stages": [
+    "stages/emergency-rewards.json",
+    "stages/road-rewards.json",
+    "stages/castle-rewards.json"
+  ],
+  "banners": [
+    "banners/example-emergency.png"
+  ]
+}

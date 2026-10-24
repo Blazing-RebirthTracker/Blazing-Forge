@@ -1,0 +1,51 @@
+{
+  "format": "ForgeCastle",
+  "schema": 2,
+  "profile": "phantom-castle/2",
+  "localId": "example:castle-rewards",
+  "name": "Castle Rewards Example",
+  "donorPvpId": "1",
+  "pointScale": 1,
+  "enabled": true,
+  "rewards": {
+    "floors": {
+      "3": {},
+      "5": {
+        "items": [
+          {
+            "id": "13683",
+            "quantity": 5,
+            "level": 1,
+            "plus": {
+              "hp": 0,
+              "atk": 0,
+              "def": 0,
+              "speed": 2
+            }
+          }
+        ]
+      },
+      "100": {
+        "pearls": 100
+      }
+    },
+    "ranking": {
+      "1-100": {
+        "pearls": 50,
+        "items": [
+          {
+            "id": "13683",
+            "quantity": 10,
+            "level": 1,
+            "plus": {
+              "hp": 0,
+              "atk": 0,
+              "def": 0,
+              "speed": 2
+            }
+          }
+        ]
+      }
+    }
+  }
+}

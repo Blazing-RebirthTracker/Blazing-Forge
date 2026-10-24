@@ -156,6 +156,16 @@ dialog.bgs::backdrop{background:rgba(5,7,10,.6)}
 .bggrid span{padding:4px 6px;text-align:left}
 .note{background:var(--panel);border-radius:14px;padding:10px 14px;font-size:12.5px;color:var(--tx2);line-height:1.5;border-left:3px solid var(--ember)}
 .hidden-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.bnwrap{position:relative;width:100%;aspect-ratio:680/320;border-radius:10px;overflow:hidden;background:#0b0d12;border:1px solid var(--line);margin:4px 0 8px}
+.bnwrap.empty{display:flex;align-items:center;justify-content:center;color:var(--tx2);font-size:13px;border-style:dashed}
+.bnwrap .bncv,.bnwrap .bnimg{width:100%;height:100%;display:block;object-fit:cover}
+.bnwrap .bncv{cursor:grab;touch-action:none}
+.bnwrap .bntag{position:absolute;left:6px;top:6px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(14,16,22,.75);padding:3px 7px;border-radius:5px;pointer-events:none}
+.bnovwrap{display:flex;flex-direction:column;gap:4px;margin:6px 0}
+.bnovwrap .bnov{width:min(300px,100%);height:auto;border-radius:6px;background:#0b0d12;display:block}
+.xfull{display:flex;gap:8px;align-items:flex-start;margin:8px 0 2px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:13px;color:var(--tx)}
+.xfull input{margin-top:3px}
+.xfull small{display:block;color:var(--tx2);margin-top:2px}
 details.more summary{cursor:pointer;font-weight:700;font-size:13px}
 details.more[open] summary{margin-bottom:8px}
 input[type=range]{accent-color:var(--ember)}
@@ -259,6 +269,7 @@ body.sbx-on #betaNote,body.sbx-on section.bar[aria-label="Mission"],body.sbx-on 
 .pcard b{font-size:13.5px}
 .pcard small{color:var(--tx2);font-size:12px;line-height:1.4}
 .pcard small.warn,.hint.warn{color:var(--ember-tx)}
+.hint.bad{color:var(--bad);font-weight:600}
 .pcard.reserved{opacity:.6}
 .adv summary{cursor:pointer;font-size:12px;color:var(--tx3);font-weight:700}
 .adv pre{white-space:pre-wrap;word-break:break-word;font:11px/1.45 var(--f-mono);color:var(--tx2);max-height:320px;overflow:auto;background:var(--ink);border-radius:8px;padding:8px}
@@ -492,6 +503,11 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
         <div class="row" style="justify-content:space-between"><span class="lbl">Rewards and challenges</span><span class="pill" id="rwPill"></span></div>
         <div id="rwBody"></div>
       </div>
+      <div class="card" id="bnCard" aria-label="Banner" hidden>
+        <div class="row" style="justify-content:space-between"><span class="lbl">Banner</span><span class="pill" id="bnPill"></span></div>
+        <div id="bnBody"></div>
+        <input type="file" id="bnFile" accept="image/png,image/jpeg,image/webp" class="hidden-file" aria-label="Banner picture">
+      </div>
       <div class="card" id="mapCard">
         <span class="lbl">Map</span>
         <div class="row"><span class="status" id="mapInfo"></span></div>
@@ -633,6 +649,7 @@ body.kind-castle.mode-custom:not(.no-castle) #boardBody{display:none}
   <div class="row" style="justify-content:space-between"><span class="lbl" id="xTitle">Export for the game</span><button class="btn ghost" id="xClose" type="button">Close</button></div>
   <div class="seg xmode" id="xModeSeg" role="group" aria-label="What to export"><button type="button" data-x="enabled" aria-pressed="true">Export enabled stages</button><button type="button" data-x="all" aria-pressed="false">Export changes including disabled imports</button></div>
   <p class="hint" id="xHint"></p>
+  <label class="xfull"><input type="checkbox" id="xFull"><span><b>Rewards and banners</b><small id="xFullHint">Put your reward, challenge and banner edits in the pack. Needs app v2.6.6 or later (a one-time IPA update; after that, importing a pack is enough). Older apps reject these files, so leave this off for a phone on 2.6.5 or older.</small></span></label>
   <div class="status msg" id="xMsg" role="status" aria-live="polite" hidden></div>
   <div class="lbl" style="margin-top:6px">In the pack</div><div class="packlist" id="xIn"></div>
   <div class="lbl" style="margin-top:6px">Left out</div><div class="packlist" id="xOut"></div>
@@ -850,7 +867,7 @@ const st = { idx: null, enemies: {}, mission: null, draft: null, key: null, mapI
   view: { z: 1, x: 0, y: 0 }, standins: true, teamSprites: true, floor: false, mode: 'game', gameOnly: true, readyOnly: false, ghosts: false, anim: true, grid: true, placing: null, t: 0, last: 0 };
 // v2.5.0 catalogs and the import contract (loaded in init): AC is the complete authoring catalog, FM the mode logic
 // around the supplied stage-modes.mjs adapter, SLOTS the supplied destination table split by mode.
-let APP = null, AC = null, FM = null, SLOTS = null, GEO = null, NAMES = {};
+let APP = null, AC = null, FM = null, SLOTS = null, GEO = null, NAMES = {}, RW = null, ITEMS = {};
 const KIND_FALLBACK = { emergency: { label: 'Emergency', capacity: 50, profile: 'emergency-layout/1', prefix: 'forge-stages', exclusive: false }, road: { label: 'Ninja Road', capacity: 10, profile: 'ninja-road-layout/1', prefix: 'forge-road', exclusive: true }, castle: { label: 'Phantom Castle', capacity: 10, profile: 'phantom-castle/1', prefix: 'forge-castle', exclusive: true } };
 const KIND = k => (FM ? FM.KINDS : KIND_FALLBACK)[k || 'emergency'];
 const kindOf = d => (d && d.kind) || 'emergency';
@@ -1292,7 +1309,7 @@ function renderRail() {
   if (document.activeElement !== $('stName')) $('stName').value = d.name || '';
   if (document.activeElement !== $('stStamina')) $('stStamina').value = d.stamina ?? 0;
   $('stInfo').textContent = (d.objectives && d.objectives.length ? 'Objectives kept from the game: ' + d.objectives.map(tagless).join(' · ') + '. ' : '') + (tplOf(d.base) ? 'In the game this becomes a new Emergency mission built from mission ' + d.base + '; the original stays as it is.' : st.mission ? 'Draft based on mission ' + st.mission.id + '.' : 'Draft for a new stage.');
-  renderSel(); renderGame(); renderRewardsCard(); syncUndo(); releaseScenes(visibleDonors());
+  renderSel(); renderGame(); renderRewardsCard(); renderBannerCard(); syncUndo(); releaseScenes(visibleDonors());
 }
 function mapSummary(mp) { let n = 0, boss = false; for (const e of mp.encounters) for (const w of e.waves) for (const it of w.items) if (it.k === 'e') { n++; if (it.type === 2) boss = true; } return { n, boss }; }
 function goMap(i) { const n = st.draft.maps.length; const j = Math.max(0, Math.min(n - 1, i)); if (j === st.mapI) return; st.mapI = j; st.encI = 0; st.waveI = 0; st.sel = null; st.mk = null; renderRail(); draw();
@@ -1504,7 +1521,7 @@ async function importOne(f) { // -> { keys: [...], bad: [...] }
   let j; try { j = JSON.parse(text); } catch (e) { return { keys: [], bad: [f.name + ' isn’t a stage file (it isn’t valid JSON).'] }; }
   if (j && j.format === 'ForgeStageWorkspace') return restoreWorkspace(j, null);
   if (j && j.format === 'ForgeStageSandbox') { if (!window.ForgeSandboxUI) return { keys: [], bad: ['Stage projects need IndexedDB, which this browser blocks.'] }; const r = await window.ForgeSandboxUI.importJSON(text, f.name); return r.err ? { keys: [], bad: [r.err] } : { keys: [], bad: [], project: r.name }; }
-  if (j && (j.format === 'ForgeCastle' || (j.format === 'ForgeStage' && j.schema === 2))) { const r = await importDefinition(j, f.name); return r.err ? { keys: [], bad: [r.err] } : { keys: [r.key], bad: [], skipped: r.skipped, notes: r.note ? [r.note] : [] }; }
+  if (j && (j.format === 'ForgeCastle' || (j.format === 'ForgeStage' && (j.schema === 2 || j.schema === 3)))) { const r = await importDefinition(j, f.name); return r.err ? { keys: [], bad: [r.err] } : { keys: [r.key], bad: [], skipped: r.skipped, notes: r.note ? [r.note] : [] }; }
   if (!j || j.format !== 'ForgeStage') return { keys: [], bad: [f.name + ' isn’t a stage file.'] };
   let d = j.native && j.native.editor;
   if (!d) d = { v: 1, base: j.targetMissionId, name: j.name, stamina: j.stamina, objectives: [], maps: j.maps.map(m => ({ donor: m.donorMapId, bg: m.backgroundId, chips: (m.native && m.native.chips) || blankMap().chips, deployWays: (m.native && m.native.deployWays) || [0, 0, 0, 0, 0, 0],
@@ -1664,11 +1681,26 @@ function keyFor(donor, localId) {
   return main + '~' + Math.random().toString(36).slice(2, 8);
 }
 // one game definition from a file or pack: an Emergency or Road layout, or a Castle
-async function importDefinition(j, fname) {
+async function importDefinition(j, fname, files) {
+  // rewards and banners (ForgeStage schema 3 / ForgeCastle schema 2): checked with the shared rewards module, then
+  // the layout part imports as before and the rewards go back into the stage's reward editor
+  let rw = null, bn = null;
+  if (j && ((j.format === 'ForgeStage' && j.schema === 3) || (j.format === 'ForgeCastle' && j.schema === 2))) {
+    try { RW.validateDefinition(AC, j, ITEMS); } catch (e) { return { err: `${fname}: ${e.message}` }; }
+    rw = j.rewards || null; bn = j.banner || null; j = RW.layoutView(j); }
   const sp = FM.splitDefinition(j);
   if (sp.error) return { err: `${fname}: ${sp.error === 'draft' ? 'a website draft file belongs on its own, not inside a game pack.' : sp.error}` };
   const r = sp.kind === 'castle' ? importCastle(sp.spec, sp.extra) : await importGameStage(sp.spec, sp.extra);
-  return r.err ? { err: `${fname}: ${r.err}` } : r;
+  if (r.err) return { err: `${fname}: ${r.err}` };
+  if (rw || bn) { const notes = [r.note].filter(Boolean), s = readStore();
+    if (sp.kind === 'castle') { const n = slotNum(r.key), rec = castleStore(s)[n]; if (rec && rw) { rec.draft = { ...(rec.draft || {}), rewards: RW.castleToDraft(AC, rec.spec, rw) }; writeStore(s); if (cs.slot === n) { cs.rec = castleStore()[n]; castleHistReset(); } } }
+    else { const d = s.drafts[r.key];
+      if (d && rw) { const base = rwBase(d), full = base ? RW.toDraft(sp.kind, base, rw) : null; if (full && !sameJ(full, base)) d.rewards = full; else delete d.rewards; }
+      if (d && bn) { const data = files && files[bn.file]; if (!data) notes.push(`${bn.file} wasn’t in the file, so the stage has no banner here yet.`);
+        else { try { await RW.checkBannerBytes({ banner: bn }, data, shaHex); d.banner = await storeBanner(new Blob([data], { type: 'image/png' })); } catch (e) { notes.push(`${bn.file}: ${e.message}`); } } }
+      if (d) { writeStore(s); if (st.key === r.key) { st.draft = d; histReset(); } } }
+    r.note = notes.join(' '); }
+  return r;
 }
 async function importPack(files, fname) {
   let list = [];
@@ -1676,7 +1708,7 @@ async function importPack(files, fname) {
   if (!list.length) list = Object.keys(files).filter(n => /(^|\/)stages\/[^/]+\.json$/.test(n));
   const keys = [], bad = [], notes = []; let skipped = 0;
   for (const n of list) { let j; try { j = JSON.parse(new TextDecoder().decode(files[n])); } catch (e) { bad.push(n + ' isn’t a stage file.'); continue; }
-    const r = await importDefinition(j, n); if (r.err) bad.push(r.err); else { keys.push(r.key); skipped += r.skipped || 0; if (r.note) notes.push(r.note); } }
+    const r = await importDefinition(j, n, files); if (r.err) bad.push(r.err); else { keys.push(r.key); skipped += r.skipped || 0; if (r.note) notes.push(r.note); } }
   if (!list.length) bad.push(fname + ' has no stages in it.');
   return { keys, bad, skipped, notes };
 }
@@ -1763,8 +1795,8 @@ function renderRewards(tpl) {
       block('Map clear rewards — server mission copy', 'The same rewards as the server mission record lists them.', R.serverMission, x => rewardText(x.mapClearRewards)),
       block('Map clear rewards — client display rows', 'What the game’s own mission data shows on screen. It can differ from the server rows; neither is a verified payout promise.' + (R.clientElsewhere ? ` The stock row list also points at ${R.clientElsewhere} map${R.clientElsewhere === 1 ? '' : 's'} of other Roads (a shared lookup); custom copies keep only this Road’s own maps.` : ''), R.client, x => rewardText(x.mapClearRewards)));
     if (R.missionClear) box.append(el('p', { class: 'hint', style: 'margin-top:8px', text: 'Clearing the whole Road: ' + rewardText(R.missionClear) + ' (server mission record).' })); }
-  $('gameRewardsHint').textContent = kindOf(st.draft) === 'road' ? 'Rewards, enemies, stats, waves, abilities and backgrounds come from the template and are kept as they are in a game export. App v2.5.0 takes Road layouts only, so reward edits stay in website drafts.'
-    : 'Rewards, enemies, stats, waves, abilities and backgrounds come from the template mission and are kept as they are in a game export. First clear has its own reward group, so it pays out even if you’ve cleared the original.';
+  $('gameRewardsHint').textContent = kindOf(st.draft) === 'road' ? 'Enemies, stats, waves, abilities and backgrounds come from the template and are kept as they are in a game export. Reward edits go in only with Rewards and banners on in Export (needs app v2.6.6 or later).'
+    : 'Enemies, stats, waves, abilities and backgrounds come from the template mission and are kept as they are in a game export; rewards too, unless you edit them below and turn on Rewards and banners in Export (needs app v2.6.6 or later). First clear has its own reward group, so it pays out even if you’ve cleared the original.';
 }
 function renderMarkers(lock) {
   const m = map(), box = $('mkList'), btns = [];
@@ -1817,7 +1849,9 @@ function renderGame() {
   chk.maps.forEach((mv, i) => { if (mv.length) box.append(li('move', `Map ${i + 1}: moves ${mv.map(v => markName(v.chip)).join(', ')}.`)); });
   if (!chk.errs.length && !chk.moves) box.append(li('', 'No moves yet: the stage plays like the template. Drag start spots or entry points to change where everyone begins.'));
   if (!chk.errs.length) box.append(li('', `Checked against the app’s import rules (${K.profile}): ready to export.`));
-  if (d.rewards) box.append(li('lost', 'Reward and challenge edits are a website draft: the game pack keeps the template’s rewards and challenges (app v2.5.0 installs layouts only).'));
+  if (d.rewards) box.append(st.fullPack ? li('', 'Reward and challenge edits go in the game pack (Rewards and banners is on in Export; needs app v2.6.6 or later).') : li('lost', 'Reward and challenge edits stay in the website draft: the game pack keeps the template’s rewards and challenges. Turn on Rewards and banners in Export to include them (needs app v2.6.6 or later).'));
+  { const dl = dropLimit(d); if (dl && dl.over) box.append(li(st.fullPack ? 'err' : 'lost', `Edited drops use ${dl.n} different items; the app takes at most 3 per mission. Fix it in Rewards › Enemy drops before exporting with Rewards and banners.`)); }
+  if (d.banner) box.append(st.fullPack ? li('', 'The banner goes in the game pack.') : li('lost', 'The banner stays in the website draft until Rewards and banners is on in Export.'));
   $('gExtra').hidden = !d.extra;
   $('keepGameBtn').hidden = !chk.lost.length && !chk.errs.some(e => e[0] === 'STAGE_MAPS' || e[0] === 'STAGE_OCCUPIED');
   pill.className = 'pill ' + (chk.errs.length ? 'no' : showOf(d) ? 'ok' : ''); pill.textContent = chk.errs.length ? 'Can’t export' : showOf(d) ? (K.exclusive ? 'Active' : 'Ready') : 'Switched off';
@@ -1851,10 +1885,22 @@ const sameJ = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 function rwEdit(fn, what) {
   const d = st.draft, base = rwBase(d); if (!base) return false; const r = clone(d.rewards || base); fn(r);
   const probs = FM.rewardProblems(r); if (probs.length) { toast(probs[0]); renderRewardsCard(); return false; }
-  if (sameJ(r, base)) delete d.rewards; else d.rewards = r; changed(); if (what) toast(what + ' (website draft; the game pack keeps the template’s rewards).'); return true;
+  if (sameJ(r, base)) delete d.rewards; else d.rewards = r; changed(); if (what) toast(what + (st.fullPack ? ' (goes in the next game pack with Rewards and banners on).' : ' (website draft until Rewards and banners is on in Export).')); return true;
+}
+// the app's limit for edited Emergency drops: at most 3 different normal-drop items across the whole mission
+// (unchanged enemies included); the shared rewards module enforces it at export
+function dropLimit(d) {
+  if (kindOf(d) !== 'emergency') return null; const base = rwBase(d); if (!base) return null; const r = rwOf(d), t = tplOf(d.base, 'emergency');
+  const items = new Set(Object.values(r.drops || {}).filter(x => x.item && x.chance > 0).map(x => x.item));
+  let edited = false; try { const rw = d.rewards && RW ? RW.fromDraft('emergency', base, d.rewards, ITEMS, t.raw) : null; edited = !!(rw && rw.drops); } catch (e) {}
+  const baseN = new Set(Object.values(base.drops || {}).filter(x => x.item && x.chance > 0).map(x => x.item)).size;
+  return { n: items.size, baseN, edited, over: edited && items.size > 3 };
 }
 const itemName = id => { const n = NAMES[String(id)] || {}; return n.n || (APP && APP.units[String(id)]) || n.s || 'Item ' + id; };
-function partView(p) { if (p.key === 'item') { const n = NAMES[p.unitId] || {}; return { key: 'item', label: 'Item', qty: p.qty, unitId: p.unitId, level: p.level || 1, plus: { s: 0, a: 0 }, raw: p }; }
+// item kinds (type3) and the stat bonus a pill carries: HP / ATK / Speed pills only work through that bonus
+const ITEM_TYPE = { 90: 'Ramen / chest', 91: 'Awakening material', 92: 'Gama-chan (Ryo)', 93: 'Stat pill', 94: 'Training unit', 95: 'Acquisition stone', 96: 'Ramen', 97: 'Talisman' };
+const bonusWords = b => [['HP', b[0]], ['ATK', b[1]], ['DEF', b[2]], ['Speed', b[3]]].filter(x => x[1]).map(([k, v]) => `+${v} ${k}`).join(' ');
+function partView(p) { if (p.key === 'item') { const n = NAMES[p.unitId] || {}, b = n.b || [0, 0, 0, 0]; return { key: 'item', label: 'Item', qty: p.qty, unitId: p.unitId, level: p.level || 1, plus: { s: b[0], a: b[1], d: b[2], sp: b[3] }, raw: p }; }
   return { key: p.key, label: FM.partLabel(p), qty: p.qty, raw: p }; }
 const partsChips = parts => parts && parts.length ? el('div', { class: 'ritems' }, parts.map(p => rewardChip(partView(p)))) : el('span', { class: 'hint', text: 'Nothing' });
 function chText(ch, i) { return FM.challengeType(ch) ? FM.challengeText(ch) : ch.sourceText || tagless(((st.mission && st.mission.objectives) || [])[i] || '') || `Game challenge type ${ch.state}`; }
@@ -1865,8 +1911,8 @@ function renderRewardsCard() {
   const keep = document.activeElement && box.contains(document.activeElement) ? document.activeElement.id : null;
   if (!base) { $('rwPill').className = 'pill'; $('rwPill').textContent = 'Not available'; box.replaceChildren(el('p', { class: 'hint', text: 'Reward and challenge data comes with game-ready templates. This stage isn’t built from one, so there’s nothing to edit here.' })); return; }
   const r = rwOf(d), changes = FM.rewardChanges(base, d.rewards), ed = !!d.rewards, kids = [];
-  $('rwPill').className = 'pill ' + (ed ? 'draft' : ''); $('rwPill').textContent = ed ? 'Website draft' : 'From the template';
-  kids.push(el('p', { class: 'hint', text: 'Edit them here as part of your website draft. App v2.5.0 installs layouts only, so a game pack keeps the template’s rewards and challenges; your edits are kept in Save editable project and Export draft file for a later app version or a developer handoff.' }));
+  $('rwPill').className = 'pill ' + (ed ? (st.fullPack ? 'ok' : 'draft') : ''); $('rwPill').textContent = ed ? (st.fullPack ? 'In the game pack' : 'Website draft') : 'From the template';
+  kids.push(el('p', { class: 'hint', text: st.fullPack ? 'Your edits go into the game pack because Rewards and banners is on in Export. The phone needs app v2.6.6 or later; older apps reject those packs. Items keep their own bonuses (an HP, ATK or Speed pill pays its stat boost).' : 'Your edits are saved with the project. To put them in the game, turn on Rewards and banners in Export (needs app v2.6.6 or later). With it off, the pack keeps the template’s rewards.' }));
   if (ed) kids.push(el('ul', { class: 'issues' }, changes.map(t => li('lost', t))), el('div', { class: 'row' }, el('button', { type: 'button', class: 'chip sm', text: 'Reset rewards to the template', onclick: () => { delete st.draft.rewards; changed(); toast('Rewards and challenges are back to the template. Undo brings your edits back.'); } })));
   const mark = (a, b) => sameJ(a, b) ? null : el('span', { class: 'edmark', text: 'edited' });
   // clear rewards
@@ -1905,7 +1951,12 @@ function renderRewardsCard() {
         el('div', { class: 'row' }, el('label', { class: 'go' }, 'Chance per 1000', numIn('rwD' + id, dr.chance, 0, 1000, `Drop chance of ${info.n}`, n => rwEdit(x => { x.drops = x.drops || {}; x.drops[id] = { ...(x.drops[id] || { item: null, varies: false }), chance: n }; if (!n && !x.drops[id].item) delete x.drops[id]; }))), el('span', { class: 'pct', text: '= ' + (dr.chance / 10).toLocaleString() + '%' }),
           el('button', { type: 'button', class: 'chip sm', text: dr.item ? 'Change item…' : 'Add a drop…', onclick: () => openRewardDialog({ title: `${info.n} drop`, single: true, onPick: it => rwEdit(x => { x.drops = x.drops || {}; x.drops[id] = { ...(x.drops[id] || { chance: 100, varies: false }), item: it }; if (!x.drops[id].chance) x.drops[id].chance = 100; }, `${info.n} drop changed`) }) }),
           dr.item ? el('button', { type: 'button', class: 'chip sm', text: 'No drop', onclick: () => rwEdit(x => { delete x.drops[id]; }, `${info.n} drop removed`) }) : null)); });
-    kids.push(el('section', { class: 'rwsec' }, el('h4', { text: `Enemy drops · map ${st.mapI + 1}` }), el('p', { class: 'hint', text: 'Each enemy on the map rolls its own drop. Pick another map in the strip to edit its enemies.' }), ...(rows.length ? rows : [el('p', { class: 'hint', text: 'No enemies on this map.' })])));
+    const dl = dropLimit(d);
+    const limitNote = !dl ? null : dl.over ? el('p', { class: 'hint bad', role: 'status', text: `This mission now drops ${dl.n} different items. Edited drops can use at most 3 across the whole mission (the app’s limit), counting enemies you didn’t change. Set some enemies to No drop or give them an item that’s already used; until then the Rewards and banners export stops at this stage.` })
+      : dl.edited ? el('p', { class: 'hint', text: `Different drop items in this mission: ${dl.n} of 3 (the app’s limit for edited drops, counting every map).` })
+      : dl.baseN > 3 ? el('p', { class: 'hint', text: `This template drops ${dl.baseN} different items. That’s fine while drops stay as they are; if you edit drops, the mission can use at most 3 different items.` })
+      : el('p', { class: 'hint', text: `Different drop items in this mission: ${dl.n} of 3 (the app’s limit if you edit drops).` });
+    kids.push(el('section', { class: 'rwsec' }, el('h4', { text: `Enemy drops · map ${st.mapI + 1}` }), el('p', { class: 'hint', text: 'Each enemy on the map rolls its own drop. Pick another map in the strip to edit its enemies.' }), limitNote, ...(rows.length ? rows : [el('p', { class: 'hint', text: 'No enemies on this map.' })])));
   } else {
     const t = tplOf(d.base, kind);
     const rows = t.maps.map((m, i) => { const p = (r.mapClear || {})[m.id] || [], bp = (base.mapClear || {})[m.id] || [], on = !sameJ(p, bp);
@@ -1918,10 +1969,67 @@ function renderRewardsCard() {
   }
   box.replaceChildren(...kids); if (keep && $(keep)) try { $(keep).focus(); } catch (e) {}
 }
+// ---- banners: a 680×320 PNG per custom Emergency / Ninja Road stage. The picture lives in this browser's IndexedDB
+// (keyed by its SHA-256); the draft keeps { sha256, width, height, bytes }. It goes into a game pack only when
+// "Rewards and banners" is on in Export (app v2.6.6 or later installs it as the stage's banner).
+const BANNER_W = 680, BANNER_H = 320;
+function bannerDb() { return new Promise((res, rej) => { let r; try { r = indexedDB.open('bf-stage-banners', 1); } catch (e) { rej(e); return; } r.onupgradeneeded = () => r.result.createObjectStore('png'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function bannerTx(mode, fn) { const db = await bannerDb(); return new Promise((res, rej) => { const t = db.transaction('png', mode), q = fn(t.objectStore('png')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error); }); }
+const putBanner = (sha, blob) => bannerTx('readwrite', s => s.put(blob, sha));
+const getBanner = sha => bannerTx('readonly', s => s.get(sha)).catch(() => null);
+async function shaHex(buf) { const h = new Uint8Array(await crypto.subtle.digest('SHA-256', buf)); return [...h].map(b => b.toString(16).padStart(2, '0')).join(''); }
+const bannerURLs = new Map();
+async function bannerURL(sha) { if (!sha) return null; if (bannerURLs.has(sha)) return bannerURLs.get(sha); const b = await getBanner(sha); const u = b ? URL.createObjectURL(b) : null; if (u) bannerURLs.set(sha, u); return u; }
+/** store a PNG as a banner; returns the draft's banner record */
+async function storeBanner(blob) { const buf = await blob.arrayBuffer(), sz = RW.pngSize(new Uint8Array(buf)); if (!sz || sz.width !== BANNER_W || sz.height !== BANNER_H) throw new Error(`Banners are ${BANNER_W}×${BANNER_H} PNGs.`);
+  if (buf.byteLength > RW.LIMITS.bannerBytes) throw new Error('That banner is over 1 MB.'); const sha = await shaHex(buf); await putBanner(sha, new Blob([buf], { type: 'image/png' })); return { sha256: sha, width: BANNER_W, height: BANNER_H, bytes: buf.byteLength }; }
+let bnEdit = null; // { img, zoom, ox, oy } while fitting an uploaded picture
+function bannerFits(kind) { return kind === 'emergency' || kind === 'road'; }
+function renderBannerCard() {
+  const d = st.draft, card = $('bnCard'); if (!card) return; const kind = d ? kindOf(d) : null, ok = d && rwBase(d) && bannerFits(kind); card.hidden = !ok; if (!ok) { bnEdit = null; return; }
+  const box = $('bnBody'), pill = $('bnPill');
+  pill.className = 'pill ' + (d.banner ? (st.fullPack ? 'ok' : 'draft') : ''); pill.textContent = d.banner ? (st.fullPack ? 'In the game pack' : 'Website draft') : 'Game default';
+  const hint = el('p', { class: 'hint', text: st.fullPack ? 'Shown on this stage in the game’s quest list. It goes into the game pack (Export › Rewards and banners is on), so the phone needs app v2.6.6 or later.' : 'Shown on this stage in the game’s quest list once it’s in a game pack: turn on Rewards and banners in Export (needs app v2.6.6 or later). Until then the game shows its default banner.' });
+  if (bnEdit) {
+    const cv = el('canvas', { width: String(BANNER_W), height: String(BANNER_H), class: 'bncv', 'aria-label': 'Banner preview: drag to move the picture', tabindex: '0' });
+    const zoom = el('input', { type: 'range', min: '1', max: '4', step: '0.01', value: String(bnEdit.zoom), 'aria-label': 'Zoom', id: 'bnZoom', style: 'flex:1;min-width:140px' });
+    // the whole uploaded picture, with the part that becomes the banner framed
+    const im0 = bnEdit.img, OW = 300, OH = Math.max(60, Math.round(OW * im0.naturalHeight / im0.naturalWidth)), ov = el('canvas', { width: String(OW), height: String(OH), class: 'bnov', 'aria-hidden': 'true' });
+    const paint = () => { const g = cv.getContext('2d'), im = bnEdit.img, base = Math.max(BANNER_W / im.naturalWidth, BANNER_H / im.naturalHeight), k = base * bnEdit.zoom, w = im.naturalWidth * k, h = im.naturalHeight * k;
+      bnEdit.ox = Math.min(0, Math.max(BANNER_W - w, bnEdit.ox)); bnEdit.oy = Math.min(0, Math.max(BANNER_H - h, bnEdit.oy)); g.fillStyle = '#000'; g.fillRect(0, 0, BANNER_W, BANNER_H); g.imageSmoothingQuality = 'high'; g.drawImage(im, bnEdit.ox, bnEdit.oy, w, h);
+      const o = ov.getContext('2d'), q = OW / im.naturalWidth, rx = -bnEdit.ox / k * q, ry = -bnEdit.oy / k * q, rw = BANNER_W / k * q, rh = BANNER_H / k * q;
+      o.clearRect(0, 0, OW, OH); o.drawImage(im, 0, 0, OW, OH); o.fillStyle = 'rgba(0,0,0,.6)'; o.fillRect(0, 0, OW, ry); o.fillRect(0, ry + rh, OW, OH - ry - rh); o.fillRect(0, ry, rx, rh); o.fillRect(rx + rw, ry, OW - rx - rw, rh);
+      o.strokeStyle = '#FF7A3D'; o.lineWidth = 2; o.strokeRect(rx + 1, ry + 1, rw - 2, rh - 2);
+      const sw = Math.round(BANNER_W / k), sh = Math.round(BANNER_H / k); info.textContent = `Your picture is ${im.naturalWidth}×${im.naturalHeight}. The framed part (${sw}×${sh} of it) becomes the ${BANNER_W}×${BANNER_H} banner` + (sw < BANNER_W ? ', enlarged, so it may look soft.' : '.'); };
+    const info = el('small', { class: 'hint' });
+    zoom.oninput = () => { const im = bnEdit.img, base = Math.max(BANNER_W / im.naturalWidth, BANNER_H / im.naturalHeight), z0 = bnEdit.zoom, z1 = +zoom.value, cx = BANNER_W / 2, cy = BANNER_H / 2;
+      bnEdit.ox = cx - (cx - bnEdit.ox) * z1 / z0; bnEdit.oy = cy - (cy - bnEdit.oy) * z1 / z0; bnEdit.zoom = z1; void base; paint(); };
+    let drag = null; cv.onpointerdown = e => { drag = { x: e.clientX, y: e.clientY }; try { cv.setPointerCapture(e.pointerId); } catch (x) {} };
+    cv.onpointermove = e => { if (!drag) return; const r = cv.getBoundingClientRect(), k = BANNER_W / r.width; bnEdit.ox += (e.clientX - drag.x) * k; bnEdit.oy += (e.clientY - drag.y) * k; drag = { x: e.clientX, y: e.clientY }; paint(); };
+    cv.onpointerup = cv.onpointercancel = () => { drag = null; };
+    cv.onkeydown = e => { const m = { ArrowLeft: [8, 0], ArrowRight: [-8, 0], ArrowUp: [0, 8], ArrowDown: [0, -8] }[e.key]; if (!m) return; e.preventDefault(); bnEdit.ox += m[0]; bnEdit.oy += m[1]; paint(); };
+    box.replaceChildren(el('div', { class: 'bnwrap' }, cv, el('span', { class: 'bntag', text: `Banner · ${BANNER_W}×${BANNER_H}` })), el('div', { class: 'row' }, el('label', { class: 'go', style: 'flex:1;display:flex;align-items:center;gap:8px' }, 'Zoom', zoom)),
+      el('div', { class: 'bnovwrap' }, el('span', { class: 'lbl', text: 'Whole picture (orange frame = the banner)' }), ov, info),
+      el('p', { class: 'hint', text: `Drag (or use the arrow keys) to move the picture, and zoom to fit. It’s saved as a ${BANNER_W}×${BANNER_H} PNG, the size the game’s quest banners use.` }),
+      el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn primary sm', text: 'Use this banner', onclick: () => cv.toBlob(async b => { try { const rec = await storeBanner(b); bnEdit = null; st.draft.banner = rec; changed(); toast(st.fullPack ? 'Banner set. It goes into the next game pack.' : 'Banner set (website draft until Rewards and banners is on in Export).'); } catch (e) { toast(e.message); } }, 'image/png') }),
+        el('button', { type: 'button', class: 'chip sm', text: 'Cancel', onclick: () => { bnEdit = null; renderBannerCard(); } })));
+    paint(); return;
+  }
+  const pic = el('img', { class: 'bnimg', alt: d.banner ? 'This stage’s banner' : '' });
+  if (d.banner) bannerURL(d.banner.sha256).then(u => { if (u) pic.src = u; else { pic.replaceWith(el('p', { class: 'hint warn', text: 'This banner’s picture isn’t stored in this browser (open the project ZIP it came in, or upload it again).' })); } });
+  box.replaceChildren(d.banner ? el('div', { class: 'bnwrap' }, pic, el('span', { class: 'bntag', text: `${BANNER_W}×${BANNER_H} · as exported` })) : el('div', { class: 'bnwrap empty' }, el('span', { text: 'Game default banner' })), hint,
+    el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn ghost sm', text: d.banner ? 'Replace…' : 'Upload an image…', onclick: () => $('bnFile').click() }),
+      d.banner ? el('button', { type: 'button', class: 'chip sm', text: 'Remove banner', onclick: () => { delete st.draft.banner; changed(); toast('Banner removed: the game default banner comes back. Undo brings yours back.'); } }) : null),
+    d.banner ? el('small', { class: 'hint', text: `${BANNER_W}×${BANNER_H} PNG · ${(d.banner.bytes / 1024).toFixed(0)} KB · SHA-256 ${d.banner.sha256.slice(0, 12)}…` }) : null);
+}
+$('bnFile').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; if (!/^image\//.test(f.type)) { toast('Pick a PNG, JPEG or WebP picture.'); return; }
+  const u = URL.createObjectURL(f), img = new Image(); img.onload = () => { bnEdit = { img, zoom: 1, ox: 0, oy: 0 }; const k = Math.max(BANNER_W / img.naturalWidth, BANNER_H / img.naturalHeight); bnEdit.ox = (BANNER_W - img.naturalWidth * k) / 2; bnEdit.oy = (BANNER_H - img.naturalHeight * k) / 2; renderBannerCard(); $('bnCard').scrollIntoView({ block: 'nearest' }); };
+  img.onerror = () => toast('That picture couldn’t be read.'); img.src = u; };
+
 // one dialog for every reward: currencies plus up to four items, or a single item pick
 let rwState = null;
 function openRewardDialog(o) {
-  rwState = { ...o, parts: clone(o.parts || []) }; $('rwTitle').textContent = o.title; $('rwHint').textContent = (o.hint ? o.hint.replace(/\.?$/, '. ') : '') + (o.single ? 'Pick one item.' : `Currencies and up to ${FM.MAX_REWARD_ITEMS} items.`) + ' Website draft only.';
+  rwState = { ...o, parts: clone(o.parts || []) }; $('rwTitle').textContent = o.title; $('rwHint').textContent = (o.hint ? o.hint.replace(/\.?$/, '. ') : '') + (o.single ? 'Pick one item.' : `Currencies and up to ${FM.MAX_REWARD_ITEMS} items.`) + (st.fullPack ? ' Goes in the game pack with Rewards and banners on.' : ' Saved with the project; goes in a game pack once Rewards and banners is on in Export.') + ' Stat pills keep their own bonus.';
   $('rwCur').replaceChildren(...FM.CURRENCIES.map(c => new Option(c.label, c.key))); for (const id of ['rwPartsBox', 'rwCurBox', 'rwSave']) $(id).hidden = !!o.single;
   $('rwQ').value = ''; $('rwMsg').hidden = true; renderRwParts(); renderRwItems(); dlgOpen($('rwDlg')); $('rwQ').focus();
 }
@@ -1934,13 +2042,13 @@ function renderRwParts() {
 function renderRwItems() {
   const toks = ($('rwQ').value || '').toLowerCase().split(/\s+/).filter(Boolean), out = []; let total = 0;
   const ids = Object.keys(NAMES).sort((a, b) => (NAMES[b].u || 0) - (NAMES[a].u || 0) || +a - +b);
-  for (const id of ids) { const n = NAMES[id], h = `${n.n || ''} ${n.s || ''} ${id} ${n.r ? n.r + '★' : ''} ${n.a ? ATTR_NAME[n.a] : ''}`.toLowerCase(); if (!toks.every(t => h.includes(t))) continue; total++; if (out.length >= 60) continue;
+  for (const id of ids) { const n = NAMES[id], h = `${n.n || ''} ${n.s || ''} ${n.p || ''} ${n.p ? n.p + 's pills' : ''} ${ITEM_TYPE[n.k] || ''} ${id} ${n.r ? n.r + '★' : ''} ${n.a ? ATTR_NAME[n.a] : ''}`.toLowerCase(); if (!toks.every(t => h.includes(t))) continue; total++; if (out.length >= 60) continue;
     out.push(el('button', { type: 'button', class: 'pcard', style: 'text-align:left;border:0;color:inherit', onclick: () => {
       if (rwState.single) { const f = rwState.onPick; $('rwDlg').close(); f(id); return; }
       const P = rwState.parts; const ex = P.find(p => p.key === 'item' && p.unitId === id); if (ex) ex.qty = Math.min(999, ex.qty + 1); else P.push({ key: 'item', unitId: id, qty: 1, level: 1 });
       rwMsg(FM.partsProblems(P)[0]); renderRwParts(); } },
       rewardThumb({ key: 'item', unitId: id }), el('span', { class: 'pb' }, el('b', {}, n.n || n.s || 'Item ' + id, n.r ? el('span', { class: 'badge rar', text: n.r + '★' }) : null, n.a ? el('span', { class: 'badge el', style: `background:${ATTR[n.a]}`, text: ATTR_NAME[n.a] }) : null),
-        el('small', { text: `ID ${id}` + (!n.n && n.s ? ' · source name (no English name in this catalog)' : '') + (n.u ? ' · given by game templates' : '') })))); }
+        el('small', { text: [n.p, n.b ? 'gives ' + bonusWords(n.b) : '', ITEM_TYPE[n.k], `ID ${id}`, !n.n && n.s ? 'source name (no English name in this catalog)' : '', n.u ? 'given by game templates' : ''].filter(Boolean).join(' · ') })))); }
   if (total > out.length) out.push(el('p', { class: 'hint', text: `Showing ${out.length} of ${total.toLocaleString()}. Type more to narrow it down.` }));
   if (!total) out.push(el('p', { class: 'hint', text: 'No item matches.' }));
   $('rwItems').replaceChildren(...out);
@@ -2256,11 +2364,14 @@ async function exportCandidates() {
     const name = (r.d.name || '').trim() || 'Untitled stage', base = { kind, slot: r.sl.slot, name, thumb: bgThumb((r.chk.tpl && r.chk.tpl.bg) || (r.d.maps[0] && r.d.maps[0].bg)), localId: r.d.localId };
     if (!r.chk.tpl) { out.push({ ...base, spec: null, why: statusOf(r)[0] }); continue; }
     if (r.chk.errs.length || !r.chk.spec) { out.push({ ...base, spec: null, why: `Can’t export (${(r.chk.errs[0] || ['STAGE'])[0]}): ${(r.chk.errs[0] || [, 'not ready'])[1]}` }); continue; }
-    out.push({ ...base, spec: r.chk.spec, exported: !!exportedAt(r.d.localId), draftOnly: r.d.rewards ? 'rewards and challenges' : null }); }
+    let rw = null; try { rw = r.d.rewards && RW ? RW.fromDraft(kind, rwBase(r.d), r.d.rewards, ITEMS, r.chk.tpl.raw) : null; } catch (e) { rw = null; }
+    const what = [rw ? 'reward and challenge edits' : null, r.d.banner ? 'banner' : null].filter(Boolean).join(' and ');
+    out.push({ ...base, spec: r.chk.spec, exported: !!exportedAt(r.d.localId), draftOnly: what || null, rw, banner: r.d.banner || null }); }
   const s = readStore();
   for (const sl of slotList('castle')) { const rec = (s.castles || {})[sl.slot]; if (!rec) { out.push({ kind: 'castle', slot: sl.slot, empty: true }); continue; }
     const p = castleProblems(rec), base = { kind: 'castle', slot: sl.slot, name: (rec.spec.name || '').trim() || 'Untitled castle', localId: rec.spec.localId };
-    out.push(p.length ? { ...base, spec: null, why: 'Can’t export: ' + p[0] } : { ...base, spec: clone(rec.spec), exported: !!exportedAt(rec.spec.localId), draftOnly: rec.draft && rec.draft.rewards ? 'floor and ranking rewards' : null }); }
+    let rw = null; try { rw = RW && rec.draft && rec.draft.rewards ? RW.castleFromDraft(AC, rec.spec, rec.draft.rewards, ITEMS) : null; } catch (e) { rw = null; }
+    out.push(p.length ? { ...base, spec: null, why: 'Can’t export: ' + p[0] } : { ...base, spec: clone(rec.spec), exported: !!exportedAt(rec.spec.localId), draftOnly: rw ? 'floor and ranking reward edits' : null, rw }); }
   return out;
 }
 const MODE_TAG = k => el('span', { class: 'mtag ' + k, text: KIND(k).label });
@@ -2268,42 +2379,76 @@ function xRow(c, inc) {
   const kids = [el('b', {}, MODE_TAG(c.kind), c.name + (c.spec && c.spec.enabled === false ? (inc ? ' — sent switched off' : ' — switched off') : ''))];
   kids.push(el('small', { text: `Slot ${c.slot} · localId ${c.localId || '—'}` + (c.kind === 'castle' && c.spec ? ` · base season ${c.spec.donorPvpId}${c.spec.rewardPvpId ? ', rewards from ' + c.spec.rewardPvpId : ''} · points ×${c.spec.pointScale ?? 1}` : c.spec ? ` · template ${c.spec.donorMissionId} · ${c.spec.maps.reduce((a, m) => a + m.markers.length, 0)} move(s)` : '') }));
   if (inc) kids.push(el('small', { text: `${c.path} · the app allocates the game IDs when it imports this localId` + (c.exported ? ' · exported before, so this updates it' : '') }));
-  if (inc && c.draftOnly) kids.push(el('small', { class: 'warn', text: `Your ${c.draftOnly} edits stay in the website draft; this pack carries the template’s.` }));
+  const plural = c.draftOnly && (c.draftOnly.includes(' and ') || c.draftOnly.endsWith('s'));
+  if (inc && c.draftOnly && st.fullPack) kids.push(el('small', { class: c.fullErr ? 'bad' : 'ok', text: c.fullErr ? `Can’t add your ${c.draftOnly}: ${c.fullErr}` : `Your ${c.draftOnly} ${plural ? 'go' : 'goes'} in this pack (${c.kind === 'castle' ? 'ForgeCastle schema 2' : 'ForgeStage schema 3'}).` }));
+  else if (inc && c.draftOnly) kids.push(el('small', { class: 'warn', text: `Your ${c.draftOnly} ${plural ? 'stay' : 'stays'} in the website draft; this pack carries the template’s. Turn on Rewards and banners to include ${plural ? 'them' : 'it'} (needs app v2.6.6 or later).` }));
   else { kids.push(el('small', { class: c.optional ? '' : 'bad', text: c.why }));
     if (c.optional) { const cb = el('input', { type: 'checkbox' }); cb.checked = false; cb.onchange = () => { xPicks[c.spec.localId] = cb.checked; renderExport(); };
       kids.push(el('label', { class: 'pick' }, cb, 'Send it anyway (it’s on a phone I imported from elsewhere)')); } }
   if (inc && c.spec && c.spec.enabled === false && !c.exported) { const cb = el('input', { type: 'checkbox' }); cb.checked = true; cb.onchange = () => { xPicks[c.spec.localId] = cb.checked; renderExport(); }; kids.push(el('label', { class: 'pick' }, cb, 'Send this switched-off definition')); }
-  return el('div', { class: 'xrow' }, c.thumb ? el('img', { alt: '', src: c.thumb }) : el('img', { alt: '', src: placeholderTile(c.kind === 'castle' ? 'PC' : 'ST', c.kind === 'castle' ? '#7AB8FF' : '#FF7A3D') }), el('div', {}, ...kids));
+  const th = c.thumb ? el('img', { alt: '', src: c.thumb }) : el('img', { alt: '', src: placeholderTile(c.kind === 'castle' ? 'PC' : 'ST', c.kind === 'castle' ? '#7AB8FF' : '#FF7A3D') });
+  if (c.banner) bannerURL(c.banner.sha256).then(u => { if (u) th.src = u; });
+  return el('div', { class: 'xrow' }, th, el('div', {}, ...kids));
+}
+/* the pack with rewards and banners: definitions that carry reward edits or a banner become ForgeStage schema 3 /
+   ForgeCastle schema 2 (validated with the shared rewards module), their banners go in banners/, and the manifest
+   becomes ForgeStagePack schema 2. Definitions without either stay byte-identical to the layout-only pack. */
+function fullPack(plan) {
+  const files = { ...plan.files }, banners = {}, defs = [], used = new Set(); let upgraded = 0;
+  for (const c of plan.included) { c.fullErr = null; const def = JSON.parse(files[c.path]);
+    if (!c.rw && !c.banner) { defs.push(def); continue; }
+    let bn = null; if (c.banner) { let nm = 'banners/' + (c.localId || 'stage').replace(/[^A-Za-z0-9._-]+/g, '-').slice(0, 80) + '.png'; for (let i = 2; used.has(nm); i++) nm = nm.replace(/(-\d+)?\.png$/, `-${i}.png`); used.add(nm); bn = { file: nm, sha256: c.banner.sha256, width: c.banner.width, height: c.banner.height }; }
+    const up = RW.withRewards(def, c.rw, bn);
+    try { RW.validateDefinition(AC, up, ITEMS); const lp = FM.contractProblem(AC, RW.layoutView(up)); if (lp) throw new Error(lp); } catch (e) { c.fullErr = e.message; defs.push(def); continue; }
+    files[c.path] = JSON.stringify(up, null, 2) + '\n'; defs.push(up); upgraded++; if (bn) banners[bn.file] = c.banner; }
+  if (upgraded) files['forge-mod.json'] = JSON.stringify(RW.packManifest(JSON.parse(plan.files['forge-mod.json']).stages, Object.keys(banners)), null, 2) + '\n';
+  return { files, banners, defs, upgraded, errors: plan.included.filter(c => c.fullErr) };
 }
 async function renderExport() {
   for (const b of $('xModeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.x === xMode));
+  $('xFull').checked = !!st.fullPack;
   const all = xMode === 'all';
   $('xHint').textContent = all ? 'Export changes including disabled imports: everything below that’s switched on, plus switched-off definitions as explicit enabled: false updates, so a phone that already has them switches them off. Switched-off definitions this browser never exported stay out unless you tick them, because sending one to a phone that doesn’t have it would still use up a permanent slot.'
-    : 'Export enabled stages: only configured definitions that are switched on, across all three modes, in slot order. Empty slots, website drafts and the game’s original quests are never in the pack. The pack holds forge-mod.json and its stages/*.json, nothing else.';
+    : 'Export enabled stages: only configured definitions that are switched on, across all three modes, in slot order. Empty slots, website drafts and the game’s original quests are never in the pack. ' + (st.fullPack ? 'The pack holds forge-mod.json, its stages/*.json and the banners/*.png they use, nothing else.' : 'The pack holds forge-mod.json and its stages/*.json, nothing else.');
   const cands = await exportCandidates(); const real = cands.filter(c => !c.empty);
   const plan = FM.planExport(AC, real, { includeDisabled: all, pick: c => (c.spec.localId in xPicks) ? xPicks[c.spec.localId] : c.exported }); xPlan = plan;
+  plan.full = st.fullPack && plan.files && RW ? fullPack(plan) : null;
   $('xIn').replaceChildren(...(plan.included.length ? plan.included.map(c => xRow(c, true)) : [el('p', { class: 'hint', text: plan.error || 'Nothing to export.' })]));
   $('xOut').replaceChildren(...(plan.leftOut.length ? plan.leftOut.map(c => xRow(c, false)) : [el('p', { class: 'hint', text: 'Nothing configured is left out.' })]));
   const empty = { emergency: 0, road: 0, castle: 0 }; for (const c of cands) if (c.empty) empty[c.kind]++;
   $('xEmpty').textContent = `Never in a pack: ${empty.emergency} empty Emergency, ${empty.road} empty Ninja Road and ${empty.castle} empty Phantom Castle slot cards.`;
   const msg = $('xMsg'); if (plan.error && real.length) { msg.textContent = plan.error; msg.hidden = false; msg.classList.add('bad'); } else { msg.hidden = true; msg.classList.remove('bad'); }
-  let size = 0; if (plan.files) for (const v of Object.values(plan.files)) size += bytes(v);
-  const per = k => plan.included.filter(c => c.kind === k).length;
-  $('xCount').textContent = plan.files ? `${plan.included.length} definition${plan.included.length === 1 ? '' : 's'} (${per('emergency')} Emergency, ${per('road')} Ninja Road, ${per('castle')} Phantom Castle) · ${(size / 1024).toFixed(1)} KB of 2 MB` : '0 definitions';
+  let size = 0; const F = plan.full ? plan.full.files : plan.files; if (F) for (const v of Object.values(F)) size += bytes(v);
+  if (plan.full) for (const b of Object.values(plan.full.banners)) size += b.bytes || 0;
+  const per = k => plan.included.filter(c => c.kind === k).length, cap = plan.full && plan.full.upgraded ? 16 : 2;
+  $('xCount').textContent = plan.files ? `${plan.included.length} definition${plan.included.length === 1 ? '' : 's'} (${per('emergency')} Emergency, ${per('road')} Ninja Road, ${per('castle')} Phantom Castle)` + (plan.full && plan.full.upgraded ? ` · ${plan.full.upgraded} with rewards or a banner, ${Object.keys(plan.full.banners).length} banner${Object.keys(plan.full.banners).length === 1 ? '' : 's'}` : '') + ` · ${size > 1048576 ? (size / 1048576).toFixed(2) + ' MB' : (size / 1024).toFixed(1) + ' KB'} of ${cap} MB` : '0 definitions';
+  $('xFullHint').textContent = st.fullPack ? `On: definitions with reward, challenge or banner edits are written as ForgeStage schema 3 / ForgeCastle schema 2 with their banners, the rest stay as before. Install with app v2.6.6 or later; older apps reject these files.` : 'Put your reward, challenge and banner edits in the pack. Needs app v2.6.6 or later (a one-time IPA update; after that, importing a pack is enough). Older apps reject these files, so leave this off for a phone on 2.6.5 or older.';
   $('xSave').disabled = !plan.files; $('xSave').textContent = all ? 'Save pack with disabled imports' : 'Save enabled stages pack';
 }
 async function openExport(mode) { saveNow(); xMode = mode || 'enabled'; xPicks = {}; await renderExport(); const d = $('xDlg');
   try { const fe = window.frameElement; if (fe) { d.style.margin = '0 auto'; d.style.top = (Math.max(0, -fe.getBoundingClientRect().top) + 20) + 'px'; d.style.maxHeight = (window.top.innerHeight - 40) + 'px'; } } catch (e) {} d.showModal(); }
 $('bdExport').onclick = () => openExport('enabled'); $('bdExportAll').onclick = () => openExport('all'); $('gameSave').onclick = () => openExport('enabled'); $('xClose').onclick = () => $('xDlg').close();
+$('xFull').onchange = e => { st.fullPack = e.target.checked; try { localStorage.setItem('bf-stages-fullpack', st.fullPack ? '1' : '0'); } catch (x) {} renderExport(); if (st.draft) { renderRewardsCard(); renderBannerCard(); } };
 $('xModeSeg').onclick = e => { const b = e.target.closest('button'); if (b && b.dataset.x !== xMode) { xMode = b.dataset.x; renderExport(); } };
 $('xSave').onclick = async () => {
-  await renderExport(); const plan = xPlan; if (!plan || !plan.files) return;
-  let members; try { members = FM.packMembers(plan.files); } catch (e) { $('xMsg').textContent = e.message; $('xMsg').hidden = false; return; }
-  const enc = new TextEncoder(), blob = zipBlob(members.map(m => ({ name: m.name, data: enc.encode(m.text) })));
-  if (blob.size > 2 * 1024 * 1024) { $('xMsg').textContent = 'That pack is over 2 MB.'; $('xMsg').hidden = false; return; }
+  await renderExport(); const plan = xPlan; if (!plan || !plan.files) return; const enc = new TextEncoder(), bad = t => { $('xMsg').textContent = t; $('xMsg').hidden = false; $('xMsg').classList.add('bad'); };
+  let blob;
+  if (plan.full && plan.full.upgraded) {
+    const P = plan.full; if (P.errors.length) { bad(`${P.errors[0].name}: ${P.errors[0].fullErr}`); return; }
+    const man = JSON.parse(P.files['forge-mod.json']), out = [{ name: 'forge-mod.json', data: enc.encode(P.files['forge-mod.json']) }, ...man.stages.map(n => ({ name: n, data: enc.encode(P.files[n]) }))];
+    for (const [name, b] of Object.entries(P.banners)) { const bl = await getBanner(b.sha256); if (!bl) { bad(`The banner picture for ${name} isn’t stored in this browser. Upload it again in that stage’s Banner card.`); return; }
+      const bytes = new Uint8Array(await bl.arrayBuffer()); const def = P.defs.find(d => d.banner && d.banner.file === name);
+      try { await RW.checkBannerBytes(def, bytes, shaHex); } catch (e) { bad(e.message); return; } out.push({ name, data: bytes }); }
+    try { RW.validatePack(out.map(m => m.name), man, P.defs); } catch (e) { bad(e.message); return; }
+    blob = zipBlob(out); if (blob.size > RW.LIMITS.packBytes) { bad('That pack is over 16 MB. Use fewer or smaller banners.'); return; }
+  } else {
+    let members; try { members = FM.packMembers(plan.files); } catch (e) { bad(e.message); return; }
+    blob = zipBlob(members.map(m => ({ name: m.name, data: enc.encode(m.text) })));
+    if (blob.size > 2 * 1024 * 1024) { bad('That pack is over 2 MB.'); return; }
+  }
   const name = `Forge-stages-${plan.included.length}${xMode === 'all' ? '-with-disabled' : ''}.zip`;
   if (await saveBlob(blob, name)) { markExported(plan.included.map(c => c.spec.localId)); $('xMsg').classList.remove('bad');
-    $('xMsg').textContent = `Saved ${name}. In the app: Forge Studio › Stages › Import stages, build, then close and reopen the game. The app checks it again and allocates the IDs; phone playback and rewards still need testing on the phone.`; $('xMsg').hidden = false; renderBoard(); if (st.kind === 'castle') renderCastle(); else renderGame(); }
+    $('xMsg').textContent = `Saved ${name}. In the app: Forge › Stages › Import stages, then Build mod, then fully close and reopen the game. The app checks it again and allocates the IDs; phone playback and rewards still need testing on the phone.` + (plan.full && plan.full.upgraded ? ' It carries rewards and banners, so it needs app v2.6.6 or later.' : ''); $('xMsg').hidden = false; renderBoard(); if (st.kind === 'castle') renderCastle(); else renderGame(); }
 };
 
 // editable project: every slot of every mode (empty ones too), switched-off definitions, in-game drafts, localIds,
@@ -2317,6 +2462,8 @@ async function saveWorkspace() {
     drafts: Object.fromEntries(Object.entries(s.drafts).filter(([k]) => !isSlotKey(k))), ids: readIds(), ledger: readLedger(), exported: readExported(), projects: [] };
   if (window.ForgeSandboxUI) for (const p of await window.ForgeSandboxUI.listProjects()) { const dir = 'projects/' + slug(p.id).replace(/[^a-z0-9._-]/g, '-') + '/';
     for (const f of await window.ForgeSandboxUI.projectFiles(p.id)) files.push({ name: dir + f.name, data: f.data }); ws.projects.push({ id: p.id, name: p.name, dir }); }
+  const shas = new Set(Object.values(s.drafts).map(d => d && d.banner && d.banner.sha256).filter(Boolean)); ws.banners = [];
+  for (const sha of shas) { const b = await getBanner(sha); if (b) { files.push({ name: `banners/${sha}.png`, data: new Uint8Array(await b.arrayBuffer()) }); ws.banners.push(sha); } }
   files.unshift({ name: 'forge-stages-workspace.json', data: enc.encode(JSON.stringify(ws, null, 1) + '\n') });
   const n = k => ws[k].filter(x => x.stage || x.record).length;
   if (await saveBlob(zipBlob(files), 'Forge-stages-project.zip')) bdMsg(`Saved Forge-stages-project.zip: ${n('slots')} Emergency, ${n('roadSlots')} Ninja Road and ${n('castleSlots')} Phantom Castle slots with work in them (switched-off ones included), ${Object.keys(ws.drafts).length} website draft${Object.keys(ws.drafts).length === 1 ? '' : 's'} and ${ws.projects.length} stage project${ws.projects.length === 1 ? '' : 's'}. This isn’t a game import; use Export enabled stages for that.`);
@@ -2325,6 +2472,7 @@ $('bdSave').onclick = saveWorkspace;
 async function restoreWorkspace(ws, files) {
   const n = FM ? FM.normalizeWorkspace(ws) : null; if (!n) return { keys: [], bad: ['That isn’t a Forge stages project.'] };
   const s = readStore(), kept = [], keys = []; s.castles = s.castles || {};
+  if (files) for (const [nm, data] of Object.entries(files)) { const m = /^banners\/([0-9a-f]{64})\.png$/.exec(nm); if (m) try { if (await shaHex(data) === m[1]) await putBanner(m[1], new Blob([data], { type: 'image/png' })); } catch (e) {} }
   for (const sl of n.emergency) { const k = slotKey(sl.slot, 'emergency'); if (sl.stage && sl.stage.maps) { if (sl.stage.kind === 'road') delete sl.stage.kind; s.drafts[k] = sl.stage; keys.push(k); } else if (s.drafts[k]) kept.push('Emergency ' + sl.slot); }
   for (const sl of n.road) { const k = slotKey(sl.slot, 'road'); if (sl.stage && sl.stage.maps) { sl.stage.kind = 'road'; s.drafts[k] = sl.stage; keys.push(k); } else if (s.drafts[k]) kept.push('Ninja Road ' + sl.slot); }
   for (const sl of n.castle) { if (sl.record && sl.record.spec) { s.castles[sl.slot] = { ...sl.record, slot: sl.slot }; keys.push('castle-' + sl.slot); } else if (s.castles[sl.slot]) kept.push('Phantom Castle ' + sl.slot); }
@@ -2441,12 +2589,13 @@ function rewardThumb(r) {
   const n = NAMES[r.unitId] || {}, name = n.n || n.s || 'Item'; const ph = placeholderTile((name.replace(/[^\p{L}\p{N} ]/gu, '').split(/\s+/).map(w => [...w][0] || '').join('').slice(0, 2) || '?').toUpperCase(), ATTR[n.a] || '#9AA3B5');
   const donor = sprIndex && sprIndex.donors && sprIndex.donors[r.unitId] && sprIndex.donors[r.unitId].moves && sprIndex.donors[r.unitId].moves.idle && !sprIndex.donors[r.unitId].moves.idle.error ? r.unitId : null;
   const c = el('canvas', { class: 'rt', width: '64', height: '64', 'data-ph': ph, title: name }); const g = c.getContext('2d'); const i = new Image(); i.onload = () => { if (c.dataset.painted !== '1') g.drawImage(i, 0, 0, 64, 64); }; i.src = ph;
+  if (n.i) { const a = new Image(); a.onload = () => { c.dataset.painted = '1'; g.clearRect(0, 0, 64, 64); const k = Math.min(64 / a.naturalWidth, 64 / a.naturalHeight), w = a.naturalWidth * k, h = a.naturalHeight * k; g.drawImage(a, (64 - w) / 2, (64 - h) / 2, w, h); }; a.src = CAT + 'items/' + r.unitId + '.png'; return c; }
   if (donor && thumbIO) { c.dataset.donor = donor; thumbIO.observe(c); } return c;
 }
 function rewardChip(r) {
   const n = r.key === 'item' ? NAMES[r.unitId] || {} : null;
   const name = r.key === 'item' ? (n.n || (n.s ? n.s : 'Item ' + r.unitId)) : r.label;
-  const sub = r.key === 'item' ? [n.r ? n.r + '★' : '', n.a ? ATTR_NAME[n.a] : '', !n.n && n.s ? 'source name, no English name in this catalog' : '', 'ID ' + r.unitId, r.level > 1 ? 'Lv ' + r.level : '', (r.plus && (r.plus.s || r.plus.a)) ? `+${r.plus.s} HP +${r.plus.a} ATK` : ''].filter(Boolean).join(' · ') : '';
+  const sub = r.key === 'item' ? [n.r ? n.r + '★' : '', n.a ? ATTR_NAME[n.a] : '', !n.n && n.s ? 'source name, no English name in this catalog' : '', 'ID ' + r.unitId, r.level > 1 ? 'Lv ' + r.level : '', r.plus ? bonusWords([r.plus.s || 0, r.plus.a || 0, r.plus.d || 0, r.plus.sp || 0]) : ''].filter(Boolean).join(' · ') : '';
   return el('span', { class: 'ritem', title: JSON.stringify(r.raw || null) }, rewardThumb(r), el('span', { class: 'rn' }, `${name} ×${Number(r.qty).toLocaleString()}`, sub ? el('small', { text: sub }) : null));
 }
 function renderCastleBoard() {
@@ -2506,7 +2655,7 @@ function renderCastle(quiet) {
   kids.push(el('dl', { class: 'rw' }, el('dt', { text: 'Season' }), el('dd', { text: `${v.base.name} · ${v.base.arena.arenaData.name}` }), el('dt', { text: 'Floors' }), el('dd', { text: String(v.floorMax) }), el('dt', { text: 'Ran' }), el('dd', { text: seasonDates(sp.donorPvpId) + ' (original dates)' }),
     el('dt', { text: 'Opponents' }), el('dd', { text: 'Inherited from the base season, with its battle behavior. Not editable in this version.' })));
   const ovc = castleOv(rec), nf = Object.keys(ovc.floors).length, nr = Object.keys(ovc.ranking).length;
-  if (nf || nr) kids.push(el('ul', { class: 'issues' }, li('lost', `Reward edits on ${nf} floor${nf === 1 ? '' : 's'} and ${nr} ranking band${nr === 1 ? '' : 's'} are a website draft: the game pack sends the base season, reward preset and point scale only (app v2.5.0 doesn’t install item rewards).`)),
+  if (nf || nr) kids.push(el('ul', { class: 'issues' }, st.fullPack ? li('', `Reward edits on ${nf} floor${nf === 1 ? '' : 's'} and ${nr} ranking band${nr === 1 ? '' : 's'} go in the game pack (Rewards and banners is on in Export; needs app v2.6.6 or later).`) : li('lost', `Reward edits on ${nf} floor${nf === 1 ? '' : 's'} and ${nr} ranking band${nr === 1 ? '' : 's'} stay in the website draft: the game pack sends the base season, reward preset and point scale only. Turn on Rewards and banners in Export to include them (needs app v2.6.6 or later).`)),
     el('div', { class: 'row' }, el('button', { type: 'button', class: 'chip sm', text: 'Reset reward edits', onclick: () => { castleEdit(r => { if (r.draft) delete r.draft.rewards; }); toast('Floor and ranking rewards are back to the season’s. Undo brings your edits back.'); } })));
   if (probs.length) kids.push(el('ul', { class: 'issues' }, probs.map(t => li('err', t, 'CASTLE'))));
   else if (!tplView) kids.push(el('ul', { class: 'issues' }, li('', `Checked against the app’s import rules (phantom-castle/1): ready to export.`)));
@@ -2530,7 +2679,7 @@ function castleRewardEdit(which, key, parts, original, label) {
   castleEdit(r => { const d = r.draft = { ...(r.draft || {}) }; const ov = d.rewards = clone(d.rewards || { floors: {}, ranking: {} });
     if (sameJ(parts, original)) delete ov[which][key]; else ov[which][key] = parts;
     if (!Object.keys(ov.floors).length && !Object.keys(ov.ranking).length) delete d.rewards; });
-  toast(label + ' changed (website draft; the game pack keeps the season’s rewards).');
+  toast(label + (st.fullPack ? ' changed (goes in the next game pack with Rewards and banners on).' : ' changed (website draft until Rewards and banners is on in Export).'));
 }
 // light refresh while someone is typing or dragging the slider: the status pill, problems and the slider/number pair
 function syncCastleBits(rec, v, probs, tplView) {
@@ -2584,9 +2733,11 @@ function renderGeo() { // what the layout preview does and doesn't know, from th
 }
 async function init() {
   if (!('DecompressionStream' in window)) throw new Error('old browser');
-  const [idx, enemies, app, fm, ac, geo, names, standins] = await Promise.all([getData(CAT + 'index.json.gz'), getData(CAT + 'enemies.json.gz'), getData(CAT + 'app.json.gz').catch(() => null),
-    import('./v250/forge-modes.mjs'), getData('v250/authoring-catalog.json.gz'), getData('v250/reference/geometry.json').catch(() => null), getData(CAT + 'reward-names.json').catch(() => null), getData(CAT + 'standins.json').catch(() => null)]);
+  const [idx, enemies, app, fm, ac, geo, names, standins, rw] = await Promise.all([getData(CAT + 'index.json.gz'), getData(CAT + 'enemies.json.gz'), getData(CAT + 'app.json.gz').catch(() => null),
+    import('./v250/forge-modes.mjs'), getData('v250/authoring-catalog.json.gz'), getData('v250/reference/geometry.json').catch(() => null), getData(CAT + 'reward-names.json').catch(() => null), getData(CAT + 'standins.json').catch(() => null), import('./rewards/stage-rewards.mjs')]);
   st.idx = idx; st.enemies = enemies; APP = app; FM = fm; AC = ac; SLOTS = FM.slotTable(AC); GEO = geo; NAMES = (names && names.items) || {}; STANDINS = (standins && standins.standins) || {};
+  RW = rw; ITEMS = Object.fromEntries(Object.entries(NAMES).map(([k, v]) => [k, { bonus: v.b || [0, 0, 0, 0], type3: v.k || 0 }]));
+  try { st.fullPack = localStorage.getItem('bf-stages-fullpack') === '1'; } catch (e) {}
   try { for (const [id, key, store] of [['standBtn', 'standins', 'bf-stages-standins'], ['teamBtn', 'teamSprites', 'bf-stages-team']]) { const v = localStorage.getItem(store); if (v !== null) st[key] = v === '1'; $(id).setAttribute('aria-pressed', String(st[key])); } } catch (e) {}
   st.roadIds = new Set(idx.missions.filter(m => m.cat === 3 && /^800\d\d$/.test(m.id)).map(m => m.id));
   try { const g = localStorage.getItem('bf-stages-gameonly'); if (g !== null) st.gameOnly = g === '1'; } catch (e) {}
@@ -2603,7 +2754,7 @@ async function init() {
   requestAnimationFrame(tick);
 }
 try { if (new URLSearchParams(location.search).has('debug')) window.__stages = { st, HIS, cs, pickSlot, moveToSlot, choosePull, openPull, exportStage, allEnemies, cellsOf, gameCheck, gameStage, unzip, importGameStage, importDefinition, importCastle, importFiles, readStore, setMode, setKind, renderBoard, exportCandidates, openExport, openSlot, createSlot, castleCreate, openCastle, castleEdit, setEnabledFor, saveWorkspace, restoreWorkspace, undoMain, redoMain, nudgeMarker, tplOf, slotList, slotKey, spriteOf, TEAM, teamLoaded: () => TEAM.every(d => !!ready.get(d)), rwBase, openRewardDialog,
-  get FM() { return FM; }, get AC() { return AC; }, get APP() { return APP; }, get plan() { return xPlan; }, get xMode() { return xMode; } }; } catch (e) {}
+  get FM() { return FM; }, get AC() { return AC; }, get APP() { return APP; }, get plan() { return xPlan; }, get xMode() { return xMode; }, get RW() { return RW; }, get ITEMS() { return ITEMS; }, getBanner, storeBanner, openRewardDialog, rwBase }; } catch (e) {}
 init().catch(err => { $('mName').textContent = err && err.message === 'old browser' ? 'This browser is too old for the stage catalog. Update it and reload.' : 'Couldn’t load the stage catalog. Reload the page to try again.'; console.error(err); });
 })();
 
@@ -3456,7 +3607,8 @@ function renderPalette() {
   } else if (sb.tab === 'rewards') {
     if (!sb.lib) rows.push(el('p', { class: 'hint warn', text: 'The reward catalog isn’t stored for this project. Import the package ZIP to search and change rewards.' }));
     else { const items = Object.values(sb.lib.items);
-      for (const it of items) { const h = `${it.name} ${it.title} ${typeLabel(it.type3)} ${stars(it.rarity)} ${it.rarity}star ${it.attribute} ${it.id}`.toLowerCase(); if (!hit(h)) continue; total++; if (rows.length >= 80) continue;
+      const PILL = { 'Health Boost': 'hp pill pills', 'Attack Boost': 'atk pill pills', 'Speed Boost': 'speed pill pills' };
+      for (const it of items) { const h = `${it.name} ${it.title} ${PILL[it.name] || ''} ${typeLabel(it.type3)} ${stars(it.rarity)} ${it.rarity}star ${it.attribute} ${it.id}`.toLowerCase(); if (!hit(h)) continue; total++; if (rows.length >= 80) continue;
         rows.push(el('div', { class: 'pcard' + (sb.pick ? ' pickable' : '') }, itemThumb(it), el('div', { class: 'pb' }, el('b', { text: it.name }), el('small', { text: [it.title, stars(it.rarity), it.attribute, typeLabel(it.type3)].filter(Boolean).join(' · ') }),
           el('small', { text: it.thumbnail ? (it.thumbnailKind === 'supplied-original' ? 'Supplied art' : 'Exact card art') : 'No art in this package (named placeholder)' }),
           advanced([['Item ID', it.id], ['Type (type3)', it.type3], ['Catalog status', it.availability], ['Default bonuses', JSON.stringify(it.defaultBonuses)], ['Card image', it.cardImageId]]),

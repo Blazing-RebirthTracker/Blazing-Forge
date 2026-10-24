@@ -2,8 +2,10 @@
 
 usage: python3 tools/build_stage_mode_names.py stages/v250/authoring-catalog.json.gz stages/cat/reward-names.json
 
-English names come from the Studio's unit list (docs/catalog.json), the Stages app list (stages/cat/app.json.gz)
-and the sprite catalog (sprites/cat/index.json.gz). Items with no English name keep the name the season's own
+English names come from the game's item list (tools/data/item-catalog.json, built by tools/build_item_catalog.py),
+the Studio's unit list (docs/catalog.json), the Stages app list (stages/cat/app.json.gz) and the sprite catalog
+(sprites/cat/index.json.gz). Every item in the game's list is offered, materials and stat pills included; "b" holds the
+HP/ATK/DEF/Speed bonuses an item carries when given out, "k" its type and "i": 1 marks stages/cat/items/<id>.png. Items with no English name keep the name the season's own
 reward row gives (field "s", in the game's source language) so the page can show something true instead of a guess.
 Every unit in the Studio's list is included so the reward editors can offer it; "u": 1 marks items a template gives out.
 """
@@ -12,9 +14,17 @@ import gzip, json, os, sys
 src, out = sys.argv[1], sys.argv[2]
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 cat = json.load(gzip.open(src))
-english = {}
+english, extra = {}, {}
+items_path = os.path.join(root, 'tools/data/item-catalog.json')
+STAT_PILLS = {'Health Boost': 'HP pill', 'Attack Boost': 'ATK pill', 'Speed Boost': 'Speed pill'}  # what players call them
+if os.path.exists(items_path):
+    for i, v in json.load(open(items_path, encoding='utf-8'))['items'].items():
+        english[i] = (v['n'] + (' (' + v['t'] + ')' if v.get('t') else ''), v.get('r'), v.get('a'))
+        e = {k: v[k] for k in ('b', 'k', 'i') if v.get(k)}
+        if v['n'] in STAT_PILLS: e['p'] = STAT_PILLS[v['n']]
+        extra[i] = e
 for u in json.load(open(os.path.join(root, 'docs/catalog.json'), encoding='utf-8'))['units']:
-    english[str(u['id'])] = (u['n'] + (' (' + u['s'] + ')' if u.get('s') else ''), u.get('r'), u.get('a'))
+    english.setdefault(str(u['id']), (u['n'] + (' (' + u['s'] + ')' if u.get('s') else ''), u.get('r'), u.get('a')))
 for i, n in json.load(gzip.open(os.path.join(root, 'stages/cat/app.json.gz')))['units'].items():
     english.setdefault(i, (n, None, None))
 for i, d in json.load(gzip.open(os.path.join(root, 'sprites/cat/index.json.gz')))['donors'].items():
@@ -58,6 +68,7 @@ for i in sorted(ids, key=int):
         n, r, a = english[i]; o['n'] = n
         if r: o['r'] = r
         if a: o['a'] = a
+    o.update(extra.get(i, {}))
     if i in source: o['s'] = source[i]
     if i in used: o['u'] = 1
     res[i] = o
